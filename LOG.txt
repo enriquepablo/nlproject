@@ -1,0 +1,47 @@
+1- Sentences can be added to the db.
+2- The db can be extended.
+3- The db can be queried
+
+1.1- One type of sentences are attributive sentences.
+1.2- One type of sentences are propositions.
+1.3- One type of sentence is rule
+
+1.1.1- These are made by instantiating a subclass of Thing, with one argument.
+1.1.2- They can be added to the db. in this case they can't be a variable.
+1.1.3- they can be added to a rule, and can be a variable.
+1.1.4- They can be added to a proposition. In this case they can or cannot be a variable depending on whether the prop goes to the db or to a rule.
+
+1.1.1.1- The argument can be a string representing a proper name.
+1.1.1.2- The argument can be a string representing a variable , of the form "XN", where "X" is X and "N" is an integer.
+
+1.2.1- propositions are made by instantiating Prop, with 3 args: an instance of a subclass of Thing (subject), another of a subclass of State (predicate) and another of Time (time).
+1.2.2- They can be added to the db. in this case they can't have variables.
+1.2.3- they can be added to a rule, and can have variables.
+
+states cannot be added to the database directly
+When State is subcllassed it is given a mods dict with keys to subclasses of Thing or Number. (not to preds or props atm).
+when instantiated, kwargs == mods but with instances instead of classes
+
+rules have prems and cons, are made by instantiating RUle with 2 lists of sentences
+
+prems can be, all attributive sentences, or all propositions
+cons can be a mixture of both
+
+XXX puede ser que en una regla se repita una variable de INSTANCE si son el mismo nombre de mod y la misma var
+
+predicates cannot be vars in a rule, all the vars are in its mods. Predicates are always vars: if you want any predicate, you can say state() although you cannot put it in a var.
+
+los predicados tienen que tener todos los args cubiertos
+
+
+si se intenta hacer alguna operación y pone now, va a petar.
+
+
+
+TODO:
+
+números. pueden salir desnudos en ce's prop o atrib, en ce's aritméticas como predicados (0, < etc), y en fórmulas en consecuencias (actions)
+
+poner nombre a las reglas.
+
+        return constraint # no se pueden poner operaciones en numeros en premisas, hay que pasarlo todo a arith preds.
