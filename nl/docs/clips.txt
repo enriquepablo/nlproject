@@ -93,7 +93,7 @@
 
 
     >>> x1.get_constraint({'X1': ['X0', 'arg']}, 'newvar')
-    '?newvar&:(superclassp Move (class ?newvar))|:(eq Move (class ?newvar))&:(eq (send ?newvar, get-v) (send ?X0 get-arg))'
+    '?newvar&:(superclassp Move (class ?newvar))|:(eq Move (class ?newvar))&:(eq (send ?newvar get-v) (send ?X0 get-arg))'
 
 
     >>> x1.put({'X1': ['X0', 'arg']})
@@ -143,7 +143,7 @@
     >>> t3.get_constraint({}, 'newvar')
     Traceback (most recent call last):
         ...
-    LnError: Can't use operators in premises; put operations as arithmetic predicates.
+    NlError: Can't use operators in premises; put operations as arithmetic predicates.
 
     >>> t4.get_constraint({}, 'newvar')
     'now'
@@ -155,7 +155,7 @@
     ...               kb.Proposition(kb.Thing('X1'), Move(v=kb.Number('+',kb.Number('X2'),kb.Number(1))), kb.Time('X4'))])
 
     >>> r1.put()
-    '(defrule (object (is-a Proposition)(subject ?X1)(predicate ?pr10&:(superclassp Move (class ?pr10))|:(eq Move (class ?pr10)))(time ?X3)) (object (is-a Proposition)(subject ?sr11&:(eq (send ?sr11 get-value) (send ?X1 get-value)))(predicate ?pr11&:(superclassp Move (class ?pr11))|:(eq Move (class ?pr11))&:(eq (send ?pr11, get-v) (send ?pr10 get-v)))(time ?X4)) => (make-instance of Proposition (subject (make-instance of Thing (value (send ?X1 get-value))))(predicate (make-instance of Move (v (+ (send ?pr10 get-v) 1))))(time ?X4)))'
+    '(defrule r1 (object (is-a Proposition)(subject ?X1)(predicate ?pr10&:(superclassp Move (class ?pr10))|:(eq Move (class ?pr10)))(time ?X3)) (object (is-a Proposition)(subject ?sr11&:(eq (send ?sr11 get-value) (send ?X1 get-value)))(predicate ?pr11&:(superclassp Move (class ?pr11))|:(eq Move (class ?pr11))&:(eq (send ?pr11 get-v) (send ?pr10 get-v)))(time ?X4)) => (make-instance of Proposition (subject (make-instance of Thing (value (send ?X1 get-value))))(predicate (make-instance of Move (v (+ (send ?pr10 get-v) 1))))(time ?X4)))'
 
 
 
@@ -166,11 +166,15 @@
 
     >>> a1.get_ce({'X1':['X0', 'var']}, 'newvar')
     '(test (> 1 (+ (send ?X0 get-var) 3)))'
-    >>> r1 = kb.Rule('r1',[kb.Proposition(kb.Thing('X1'), Move(v=kb.Number('X2')), kb.Time('X3')),
+    >>> r2 = kb.Rule('r2',[kb.Proposition(kb.Thing('X1'), Move(v=kb.Number('X2')), kb.Time('X3')),
     ...              kb.Proposition(kb.Thing('X1'), Move(v=kb.Number('X2')), kb.Time('X4')),
     ...              kb.Arith('>', kb.Number(1), kb.Number('+', kb.Number('X2'), kb.Number('X3')))],
     ...              [kb.Proposition(kb.Thing('X1'), Move(v=kb.Number('+',kb.Number('X2'),kb.Number(1))), kb.Time('X4'))])
 
-    >>> r1.put()
-    '(defrule (object (is-a Proposition)(subject ?X1)(predicate ?pr10&:(superclassp Move (class ?pr10))|:(eq Move (class ?pr10)))(time ?X3)) (object (is-a Proposition)(subject ?sr11&:(eq (send ?sr11 get-value) (send ?X1 get-value)))(predicate ?pr11&:(superclassp Move (class ?pr11))|:(eq Move (class ?pr11))&:(eq (send ?pr11, get-v) (send ?pr10 get-v)))(time ?X4)) (test (> 1 (+ (send ?pr10 get-v) ?X3))) => (make-instance of Proposition (subject (make-instance of Thing (value (send ?X1 get-value))))(predicate (make-instance of Move (v (+ (send ?pr10 get-v) 1))))(time ?X4)))'
+    >>> r2.put()
+    '(defrule r2 (object (is-a Proposition)(subject ?X1)(predicate ?pr20&:(superclassp Move (class ?pr20))|:(eq Move (class ?pr20)))(time ?X3)) (object (is-a Proposition)(subject ?sr21&:(eq (send ?sr21 get-value) (send ?X1 get-value)))(predicate ?pr21&:(superclassp Move (class ?pr21))|:(eq Move (class ?pr21))&:(eq (send ?pr21 get-v) (send ?pr20 get-v)))(time ?X4)) (test (> 1 (+ (send ?pr20 get-v) ?X3))) => (make-instance of Proposition (subject (make-instance of Thing (value (send ?X1 get-value))))(predicate (make-instance of Move (v (+ (send ?pr20 get-v) 1))))(time ?X4)))'
+
+    >>> r2.put_ism()
+    '(do-for-all-instances ((?Y0 Proposition) (?Y1 Thing) (?Y2 Move) (?Y3 Proposition) (?Y4 Thing) (?Y5 Move)) (and (eq ?Y0:subject ?Y1) (eq ?Y2:v ?X2) (eq ?Y0:predicate ?Y2) (eq ?Y0:time ?X3) (eq ?Y1:value ?Y4:value) (eq ?Y3:subject ?Y4) (eq ?Y5:v ?X2) (eq ?Y3:predicate ?Y5) (eq ?Y3:time ?X4) (> 1 (+ ?X2 ?X3))) (make-instance of Proposition (subject (make-instance of Thing (value (send ?Y1 get-value))))(predicate (make-instance of Move (v (+ ?X2 1))))(time ?X4)))'
+
 

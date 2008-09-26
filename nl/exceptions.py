@@ -14,7 +14,7 @@ class Paradox(Exception):
                                                             self.message)
 
 
-class LnError(Exception):
+class NlError(Exception):
     """
     """
     def __init__(self, messg):

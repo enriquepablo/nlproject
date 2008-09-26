@@ -1,0 +1,321 @@
+    TESTS FOR nl
+    ------------
+
+
+    >>> from nl import kb
+
+    un contenido es una cosa
+
+    >>> class Content(kb.Thing): pass
+
+    doc1 es un Content
+
+    >>> doc1 = Content('doc1')
+    >>> kb.tell(doc1)
+
+    doc2 es un Content
+
+    >>> doc2 = Content('doc2')
+    >>> kb.tell(doc2)
+
+    un WfState es una cosa
+
+    >>> class WfState(kb.Thing): pass
+
+    public es un WfState
+    private es un WfState
+
+    >>> private = WfState('private')
+    >>> kb.tell(private)
+
+    >>> public = WfState('public')
+    >>> kb.tell(public)
+
+    HasState es un verbo, y si dices que algo HasState lo que sea, ese algo
+    ha de ser un Content y ese lo que sea ha de ser un WFState
+
+    >>> class HasState(kb.State):
+    ...     mods = {'state': WfState}
+
+    ChangeOfState es un verbo, y si dices que algo ChangeOfState de a a b,
+    algo ha de ser un Content y a y b han de ser WFState
+
+    >>> class ChangeOfState(kb.State):
+    ...     mods = {'init_state': WfState, 'end_state': WfState}
+
+    un User es una cosa
+
+    >>> class User(kb.Thing): pass
+
+    john es un User
+
+    >>> john = User('john')
+    >>> kb.tell(john)
+
+    bob es un User
+
+    >>> bob = User('bob')
+    >>> kb.tell(bob)
+
+    una Action es una cosa
+
+    >>> class Action(kb.Thing): pass
+
+    view es una Action
+
+    >>> view = Action('view')
+    >>> kb.tell(view)
+
+    edit es una Action
+
+    >>> edit = Action('edit')
+    >>> kb.tell(edit)
+
+    remove es una Action
+
+    >>> remove = Action('remove')
+    >>> kb.tell(remove)
+
+    change_state es una Action
+
+    >>> change_state = Action('change_state')
+    >>> kb.tell(change_state)
+
+    Un usuario puede tener permiso para realizar una acción sobre un
+    contenido
+
+    >>> class HasPermission(kb.State):
+    ...     mods = {'action': Action, 'content': Content}
+
+    Un usuario puede  realizar una acción sobre un contenido
+
+    >>> class Do(kb.State):
+    ...     mods = {'action': Action, 'content': Content}
+
+    Un usuario puede pedir realizar una acción sobre un contenido
+
+    >>> class Ask(kb.State):
+    ...     mods = {'action': Action, 'content': Content}
+
+    Una relación es una cosa
+
+    >>> class RelationToContent(kb.Thing): pass
+
+    propietario es una relación
+
+    >>> owner = RelationToContent('owner')
+    >>> kb.tell(owner)
+
+    un usuario puede tener una cierta relación con un contenido
+
+    >>> class HasRelation(kb.State):
+    ...     mods = {'relation_to_content': RelationToContent,
+    ...             'content': Content}
+
+    el contenido doc1 tiene estado público ahora
+
+    >>> ahora = kb.Number(0)
+    >>> prop1 = kb.Prop(doc1, HasState(state=public), ahora)
+    >>> kb.tell(prop1)
+
+    si un contenido tiene estado público, cualquier usuario tiene
+    permiso para verlo
+
+    >>> u1 = User('X1')
+    >>> c1 = Content('X2')
+    >>> p1 = kb.Prop(c1, HasState(state=public), kb.Number('X3'))
+    >>> p2 = kb.Prop(u1, HasPermission(action=view,content=c1),
+    ...                                             kb.Number('X3'))
+    >>> kb.tell(kb.Rule('r1', (u1, p1,),(p2,)))
+
+    si un usuario es propietario de un contenido, tiene permiso para
+    editarlo, para borrarlo, y para cambiar su estado
+
+    >>> u1 = User('X1')
+    >>> c1 = Content('X2')
+    >>> p1 = kb.Prop(u1, HasRelation(relation_to_content=owner, content=c1),
+    ...                 kb.Number('X3'))
+    >>> p2 = kb.Prop(u1, HasPermission(action=edit,content=c1),
+    ...                                             kb.Number('X3'))
+    >>> p3 = kb.Prop(u1, HasPermission(action=remove,content=c1),
+    ...                                             kb.Number('X3'))
+    >>> p4 = kb.Prop(u1, HasPermission(action=change_state,content=c1),
+    ...                                             kb.Number('X3'))
+    >>> r2 = kb.Rule('r2', (p1,),(p2, p3, p4))
+    >>> kb.tell(r2)
+
+    si un usuario pide realizar una acción, y tiene permiso para ello,
+    la realiza
+
+    >>> u1 = User('X1')
+    >>> c1 = Content('X2')
+    >>> a1 = Action('X3')
+    >>> p1 = kb.Prop(u1, Ask(action=a1,content=c1), kb.Number('X4'))
+    >>> p2 = kb.Prop(u1, HasPermission(action=a1,content=c1),
+    ...                                             kb.Number('X4'))
+    >>> p3 = kb.Prop(u1, Do(action=a1,content=c1), kb.Number('X4'))
+    >>> kb.tell(kb.Rule('r3', (p1, p2),(p3,)))
+
+    john es propietario del doc1
+
+    >>> prop1 = kb.Prop(john,
+    ...          HasRelation(relation_to_content=owner,content=doc1), ahora)
+    >>> kb.tell(prop1)
+
+    john pide editar el doc1
+
+    >>> prop1 = kb.Prop(john, Ask(action=edit,content=doc1), ahora)
+    >>> kb.tell(prop1)
+
+    bob pide editar el doc1
+
+    >>> prop1 = kb.Prop(bob, Ask(action=edit,content=doc1), ahora)
+    >>> kb.tell(prop1)
+
+    Compilamos la base de datos.
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    >>> kb.extend()
+
+    ¿es cierto que remove es una action?
+
+    >>> kb.ask(remove)
+    '(find-all-instances ((?Y6 Action)) (eq ?Y6:value remove))'
+
+    ¿es cierto que delete es una action?
+
+    >>> remove.value = 'delete'
+    >>> kb.ask(remove)
+    '(find-all-instances ((?Y7 Action)) (eq ?Y7:value delete))'
+
+    ¿tiene bob permiso para ver doc1?
+
+    >>> q1 = kb.Prop(bob,
+    ...              HasPermission(action=view,content=doc1),
+    ...              ahora)
+    >>> kb.ask(q1)
+    '(find-all-instances ((?Y8 Proposition) (?Y9 User) (?Y10 HasPermission) (?Y11 Action) (?Y12 Content)) (and (eq ?Y9:value bob) (eq ?Y8:subject ?Y9) (eq ?Y10:action ?Y11) (eq ?Y11:value view) (eq ?Y10:content ?Y12) (eq ?Y12:value doc1) (eq ?Y8:predicate ?Y10) (eq ?Y8:time 0)))'
+
+    ¿tiene bob permiso para editar doc1?
+
+    >>> q1 = kb.Prop(bob,
+    ...              HasPermission(action=edit,content=doc1),
+    ...              ahora)
+    >>> kb.ask(q1)
+    '(find-all-instances ((?Y13 Proposition) (?Y14 User) (?Y15 HasPermission) (?Y16 Action) (?Y17 Content)) (and (eq ?Y14:value bob) (eq ?Y13:subject ?Y14) (eq ?Y15:action ?Y16) (eq ?Y16:value edit) (eq ?Y15:content ?Y17) (eq ?Y17:value doc1) (eq ?Y13:predicate ?Y15) (eq ?Y13:time 0)))'
+
+    ¿edita john doc1 ahora?
+
+    >>> q1 = kb.Prop(john,
+    ...              Do(action=edit,content=doc1),
+    ...              ahora)
+    >>> kb.ask(q1)
+    '(find-all-instances ((?Y18 Proposition) (?Y19 User) (?Y20 Do) (?Y21 Action) (?Y22 Content)) (and (eq ?Y19:value john) (eq ?Y18:subject ?Y19) (eq ?Y20:action ?Y21) (eq ?Y21:value edit) (eq ?Y20:content ?Y22) (eq ?Y22:value doc1) (eq ?Y18:predicate ?Y20) (eq ?Y18:time 0)))'
+
+    ¿edita bob doc1 ahora?
+
+    >>> q1 = kb.Prop(bob,
+    ...              Do(action=edit,content=doc1),
+    ...              ahora)
+    >>> kb.ask(q1)
+    '(find-all-instances ((?Y23 Proposition) (?Y24 User) (?Y25 Do) (?Y26 Action) (?Y27 Content)) (and (eq ?Y24:value bob) (eq ?Y23:subject ?Y24) (eq ?Y25:action ?Y26) (eq ?Y26:value edit) (eq ?Y25:content ?Y27) (eq ?Y27:value doc1) (eq ?Y23:predicate ?Y25) (eq ?Y23:time 0)))'
+
+
+
+
+
+
+
+
+
+
+
+
+
