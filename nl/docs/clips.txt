@@ -38,7 +38,7 @@
     '[juan]'
 
     >>> juan.get_ce([])
-    '(object (is-a Hombre)(name juan))'
+    '(logical (object (is-a Hombre)(name juan)))'
 
     >>> x1 = Hombre('X1')
 
@@ -46,7 +46,7 @@
     '?X1&:(superclassp Hombre (class ?X1))|:(eq Hombre (class ?X1))'
 
     >>> x1.get_ce([])
-    '(object (is-a Hombre)(name ?X1))'
+    '(logical (object (is-a Hombre)(name ?X1)))'
 
     >>> x1.put_action()
     '(make-instance ?X1 of Hombre)'
@@ -102,12 +102,12 @@
     >>> p1 = kb.Proposition(Hombre('juan'),Move(v=kb.Number(2)),kb.Time('now'))
 
     >>> p1.get_ce([])
-    '(object (is-a Proposition)(subject [juan])(predicate Move 2)(time now))'
+    '(logical (object (is-a Proposition)(subject [juan])(predicate Move 2)(time now)))'
 
     >>> p2 = kb.Proposition(Hombre('X1'),Move(v=kb.Number('X2')),kb.Time('X3'))
 
     >>> p2.get_ce([])
-    '(object (is-a Proposition)(subject ?X1&:(superclassp Hombre (class ?X1))|:(eq Hombre (class ?X1)))(predicate Move ?X2)(time ?X3))'
+    '(logical (object (is-a Proposition)(subject ?X1&:(superclassp Hombre (class ?X1))|:(eq Hombre (class ?X1)))(predicate Move ?X2)(time ?X3)))'
 
 
     >>> p1.put_action()
@@ -147,7 +147,7 @@
     ...               kb.Proposition(kb.Thing('X1'), Move(v=kb.Number('+',kb.Number('X2'),kb.Number(1))), kb.Time('X4'))])
 
     >>> r1.put_action()
-    '(defrule r1 (object (is-a Proposition)(subject ?X1&:(superclassp Thing (class ?X1))|:(eq Thing (class ?X1)))(predicate Move ?X2)(time ?X3)) (object (is-a Proposition)(subject ?X1)(predicate Move ?X2)(time ?X4)) => (make-instance of Proposition (subject ?X1)(predicate Move (+ ?X2 1))(time ?X4)))'
+    '(defrule r1 (logical (object (is-a Proposition)(subject ?X1&:(superclassp Thing (class ?X1))|:(eq Thing (class ?X1)))(predicate Move ?X2)(time ?X3))) (logical (object (is-a Proposition)(subject ?X1)(predicate Move ?X2)(time ?X4))) => (make-instance of Proposition (subject ?X1)(predicate Move (+ ?X2 1))(time ?X4)))'
 
 
 
@@ -166,5 +166,5 @@
     ...              [kb.Proposition(kb.Thing('X1'), Move(v=kb.Number('+',kb.Number('X2'),kb.Number(1))), kb.Time('X4'))])
 
     >>> r2.put_action()
-    '(defrule r2 (object (is-a Proposition)(subject ?X1&:(superclassp Thing (class ?X1))|:(eq Thing (class ?X1)))(predicate Move ?X2)(time ?X3)) (object (is-a Proposition)(subject ?X1)(predicate Move ?X2)(time ?X4)) (test (> 1 (+ ?X2 ?X3))) => (make-instance of Proposition (subject ?X1)(predicate Move (+ ?X2 1))(time ?X4)))'
+    '(defrule r2 (logical (object (is-a Proposition)(subject ?X1&:(superclassp Thing (class ?X1))|:(eq Thing (class ?X1)))(predicate Move ?X2)(time ?X3))) (logical (object (is-a Proposition)(subject ?X1)(predicate Move ?X2)(time ?X4))) (test (> 1 (+ ?X2 ?X3))) => (make-instance of Proposition (subject ?X1)(predicate Move (+ ?X2 1))(time ?X4)))'
 

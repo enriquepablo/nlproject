@@ -164,13 +164,13 @@
 
     john pide editar el doc1
 
-    >>> prop1 = kb.Prop(john, Ask(action=edit,content=doc1), ahora)
-    >>> kb.tell(prop1)
+    >>> prop2 = kb.Prop(john, Ask(action=edit,content=doc1), ahora)
+    >>> kb.tell(prop2)
 
     bob pide editar el doc1
 
-    >>> prop1 = kb.Prop(bob, Ask(action=edit,content=doc1), ahora)
-    >>> kb.tell(prop1)
+    >>> prop3 = kb.Prop(bob, Ask(action=edit,content=doc1), ahora)
+    >>> kb.tell(prop3)
 
     Compilamos la base de datos.
 
@@ -215,6 +215,18 @@
     ¿edita bob doc1 ahora?
 
     >>> q1 = kb.Prop(bob,
+    ...              Do(action=edit,content=doc1),
+    ...              ahora)
+    >>> kb.ask(q1)
+    'no'
+
+    John no es owner de doc1
+
+    >>> kb.retract(prop1)
+
+    ¿edita john doc1 ahora?
+
+    >>> q1 = kb.Prop(john,
     ...              Do(action=edit,content=doc1),
     ...              ahora)
     >>> kb.ask(q1)

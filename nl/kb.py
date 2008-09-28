@@ -134,9 +134,9 @@ class Thing(_Name):
         """
         if varpat.match(self.value):
             vrs.append(self.value)
-            return '(object (is-a %s)(name ?%s))' % (self.__class__.__name__,
+            return '(logical (object (is-a %s)(name ?%s)))' % (self.__class__.__name__,
                                      self.value)
-        return '(object (is-a %s)(name %s))' % (self.__class__.__name__,
+        return '(logical (object (is-a %s)(name %s)))' % (self.__class__.__name__,
                                     self.value)
 
     def get_slot_constraint(self, vrs):
@@ -308,7 +308,7 @@ class Proposition(object):
         """
         if vrs is None:
             vrs = []
-        return '(object (is-a Proposition)(subject %s)(predicate %s)(time %s))' % (self.subject.get_slot_constraint(vrs),
+        return '(logical (object (is-a Proposition)(subject %s)(predicate %s)(time %s)))' % (self.subject.get_slot_constraint(vrs),
                                 self.predicate.get_slot_constraint(vrs),
                                 self.time.get_slot_constraint(vrs))
 
@@ -367,10 +367,7 @@ def tell(sentence):
     else:
         clips.Eval(s)
 
-def retract(sentence): # XXX logical
-    pass
-
-def ask(sentence):
+def get_instances(sentence):
     templs = []
     queries = []
     sentence.get_ism(templs, queries)
@@ -378,11 +375,15 @@ def ask(sentence):
         q = '(find-all-instances (%s) (and %s))' % (' '.join(templs), ' '.join(queries))
     else:
         q = '(find-all-instances (%s) %s)' % (' '.join(templs), queries and queries[0] or 'TRUE')
-    # f = open('clips', 'a')
-    # f.write(q+'\n')
-    # f.close()
-    # return q
-    clps = clips.Eval(q)
+    return clips.Eval(q)
+
+def retract(sentence):
+    for ins in get_instances(sentence):
+        clips.FindInstance(ins).Remove()
+
+
+def ask(sentence):
+    clps = get_instances(sentence)
     if clps:
         sens = []
         for ins in clps:
