@@ -12,6 +12,11 @@ varpat = re.compile(r'^X(\d+)$')
 # marker object
 _m = []
 
+# registry of subclasses
+_subclasses = {}
+def register(clsname, cls):
+    _subclasses[clsname] = cls
+
 
 class Number(object):
     """
@@ -63,6 +68,8 @@ class Number(object):
         """
         return self.put()
 
+register('Number', Number)
+
 
 class Arith(Number):
     """
@@ -83,6 +90,7 @@ class Arith(Number):
         arg2 =  self.arg2.put()
         queries.append('(%s %s %s)' % (self.value, arg1, arg2))
 
+register('Arith', Arith)
 
 
 class _Name(object):
@@ -98,10 +106,12 @@ class MetaThing(type):
     """
     When Name is extended, this adds 1 defclass to clips
     creating a subclass of Name.
+    And registers the class in _subclasses
     """
     def __init__(cls, classname, bases, newdict):
         super(MetaThing, cls).__init__(classname, bases, newdict)
         cls.clips_class = bases[0].clips_class.BuildSubclass(classname)
+        register(classname, cls)
 
 # XXX ponerle adjetivos a thing
 class Thing(_Name):
@@ -111,15 +121,12 @@ class Thing(_Name):
 
     @classmethod
     def from_clips(cls, instance):
-        return cls(instance.GetName())
+        inst = clips.FindInstance(instance)
+        cls = _subclasses[str(inst.Class.Name)]
+        return cls(str(inst))
 
-#     def get_isc(self, templs, queries):
-#         """
-#         get instance-set condition;
-#         return (instance-set templates, instance-set queries)
-#         """
-#         if varpat.match(self.value):
-#             templs.append('(?%s %s)' % (self.value, self.__class__.__name__))
+    def __str__(self):
+        return '%s is a %s' % (self.value, self.__class__.__name__)
 
     def get_ce(self, vrs):
         """
@@ -179,11 +186,22 @@ class Thing(_Name):
             templs.append('(?%s %s)' % (newvar, self.__class__.__name__))
             queries.append('(eq ?%s [%s])' % (newvar, self.value))
 
+register('Thing', Thing)
+
+
+class MetaState(type):
+    """
+    When State is extended, this registers the class in _subclasses
+    """
+    def __init__(cls, classname, bases, newdict):
+        super(MetaState, cls).__init__(classname, bases, newdict)
+        register(classname, cls)
 
 
 class State(object):
     """
     """
+    __metaclass__ = MetaState
 
     mods = {}
 
@@ -196,9 +214,13 @@ class State(object):
 
     @classmethod
     def from_clips(cls, instance):
+        clsname = str(instance[0])
+        instance = instance[1:]
+        cls = _subclasses[clsname]
         kwargs = {}
         for mod,mcls in cls.mods.items():
-            kwargs[mod] = '' # XXX
+            kwargs[mod] = mcls(str(instance[0]))
+            instance = instance[1:]
         return cls(**kwargs)
 
     def put(self):
@@ -232,7 +254,10 @@ class State(object):
 class Time(Number):
     """
     """
-    pass
+
+    @classmethod
+    def from_clips(cls, instance):
+        return Time(instance)
 
 
 class Proposition(object):
@@ -245,11 +270,23 @@ class Proposition(object):
         self.predicate = pred
         self.time = time
 
+    def __str__(self):
+        mods = []
+        for mod,cls in self.predicate.mods.items():
+            mods.append('%s=%s' % (mod, getattr(self.predicate, mod).value))
+        return '%s %s %s at %s' % (self.subject.value,
+                                   self.predicate.__class__.__name__,
+                                   mods,
+                                   self.time.value)
+
     @classmethod
     def from_clips(cls, instance):
-        s = Thing.from_clips(instance.GetSlot('subject'))
-        p = State.from_clips(instance.GetSlot('predicate'))
-        t = Time.from_clips(instance.GetSlot('time'))
+        s = clips.FindInstance(instance)
+        s = Thing.from_clips(s.GetSlot('subject'))
+        p = clips.FindInstance(instance)
+        p = State.from_clips(p.GetSlot('predicate'))
+        t = clips.FindInstance(instance)
+        t = Time.from_clips(t.GetSlot('time'))
         return Prop(s, p, t)
 
     def get_ism(self, templs, queries, newvar='prop'):
@@ -345,7 +382,17 @@ def ask(sentence):
     # f.write(q+'\n')
     # f.close()
     # return q
-    return clips.Eval(q)
+    clps = clips.Eval(q)
+    if clps:
+        sens = []
+        for ins in clps:
+            if isinstance(sentence, Thing):
+                sens.append(str(Thing.from_clips(ins)))
+            else:
+                sens.append(str(Proposition.from_clips(ins)))
+        return '\n'.join(sens)
+    else:
+        return 'no'
 
 def extend():
     return clips.Run()
