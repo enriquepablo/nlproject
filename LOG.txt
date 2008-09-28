@@ -45,3 +45,8 @@ números. pueden salir desnudos en ce's prop o atrib, en ce's aritméticas como 
 poner nombre a las reglas.
 
         return constraint # no se pueden poner operaciones en numeros en premisas, hay que pasarlo todo a arith preds.
+
+
+
+
+hay que instanciar los componentes de las prop primero, y tellarlos

@@ -175,105 +175,18 @@
     Compilamos la base de datos.
 
     >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
-
-    >>> kb.extend()
+    4
 
     ¿es cierto que remove es una action?
 
     >>> kb.ask(remove)
-    '(find-all-instances ((?Y6 Action)) (eq ?Y6:value remove))'
+    <Multifield [<InstanceName 'remove'>]>
 
     ¿es cierto que delete es una action?
 
     >>> remove.value = 'delete'
     >>> kb.ask(remove)
-    '(find-all-instances ((?Y7 Action)) (eq ?Y7:value delete))'
+    <Multifield []>
 
     ¿tiene bob permiso para ver doc1?
 
@@ -281,7 +194,7 @@
     ...              HasPermission(action=view,content=doc1),
     ...              ahora)
     >>> kb.ask(q1)
-    '(find-all-instances ((?Y8 Proposition) (?Y9 User) (?Y10 HasPermission) (?Y11 Action) (?Y12 Content)) (and (eq ?Y9:value bob) (eq ?Y8:subject ?Y9) (eq ?Y10:action ?Y11) (eq ?Y11:value view) (eq ?Y10:content ?Y12) (eq ?Y12:value doc1) (eq ?Y8:predicate ?Y10) (eq ?Y8:time 0)))'
+    <Multifield [<InstanceName 'gen10'>]>
 
     ¿tiene bob permiso para editar doc1?
 
@@ -289,7 +202,7 @@
     ...              HasPermission(action=edit,content=doc1),
     ...              ahora)
     >>> kb.ask(q1)
-    '(find-all-instances ((?Y13 Proposition) (?Y14 User) (?Y15 HasPermission) (?Y16 Action) (?Y17 Content)) (and (eq ?Y14:value bob) (eq ?Y13:subject ?Y14) (eq ?Y15:action ?Y16) (eq ?Y16:value edit) (eq ?Y15:content ?Y17) (eq ?Y17:value doc1) (eq ?Y13:predicate ?Y15) (eq ?Y13:time 0)))'
+    <Multifield []>
 
     ¿edita john doc1 ahora?
 
@@ -297,7 +210,7 @@
     ...              Do(action=edit,content=doc1),
     ...              ahora)
     >>> kb.ask(q1)
-    '(find-all-instances ((?Y18 Proposition) (?Y19 User) (?Y20 Do) (?Y21 Action) (?Y22 Content)) (and (eq ?Y19:value john) (eq ?Y18:subject ?Y19) (eq ?Y20:action ?Y21) (eq ?Y21:value edit) (eq ?Y20:content ?Y22) (eq ?Y22:value doc1) (eq ?Y18:predicate ?Y20) (eq ?Y18:time 0)))'
+    <Multifield [<InstanceName 'gen8'>]>
 
     ¿edita bob doc1 ahora?
 
@@ -305,7 +218,7 @@
     ...              Do(action=edit,content=doc1),
     ...              ahora)
     >>> kb.ask(q1)
-    '(find-all-instances ((?Y23 Proposition) (?Y24 User) (?Y25 Do) (?Y26 Action) (?Y27 Content)) (and (eq ?Y24:value bob) (eq ?Y23:subject ?Y24) (eq ?Y25:action ?Y26) (eq ?Y26:value edit) (eq ?Y25:content ?Y27) (eq ?Y27:value doc1) (eq ?Y23:predicate ?Y25) (eq ?Y23:time 0)))'
+    <Multifield []>
 
 
 

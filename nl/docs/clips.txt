@@ -5,47 +5,51 @@
     >>> x1 = kb.Number('X1')
     >>> mix = kb.Number('+', kb.Number(3), kb.Number('+', kb.Number('X1'), kb.Number(5)))
 
-    >>> dos.put({})
+    >>> dos.put()
     '2'
 
-    >>> suma.put({})
+    >>> suma.put()
     '(+ 3 (+ 2 5))'
 
-    >>> x1.put({})
+    >>> x1.put()
     '?X1'
 
-    >>> mix.put({})
+    >>> mix.put()
     '(+ 3 (+ ?X1 5))'
 
+    >>> dos.get_slot_constraint([])
+    '2'
 
+    >>> suma.get_slot_constraint([])
+    '(+ 3 (+ 2 5))'
+
+    >>> x1.get_slot_constraint([])
+    '?X1'
+
+    >>> mix.get_slot_constraint([])
+    '(+ 3 (+ ?X1 5))'
 
 
     >>> class Hombre(kb.Thing):pass
 
     >>> juan = Hombre('juan')
 
-    >>> juan.get_constraint({}, 'newvar')
-    '?newvar&:(eq (send ?newvar get-value) juan)'
+    >>> juan.get_slot_constraint([])
+    '[juan]'
 
-    >>> juan.get_ce({}, '')
-    '(object (is-a Hombre)(value juan))'
+    >>> juan.get_ce([])
+    '(object (is-a Hombre)(name juan))'
 
     >>> x1 = Hombre('X1')
 
-    >>> x1.get_constraint({}, 'newvar')
-    '?X1'
+    >>> x1.get_slot_constraint([])
+    '?X1&:(superclassp Hombre (class ?X1))|:(eq Hombre (class ?X1))'
 
-    >>> x1.get_ce({}, '')
-    '(object (is-a Hombre)(value ?X1))'
+    >>> x1.get_ce([])
+    '(object (is-a Hombre)(name ?X1))'
 
-    >>> x1.put({'X1':['X0', 'arg']})
-    '(make-instance of Hombre (value (send (send ?X0 get-arg) get-value)))'
-
-    >>> x1.put({'X1':['X0', 'arg']})
-    '(make-instance of Hombre (value (send (send ?X0 get-arg) get-value)))'
-
-
-
+    >>> x1.put_action()
+    '(make-instance ?X1 of Hombre)'
 
 
     >>> class Sitio(kb.Thing):pass
@@ -56,25 +60,21 @@
 
     >>> paya = Move(towards=Sitio('aya'))
 
-    >>> paya.get_constraint({}, 'newvar')
-    '?newvar&:(superclassp Move (class ?newvar))|:(eq Move (class ?newvar))&:(eq (send (send ?newvar get-towards) get-value) aya)'
+    >>> paya.get_slot_constraint([])
+    'Move [aya]'
 
-    >>> paya.put({})
-    '(make-instance of Move (towards (make-instance of Sitio (value aya))))'
+    >>> paya.put()
+    'Move [aya]'
 
 
     >>> x1=Move(towards=Sitio('X1'))
 
-    >>> x1.get_constraint({}, 'newvar')
-    '?newvar&:(superclassp Move (class ?newvar))|:(eq Move (class ?newvar))'
+    >>> x1.get_slot_constraint([])
+    'Move ?X1&:(superclassp Sitio (class ?X1))|:(eq Sitio (class ?X1))'
 
 
-    >>> x1.put({'X1': ['X0', 'arg']})
-    '(make-instance of Move (towards (make-instance of Sitio (value (send (send ?X0 get-arg) get-value)))))'
-
-
-    >>> x1.put({'X1': ['X0', 'value']})
-    '(make-instance of Move (towards (make-instance of Sitio (value (send ?X0 get-value)))))'
+    >>> x1.put()
+    'Move ?X1'
 
 
     >>> class Move(kb.State):
@@ -83,47 +83,41 @@
 
     >>> v1 = Move(v=kb.Number(2))
 
-    >>> v1.get_constraint({}, 'newvar')
-    '?newvar&:(superclassp Move (class ?newvar))|:(eq Move (class ?newvar))&:(eq (send ?newvar get-v) 2)'
+    >>> v1.get_slot_constraint([])
+    'Move 2'
 
-    >>> v1.put({})
-    '(make-instance of Move (v 2))'
+    >>> v1.put()
+    'Move 2'
 
     >>> x1 = Move(v=kb.Number('X1'))
 
 
-    >>> x1.get_constraint({'X1': ['X0', 'arg']}, 'newvar')
-    '?newvar&:(superclassp Move (class ?newvar))|:(eq Move (class ?newvar))&:(eq (send ?newvar get-v) (send ?X0 get-arg))'
+    >>> x1.get_slot_constraint(['X1'])
+    'Move ?X1'
 
 
-    >>> x1.put({'X1': ['X0', 'arg']})
-    '(make-instance of Move (v (send ?X0 get-arg)))'
-
-
-    >>> x1.put({'X1': ['X0', '']})
-    '(make-instance of Move (v ?X0))'
-
+    >>> x1.put()
+    'Move ?X1'
 
     >>> p1 = kb.Proposition(Hombre('juan'),Move(v=kb.Number(2)),kb.Time('now'))
 
-    >>> p1.get_ce({}, 'newvar')
-    '(object (is-a Proposition)(subject ?snewvar&:(eq (send ?snewvar get-value) juan))(predicate ?pnewvar&:(superclassp Move (class ?pnewvar))|:(eq Move (class ?pnewvar))&:(eq (send ?pnewvar get-v) 2))(time now))'
+    >>> p1.get_ce([])
+    '(object (is-a Proposition)(subject [juan])(predicate Move 2)(time now))'
 
     >>> p2 = kb.Proposition(Hombre('X1'),Move(v=kb.Number('X2')),kb.Time('X3'))
 
-    >>> p2.get_ce({}, 'newvar')
-    '(object (is-a Proposition)(subject ?X1)(predicate ?pnewvar&:(superclassp Move (class ?pnewvar))|:(eq Move (class ?pnewvar)))(time ?X3))'
+    >>> p2.get_ce([])
+    '(object (is-a Proposition)(subject ?X1&:(superclassp Hombre (class ?X1))|:(eq Hombre (class ?X1)))(predicate Move ?X2)(time ?X3))'
 
 
-    >>> p1.put({})
-    '(make-instance of Proposition (subject (make-instance of Hombre (value juan)))(predicate (make-instance of Move (v 2)))(time now))'
+    >>> p1.put_action()
+    '(make-instance of Proposition (subject [juan])(predicate Move 2)(time now))'
 
-    >>> p2.put({'X1':['X11', 'value'], 'X2':['X22', 'arg1'] ,'X3':['X33', 'vel']})
-    '(make-instance of Proposition (subject (make-instance of Hombre (value (send ?X11 get-value))))(predicate (make-instance of Move (v (send ?X22 get-arg1))))(time (send ?X33 get-vel)))'
+    >>> p2.put_action()
+    '(make-instance of Proposition (subject ?X1)(predicate Move ?X2)(time ?X3))'
 
-    >>> p2.put({'X1':['X11', 'arg'], 'X2':['X22', 'arg1'] ,'X3':['X33', 'vel']})
-    '(make-instance of Proposition (subject (make-instance of Hombre (value (send (send ?X11 get-arg) get-value))))(predicate (make-instance of Move (v (send ?X22 get-arg1))))(time (send ?X33 get-vel)))'
-
+    >>> p2.put_action()
+    '(make-instance of Proposition (subject ?X1)(predicate Move ?X2)(time ?X3))'
 
 
     >>> t1 = kb.Time(1)
@@ -134,18 +128,16 @@
 
     >>> t4 = kb.Time('now')
 
-    >>> t1.get_constraint({}, 'newvar')
+    >>> t1.get_slot_constraint([])
     '1'
 
-    >>> t2.get_constraint({}, 'newvar')
+    >>> t2.get_slot_constraint([])
     '?X1'
 
-    >>> t3.get_constraint({}, 'newvar')
-    Traceback (most recent call last):
-        ...
-    NlError: Can't use operators in premises; put operations as arithmetic predicates.
+    >>> t3.get_slot_constraint([])
+    '(+ ?X1 3)'
 
-    >>> t4.get_constraint({}, 'newvar')
+    >>> t4.get_slot_constraint([])
     'now'
 
 
@@ -154,27 +146,25 @@
     ...              , kb.Proposition(kb.Thing('X1'), Move(v=kb.Number('X2')), kb.Time('X4'))],[
     ...               kb.Proposition(kb.Thing('X1'), Move(v=kb.Number('+',kb.Number('X2'),kb.Number(1))), kb.Time('X4'))])
 
-    >>> r1.put()
-    '(defrule r1 (object (is-a Proposition)(subject ?X1)(predicate ?pr10&:(superclassp Move (class ?pr10))|:(eq Move (class ?pr10)))(time ?X3)) (object (is-a Proposition)(subject ?sr11&:(eq (send ?sr11 get-value) (send ?X1 get-value)))(predicate ?pr11&:(superclassp Move (class ?pr11))|:(eq Move (class ?pr11))&:(eq (send ?pr11 get-v) (send ?pr10 get-v)))(time ?X4)) => (make-instance of Proposition (subject (make-instance of Thing (value (send ?X1 get-value))))(predicate (make-instance of Move (v (+ (send ?pr10 get-v) 1))))(time ?X4)))'
+    >>> r1.put_action()
+    '(defrule r1 (object (is-a Proposition)(subject ?X1&:(superclassp Thing (class ?X1))|:(eq Thing (class ?X1)))(predicate Move ?X2)(time ?X3)) (object (is-a Proposition)(subject ?X1)(predicate Move ?X2)(time ?X4)) => (make-instance of Proposition (subject ?X1)(predicate Move (+ ?X2 1))(time ?X4)))'
 
 
 
     >>> a1 = kb.Arith('>', kb.Number(1), kb.Number('+', kb.Number('X1'), kb.Number(3)))
 
-    >>> a1.get_ce({'X1':['X0', '']}, 'newvar')
-    '(test (> 1 (+ ?X0 3)))'
+    >>> a1.get_ce(['X1'])
+    '(test (> 1 (+ ?X1 3)))'
 
-    >>> a1.get_ce({'X1':['X0', 'var']}, 'newvar')
-    '(test (> 1 (+ (send ?X0 get-var) 3)))'
+    >>> a1.get_ce(['X1'])
+    '(test (> 1 (+ ?X1 3)))'
+
+
     >>> r2 = kb.Rule('r2',[kb.Proposition(kb.Thing('X1'), Move(v=kb.Number('X2')), kb.Time('X3')),
     ...              kb.Proposition(kb.Thing('X1'), Move(v=kb.Number('X2')), kb.Time('X4')),
     ...              kb.Arith('>', kb.Number(1), kb.Number('+', kb.Number('X2'), kb.Number('X3')))],
     ...              [kb.Proposition(kb.Thing('X1'), Move(v=kb.Number('+',kb.Number('X2'),kb.Number(1))), kb.Time('X4'))])
 
-    >>> r2.put()
-    '(defrule r2 (object (is-a Proposition)(subject ?X1)(predicate ?pr20&:(superclassp Move (class ?pr20))|:(eq Move (class ?pr20)))(time ?X3)) (object (is-a Proposition)(subject ?sr21&:(eq (send ?sr21 get-value) (send ?X1 get-value)))(predicate ?pr21&:(superclassp Move (class ?pr21))|:(eq Move (class ?pr21))&:(eq (send ?pr21 get-v) (send ?pr20 get-v)))(time ?X4)) (test (> 1 (+ (send ?pr20 get-v) ?X3))) => (make-instance of Proposition (subject (make-instance of Thing (value (send ?X1 get-value))))(predicate (make-instance of Move (v (+ (send ?pr20 get-v) 1))))(time ?X4)))'
-
-    >>> r2.put_ism()
-    '(do-for-all-instances ((?Y0 Proposition) (?Y1 Thing) (?Y2 Move) (?Y3 Proposition) (?Y4 Thing) (?Y5 Move)) (and (eq ?Y0:subject ?Y1) (eq ?Y2:v ?X2) (eq ?Y0:predicate ?Y2) (eq ?Y0:time ?X3) (eq ?Y1:value ?Y4:value) (eq ?Y3:subject ?Y4) (eq ?Y5:v ?X2) (eq ?Y3:predicate ?Y5) (eq ?Y3:time ?X4) (> 1 (+ ?X2 ?X3))) (make-instance of Proposition (subject (make-instance of Thing (value (send ?Y1 get-value))))(predicate (make-instance of Move (v (+ ?X2 1))))(time ?X4)))'
-
+    >>> r2.put_action()
+    '(defrule r2 (object (is-a Proposition)(subject ?X1&:(superclassp Thing (class ?X1))|:(eq Thing (class ?X1)))(predicate Move ?X2)(time ?X3)) (object (is-a Proposition)(subject ?X1)(predicate Move ?X2)(time ?X4)) (test (> 1 (+ ?X2 ?X3))) => (make-instance of Proposition (subject ?X1)(predicate Move (+ ?X2 1))(time ?X4)))'
 
