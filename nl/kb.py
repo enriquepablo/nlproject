@@ -246,7 +246,7 @@ class State(object):
         for mod,mcls in self.mods.items():
             m = getattr(self, mod)
             mods.append(m.get_isc(templs, queries))
-        return ' '.join(mods)
+        return mods
 
 
 
@@ -298,8 +298,12 @@ class Proposition(object):
         s = self.subject.get_isc(templs, queries)
         queries.append('(eq ?%s:subject %s)' % (newvar, s))
         p = self.predicate.get_isc(templs, queries)
-        queries.append('(eq ?%s:predicate (create$ %s))' % (newvar, p))
-        queries.append('(eq ?%s:time %s)' % (newvar, self.time.get_isc(templs, queries)))
+        for n,t in enumerate(p):
+            if not varpat.match(t[1:]):
+                queries.append('(eq (nth$ %d ?%s:predicate) %s)' % (n+1, newvar, t))
+        t = self.time.get_isc(templs, queries)
+        if not varpat.match(t):
+            queries.append('(eq ?%s:time %s)' % (newvar, self.time.get_isc(templs, queries)))
         return newvar
 
     def get_ce(self, vrs=None):
@@ -366,6 +370,16 @@ def tell(sentence):
         clips.Build(s)
     else:
         clips.Eval(s)
+
+def get_instancesn(sentence):
+    templs = []
+    queries = []
+    sentence.get_ism(templs, queries)
+    if len(queries) > 1:
+        q = '(find-all-instances (%s) (and %s))' % (' '.join(templs), ' '.join(queries))
+    else:
+        q = '(find-all-instances (%s) %s)' % (' '.join(templs), queries and queries[0] or 'TRUE')
+    return q
 
 def get_instances(sentence):
     templs = []
