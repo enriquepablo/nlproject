@@ -302,7 +302,7 @@ class Proposition(object):
             if not varpat.match(t[1:]):
                 queries.append('(eq (nth$ %d ?%s:predicate) %s)' % (n+1, newvar, t))
         t = self.time.get_isc(templs, queries)
-        if not varpat.match(t):
+        if not varpat.match(t[1:]):
             queries.append('(eq ?%s:time %s)' % (newvar, self.time.get_isc(templs, queries)))
         return newvar
 
@@ -405,7 +405,7 @@ def ask(sentence):
                 sens.append(str(Thing.from_clips(ins)))
             else:
                 sens.append(str(Proposition.from_clips(ins)))
-        return '\n'.join(sens)
+        return "\n".join(sens)
     else:
         return 'no'
 
