@@ -17,6 +17,28 @@ _subclasses = {}
 def register(clsname, cls):
     _subclasses[clsname] = cls
 
+def parens(expr):
+    if expr[0] != '(':
+        return expr
+    depth = 0
+    term = ''
+    terms = []
+    for c in expr:
+        if depth == 1 and c == ' ':
+            terms.append(term)
+            term = ''
+        elif c == '(':
+            depth += 1
+            if depth > 1:
+                term += c
+        elif c == ')':
+            depth -= 1
+            if depth > 0:
+                term += c
+        else:
+            term += c
+    terms.append(term)
+    return terms
 
 class Number(object):
     """
@@ -38,9 +60,15 @@ class Number(object):
         try:
             self.value = str(int(value))
         except ValueError:
-            self.value = value
-            self.arg1 = arg1
-            self.arg2 = arg2
+            if value[0] == '(':
+                args = parens(value)
+                self.value = args[0]
+                self.arg1 = Number(args[1])
+                self.arg2 = Number(args[2])
+            else:
+                self.value = value
+                self.arg1 = arg1
+                self.arg2 = arg2
 
 
     def get_slot_constraint(self, vrs):
@@ -76,9 +104,15 @@ class Arith(Number):
     Arithmetic predicate
     """
     def __init__(self, value, arg1='', arg2=''):
-        self.value = value
-        self.arg1 = arg1
-        self.arg2 = arg2
+        if value[0] == '(':
+            args = parens(value)
+            self.value = args[0]
+            self.arg1 = Number(args[1])
+            self.arg2 = Number(args[2])
+        else:
+            self.value = value
+            self.arg1 = arg1
+            self.arg2 = arg2
 
     def get_ce(self, vrs):
         arg1 = self.arg1.put()

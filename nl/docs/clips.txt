@@ -29,6 +29,25 @@
     >>> mix.get_slot_constraint([])
     '(+ 3 (+ ?X1 5))'
 
+    >>> nu = kb.Number('(+ (* 2 (- 4 2)) (/ 10 2))')
+
+    >>> nu.value
+    '+'
+
+    >>> nu.arg1
+    <nl.kb.Number object at ...>
+
+    >>> nu.arg1.value
+    '*'
+
+    >>> nu.arg1.arg1
+    <nl.kb.Number object at ...>
+
+    >>> nu.arg1.arg1.value
+    '2'
+
+    >>> nu.arg2.arg1.value
+    '10'
 
     >>> class Hombre(kb.Thing):pass
 
