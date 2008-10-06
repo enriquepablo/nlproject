@@ -241,8 +241,11 @@ class State(object):
 
     def __init__(self, **kwargs):
         for mod,cls in self.mods.items():
-            if kwargs.get(mod, _m) is not _m and isinstance(kwargs[mod], cls):
-                setattr(self, mod, kwargs[mod])
+            if kwargs.get(mod, _m) is not _m:
+                if isinstance(kwargs[mod], cls):
+                    setattr(self, mod, kwargs[mod])
+                else:
+                    setattr(self, mod, cls(kwargs[mod]))
             else:
                 raise NlError("wrong modifier for verb")
 
@@ -302,7 +305,7 @@ class Proposition(object):
     def __init__(self, subj, pred, time):
         self.subject = subj
         self.predicate = pred
-        self.time = time
+        self.time = isinstance(time, Number) and time or Time(time)
 
     def __str__(self):
         mods = []

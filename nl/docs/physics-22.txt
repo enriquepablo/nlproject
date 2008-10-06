@@ -81,13 +81,13 @@
     >>> # 'si en un segundo un cuerpo tiene velocidad v y aceleracion a, en el siguiente segundo tiene velocidad v+a.'
     
     >>> r3 = kb.Rule('r3', [
-    ...            kb.Prop(Cuerpo('X1'), TieneVelocidad(mps=kb.Number('X2')), kb.Number('X4')),
-    ...            kb.Prop(Cuerpo('X1'), TieneAceleracion(mps2=kb.Number('X3')), kb.Number('X4')),
-    ...            kb.Arith('<', kb.Number('X4'), kb.Number(100))
+    ...            kb.Prop(Cuerpo('X1'), TieneVelocidad(mps='X2'), 'X4'),
+    ...            kb.Prop(Cuerpo('X1'), TieneAceleracion(mps2='X3'), 'X4'),
+    ...            kb.Arith('(< X4 100)')
     ...           ],
-    ...          [
-    ...            kb.Prop(Cuerpo('X1'), TieneVelocidad(mps=kb.Number('+', arg1=kb.Number('X2'), arg2=kb.Number('X3'))), kb.Number('+', arg1=kb.Number('X4'), arg2=kb.Number(1)))
-    ...      ])
+    ...           [
+    ...            kb.Prop(Cuerpo('X1'), TieneVelocidad(mps='(+ X2 X3)'), '(+ X4 1)')
+    ...           ])
     
     
     >>> # 'sufre fuerza' es un verbo que se aplica sobre 'cuerpo' y que tiene un adv numerico 'newton'.
