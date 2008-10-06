@@ -34,20 +34,17 @@
     >>> nu.value
     '+'
 
-    >>> nu.arg1
-    <nl.kb.Number object at ...>
-
     >>> nu.arg1.value
     '*'
-
-    >>> nu.arg1.arg1
-    <nl.kb.Number object at ...>
 
     >>> nu.arg1.arg1.value
     '2'
 
     >>> nu.arg2.arg1.value
     '10'
+
+    >>> nu.get_slot_constraint([])
+    '(+ (* 2 (- 4 2)) (/ 10 2))'
 
     >>> class Hombre(kb.Thing):pass
 
