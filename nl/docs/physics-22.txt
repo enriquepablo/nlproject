@@ -22,107 +22,107 @@
 
 
     
-    >>> from nl import kb
+    >>> from nl import kb, Number, Arith, Thing, State, Prop, Rule
     
     'cuerpo' es un nombre común
     
-    >>> class Cuerpo(kb.Thing): pass
+    >>> class Cuerpo(Thing): pass
     
     'tiene_masa' es un verbo que se aplica sobre 'cuerpo' y tiene un modificador numérico 'gramos'.
     
-    >>> class TieneMasa(kb.State):
-    ...     mods = {'kgs': kb.Number}
+    >>> class TieneMasa(State):
+    ...     mods = {'kgs': Number}
     
     'tiene_posicion' es un verbo que se aplica sobre 'cuerpo' y tiene un modificador numérico 'metros'.
     
-    >>> class TienePosicion(kb.State):
-    ...     mods = {'metros': kb.Number}
+    >>> class TienePosicion(State):
+    ...     mods = {'metros': Number}
     
     'esta_a_distancia' es un verbo que se aplica sobre 'cuerpo' y que tiene, un objeto 'otro' de tipo cuerpo y una magnitud numerica 'metros'.
     
-    >>> class EstaADistancia(kb.State):
-    ...     mods = {'metros': kb.Number, 'otro': Cuerpo}
+    >>> class EstaADistancia(State):
+    ...     mods = {'metros': Number, 'otro': Cuerpo}
     
     'si un cuerpo tiene_posicion pos1 y otro cuerpo tiene_posicion pos2, el primero está a una distancia de pos1 - pos2 del segundo'
     
-    >>> r1 = kb.Rule('r1', [
-    ...                kb.Prop(Cuerpo('X1'), TienePosicion(metros='X2'), 'X4'),
-    ...                kb.Prop(Cuerpo('X3'), TienePosicion(metros='X5'), 'X4'),
-    ...                kb.Arith('(< X4 100)'),
-    ...                kb.Arith('(neq X2 X5)')
+    >>> r1 = Rule('r1', [
+    ...                Prop(Cuerpo('X1'), TienePosicion(metros='X2'), 'X4'),
+    ...                Prop(Cuerpo('X3'), TienePosicion(metros='X5'), 'X4'),
+    ...                Arith('(< X4 100)'),
+    ...                Arith('(neq X2 X5)')
     ...                ], [
-    ...                kb.Prop(Cuerpo('X1'), EstaADistancia(metros='(- X2 X5)', otro=Cuerpo('X3')), 'X4')
+    ...                Prop(Cuerpo('X1'), EstaADistancia(metros='(- X2 X5)', otro=Cuerpo('X3')), 'X4')
     ...                ])
     
     'tiene velocidad' es un verbo que se aplica sobre 'cuerpo' y que tiene un adv numerico 'metros/seg'.
     
     
-    >>> class TieneVelocidad(kb.State):
-    ...     mods = {'mps': kb.Number}
+    >>> class TieneVelocidad(State):
+    ...     mods = {'mps': Number}
     
     'si en un segundo un cuerpo tiene pos x y velocidad v, en el siguiente segundo tiene pos x+v.'
     
     
-    >>> r2 = kb.Rule('r2', [
-    ...            kb.Prop(Cuerpo('X1'), TienePosicion(metros='X2'), 'X4'),
-    ...            kb.Prop(Cuerpo('X1'), TieneVelocidad(mps='X3'), 'X4'),
-    ...            kb.Arith('(< X4 100)')
+    >>> r2 = Rule('r2', [
+    ...            Prop(Cuerpo('X1'), TienePosicion(metros='X2'), 'X4'),
+    ...            Prop(Cuerpo('X1'), TieneVelocidad(mps='X3'), 'X4'),
+    ...            Arith('(< X4 100)')
     ...            ], [
-    ...            kb.Prop(Cuerpo('X1'), TienePosicion(metros='(+ X2 X3)'), '(+ X4 1)')
+    ...            Prop(Cuerpo('X1'), TienePosicion(metros='(+ X2 X3)'), '(+ X4 1)')
     ...            ])
     
     'tiene aceleración' es un verbo que se aplica sobre 'cuerpo' y que tiene un adv numerico 'metros/seg2'.
     
-    >>> class TieneAceleracion(kb.State):
-    ...     mods = {'mps2': kb.Number}
+    >>> class TieneAceleracion(State):
+    ...     mods = {'mps2': Number}
     
     'si en un segundo un cuerpo tiene velocidad v y aceleracion a, en el siguiente segundo tiene velocidad v+a.'
     
-    >>> r3 = kb.Rule('r3', [
-    ...            kb.Prop(Cuerpo('X1'), TieneVelocidad(mps='X2'), 'X4'),
-    ...            kb.Prop(Cuerpo('X1'), TieneAceleracion(mps2='X3'), 'X4'),
-    ...            kb.Arith('(< X4 100)')
+    >>> r3 = Rule('r3', [
+    ...            Prop(Cuerpo('X1'), TieneVelocidad(mps='X2'), 'X4'),
+    ...            Prop(Cuerpo('X1'), TieneAceleracion(mps2='X3'), 'X4'),
+    ...            Arith('(< X4 100)')
     ...            ], [
-    ...            kb.Prop(Cuerpo('X1'), TieneVelocidad(mps='(+ X2 X3)'), '(+ X4 1)')
+    ...            Prop(Cuerpo('X1'), TieneVelocidad(mps='(+ X2 X3)'), '(+ X4 1)')
     ...            ])
     
     
     'sufre fuerza' es un verbo que se aplica sobre 'cuerpo' y que tiene un adv numerico 'newton'.
     
-    >>> class SufreFuerza(kb.State):
-    ...     mods = {'newton': kb.Number}
+    >>> class SufreFuerza(State):
+    ...     mods = {'newton': Number}
     ...
     
     'si en un segundo un cuerpo tiene aceleracion a y sufre una furerza f, en el siguiente segundo tiene aceleración (f/m)**1/2.'
     
     
-    >>> r4 = kb.Rule('r4', [
-    ...            kb.Prop(Cuerpo('X1'), SufreFuerza(newton='X2'), 'X4'),
-    ...            kb.Prop(Cuerpo('X1'), TieneAceleracion(mps2='X3'), 'X4'),
-    ...            kb.Prop(Cuerpo('X1'), TieneMasa(kgs=kb.Number('X5')), kb.Number('X4')),
-    ...            kb.Arith('<', kb.Number('X4'), kb.Number(100))
+    >>> r4 = Rule('r4', [
+    ...            Prop(Cuerpo('X1'), SufreFuerza(newton='X2'), 'X4'),
+    ...            Prop(Cuerpo('X1'), TieneAceleracion(mps2='X3'), 'X4'),
+    ...            Prop(Cuerpo('X1'), TieneMasa(kgs=Number('X5')), Number('X4')),
+    ...            Arith('<', Number('X4'), Number(100))
     ...            ], [
-    ...            kb.Prop(Cuerpo('X1'), TieneAceleracion(mps2='(+ X3 (** (/ X2 X5) (/ 1 2)))'), '(+ X4 1)')
+    ...            Prop(Cuerpo('X1'), TieneAceleracion(mps2='(+ X3 (** (/ X2 X5) (/ 1 2)))'), '(+ X4 1)')
     ...            ])
     
     'si un cuerpo está a una distancia de otro, sufre fuerza inversa al cuadrado de esa distancia, y proporcional a sus masas.'
     
-    >>> r5 = kb.Rule('r5', [
-    ...            kb.Prop(Cuerpo('X1'), EstaADistancia(metros='X2', otro=Cuerpo('X3')), 'X4'),
-    ...            kb.Prop(Cuerpo('X1'), TieneMasa(kgs='X5'), 'X4'),
-    ...            kb.Prop(Cuerpo('X3'), TieneMasa(kgs='X6'), 'X4'),
-    ...            kb.Arith('<', kb.Number('X4'), kb.Number(100))
+    >>> r5 = Rule('r5', [
+    ...            Prop(Cuerpo('X1'), EstaADistancia(metros='X2', otro=Cuerpo('X3')), 'X4'),
+    ...            Prop(Cuerpo('X1'), TieneMasa(kgs='X5'), 'X4'),
+    ...            Prop(Cuerpo('X3'), TieneMasa(kgs='X6'), 'X4'),
+    ...            Arith('<', Number('X4'), Number(100))
     ...           ],
-    ...          [                                                                                                  kb.Prop(Cuerpo('X1'), SufreFuerza(newton='(/ (* X5 X6) (** X2 2))'), '(+ X4 1)')])
+    ...          [                                                                                                  Prop(Cuerpo('X1'), SufreFuerza(newton='(/ (* X5 X6) (** X2 2))'), '(+ X4 1)')])
     
     'si un cuerpo tiene masa m, seguirá teniendo masa m'
     
-    >>> r6 = kb.Rule('r6', [
-    ...            kb.Prop(Cuerpo('X1'), TieneMasa(kgs='X2'), 'X3'),
-    ...            kb.Arith('(< X3 100)')
+    >>> r6 = Rule('r6', [
+    ...            Prop(Cuerpo('X1'), TieneMasa(kgs='X2'), 'X3'),
+    ...            Arith('(< X3 100)')
     ...            ],
     ...            [
-    ...            kb.Prop(Cuerpo('X1'), TieneMasa(kgs='X2'), '(+ X3 1)')
+    ...            Prop(Cuerpo('X1'), TieneMasa(kgs='X2'), '(+ X3 1)')
     ...            ])
     
     c1 es un cuerpo
@@ -133,25 +133,25 @@
     
     >>> c2 = Cuerpo('c2')
     
-    >>> p1 = kb.Prop(c1, TieneMasa(kgs=kb.Number(100)), kb.Number(1))
+    >>> p1 = Prop(c1, TieneMasa(kgs=Number(100)), Number(1))
     
-    >>> p2 = kb.Prop(c2, TieneMasa(kgs=kb.Number(50)), kb.Number(1))
+    >>> p2 = Prop(c2, TieneMasa(kgs=Number(50)), Number(1))
     
-    >>> p3 = kb.Prop(c1, TienePosicion(metros=kb.Number(5)), kb.Number(1))
+    >>> p3 = Prop(c1, TienePosicion(metros=Number(5)), Number(1))
     
-    >>> p4 = kb.Prop(c2, TienePosicion(metros=kb.Number(10)), kb.Number(1))
+    >>> p4 = Prop(c2, TienePosicion(metros=Number(10)), Number(1))
     
-    >>> p5 = kb.Prop(c1, TieneVelocidad(mps=kb.Number(1)), kb.Number(1))
+    >>> p5 = Prop(c1, TieneVelocidad(mps=Number(1)), Number(1))
     
-    >>> p6 = kb.Prop(c2, TieneVelocidad(mps=kb.Number(1)), kb.Number(1))
+    >>> p6 = Prop(c2, TieneVelocidad(mps=Number(1)), Number(1))
     
-    >>> p7 = kb.Prop(c1, TieneAceleracion(mps2=kb.Number(0)), kb.Number(1))
+    >>> p7 = Prop(c1, TieneAceleracion(mps2=Number(0)), Number(1))
     
-    >>> p8 = kb.Prop(c2, TieneAceleracion(mps2=kb.Number(0)), kb.Number(1))
+    >>> p8 = Prop(c2, TieneAceleracion(mps2=Number(0)), Number(1))
     
-    >>> p9 = kb.Prop(c1, SufreFuerza(newton=kb.Number(0)), kb.Number(1))
+    >>> p9 = Prop(c1, SufreFuerza(newton=Number(0)), Number(1))
     
-    >>> p10 = kb.Prop(c2, SufreFuerza(newton=kb.Number(0)), kb.Number(1))
+    >>> p10 = Prop(c2, SufreFuerza(newton=Number(0)), Number(1))
     
     >>> kb.tell(r1)
 
@@ -192,53 +192,53 @@
     >>> kb.extend()
     1188
    
-    >>> kb.ask(kb.Prop(c1, TienePosicion(metros=kb.Number(5)), kb.Number(1)))
+    >>> kb.ask(Prop(c1, TienePosicion(metros=Number(5)), Number(1)))
     "c1 TienePosicion ['metros=5'] at 1"
     
-    >>> kb.ask(kb.Prop(c1, TienePosicion(metros=kb.Number('X1')), kb.Number(2)))
+    >>> kb.ask(Prop(c1, TienePosicion(metros=Number('X1')), Number(2)))
     "c1 TienePosicion ['metros=6'] at 2"
     
-    >>> kb.ask(kb.Prop(c2, TienePosicion(metros=kb.Number('X1')), kb.Number(2)))
+    >>> kb.ask(Prop(c2, TienePosicion(metros=Number('X1')), Number(2)))
     "c2 TienePosicion ['metros=11'] at 2"
 
-    kb.get_instancesn(kb.Prop(c1, TienePosicion(metros=kb.Number(6)), kb.Number(2)))
+    kb.get_instancesn(Prop(c1, TienePosicion(metros=Number(6)), Number(2)))
 
-    kb.get_instancesn(kb.Prop(c1, TienePosicion(metros=kb.Number('X1')), kb.Number(2)))
+    kb.get_instancesn(Prop(c1, TienePosicion(metros=Number('X1')), Number(2)))
     
-    >>> kb.ask(kb.Prop(c1, TieneVelocidad(mps=kb.Number(1)), kb.Number(2)))
+    >>> kb.ask(Prop(c1, TieneVelocidad(mps=Number(1)), Number(2)))
     "c1 TieneVelocidad ['mps=1'] at 2"
     
-    >>> kb.ask(kb.Prop(c1, TienePosicion(metros=kb.Number(7)), kb.Number(3)))
+    >>> kb.ask(Prop(c1, TienePosicion(metros=Number(7)), Number(3)))
     "c1 TienePosicion ['metros=7'] at 3"
     
-    >>> kb.ask(kb.Prop(c2, TieneMasa(kgs=kb.Number(50)), kb.Number(9)))
+    >>> kb.ask(Prop(c2, TieneMasa(kgs=Number(50)), Number(9)))
     "c2 TieneMasa ['kgs=50'] at 9"
     
-    >>> kb.ask(kb.Prop(c2, TieneMasa(kgs=kb.Number(50)), kb.Number(99)))
+    >>> kb.ask(Prop(c2, TieneMasa(kgs=Number(50)), Number(99)))
     "c2 TieneMasa ['kgs=50'] at 99"
     
-    >>> kb.ask(kb.Prop(c1, SufreFuerza(newton=kb.Number('X1')), kb.Number(1)))
+    >>> kb.ask(Prop(c1, SufreFuerza(newton=Number('X1')), Number(1)))
     "c1 SufreFuerza ['newton=0'] at 1"
     
-    >>> kb.ask(kb.Prop(c1, EstaADistancia(metros='X1', otro=c2), 19))
+    >>> kb.ask(Prop(c1, EstaADistancia(metros='X1', otro=c2), 19))
     "c1 EstaADistancia ['otro=c2', 'metros=-317.169040648'] at 19"
     
-    >>> kb.ask(kb.Prop(c2, EstaADistancia(metros='X1', otro=c1), 19))
+    >>> kb.ask(Prop(c2, EstaADistancia(metros='X1', otro=c1), 19))
     "c2 EstaADistancia ['otro=c1', 'metros=317.169040648'] at 19"
     
-    >>> kb.ask(kb.Prop(c1, EstaADistancia(metros=kb.Number('X1'), otro=c2), kb.Number(99)))
+    >>> kb.ask(Prop(c1, EstaADistancia(metros=Number('X1'), otro=c2), Number(99)))
     "c1 EstaADistancia ['otro=c2', 'metros=-17628.3499113'] at 99"
     
-    >>> kb.ask(kb.Prop(c1, SufreFuerza(newton=kb.Number('X1')), kb.Number(99)))
+    >>> kb.ask(Prop(c1, SufreFuerza(newton=Number('X1')), Number(99)))
     "c1 SufreFuerza ['newton=1.681150856e-05'] at 99"
     
-    >>> kb.ask(kb.Prop(c1, TieneAceleracion(mps2=kb.Number('X1')), kb.Number(99)))
+    >>> kb.ask(Prop(c1, TieneAceleracion(mps2=Number('X1')), Number(99)))
     "c1 TieneAceleracion ['mps2=10.1847704426'] at 99"
     
-    >>> kb.ask(kb.Prop(c1, TieneAceleracion(mps2=kb.Number('X1')), kb.Number('X2')))
+    >>> kb.ask(Prop(c1, TieneAceleracion(mps2=Number('X1')), Number('X2')))
     "c1 TieneAceleracion ['mps2=0'] at 1\nc1 TieneAceleracion ['mps2=0.0'] at 2\nc1 TieneAceleracion ['mps2=1.41421356237'] at 3\nc1 TieneAceleracion ['mps2=2.82842712475'] at 4\nc1 TieneAceleracion ['mps2=4.24264068712'] at 5\nc1 TieneAceleracion ['mps2=5.65685424949'] at 6\nc1 TieneAceleracion ['mps2=6.92275796615'] at 7\nc1 TieneAceleracion ['mps2=7.8857060067'] at 8\nc1 TieneAceleracion ['mps2=8.53694528975'] at 9\nc1 TieneAceleracion ['mps2=8.95996410732'] at 10\nc1 TieneAceleracion ['mps2=9.23790294076'] at 11\nc1 TieneAceleracion ['mps2=9.42680313552'] at 12\nc1 TieneAceleracion ['mps2=9.56031857811'] at 13\nc1 TieneAceleracion ['mps2=9.65825599257'] at 14\nc1 TieneAceleracion ['mps2=9.7324808348'] at 15\nc1 TieneAceleracion ['mps2=9.79032856297'] at 16\nc1 TieneAceleracion ['mps2=9.83649452737'] at 17\nc1 TieneAceleracion ['mps2=9.87408715194'] at 18\nc1 TieneAceleracion ['mps2=9.90522906865'] at 19\nc1 TieneAceleracion ['mps2=9.93141073605'] at 20\nc1 TieneAceleracion ['mps2=9.95370505519'] at 21\nc1 TieneAceleracion ['mps2=9.97290160362'] at 22\nc1 TieneAceleracion ['mps2=9.98959298604'] at 23\nc1 TieneAceleracion ['mps2=10.0042318353'] at 24\nc1 TieneAceleracion ['mps2=10.0171693361'] at 25\nc1 TieneAceleracion ['mps2=10.0286818264'] at 26\nc1 TieneAceleracion ['mps2=10.0389895261'] at 27\nc1 TieneAceleracion ['mps2=10.0482699614'] at 28\nc1 TieneAceleracion ['mps2=10.0566677429'] at 29\nc1 TieneAceleracion ['mps2=10.0643017947'] at 30\nc1 TieneAceleracion ['mps2=10.071270772'] at 31\nc1 TieneAceleracion ['mps2=10.0776571723'] at 32\nc1 TieneAceleracion ['mps2=10.083530491'] at 33\nc1 TieneAceleracion ['mps2=10.0889496699'] at 34\nc1 TieneAceleracion ['mps2=10.0939650149'] at 35\nc1 TieneAceleracion ['mps2=10.0986197134'] at 36\nc1 TieneAceleracion ['mps2=10.1029510432'] at 37\nc1 TieneAceleracion ['mps2=10.106991345'] at 38\nc1 TieneAceleracion ['mps2=10.1107688095'] at 39\nc1 TieneAceleracion ['mps2=10.1143081191'] at 40\nc1 TieneAceleracion ['mps2=10.1176309751'] at 41\nc1 TieneAceleracion ['mps2=10.1207565323'] at 42\nc1 TieneAceleracion ['mps2=10.1237017608'] at 43\nc1 TieneAceleracion ['mps2=10.1264817471'] at 44\nc1 TieneAceleracion ['mps2=10.1291099478'] at 45\nc1 TieneAceleracion ['mps2=10.1315984029'] at 46\nc1 TieneAceleracion ['mps2=10.1339579169'] at 47\nc1 TieneAceleracion ['mps2=10.1361982127'] at 48\nc1 TieneAceleracion ['mps2=10.1383280632'] at 49\nc1 TieneAceleracion ['mps2=10.1403554044'] at 50\nc1 TieneAceleracion ['mps2=10.1422874322'] at 51\nc1 TieneAceleracion ['mps2=10.1441306867'] at 52\nc1 TieneAceleracion ['mps2=10.145891125'] at 53\nc1 TieneAceleracion ['mps2=10.1475741846'] at 54\nc1 TieneAceleracion ['mps2=10.1491848386'] at 55\nc1 TieneAceleracion ['mps2=10.1507276441'] at 56\nc1 TieneAceleracion ['mps2=10.1522067848'] at 57\nc1 TieneAceleracion ['mps2=10.1536261083'] at 58\nc1 TieneAceleracion ['mps2=10.1549891592'] at 59\nc1 TieneAceleracion ['mps2=10.1562992082'] at 60\nc1 TieneAceleracion ['mps2=10.1575592779'] at 61\nc1 TieneAceleracion ['mps2=10.1587721661'] at 62\nc1 TieneAceleracion ['mps2=10.1599404661'] at 63\nc1 TieneAceleracion ['mps2=10.1610665848'] at 64\nc1 TieneAceleracion ['mps2=10.1621527597'] at 65\nc1 TieneAceleracion ['mps2=10.1632010729'] at 66\nc1 TieneAceleracion ['mps2=10.1642134647'] at 67\nc1 TieneAceleracion ['mps2=10.1651917454'] at 68\nc1 TieneAceleracion ['mps2=10.1661376057'] at 69\nc1 TieneAceleracion ['mps2=10.1670526268'] at 70\nc1 TieneAceleracion ['mps2=10.167938289'] at 71\nc1 TieneAceleracion ['mps2=10.1687959795'] at 72\nc1 TieneAceleracion ['mps2=10.1696269994'] at 73\nc1 TieneAceleracion ['mps2=10.1704325708'] at 74\nc1 TieneAceleracion ['mps2=10.1712138423'] at 75\nc1 TieneAceleracion ['mps2=10.1719718945'] at 76\nc1 TieneAceleracion ['mps2=10.1727077449'] at 77\nc1 TieneAceleracion ['mps2=10.1734223528'] at 78\nc1 TieneAceleracion ['mps2=10.1741166229'] at 79\nc1 TieneAceleracion ['mps2=10.1747914093'] at 80\nc1 TieneAceleracion ['mps2=10.1754475191'] at 81\nc1 TieneAceleracion ['mps2=10.1760857155'] at 82\nc1 TieneAceleracion ['mps2=10.1767067207'] at 83\nc1 TieneAceleracion ['mps2=10.1773112188'] at 84\nc1 TieneAceleracion ['mps2=10.1778998579'] at 85\nc1 TieneAceleracion ['mps2=10.1784732529'] at 86\nc1 TieneAceleracion ['mps2=10.1790319872'] at 87\nc1 TieneAceleracion ['mps2=10.179576615'] at 88\nc1 TieneAceleracion ['mps2=10.1801076627'] at 89\nc1 TieneAceleracion ['mps2=10.1806256312'] at 90\nc1 TieneAceleracion ['mps2=10.1811309969'] at 91\nc1 TieneAceleracion ['mps2=10.1816242134'] at 92\nc1 TieneAceleracion ['mps2=10.1821057128'] at 93\nc1 TieneAceleracion ['mps2=10.182575907'] at 94\nc1 TieneAceleracion ['mps2=10.1830351889'] at 95\nc1 TieneAceleracion ['mps2=10.1834839335'] at 96\nc1 TieneAceleracion ['mps2=10.1839224985'] at 97\nc1 TieneAceleracion ['mps2=10.1843512259'] at 98\nc1 TieneAceleracion ['mps2=10.1847704426'] at 99\nc1 TieneAceleracion ['mps2=10.185180461'] at 100"
     
 
     
-    >>> kb.ask(kb.Prop(c1, EstaADistancia(metros=kb.Number('X1'), otro=c2), kb.Number('X2')))
+    >>> kb.ask(Prop(c1, EstaADistancia(metros=Number('X1'), otro=c2), Number('X2')))
     "c1 EstaADistancia ['otro=c2', 'metros=-5'] at 2\nc1 EstaADistancia ['otro=c2', 'metros=-5'] at 3\nc1 EstaADistancia ['otro=c2', 'metros=-5.0'] at 4\nc1 EstaADistancia ['otro=c2', 'metros=-5'] at 1\nc1 EstaADistancia ['otro=c2', 'metros=-5.58578643763'] at 5\nc1 EstaADistancia ['otro=c2', 'metros=-7.34314575051'] at 6\nc1 EstaADistancia ['otro=c2', 'metros=-10.8578643763'] at 7\nc1 EstaADistancia ['otro=c2', 'metros=-16.7157287525'] at 8\nc1 EstaADistancia ['otro=c2', 'metros=-25.4410933674'] at 9\nc1 EstaADistancia ['otro=c2', 'metros=-37.4328243592'] at 10\nc1 EstaADistancia ['otro=c2', 'metros=-52.9606738711'] at 11\nc1 EstaADistancia ['otro=c2', 'metros=-72.1998620348'] at 12\nc1 EstaADistancia ['otro=c2', 'metros=-95.2655148843'] at 13\nc1 EstaADistancia ['otro=c2', 'metros=-122.235877442'] at 14\nc1 EstaADistancia ['otro=c2', 'metros=-153.166253616'] at 15\nc1 EstaADistancia ['otro=c2', 'metros=-188.097210411'] at 16\nc1 EstaADistancia ['otro=c2', 'metros=-227.059492763'] at 17\nc1 EstaADistancia ['otro=c2', 'metros=-270.077061986'] at 18\nc1 EstaADistancia ['otro=c2', 'metros=-317.169040648'] at 19\nc1 EstaADistancia ['otro=c2', 'metros=-368.351000125'] at 20\nc1 EstaADistancia ['otro=c2', 'metros=-423.635839821'] at 21\nc1 EstaADistancia ['otro=c2', 'metros=-483.034404536'] at 22\nc1 EstaADistancia ['otro=c2', 'metros=-546.555928882'] at 23\nc1 EstaADistancia ['otro=c2', 'metros=-614.208364328'] at 24\nc1 EstaADistancia ['otro=c2', 'metros=-685.998624671'] at 25\nc1 EstaADistancia ['otro=c2', 'metros=-761.932773522'] at 26\nc1 EstaADistancia ['otro=c2', 'metros=-842.016169768'] at 27\nc1 EstaADistancia ['otro=c2', 'metros=-926.25358204'] at 28\nc1 EstaADistancia ['otro=c2', 'metros=-1014.64927993'] at 29\nc1 EstaADistancia ['otro=c2', 'metros=-1107.20710751'] at 30\nc1 EstaADistancia ['otro=c2', 'metros=-1203.93054326'] at 31\nc1 EstaADistancia ['otro=c2', 'metros=-1304.82274931'] at 32\nc1 EstaADistancia ['otro=c2', 'metros=-1409.88661231'] at 33\nc1 EstaADistancia ['otro=c2', 'metros=-1519.12477758'] at 34\nc1 EstaADistancia ['otro=c2', 'metros=-1632.53967795'] at 35\nc1 EstaADistancia ['otro=c2', 'metros=-1750.13355809'] at 36\nc1 EstaADistancia ['otro=c2', 'metros=-1871.90849544'] at 37\nc1 EstaADistancia ['otro=c2', 'metros=-1997.86641804'] at 38\nc1 EstaADistancia ['otro=c2', 'metros=-2128.00911998'] at 39\nc1 EstaADistancia ['otro=c2', 'metros=-2262.33827481'] at 40\nc1 EstaADistancia ['otro=c2', 'metros=-2400.8554472'] at 41\nc1 EstaADistancia ['otro=c2', 'metros=-2543.5621032'] at 42\nc1 EstaADistancia ['otro=c2', 'metros=-2690.45961916'] at 43\nc1 EstaADistancia ['otro=c2', 'metros=-2841.54928974'] at 44\nc1 EstaADistancia ['otro=c2', 'metros=-2996.83233489'] at 45\nc1 EstaADistancia ['otro=c2', 'metros=-3156.30990612'] at 46\nc1 EstaADistancia ['otro=c2', 'metros=-3319.98309206'] at 47\nc1 EstaADistancia ['otro=c2', 'metros=-3487.85292347'] at 48\nc1 EstaADistancia ['otro=c2', 'metros=-3659.92037769'] at 49\nc1 EstaADistancia ['otro=c2', 'metros=-3836.18638269'] at 50\nc1 EstaADistancia ['otro=c2', 'metros=-4016.65182066'] at 51\nc1 EstaADistancia ['otro=c2', 'metros=-4201.31753137'] at 52\nc1 EstaADistancia ['otro=c2', 'metros=-4390.18431509'] at 53\nc1 EstaADistancia ['otro=c2', 'metros=-4583.25293532'] at 54\nc1 EstaADistancia ['otro=c2', 'metros=-4780.52412125'] at 55\nc1 EstaADistancia ['otro=c2', 'metros=-4981.99857004'] at 56\nc1 EstaADistancia ['otro=c2', 'metros=-5187.67694883'] at 57\nc1 EstaADistancia ['otro=c2', 'metros=-5397.55989668'] at 58\nc1 EstaADistancia ['otro=c2', 'metros=-5611.64802627'] at 59\nc1 EstaADistancia ['otro=c2', 'metros=-5829.94192551'] at 60\nc1 EstaADistancia ['otro=c2', 'metros=-6052.44215897'] at 61\nc1 EstaADistancia ['otro=c2', 'metros=-6279.14926931'] at 62\nc1 EstaADistancia ['otro=c2', 'metros=-6510.06377847'] at 63\nc1 EstaADistancia ['otro=c2', 'metros=-6745.18618883'] at 64\nc1 EstaADistancia ['otro=c2', 'metros=-6984.51698433'] at 65\nc1 EstaADistancia ['otro=c2', 'metros=-7228.05663142'] at 66\nc1 EstaADistancia ['otro=c2', 'metros=-7475.80558'] at 67\nc1 EstaADistancia ['otro=c2', 'metros=-7727.7642643'] at 68\nc1 EstaADistancia ['otro=c2', 'metros=-7983.93310367'] at 69\nc1 EstaADistancia ['otro=c2', 'metros=-8244.31250333'] at 70\nc1 EstaADistancia ['otro=c2', 'metros=-8508.90285506'] at 71\nc1 EstaADistancia ['otro=c2', 'metros=-8777.70453788'] at 72\nc1 EstaADistancia ['otro=c2', 'metros=-9050.71791863'] at 73\nc1 EstaADistancia ['otro=c2', 'metros=-9327.9433526'] at 74\nc1 EstaADistancia ['otro=c2', 'metros=-9609.38118399'] at 75\nc1 EstaADistancia ['otro=c2', 'metros=-9895.03174649'] at 76\nc1 EstaADistancia ['otro=c2', 'metros=-10184.8953637'] at 77\nc1 EstaADistancia ['otro=c2', 'metros=-10478.9723496'] at 78\nc1 EstaADistancia ['otro=c2', 'metros=-10777.2630091'] at 79\nc1 EstaADistancia ['otro=c2', 'metros=-11079.767638'] at 80\nc1 EstaADistancia ['otro=c2', 'metros=-11386.4865241'] at 81\nc1 EstaADistancia ['otro=c2', 'metros=-11697.4199467'] at 82\nc1 EstaADistancia ['otro=c2', 'metros=-12012.5681778'] at 83\nc1 EstaADistancia ['otro=c2', 'metros=-12331.9314815'] at 84\nc1 EstaADistancia ['otro=c2', 'metros=-12655.5101152'] at 85\nc1 EstaADistancia ['otro=c2', 'metros=-12983.3043292'] at 86\nc1 EstaADistancia ['otro=c2', 'metros=-13315.3143673'] at 87\nc1 EstaADistancia ['otro=c2', 'metros=-13651.5404672'] at 88\nc1 EstaADistancia ['otro=c2', 'metros=-13991.9828601'] at 89\nc1 EstaADistancia ['otro=c2', 'metros=-14336.6417717'] at 90\nc1 EstaADistancia ['otro=c2', 'metros=-14685.517422'] at 91\nc1 EstaADistancia ['otro=c2', 'metros=-15038.6100255'] at 92\nc1 EstaADistancia ['otro=c2', 'metros=-15395.9197915'] at 93\nc1 EstaADistancia ['otro=c2', 'metros=-15757.4469244'] at 94\nc1 EstaADistancia ['otro=c2', 'metros=-16123.1916236'] at 95\nc1 EstaADistancia ['otro=c2', 'metros=-16493.1540837'] at 96\nc1 EstaADistancia ['otro=c2', 'metros=-16867.3344952'] at 97\nc1 EstaADistancia ['otro=c2', 'metros=-17245.7330438'] at 98\nc1 EstaADistancia ['otro=c2', 'metros=-17628.3499113'] at 99"

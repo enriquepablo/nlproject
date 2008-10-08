@@ -17,6 +17,7 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 # registry of subclasses
 
+import clips
 
 subclasses = {}
 def register(clsname, cls):

@@ -17,8 +17,7 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 # import logging
-import clips
-
+from nl.registry import clips
 from nl.thing import Thing
 from nl.prop import Proposition
 from nl.rule import Rule

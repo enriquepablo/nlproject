@@ -21,6 +21,6 @@ import kb
 from arith import Number, Arith, Time
 from thing import Thing
 from state import State
-from prop import Proposition
+from prop import Proposition, Prop
 from rule import Rule
 #from exceptions import Paradox, NlError

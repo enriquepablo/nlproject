@@ -18,9 +18,8 @@
 
 # import logging
 import re
-import clips
 
-from nl.registry import register, subclasses
+from nl.registry import register, subclasses, clips
 
 # vars are always XNUM
 varpat = re.compile(r'^X(\d+)$')
