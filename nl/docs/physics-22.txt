@@ -24,113 +24,112 @@
     
     >>> from nl import kb
     
-    >>> # 'cuerpo' es un nombre común
+    'cuerpo' es un nombre común
     
     >>> class Cuerpo(kb.Thing): pass
     
-    >>> # 'tiene_masa' es un verbo que se aplica sobre 'cuerpo' y tiene un modificador numérico 'gramos'.
+    'tiene_masa' es un verbo que se aplica sobre 'cuerpo' y tiene un modificador numérico 'gramos'.
     
     >>> class TieneMasa(kb.State):
     ...     mods = {'kgs': kb.Number}
     
-    >>> # 'tiene_posicion' es un verbo que se aplica sobre 'cuerpo' y tiene un modificador numérico 'metros'.
+    'tiene_posicion' es un verbo que se aplica sobre 'cuerpo' y tiene un modificador numérico 'metros'.
     
     >>> class TienePosicion(kb.State):
     ...     mods = {'metros': kb.Number}
     
-    >>> # 'esta_a_distancia' es un verbo que se aplica sobre 'cuerpo' y que tiene, un objeto 'otro' de tipo cuerpo y una magnitud numerica 'metros'.
+    'esta_a_distancia' es un verbo que se aplica sobre 'cuerpo' y que tiene, un objeto 'otro' de tipo cuerpo y una magnitud numerica 'metros'.
     
     >>> class EstaADistancia(kb.State):
     ...     mods = {'metros': kb.Number, 'otro': Cuerpo}
     
-    >>> # 'si un cuerpo tiene_posicion pos1 y otro cuerpo tiene_posicion pos2, el primero está a una distancia de pos1 - pos2 del segundo'
+    'si un cuerpo tiene_posicion pos1 y otro cuerpo tiene_posicion pos2, el primero está a una distancia de pos1 - pos2 del segundo'
     
     >>> r1 = kb.Rule('r1', [
-    ...                kb.Prop(Cuerpo('X1'), TienePosicion(metros=kb.Number('X2')), kb.Number('X4')),
-    ...                kb.Prop(Cuerpo('X3'), TienePosicion(metros=kb.Number('X5')), kb.Number('X4')),
-    ...            kb.Arith('<', kb.Number('X4'), kb.Number(100)),
-    ...            kb.Arith('neq' , kb.Number('X2'), kb.Number('X5'))
-    ...               ],
-    ...              [
-    ...               kb.Prop(Cuerpo('X1'), EstaADistancia(metros=kb.Number('-', arg1=kb.Number('X2'), arg2=kb.Number('X5')), otro=Cuerpo('X3')), kb.Number('X4'))
-    ...              ])
+    ...                kb.Prop(Cuerpo('X1'), TienePosicion(metros='X2'), 'X4'),
+    ...                kb.Prop(Cuerpo('X3'), TienePosicion(metros='X5'), 'X4'),
+    ...                kb.Arith('(< X4 100)'),
+    ...                kb.Arith('(neq X2 X5)')
+    ...                ], [
+    ...                kb.Prop(Cuerpo('X1'), EstaADistancia(metros='(- X2 X5)', otro=Cuerpo('X3')), 'X4')
+    ...                ])
     
-    >>> # 'tiene velocidad' es un verbo que se aplica sobre 'cuerpo' y que tiene un adv numerico 'metros/seg'.
+    'tiene velocidad' es un verbo que se aplica sobre 'cuerpo' y que tiene un adv numerico 'metros/seg'.
     
     
     >>> class TieneVelocidad(kb.State):
     ...     mods = {'mps': kb.Number}
     
-    >>> # 'si en un segundo un cuerpo tiene pos x y velocidad v, en el siguiente segundo tiene pos x+v.'
+    'si en un segundo un cuerpo tiene pos x y velocidad v, en el siguiente segundo tiene pos x+v.'
     
     
     >>> r2 = kb.Rule('r2', [
-    ...            kb.Prop(Cuerpo('X1'), TienePosicion(metros=kb.Number('X2')), kb.Number('X4')),
-    ...            kb.Prop(Cuerpo('X1'), TieneVelocidad(mps=kb.Number('X3')), kb.Number('X4')),
-    ...            kb.Arith('<', kb.Number('X4'), kb.Number(100))
-    ...           ],
-    ...          [
-    ...            kb.Prop(Cuerpo('X1'), TienePosicion(metros=kb.Number('+', arg1=kb.Number('X2'), arg2=kb.Number('X3'))), kb.Number('+', arg1=kb.Number('X4'), arg2=kb.Number(1)))
-    ...          ])
+    ...            kb.Prop(Cuerpo('X1'), TienePosicion(metros='X2'), 'X4'),
+    ...            kb.Prop(Cuerpo('X1'), TieneVelocidad(mps='X3'), 'X4'),
+    ...            kb.Arith('(< X4 100)')
+    ...            ], [
+    ...            kb.Prop(Cuerpo('X1'), TienePosicion(metros='(+ X2 X3)'), '(+ X4 1)')
+    ...            ])
     
-    >>> # 'tiene aceleración' es un verbo que se aplica sobre 'cuerpo' y que tiene un adv numerico 'metros/seg2'.
+    'tiene aceleración' es un verbo que se aplica sobre 'cuerpo' y que tiene un adv numerico 'metros/seg2'.
     
     >>> class TieneAceleracion(kb.State):
     ...     mods = {'mps2': kb.Number}
     
-    >>> # 'si en un segundo un cuerpo tiene velocidad v y aceleracion a, en el siguiente segundo tiene velocidad v+a.'
+    'si en un segundo un cuerpo tiene velocidad v y aceleracion a, en el siguiente segundo tiene velocidad v+a.'
     
     >>> r3 = kb.Rule('r3', [
     ...            kb.Prop(Cuerpo('X1'), TieneVelocidad(mps='X2'), 'X4'),
     ...            kb.Prop(Cuerpo('X1'), TieneAceleracion(mps2='X3'), 'X4'),
     ...            kb.Arith('(< X4 100)')
-    ...           ],
-    ...           [
+    ...            ], [
     ...            kb.Prop(Cuerpo('X1'), TieneVelocidad(mps='(+ X2 X3)'), '(+ X4 1)')
-    ...           ])
+    ...            ])
     
     
-    >>> # 'sufre fuerza' es un verbo que se aplica sobre 'cuerpo' y que tiene un adv numerico 'newton'.
+    'sufre fuerza' es un verbo que se aplica sobre 'cuerpo' y que tiene un adv numerico 'newton'.
     
     >>> class SufreFuerza(kb.State):
     ...     mods = {'newton': kb.Number}
     ...
     
-    >>> # 'si en un segundo un cuerpo tiene aceleracion a y sufre una furerza f, en el siguiente segundo tiene aceleración (f/m)**1/2.'
+    'si en un segundo un cuerpo tiene aceleracion a y sufre una furerza f, en el siguiente segundo tiene aceleración (f/m)**1/2.'
     
     
     >>> r4 = kb.Rule('r4', [
-    ...            kb.Prop(Cuerpo('X1'), SufreFuerza(newton=kb.Number('X2')), kb.Number('X4')),
-    ...            kb.Prop(Cuerpo('X1'), TieneAceleracion(mps2=kb.Number('X3')), kb.Number('X4')),kb.Prop(Cuerpo('X1'), TieneMasa(kgs=kb.Number('X5')), kb.Number('X4')),
+    ...            kb.Prop(Cuerpo('X1'), SufreFuerza(newton='X2'), 'X4'),
+    ...            kb.Prop(Cuerpo('X1'), TieneAceleracion(mps2='X3'), 'X4'),
+    ...            kb.Prop(Cuerpo('X1'), TieneMasa(kgs=kb.Number('X5')), kb.Number('X4')),
     ...            kb.Arith('<', kb.Number('X4'), kb.Number(100))
-    ...           ],
-    ...          [
-    ...            kb.Prop(Cuerpo('X1'), TieneAceleracion(mps2=kb.Number('+', arg1=kb.Number('X3'), arg2=kb.Number('**', arg1=kb.Number('/', arg1=kb.Number('X2'), arg2=kb.Number('X5')), arg2=kb.Number('/', arg1=kb.Number(1), arg2=kb.Number(2))))), kb.Number('+', arg1=kb.Number('X4'), arg2=kb.Number(1)))
-    ...      ])
+    ...            ], [
+    ...            kb.Prop(Cuerpo('X1'), TieneAceleracion(mps2='(+ X3 (** (/ X2 X5) (/ 1 2)))'), '(+ X4 1)')
+    ...            ])
     
-    >>> # 'si un cuerpo está a una distancia de otro, sufre fuerza inversa al cuadrado de esa distancia, y proporcional a sus masas.'
+    'si un cuerpo está a una distancia de otro, sufre fuerza inversa al cuadrado de esa distancia, y proporcional a sus masas.'
     
     >>> r5 = kb.Rule('r5', [
-    ...            kb.Prop(Cuerpo('X1'), EstaADistancia(metros=kb.Number('X2'), otro=Cuerpo('X3')), kb.Number('X4')),kb.Prop(Cuerpo('X1'), TieneMasa(kgs=kb.Number('X5')), kb.Number('X4')),kb.Prop(Cuerpo('X3'), TieneMasa(kgs=kb.Number('X6')), kb.Number('X4')),
+    ...            kb.Prop(Cuerpo('X1'), EstaADistancia(metros='X2', otro=Cuerpo('X3')), 'X4'),
+    ...            kb.Prop(Cuerpo('X1'), TieneMasa(kgs='X5'), 'X4'),
+    ...            kb.Prop(Cuerpo('X3'), TieneMasa(kgs='X6'), 'X4'),
     ...            kb.Arith('<', kb.Number('X4'), kb.Number(100))
     ...           ],
-    ...          [                                                                                                                                                kb.Prop(Cuerpo('X1'), SufreFuerza(newton=kb.Number('/', arg1=kb.Number('*', arg1=kb.Number('X5'), arg2=kb.Number('X6')), arg2=kb.Number('**', arg1=kb.Number('X2'), arg2=kb.Number(2)))), kb.Number('+', arg1=kb.Number('X4'), arg2=kb.Number(1)))
-    ...      ])
+    ...          [                                                                                                  kb.Prop(Cuerpo('X1'), SufreFuerza(newton='(/ (* X5 X6) (** X2 2))'), '(+ X4 1)')])
     
+    'si un cuerpo tiene masa m, seguirá teniendo masa m'
     
     >>> r6 = kb.Rule('r6', [
-    ...            kb.Prop(Cuerpo('X1'), TieneMasa(kgs=kb.Number('X2')), kb.Number('X3')),
-    ...            kb.Arith('<', kb.Number('X3'), kb.Number(100))
-    ...           ],
-    ...          [
-    ...            kb.Prop(Cuerpo('X1'), TieneMasa(kgs=kb.Number('X2')), kb.Number('+', arg1=kb.Number('X3'), arg2=kb.Number(1)))
-    ...      ])
+    ...            kb.Prop(Cuerpo('X1'), TieneMasa(kgs='X2'), 'X3'),
+    ...            kb.Arith('(< X3 100)')
+    ...            ],
+    ...            [
+    ...            kb.Prop(Cuerpo('X1'), TieneMasa(kgs='X2'), '(+ X3 1)')
+    ...            ])
     
-    >>> # c1 es un cuerpo
+    c1 es un cuerpo
     
     >>> c1 = Cuerpo('c1')
     
-    >>> # c2 es un cuerpo
+    c2 es un cuerpo
     
     >>> c2 = Cuerpo('c2')
     
@@ -193,7 +192,6 @@
     >>> kb.extend()
     1188
    
-    for some reason first q fails
     >>> kb.ask(kb.Prop(c1, TienePosicion(metros=kb.Number(5)), kb.Number(1)))
     "c1 TienePosicion ['metros=5'] at 1"
     
@@ -203,9 +201,9 @@
     >>> kb.ask(kb.Prop(c2, TienePosicion(metros=kb.Number('X1')), kb.Number(2)))
     "c2 TienePosicion ['metros=11'] at 2"
 
-    >>> # kb.get_instancesn(kb.Prop(c1, TienePosicion(metros=kb.Number(6)), kb.Number(2)))
+    kb.get_instancesn(kb.Prop(c1, TienePosicion(metros=kb.Number(6)), kb.Number(2)))
 
-    >>> # kb.get_instancesn(kb.Prop(c1, TienePosicion(metros=kb.Number('X1')), kb.Number(2)))
+    kb.get_instancesn(kb.Prop(c1, TienePosicion(metros=kb.Number('X1')), kb.Number(2)))
     
     >>> kb.ask(kb.Prop(c1, TieneVelocidad(mps=kb.Number(1)), kb.Number(2)))
     "c1 TieneVelocidad ['mps=1'] at 2"
@@ -222,8 +220,11 @@
     >>> kb.ask(kb.Prop(c1, SufreFuerza(newton=kb.Number('X1')), kb.Number(1)))
     "c1 SufreFuerza ['newton=0'] at 1"
     
-    >>> kb.ask(kb.Prop(c1, EstaADistancia(metros=kb.Number('X1'), otro=c2), kb.Number(19)))
+    >>> kb.ask(kb.Prop(c1, EstaADistancia(metros='X1', otro=c2), 19))
     "c1 EstaADistancia ['otro=c2', 'metros=-317.169040648'] at 19"
+    
+    >>> kb.ask(kb.Prop(c2, EstaADistancia(metros='X1', otro=c1), 19))
+    "c2 EstaADistancia ['otro=c1', 'metros=317.169040648'] at 19"
     
     >>> kb.ask(kb.Prop(c1, EstaADistancia(metros=kb.Number('X1'), otro=c2), kb.Number(99)))
     "c1 EstaADistancia ['otro=c2', 'metros=-17628.3499113'] at 99"
