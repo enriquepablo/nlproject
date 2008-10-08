@@ -15,12 +15,10 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
+# registry of subclasses
 
 
-import kb
-from arith import Number, Arith, Time
-from thing import Thing
-from state import State
-from prop import Proposition
-from rule import Rule
-#from exceptions import Paradox, NlError
+subclasses = {}
+def register(clsname, cls):
+    subclasses[clsname] = cls
+
