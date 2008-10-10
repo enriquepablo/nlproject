@@ -1,24 +1,9 @@
     FISICA CLASICA PARA UN SISTEMA CON DOS CUERPOS EN UN ESPACIO BIDIMENSIONAL.
     ---------------------------------------------------------------------------
-    
-    'cuerpo' es un nombre común
-    'tiene_masa' es un verbo que se aplica sobre 'cuerpo' y tiene un adv numérico 'gramos'.
-    'c1 es un cuerpo'
-    'c2 es un cuerpo'
-    'c1 tiene_masa de 100 gramos en el instante 0'
-    'c2 tiene_masa de 200 gramos en el instante 0'
-    'tiene_posicion' es un verbo que se aplica sobre 'cuerpo' y tiene un modificador numérico 'metros'.
-    'esta_a_distancia' es un verbo que se aplica sobre 'cuerpo' y que tiene, un objeto 'otro' de tipo cuerpo y una magnitud numerica 'metros'.
-    'si un cuerpo tiene_posicion pos1 y otro cuerpo tiene_posicion pos2, el primero está a una distancia de pos1 - pos2 del segundo'
-    'tiene velocidad' es un verbo que se aplica sobre 'cuerpo' y que tiene un adv numerico 'metros/seg'.
-    'si en un segundo un cuerpo tiene pos x y velocidad v, en el siguiente segundo tiene pos x+v.'
-    'tiene aceleración' es un verbo que se aplica sobre 'cuerpo' y que tiene un adv numerico 'metros/seg2'.
-    'si en un segundo un cuerpo tiene velocidad v y aceleracion a, en el siguiente segundo tiene velocidad v+a.'
-    'sufre fuerza' es un verbo que se aplica sobre 'cuerpo' y que tiene un adv numerico 'newton'.
-    'si en un segundo un cuerpo tiene aceleracion a y sufre una furerza f, en el siguiente segundo tiene aceleración (f/m)**1/2.'
-    'si un cuerpo está a una distancia de otro, sufre fuerza inversa al cuadrado de esa distancia, y proporcional a sus masas.'
-    'c1 tiene posicion 6 y masa 100 y velocidad 1 y aceleración 0 en el instane 0'
-    'c1 tiene posicion 2 y masa 200 y velocidad -1 y aceleración 0 en el instane 0'
+    La física está hecha al boleo, la he terminado más acorde con newton
+    en el directorio examples de la distribución, módulo physics-22.py,
+    y si tienes gnuplot y python-Gnuplot, se dibujan las trayectorias.
+    Esto lo dejo meramente como test de regresión.
 
 
     
