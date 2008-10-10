@@ -20,7 +20,7 @@ import Gnuplot
 from nl import kb, State, Thing, Number, Arith, Prop, Rule
 
 
-time = '100'
+time = '1000'
 
 # names
 
@@ -124,13 +124,13 @@ c2 = Cuerpo('c2')
 
 # propositions
 
-p1 = Prop(c1, TieneMasa(kgs=500), 1)
+p1 = Prop(c1, TieneMasa(kgs=900), 1)
 
-p2 = Prop(c2, TieneMasa(kgs=500), 1)
+p2 = Prop(c2, TieneMasa(kgs=700), 1)
 
-p3 = Prop(c1, TienePosicion(x=12, y=2), 1)
+p3 = Prop(c1, TienePosicion(x=0, y=0), 1)
 
-p4 = Prop(c2, TienePosicion(x=10, y=100), 1)
+p4 = Prop(c2, TienePosicion(x=0, y=100), 1)
 
 p5 = Prop(c1, TieneVelocidad(x=-2, y=0), 1)
 
@@ -165,7 +165,17 @@ gp = Gnuplot.Gnuplot(persist = 1)
 
 gp('set data style lines')
 
-plot1 = Gnuplot.PlotItems.Data(line1, with="points 3", title=None)
-plot2 = Gnuplot.PlotItems.Data(line2, with="points 8", title=None)
+plot1 = Gnuplot.PlotItems.Data(line1, with="points 3",
+      title='c1 con %s kgs, desde (%s, %s) a (%s, %s)' % (p1.predicate.kgs.value,
+                                                     p3.predicate.x.value,
+                                                     p3.predicate.y.value,
+                                                     p5.predicate.x.value,
+                                                     p5.predicate.y.value))
+plot2 = Gnuplot.PlotItems.Data(line2, with="points 8",
+      title='c2 con %s kgs, desde (%s, %s) a (%s, %s)' % (p2.predicate.kgs.value,
+                                                     p4.predicate.x.value,
+                                                     p4.predicate.y.value,
+                                                     p6.predicate.x.value,
+                                                     p6.predicate.y.value))
 
 gp.plot(plot1, plot2)
