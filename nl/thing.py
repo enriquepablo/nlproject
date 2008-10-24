@@ -59,41 +59,39 @@ class Thing(_Name):
     def __str__(self):
         return '%s is a %s' % (self.value, self.__class__.__name__)
 
-    def get_ce(self, vrs):
+    def get_ce(self, ces=None):
         """
         build CE for clips
         """
         if varpat.match(self.value):
-            vrs.append(self.value)
-            return '(logical (object (is-a %s)(name ?%s)))' % (self.__class__.__name__,
-                                     self.value)
-        return '(logical (object (is-a %s)(name %s)))' % (self.__class__.__name__,
-                                    self.value)
+            ce = '(logical (object (is-a %s) (name ?%s)))'
+            return ce % (self.__class__.__name__, self.value)
+        return ''
 
-    def get_slot_constraint(self, vrs):
+    def get_slot_constraint(self, ces):
         """
         build rule CE constraint for clips
-        for a slot constraint for a prop in a rule
+        for a slot constraint for a pred in a prop in a rule
         """
+        ce = self.get_ce()
+        if ce and ce not in ces:
+            ces.append(ce)
         if varpat.match(self.value):
-            if self.value in vrs:
-                return '?%s' % self.value
-            else:
-                vrs.append(self.value)
-                return '?%(val)s&:(superclassp %(cls)s (class ?%(val)s))|:(eq %(cls)s (class ?%(val)s))' % {'val': self.value, 'cls': self.__class__.__name__}
-        else:
-            return '[%s]' % self.value
+            return '?%s' % self.value
+        return '[%s]' % self.value
 
     def put_action(self):
         """
         put name in clips as a make-instance action.
         """
-        val = varpat.match(self.value) and '?%s' % self.value or '[%s]' % self.value
-# XXX chequear que no existe y no pertenece ya a una clase más específica. Entonces se podrán contruir props con nombres nuevos, y unificar los put
+        val = varpat.match(self.value) and '?%s' % self.value or \
+                                           '[%s]' % self.value
+# XXX chequear que no existe y no pertenece ya a una clase más específica.
+# Entonces se podrán contruir props con nombres nuevos, y unificar los put
         return '(make-instance %s of %s)' % (val, self.__class__.__name__)
 
     def put(self):
-        return self.get_slot_constraint([self.value])
+        return self.get_slot_constraint([])
 
     def get_isc(self, templs, queries):
         """
@@ -101,7 +99,8 @@ class Thing(_Name):
         return (instance-set templates, instance-set queries)
         """
         if varpat.match(self.value):
-            templs.append('(?%s %s)' % (self.value, self.__class__.__name__))
+            templs.append('(?%s %s)' % (self.value,
+                                        self.__class__.__name__))
             return '?%s' % self.value
         else:
             return '[%s]' % self.value
@@ -112,7 +111,8 @@ class Thing(_Name):
         return (instance-set templates, instance-set queries)
         """
         if varpat.match(self.value):
-            templs.append('(?%s %s)' % (self.value, self.__class__.__name__))
+            templs.append('(?%s %s)' % (self.value,
+                                        self.__class__.__name__))
         else:
             templs.append('(?%s %s)' % (newvar, self.__class__.__name__))
             queries.append('(eq ?%s [%s])' % (newvar, self.value))

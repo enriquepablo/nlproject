@@ -115,6 +115,9 @@
     >>> x1.put()
     'Move ?X1'
 
+    >>> class Anda(Move):
+    ...    mods = {'longitud_zancada': Number}
+
     >>> p1 = Proposition(Hombre('juan'),Move(v=Number(2)),Time('now'))
 
     >>> p1.get_ce([])
@@ -135,6 +138,10 @@
     >>> p2.put_action()
     '(make-instance of Proposition (subject ?X1)(predicate Move ?X2)(time ?X3))'
 
+    >>> p3 = Proposition(Hombre('X1'),Anda(v='X2', longitud_zancada=5),Time('X3'))
+
+    >>> p3.get_ce([])
+    '(logical (object (is-a Proposition)(subject ?X1&:(superclassp Hombre (class ?X1))|:(eq Hombre (class ?X1)))(predicate Anda 5 ?X2)(time ?X3)))'
 
     >>> t1 = Time(1)
 

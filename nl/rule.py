@@ -29,10 +29,11 @@ class Rule(object):
         """
         put rule in clips
         """
-        vrs = []
-        cprems = [prem.get_ce(vrs) for prem in self.prems]
+        ces = []
+        cprems = filter(None, map(lambda x:x.get_ce(ces), self.prems))
         ccons = [con.put_action() for con in self.cons]
-        return '(defrule %s %s => %s)' % (self.name,
+        return '(defrule %s %s %s => %s)' % (self.name,
+                                          ' '.join(sorted(ces)),
                                           ' '.join(cprems),
                                           ' '.join(ccons))
 

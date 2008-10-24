@@ -47,14 +47,23 @@
 
     >>> class User(Thing): pass
 
-    john es un User
+    un jefe es un user
 
-    >>> john = User('john')
+    >>> class Boss(User): pass
+
+    john es un Boss
+
+    >>> john = Boss('john')
     >>> kb.tell(john)
 
-    bob es un User
+    un empleado es un user
 
-    >>> bob = User('bob')
+    >>> class Employee(User): pass
+
+
+    bob es un empleado
+
+    >>> bob = Employee('bob')
     >>> kb.tell(bob)
 
     una Action es una cosa

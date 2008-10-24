@@ -27,7 +27,7 @@ class Proposition(object):
     """
     """
     clips_class = clips.USER_CLASS.BuildSubclass('Proposition',
-           '(slot subject (type INSTANCE)) (multislot predicate) (slot time (type ?VARIABLE))')
+           '(slot subject (type INSTANCE)) (slot predicate (type INSTANCE)) (slot time (type ?VARIABLE))')
     def __init__(self, subj, pred, time):
         self.subject = subj
         self.predicate = pred
@@ -44,12 +44,10 @@ class Proposition(object):
 
     @classmethod
     def from_clips(cls, instance):
-        s = clips.FindInstance(instance)
-        s = Thing.from_clips(s.GetSlot('subject'))
-        p = clips.FindInstance(instance)
-        p = State.from_clips(p.GetSlot('predicate'))
-        t = clips.FindInstance(instance)
-        t = Time.from_clips(t.GetSlot('time'))
+        i = clips.FindInstance(instance)
+        s = Thing.from_clips(i.GetSlot('subject'))
+        p = State.from_clips(i.GetSlot('predicate'))
+        t = Time.from_clips(i.GetSlot('time'))
         return Prop(s, p, t)
 
     def get_ism(self, templs, queries, newvar='prop'):
@@ -61,30 +59,27 @@ class Proposition(object):
         s = self.subject.get_isc(templs, queries)
         queries.append('(eq ?%s:subject %s)' % (newvar, s))
         p = self.predicate.get_isc(templs, queries)
-        for n,t in enumerate(p):
-            if not varpat.match(t[1:]):
-                queries.append('(eq (nth$ %d ?%s:predicate) %s)' % (n+1, newvar, t))
+        queries.append('(eq ?%s:predicate %s)' % (newvar, p))
         t = self.time.get_isc(templs, queries)
         if not varpat.match(t[1:]):
             queries.append('(eq ?%s:time %s)' % (newvar, self.time.get_isc(templs, queries)))
         return newvar
 
-    def get_ce(self, vrs=None):
+    def get_ce(self, ces=None):
         """
         put proposition in clips as a conditional element of a rule
         """
-        if vrs is None:
-            vrs = []
-        return '(logical (object (is-a Proposition)(subject %s)(predicate %s)(time %s)))' % (self.subject.get_slot_constraint(vrs),
-                                self.predicate.get_slot_constraint(vrs),
-                                self.time.get_slot_constraint(vrs))
+        ce = '(logical (object (is-a Proposition) (subject %s) (predicate ?%s) (time %s)))'
+        return ce % (self.subject.get_slot_constraint(ces),
+                     self.predicate.get_slot_constraint(ces),
+                     self.time.get_slot_constraint(ces))
 
 
     def put_action(self):
         """
         put proposition in clips as an action that makes the proposition
         """
-        return '(make-instance of Proposition (subject %s)(predicate %s)(time %s))' % (self.subject.put(),
+        return '(make-instance of Proposition (subject %s) (predicate %s) (time %s))' % (self.subject.put(),
                                                     self.predicate.put(),
                                                   self.time.put())
 

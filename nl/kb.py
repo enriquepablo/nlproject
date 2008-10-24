@@ -25,11 +25,14 @@ from nl.rule import Rule
 
 def tell(sentence):
     s = sentence.put_action()
-    # f = open('clips', 'a')
-    # f.write(s+'\n')
-    # f.close()
+    f = open('clips', 'a')
+    f.write(s+'\n')
+    f.close()
     if isinstance(sentence, Rule):
-        clips.Build(s)
+        try:
+            clips.Build(s)
+        except:
+            import pdb;pdb.set_trace()
     else:
         clips.Eval(s)
 

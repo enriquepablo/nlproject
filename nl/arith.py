@@ -77,8 +77,11 @@ class Number(object):
                 self.arg1 = arg1
                 self.arg2 = arg2
 
+    @classmethod
+    def from_clips(cls, instance):
+        return Number(instance)
 
-    def get_slot_constraint(self, vrs):
+    def get_slot_constraint(self, ces):
         """
         in a make-instance of a proposition
         """
@@ -89,12 +92,12 @@ class Number(object):
         except ValueError:
             if self.value == 'now':
                 return 'now'
-            arg1 = self.arg1.get_slot_constraint(vrs)
-            arg2 =  self.arg2.get_slot_constraint(vrs)
+            arg1 = self.arg1.get_slot_constraint(ces)
+            arg2 =  self.arg2.get_slot_constraint(ces)
             return '(%s %s %s)' % (self.value, arg1, arg2)
 
     def put(self):
-        return self.get_slot_constraint(_m)
+        return self.get_slot_constraint([])
 
     def get_isc(self, templs, queries):
         """
@@ -121,7 +124,7 @@ class Arith(Number):
             self.arg1 = arg1
             self.arg2 = arg2
 
-    def get_ce(self, vrs):
+    def get_ce(self, ces=None):
         arg1 = self.arg1.put()
         arg2 = self.arg2.put()
         return '(test (%s %s %s))' % (self.value, arg1, arg2)
