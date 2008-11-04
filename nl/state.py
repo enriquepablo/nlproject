@@ -18,20 +18,29 @@
 
 # import logging
 # from nl.exceptions import NlError
+from log import logger
 from nl.registry import register, subclasses, clips
 from nl.arith import Number
-from nl.thing import varpat
+from nl.thing import varpat, class_constraint
 
 
 # marker object
 _m = []
-# symbol for empty args
-empty = 'null_'
 
-class _Verb(object):
+_vn = 0
+
+def _newvar():
+    global _vn
+    _vn += 1
+    return 'Y%d' % _vn
+
+class Verb(object):
     """
     """
-    clips_class = clips.USER_CLASS.BuildSubclass('Verb')
+    clp = '(defclass Verb (is-a USER))'
+    logger.info(clp)
+    clips.Build(clp)
+    clips_class = clips.FindClass('Verb')
 
 
 class MetaState(type):
@@ -45,14 +54,19 @@ class MetaState(type):
             issubclass(modclass, Number) and '?VARIABLE' or 'INSTANCE')
                   for mod,modclass in cls.mods.items()]
         slots = ' '.join(slots)
-        cls.clips_class = bases[0].clips_class.BuildSubclass(classname, slots)
+        clp = '(defclass %s (is-a %s) %s)' % (classname,
+                                              bases[0].__name__,
+                                              slots)
+        logger.info(clp)
+        clips.Build(clp)
+        cls.clips_class = clips.FindClass(classname)
         for kls in bases:
             if getattr(kls, 'mods', _m):
                 cls.mods.update(kls.mods)
         register(classname, cls)
 
 
-class State(_Verb):
+class State(Verb):
     """
     """
     __metaclass__ = MetaState
@@ -72,43 +86,48 @@ class State(_Verb):
     def __str__(self):
         return ''
 
-    _vn = 0
-
-    @classmethod
-    def _newvar(cls):
-        cls._vn += 1
-        return 'Y%d' % cls._vn
-
     @classmethod
     def from_clips(cls, instance):
         inst = clips.FindInstance(instance)
         cls = subclasses[str(inst.Class.Name)]
         kwargs = {}
         for mod,mcls in cls.mods.items():
-                kwargs[mod] = mcls.from_clips(inst.GetSlot(mod))
+            cmod = inst.GetSlot(mod)
+            if cmod:
+                kwargs[mod] = mcls.from_clips(cmod)
         return cls(**kwargs)
 
-    def get_slot_constraint(self, ces):
+    def get_slot_constraint(self, vrs):
         """
         build rule CE constraint for clips
         for a slot constraint for a prop in a rule
         """
-        newvar = self._newvar()
-        ce = ['(is-a %s)' % self.__class__.__name__,
-              '(name ?%s)' % newvar]
+        newvar = _newvar()
+        constraint = class_constraint % {'val': newvar,
+                                         'cls': self.__class__.__name__}
         for mod,cls in self.mods.items():
             mod_o =  getattr(self, mod, _m)
             if mod_o is not _m:
                 var = getattr(self, mod).value
                 if varpat.match(var):
-                    ce.append('(%s ?%s)' % (mod, var))
+                    if var in vrs:
+                        if vrs[var]:
+                            constraint += '&:(eq (send ?%s get-%s) (send ?%s get-%s))' % (newvar, mod, vrs[var][0], vrs[var][1])
+                        else:
+                            constraint += '&:(eq (send ?%s get-%s) ?%s)' % (newvar,
+                                                                   mod, var)
+                    else:
+                        vrs[var] = (newvar, mod)
                 else:
-                    var = mod_o.get_slot_constraint(ces)
-                    ce.append('(%s %s)' % (mod, var))
-        ces.append('(logical (object %s))' % ' '.join(ce))
-        return newvar
+                    if isinstance(mod_o, Number):
+                        constraint += '&:(eq (send ?%s get-%s) %s)' % (newvar,
+                                       mod, mod_o.get_slot_constraint(vrs))
+                    else:
+                        constraint += '&:(eq (send ?%s get-%s) [%s])' % (newvar,
+                                                                   mod, var)
+        return constraint
 
-    def put(self):
+    def put(self, vrs):
         """
         put pred in clips as a make-instance action.
         """
@@ -116,7 +135,7 @@ class State(_Verb):
         for mod in self.mods:
             mod_o = getattr(self, mod, _m)
             if mod_o is not _m:
-                slots.append('(%s %s)' % (mod, mod_o.put()))
+                slots.append('(%s %s)' % (mod, mod_o.put(vrs)))
         slots = ' '.join(slots)
         return '(make-instance of %s %s)' % (self.__class__.__name__, slots)
 
@@ -126,11 +145,11 @@ class State(_Verb):
         get instance-set condition;
         return (instance-set templates, instance-set queries)
         """
-        newvar = self._newvar()
+        newvar = _newvar()
         templs.append('(?%s %s)' % (newvar, self.__class__.__name__))
         for mod,mcls in self.mods.items():
             mod_o = getattr(self, mod, _m)
-            if mod_o is not _m:
+            if mod_o is not _m and not varpat.match(mod_o.value):
                 queries.append('(eq ?%s:%s %s)' % (newvar, mod,
                                                mod_o.get_isc(templs, queries)))
         return '?' + newvar

@@ -17,22 +17,18 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 # import logging
-from nl.registry import clips
+from log import logger
+from nl.registry import clips, subclasses
 from nl.thing import Thing
 from nl.prop import Proposition
 from nl.rule import Rule
 
 
 def tell(sentence):
-    s = sentence.put_action()
-    f = open('clips', 'a')
-    f.write(s+'\n')
-    f.close()
+    s = sentence.put_action({})
+    logger.info(s)
     if isinstance(sentence, Rule):
-        try:
-            clips.Build(s)
-        except:
-            import pdb;pdb.set_trace()
+        clips.Build(s)
     else:
         clips.Eval(s)
 
@@ -41,9 +37,11 @@ def get_instancesn(sentence):
     queries = []
     sentence.get_ism(templs, queries)
     if len(queries) > 1:
-        q = '(find-all-instances (%s) (and %s))' % (' '.join(templs), ' '.join(queries))
+        q = '(find-all-instances (%s) (and %s))' % (' '.join(templs),
+                                                    ' '.join(queries))
     else:
-        q = '(find-all-instances (%s) %s)' % (' '.join(templs), queries and queries[0] or 'TRUE')
+        q = '(find-all-instances (%s) %s)' % (' '.join(templs),
+                                            queries and queries[0] or 'TRUE')
     return q
 
 def get_instances(sentence):
@@ -51,9 +49,12 @@ def get_instances(sentence):
     queries = []
     sentence.get_ism(templs, queries)
     if len(queries) > 1:
-        q = '(find-all-instances (%s) (and %s))' % (' '.join(templs), ' '.join(queries))
+        q = '(find-all-instances (%s) (and %s))' % (' '.join(templs),
+                                                    ' '.join(queries))
     else:
-        q = '(find-all-instances (%s) %s)' % (' '.join(templs), queries and queries[0] or 'TRUE')
+        q = '(find-all-instances (%s) %s)' % (' '.join(templs),
+                                            queries and queries[0] or 'TRUE')
+    logger.info(q)
     return clips.Eval(q)
 
 def retract(sentence):
@@ -68,8 +69,10 @@ def ask(sentence):
         for ins in clps:
             if isinstance(sentence, Thing):
                 sens.append(str(Thing.from_clips(ins)))
-            else:
-                sens.append(str(Proposition.from_clips(ins)))
+            elif isinstance(sentence, Proposition):
+                i = clips.FindInstance(ins)
+                if issubclass(subclasses[str(i.Class.Name)], Proposition):
+                    sens.append(str(Proposition.from_clips(ins)))
         return "\n".join(sens)
     else:
         return 'no'

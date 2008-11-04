@@ -33,7 +33,7 @@
     >>> r1 = Rule('r1', [
     ...                Prop(Cuerpo('X1'), TienePosicion(metros='X2'), 'X4'),
     ...                Prop(Cuerpo('X3'), TienePosicion(metros='X5'), 'X4'),
-    ...                Arith('(< X4 10)'),
+    ...                Arith('(< X4 100)'),
     ...                Arith('(neq X2 X5)')
     ...                ], [
     ...                Prop(Cuerpo('X1'), EstaADistancia(metros='(- X2 X5)', otro=Cuerpo('X3')), 'X4')
@@ -57,7 +57,7 @@
     >>> r2 = Rule('r2', [
     ...            Prop(Cuerpo('X1'), TienePosicion(metros='X2'), 'X4'),
     ...            Prop(Cuerpo('X1'), TieneVelocidad(mps='X3'), 'X4'),
-    ...            Arith('(< X4 10)')
+    ...            Arith('(< X4 100)')
     ...            ], [
     ...            Prop(Cuerpo('X1'), TienePosicion(metros='(+ X2 X3)'), '(+ X4 1)')
     ...            ])
@@ -72,7 +72,7 @@
     >>> r3 = Rule('r3', [
     ...            Prop(Cuerpo('X1'), TieneVelocidad(mps='X2'), 'X4'),
     ...            Prop(Cuerpo('X1'), TieneAceleracion(mps2='X3'), 'X4'),
-    ...            Arith('(< X4 10)')
+    ...            Arith('(< X4 100)')
     ...            ], [
     ...            Prop(Cuerpo('X1'), TieneVelocidad(mps='(+ X2 X3)'), '(+ X4 1)')
     ...            ])
@@ -91,7 +91,7 @@
     ...            Prop(Cuerpo('X1'), SufreFuerza(newton='X2'), 'X4'),
     ...            Prop(Cuerpo('X1'), TieneAceleracion(mps2='X3'), 'X4'),
     ...            Prop(Cuerpo('X1'), TieneMasa(kgs=Number('X5')), Number('X4')),
-    ...            Arith('<', Number('X4'), Number(10))
+    ...            Arith('<', Number('X4'), Number(100))
     ...            ], [
     ...            Prop(Cuerpo('X1'), TieneAceleracion(mps2='(+ X3 (** (/ X2 X5) (/ 1 2)))'), '(+ X4 1)')
     ...            ])
@@ -102,7 +102,7 @@
     ...            Prop(Cuerpo('X1'), EstaADistancia(metros='X2', otro=Cuerpo('X3')), 'X4'),
     ...            Prop(Cuerpo('X1'), TieneMasa(kgs='X5'), 'X4'),
     ...            Prop(Cuerpo('X3'), TieneMasa(kgs='X6'), 'X4'),
-    ...            Arith('<', Number('X4'), Number(10))
+    ...            Arith('<', Number('X4'), Number(100))
     ...           ],
     ...          [                                                                                                  Prop(Cuerpo('X1'), SufreFuerza(newton='(/ (* X5 X6) (** X2 2))'), '(+ X4 1)')])
     
@@ -110,7 +110,7 @@
     
     >>> r6 = Rule('r6', [
     ...            Prop(Cuerpo('X1'), TieneMasa(kgs='X2'), 'X3'),
-    ...            Arith('(< X3 10)')
+    ...            Arith('(< X3 100)')
     ...            ],
     ...            [
     ...            Prop(Cuerpo('X1'), TieneMasa(kgs='X2'), '(+ X3 1)')
@@ -132,7 +132,7 @@
     
     >>> p4 = Prop(c2, TienePosicion(metros=Number(10)), Number(1))
     
-    >>> p5 = Prop(c1, Anda(mps=Number(1), longitud_zancada=3), Number(1))
+    >>> p5 = Prop(c1, TieneVelocidad(mps=Number(1)), Number(1))
     
     >>> p6 = Prop(c2, TieneVelocidad(mps=Number(1)), Number(1))
     
@@ -182,7 +182,11 @@
 
     >>> kb.extend()
     1188
-   
+    
+    >>> kb.tell(c1)
+
+    >>> kb.tell(c2)
+
     >>> kb.ask(Prop(c1, TienePosicion(metros=Number(5)), Number(1)))
     "c1 TienePosicion ['metros=5'] at 1"
     

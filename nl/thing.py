@@ -16,18 +16,24 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
-# import logging
 import re
 
+from log import logger
 from nl.registry import register, subclasses, clips
 
 # vars are always XNUM
-varpat = re.compile(r'^X(\d+)$')
+varpat = re.compile(r'^X\d+$')
 
-class _Name(object):
+class_constraint = '?%(val)s&:(eq (class ?%(val)s) %(cls)s)|:(subclassp (class ?%(val)s) %(cls)s)'
+sec_var_constraint = '?%(val)s&:(eq ?%(val)s (send ?%(var)s get-%(mod)s))'
+
+class Name(object):
     """
     """
-    clips_class = clips.USER_CLASS.BuildSubclass('Name')
+    clp = '(defclass Name (is-a USER))'
+    logger.info(clp)
+    clips.Build(clp)
+    clips_class = clips.FindClass('Name')
 
     def __init__(self, value):
         self.value = value
@@ -41,11 +47,14 @@ class MetaThing(type):
     """
     def __init__(cls, classname, bases, newdict):
         super(MetaThing, cls).__init__(classname, bases, newdict)
-        cls.clips_class = bases[0].clips_class.BuildSubclass(classname)
+        clp = '(defclass %s (is-a %s))' % (classname, bases[0].__name__)
+        logger.info(clp)
+        clips.Build(clp)
+        cls.clips_class = clips.FindClass(classname)
         register(classname, cls)
 
 # XXX ponerle adjetivos a thing
-class Thing(_Name):
+class Thing(Name):
     """
     """
     __metaclass__ = MetaThing
@@ -59,39 +68,53 @@ class Thing(_Name):
     def __str__(self):
         return '%s is a %s' % (self.value, self.__class__.__name__)
 
-    def get_ce(self, ces=None):
+    def get_ce(self, vrs):
         """
         build CE for clips
         """
         if varpat.match(self.value):
+            vrs[self.value] = ()
             ce = '(logical (object (is-a %s) (name ?%s)))'
             return ce % (self.__class__.__name__, self.value)
         return ''
 
-    def get_slot_constraint(self, ces):
+    def get_slot_constraint(self, vrs):
         """
         build rule CE constraint for clips
         for a slot constraint for a pred in a prop in a rule
         """
-        ce = self.get_ce()
-        if ce and ce not in ces:
-            ces.append(ce)
         if varpat.match(self.value):
-            return '?%s' % self.value
+            if self.value in vrs:
+                if vrs[self.value]:
+                    return sec_var_constraint % {'val': self.value,
+                                                 'var': vrs[self.value][0],
+                                                 'mod': vrs[self.value][1]}
+                else:
+                    return '?%s' % self.value
+            else:
+                vrs[self.value]= ()
+                return class_constraint % {'val': self.value,
+                                           'cls': self.__class__.__name__}
         return '[%s]' % self.value
 
-    def put_action(self):
+    def put_action(self, vrs):
         """
         put name in clips as a make-instance action.
         """
-        val = varpat.match(self.value) and '?%s' % self.value or \
-                                           '[%s]' % self.value
+        val = self.put(vrs)
 # XXX chequear que no existe y no pertenece ya a una clase más específica.
 # Entonces se podrán contruir props con nombres nuevos, y unificar los put
         return '(make-instance %s of %s)' % (val, self.__class__.__name__)
 
-    def put(self):
-        return self.get_slot_constraint([])
+    def put(self, vrs):
+        if varpat.match(self.value):
+            if self.value in vrs and vrs[self.value]:
+                return '(send ?%s get-%s)' % (vrs[self.value][0],
+                                              vrs[self.value][1])
+            else:
+                return '?%s' % self.value
+        else:
+            return '[%s]' % self.value
 
     def get_isc(self, templs, queries):
         """

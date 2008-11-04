@@ -25,15 +25,15 @@ class Rule(object):
         self.prems = prems
         self.cons = cons
 
-    def put_action(self):
+    def put_action(self, vrs=None):
         """
         put rule in clips
         """
-        ces = []
-        cprems = filter(None, map(lambda x:x.get_ce(ces), self.prems))
-        ccons = [con.put_action() for con in self.cons]
-        return '(defrule %s %s %s => %s)' % (self.name,
-                                          ' '.join(sorted(ces)),
+        if vrs is None:
+            vrs = {}
+        cprems = filter(None, map(lambda x:x.get_ce(vrs), self.prems))
+        ccons = [con.put_action(vrs) for con in self.cons]
+        return '(defrule %s %s => %s)' % (self.name,
                                           ' '.join(cprems),
                                           ' '.join(ccons))
 

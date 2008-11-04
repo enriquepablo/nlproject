@@ -46,7 +46,20 @@ poner nombre a las reglas.
 
         return constraint # no se pueden poner operaciones en numeros en premisas, hay que pasarlo todo a arith preds.
 
-
-
-
 hay que instanciar los componentes de las prop primero, y tellarlos
+
+
+
+    A number can be of 4 classes: number, operation, var, & op with vars.
+    A number can be in three places: in a bare prop, in a prem, in a con.
+    in a prop it can be a number (and possibly an op).
+    in a prem it can be in 2 places: in a prop, or in an arith condition.
+    in a prem prop, it is a single number.
+    in an arith prem, it is anything at all.
+    in a cond, it is anything at all.
+    so we need:
+    put gives us prop and con; with a vrs arg that tell where to get the vals.
+    get_constraint gives a var or a number, and if var and in vrs, a simple
+    comparison with the referenced mod of the vrs.
+    and we need an ArithPred that gives us CEs. with vrs.
+    (double check the newvar passing).
