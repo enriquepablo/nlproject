@@ -134,7 +134,7 @@
     
     >>> p5 = Prop(c1, TieneVelocidad(mps=1), 1)
     
-    >>> p6 = Prop(c2, TieneVelocidad(mps=1), 1)
+    >>> p6 = Prop(c2, Anda(mps=1, longitud_zancada=2), 1)
     
     >>> p7 = Prop(c1, TieneAceleracion(mps2=0), 1)
     
