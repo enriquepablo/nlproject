@@ -93,7 +93,7 @@ class State(Verb):
         kwargs = {}
         for mod,mcls in cls.mods.items():
             cmod = inst.GetSlot(mod)
-            if cmod:
+            if cmod is not None:
                 kwargs[mod] = mcls.from_clips(cmod)
         return cls(**kwargs)
 

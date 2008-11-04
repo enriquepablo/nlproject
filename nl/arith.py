@@ -67,10 +67,10 @@ class Number(object):
                 self.arg2 = Number(args[2])
             else:
                 self.value = value
-                if arg1:
+                if arg1 != '':
                     self.arg1 = isinstance(arg1,
                                            Number) and arg1 or Number(arg1)
-                if arg2:
+                if arg2 != '':
                     self.arg2 = isinstance(arg2,
                                            Number) and arg2 or Number(arg2)
 
@@ -93,8 +93,8 @@ class Number(object):
         except ValueError:
             if self.value == 'now':
                 return 'now'
-            arg1 = self.arg1 and self.arg1.get_slot_constraint(vrs)
-            arg2 =  self.arg1 and self.arg2.get_slot_constraint(vrs)
+            arg1 = self.arg1 != '' and self.arg1.get_slot_constraint(vrs)
+            arg2 =  self.arg1 != '' and self.arg2.get_slot_constraint(vrs)
             return '(%s %s %s)' % (self.value, arg1, arg2)
 
     def put(self, vrs):
@@ -122,9 +122,9 @@ class Arith(Number):
             self.arg2 = Number(args[2])
         else:
             self.value = value
-            if arg1:
+            if arg1 != '':
                 self.arg1 = isinstance(arg1, Number) and arg1 or Number(arg1)
-            if arg2:
+            if arg2 != '':
                 self.arg2 = isinstance(arg2, Number) and arg2 or Number(arg2)
 
     def get_ce(self, vrs=None):
