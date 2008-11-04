@@ -62,34 +62,26 @@ def retract(sentence):
         clips.FindInstance(ins).Remove()
 
 
-def ask(sentence):
-    clps = get_instances(sentence)
-    if clps:
-        sens = []
-        for ins in clps:
-            if isinstance(sentence, Thing):
-                sens.append(str(Thing.from_clips(ins)))
-            elif isinstance(sentence, Proposition):
-                i = clips.FindInstance(ins)
-                if issubclass(subclasses[str(i.Class.Name)], Proposition):
-                    sens.append(str(Proposition.from_clips(ins)))
-        return "\n".join(sens)
-    else:
-        return 'no'
-
-
 def ask_objs(sentence):
     clps = get_instances(sentence)
+    sens = []
     if clps:
-        sens = []
         for ins in clps:
             if isinstance(sentence, Thing):
                 sens.append(Thing.from_clips(ins))
-            else:
-                sens.append(Proposition.from_clips(ins))
-        return sens
-    else:
+            elif isinstance(sentence, Proposition):
+                i = clips.FindInstance(ins)
+                if issubclass(subclasses[str(i.Class.Name)], Proposition):
+                    sens.append(Proposition.from_clips(ins))
+    return sens
+
+
+def ask(sentence):
+    sens = ask_objs(sentence)
+    if not sens:
         return 'no'
+    else:
+        return '\n'.join(map(str, sens))
 
 def extend():
     return clips.Run()

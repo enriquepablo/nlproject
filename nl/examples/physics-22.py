@@ -20,7 +20,7 @@ import Gnuplot
 from nl import kb, State, Thing, Number, Arith, Prop, Rule
 
 
-time = '10000'
+time = '1000'
 
 # names
 
