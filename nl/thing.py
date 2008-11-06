@@ -102,9 +102,7 @@ class Thing(Name):
         put name in clips as a make-instance action.
         """
         val = self.put(vrs)
-# XXX chequear que no existe y no pertenece ya a una clase más específica.
-# Entonces se podrán contruir props con nombres nuevos, y unificar los put
-        return '(make-instance %s of %s)' % (val, self.__class__.__name__)
+        return '(reduce-class %s %s)' % (val, self.__class__.__name__)
 
     def put(self, vrs):
         if varpat.match(self.value):
