@@ -21,7 +21,7 @@
 from log import logger
 from nl.registry import register, subclasses, clips
 from nl.arith import Number
-from nl.thing import varpat, class_constraint
+from nl.thing import Thing, varpat, class_constraint
 
 
 # marker object
@@ -34,12 +34,14 @@ def _newvar():
     _vn += 1
     return 'Y%d' % _vn
 
+
+clp = '(defclass Verb (is-a USER))'
+logger.info(clp)
+clips.Build(clp)
+
 class Verb(object):
     """
     """
-    clp = '(defclass Verb (is-a USER))'
-    logger.info(clp)
-    clips.Build(clp)
     clips_class = clips.FindClass('Verb')
 
 
@@ -57,6 +59,7 @@ class MetaState(type):
         clp = '(defclass %s (is-a %s) %s)' % (classname,
                                               bases[0].__name__,
                                               slots)
+        clp_r = '(defrule (prop(s, p)) => s is-a S)' # XXX follow this? too many rules?
         logger.info(clp)
         clips.Build(clp)
         cls.clips_class = clips.FindClass(classname)
@@ -71,6 +74,7 @@ class State(Verb):
     """
     __metaclass__ = MetaState
 
+    subject = Thing
     mods = {}
 
     def __init__(self, **kwargs):
