@@ -24,13 +24,14 @@ from nl.prop import Proposition
 from nl.rule import Rule
 
 
-def tell(sentence):
-    s = sentence.put_action({})
-    logger.info(s)
-    if isinstance(sentence, Rule):
-        clips.Build(s)
-    else:
-        clips.Eval(s)
+def tell(*args):
+    for sentence in args:
+        s = sentence.put_action({})
+        logger.info(s)
+        if isinstance(sentence, Rule):
+            clips.Build(s)
+        else:
+            clips.Eval(s)
 
 def get_instancesn(sentence):
     templs = []

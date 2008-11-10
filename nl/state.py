@@ -16,12 +16,12 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
-# import logging
-# from nl.exceptions import NlError
+from persistent.dict import PersistentDict
+
 from log import logger
 from nl.registry import register, subclasses, clips
 from nl.arith import Number
-from nl.thing import Thing, varpat, class_constraint
+from nl.thing import Thing, Name, varpat, class_constraint
 
 
 # marker object
@@ -39,7 +39,7 @@ clp = '(defclass Verb (is-a USER))'
 logger.info(clp)
 clips.Build(clp)
 
-class Verb(object):
+class Verb(Name):
     """
     """
     clips_class = clips.FindClass('Verb')
@@ -63,9 +63,16 @@ class MetaState(type):
         logger.info(clp)
         clips.Build(clp)
         cls.clips_class = clips.FindClass(classname)
+        cls.modificators = PersistentDict()
+        for mod,modclass in cls.mods.items():
+            cls.modificators['mod'] == modclass.__name__
         for kls in bases:
-            if getattr(kls, 'mods', _m):
-                cls.mods.update(kls.mods)
+            if getattr(kls, 'modificators', _m):
+                cls.modificators.update(kls.modificators)
+        def _get_mods(self):
+# XXX horribol and possibly wrong:
+            return dict([(mod, subclasses(modcls)) for mod,modcls in self.modificators.items()])
+        cls.mods = property(_get_mods)
         register(classname, cls)
 
 
@@ -75,7 +82,7 @@ class State(Verb):
     __metaclass__ = MetaState
 
     subject = Thing
-    mods = {}
+    mods = PersistentDict()
 
     def __init__(self, **kwargs):
         for mod,cls in self.mods.items():

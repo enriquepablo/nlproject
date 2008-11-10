@@ -18,7 +18,7 @@
 
 # import logging
 from nl.registry import register
-from nl.thing import varpat
+from nl.thing import varpat, Name
 
 # marker object
 _m = []
@@ -50,7 +50,7 @@ def parens(expr):
     terms.append(term)
     return terms
 
-class Number(object):
+class Number(Name):
     """
 
     """

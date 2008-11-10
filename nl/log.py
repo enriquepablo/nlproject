@@ -19,10 +19,11 @@
 # this snippet comes from
 # http://www.mechanicalcat.net/richard/log/Python/Simple_usage_of_Python_s_logging_module
 
+from os import path
 import logging
-import nl
 logger = logging.getLogger('nl')
-hdlr = logging.FileHandler(nl.__path__[0] + '/clips/log.clp')
+here = path.join(path.dirname(__file__))
+hdlr = logging.FileHandler(here + '/clips/log.clp')
 formatter = logging.Formatter('%(message)s')
 # formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 hdlr.setFormatter(formatter)

@@ -17,6 +17,7 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
+from persistent import Persistent
 
 from log import logger
 from nl.registry import register, subclasses, clips
@@ -27,17 +28,14 @@ varpat = re.compile(r'^X\d+$')
 class_constraint = '?%(val)s&:(eq (class ?%(val)s) %(cls)s)|:(subclassp (class ?%(val)s) %(cls)s)'
 sec_var_constraint = '?%(val)s&:(eq ?%(val)s (send ?%(var)s get-%(mod)s))'
 
-class Name(object):
+clp = '(defclass Name (is-a USER))'
+logger.info(clp)
+clips.Build(clp)
+
+class Name(Persistent):
     """
     """
-    clp = '(defclass Name (is-a USER))'
-    logger.info(clp)
-    clips.Build(clp)
     clips_class = clips.FindClass('Name')
-
-    def __init__(self, value):
-        self.value = value
-
 
 class MetaThing(type):
     """
@@ -53,11 +51,14 @@ class MetaThing(type):
         cls.clips_class = clips.FindClass(classname)
         register(classname, cls)
 
-# XXX ponerle adjetivos a thing
+# XXX ponerle adjetivos a thing?
 class Thing(Name):
     """
     """
     __metaclass__ = MetaThing
+
+    def __init__(self, value):
+        self.value = value
 
     @classmethod
     def from_clips(cls, instance):
@@ -102,7 +103,7 @@ class Thing(Name):
         put name in clips as a make-instance action.
         """
         val = self.put(vrs)
-        return '(reduce-class %s %s)' % (val, self.__class__.__name__)
+        return '(make-instance %s of %s)' % (val, self.__class__.__name__)
 
     def put(self, vrs):
         if varpat.match(self.value):

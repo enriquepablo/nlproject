@@ -17,9 +17,36 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 # registry of subclasses
 
+import os
+from ZODB.FileStorage import FileStorage
+from ZODB.DB import DB
+from BTrees.OOBTree import OOBTree
+from persistent.mapping import PersistentMapping
+import transaction
+
 import clips
+from nl.log import here
+
+fs = os.path.exists(os.path.join(here, 'var/data.fs'))
+if not fs:
+    base = FileStorage(fs)
+    db = DB(base)
+    conn = db.open()
+    conn.root()['sentences'] = OOBTree()
+    transaction.commit()
+    db.close()
 
 subclasses = {}
 def register(clsname, cls):
     subclasses[clsname] = cls
 
+
+def root():
+    base = FileStorage(fs)
+    db = DB(base)
+    conn = db.open()
+    try:
+        while True:
+            yield conn.root()
+    finally:
+        db.close()

@@ -20,12 +20,12 @@
 from log import logger
 from nl.registry import clips, register
 from nl.arith import Number, Time
-from nl.thing import Thing, varpat
+from nl.thing import Thing, Name, varpat
 from nl.state import State
 
 _m = []
 
-class Proposition(object):
+class Proposition(Name):
     """
     """
     clp = '(defclass Proposition (is-a USER) (slot subject (type INSTANCE)) (slot predicate (type INSTANCE)) (slot time (type ?VARIABLE)))'
