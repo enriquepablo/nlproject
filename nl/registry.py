@@ -21,14 +21,13 @@ import os
 from ZODB.FileStorage import FileStorage
 from ZODB.DB import DB
 from BTrees.OOBTree import OOBTree
-from persistent.mapping import PersistentMapping
 import transaction
 
 import clips
 from nl.log import here
 
-fs = os.path.exists(os.path.join(here, 'var/data.fs'))
-if not fs:
+fs = os.path.join(here, 'var/data.fs')
+if not os.path.exists(fs):
     base = FileStorage(fs)
     db = DB(base)
     conn = db.open()

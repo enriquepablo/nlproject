@@ -63,16 +63,12 @@ class MetaState(type):
         logger.info(clp)
         clips.Build(clp)
         cls.clips_class = clips.FindClass(classname)
-        cls.modificators = PersistentDict()
         for mod,modclass in cls.mods.items():
-            cls.modificators['mod'] == modclass.__name__
+            if isinstance(modclass, type):
+                cls.mods[mod] = modclass.__name__
         for kls in bases:
-            if getattr(kls, 'modificators', _m):
-                cls.modificators.update(kls.modificators)
-        def _get_mods(self):
-# XXX horribol and possibly wrong:
-            return dict([(mod, subclasses(modcls)) for mod,modcls in self.modificators.items()])
-        cls.mods = property(_get_mods)
+            if getattr(kls, 'mods', _m):
+                cls.mods.update(kls.mods)
         register(classname, cls)
 
 
@@ -87,10 +83,10 @@ class State(Verb):
     def __init__(self, **kwargs):
         for mod,cls in self.mods.items():
             if kwargs.get(mod, _m) is not _m:
-                if isinstance(kwargs[mod], cls):
+                if isinstance(kwargs[mod], subclasses[cls]):
                     setattr(self, mod, kwargs[mod])
                 else:
-                    setattr(self, mod, cls(kwargs[mod]))
+                    setattr(self, mod, subclasses[cls](kwargs[mod]))
             #else:
             #    raise NlError("wrong modifier for verb")
 
@@ -105,7 +101,7 @@ class State(Verb):
         for mod,mcls in cls.mods.items():
             cmod = inst.GetSlot(mod)
             if cmod is not None:
-                kwargs[mod] = mcls.from_clips(cmod)
+                kwargs[mod] = subclasses[mcls].from_clips(cmod)
         return cls(**kwargs)
 
     def get_slot_constraint(self, vrs):
