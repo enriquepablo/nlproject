@@ -103,7 +103,7 @@ class Thing(Name):
         put name in clips as a make-instance action.
         """
         val = self.put(vrs)
-        return '(make-instance %s of %s)' % (val, self.__class__.__name__)
+        return '(reduce-class %s %s)' % (val, self.__class__.__name__)
 
     def put(self, vrs):
         if varpat.match(self.value):

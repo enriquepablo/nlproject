@@ -30,7 +30,8 @@ from log import logger
 from registry import clips, subclasses, root
 #from exceptions import Paradox, NlError
 
-_reduce_class = '(deffunction reduce-class (?instance ?class) (if (subclassp ?class (class ?instance)) then (make-instance ?instance of ?class)))'
+# _reduce_class = '(deffunction reduce-class (?instance ?class) (if (subclassp ?class (class ?instance)) then (make-instance ?instance of ?class)))'
+_reduce_class = '(deffunction reduce-class (?instance ?class) (if (or (eq (length$ (find-instance ((?a ?class)) (eq (instance-name ?a) ?instance))) 0) (subclassp ?class (class ?instance))) then (make-instance ?instance of ?class)))'
 clips.Build(_reduce_class)
 logger.info(_reduce_class)
 
