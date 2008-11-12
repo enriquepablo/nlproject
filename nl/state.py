@@ -19,9 +19,9 @@
 from persistent.dict import PersistentDict
 
 from log import logger
-from nl.registry import register, subclasses, clips
+from nl.utils import register, subclasses, clips, Name, varpat, class_constraint
 from nl.arith import Number
-from nl.thing import Thing, Name, varpat, class_constraint
+from nl.thing import Thing
 
 
 # marker object

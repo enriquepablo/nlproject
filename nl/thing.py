@@ -16,26 +16,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
-import re
-from persistent import Persistent
-
-from log import logger
-from nl.registry import register, subclasses, clips
-
-# vars are always XNUM
-varpat = re.compile(r'^X\d+$')
-
-class_constraint = '?%(val)s&:(eq (class ?%(val)s) %(cls)s)|:(subclassp (class ?%(val)s) %(cls)s)'
-sec_var_constraint = '?%(val)s&:(eq ?%(val)s (send ?%(var)s get-%(mod)s))'
-
-clp = '(defclass Name (is-a USER))'
-logger.info(clp)
-clips.Build(clp)
-
-class Name(Persistent):
-    """
-    """
-    clips_class = clips.FindClass('Name')
+from nl.log import logger
+from nl.utils import register, subclasses, clips, varpat, class_constraint, sec_var_constraint, Name
 
 class MetaThing(type):
     """

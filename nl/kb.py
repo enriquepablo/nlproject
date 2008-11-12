@@ -18,7 +18,7 @@
 
 # import logging
 from log import logger
-from nl.registry import clips, subclasses
+from nl.utils import clips, subclasses
 from nl.thing import Thing
 from nl.prop import Proposition
 from nl.rule import Rule

@@ -16,9 +16,6 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import md5
-import transaction
 
 import kb
 from arith import Number, Arith, Time
@@ -26,27 +23,3 @@ from thing import Thing
 from state import State
 from prop import Proposition, Prop
 from rule import Rule
-from log import logger
-from registry import clips, subclasses, root
-#from exceptions import Paradox, NlError
-
-# _reduce_class = '(deffunction reduce-class (?instance ?class) (if (subclassp ?class (class ?instance)) then (make-instance ?instance of ?class)))'
-_reduce_class = '(deffunction reduce-class (?instance ?class) (if (or (eq (length$ (find-instance ((?a ?class)) (eq (instance-name ?a) ?instance))) 0) (subclassp ?class (class ?instance))) then (make-instance ?instance of ?class)))'
-clips.Build(_reduce_class)
-logger.info(_reduce_class)
-
-def tonl(classname, name):
-    cls = subclasses[classname]
-    sen = cls.from_clips(name)
-    m = md5.new()
-    m.update(str(sen))
-    md5sum = m.digest()
-    r = root()
-    if md5sum in r['sentences']:
-        return False
-    else:
-        r['sentences'][md5sum] = sen
-        transaction.commit()
-        return True
-
-clips.RegisterPythonFunction(tonl)

@@ -17,8 +17,7 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 # import logging
-from nl.registry import register
-from nl.thing import varpat, Name
+from nl.utils import register, varpat, Name
 
 # marker object
 _m = []

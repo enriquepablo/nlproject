@@ -18,9 +18,9 @@
 
 # import logging
 from log import logger
-from nl.registry import clips, register
+from nl.utils import clips, register, Name, varpat
 from nl.arith import Number, Time
-from nl.thing import Thing, Name, varpat
+from nl.thing import Thing
 from nl.state import State
 
 _m = []
