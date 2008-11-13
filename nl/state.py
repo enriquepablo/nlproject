@@ -42,7 +42,7 @@ clips.Build(clp)
 class Verb(Name):
     """
     """
-    clips_class = clips.FindClass('Verb')
+    _v_clips_class = clips.FindClass('Verb')
 
 
 class MetaState(type):
@@ -62,7 +62,7 @@ class MetaState(type):
         clp_r = '(defrule (prop(s, p)) => s is-a S)' # XXX follow this? too many rules?
         logger.info(clp)
         clips.Build(clp)
-        cls.clips_class = clips.FindClass(classname)
+        cls._v_clips_class = clips.FindClass(classname)
         for mod,modclass in cls.mods.items():
             if isinstance(modclass, type):
                 cls.mods[mod] = modclass.__name__
@@ -95,11 +95,12 @@ class State(Verb):
 
     @classmethod
     def from_clips(cls, instance):
-        inst = clips.FindInstance(instance)
-        cls = subclasses[str(inst.Class.Name)]
+        if not isinstance(instance, clips._clips_wrap.Instance):
+            instance = clips.FindInstance(instance)
+        cls = subclasses[str(instance.Class.Name)]
         kwargs = {}
         for mod,mcls in cls.mods.items():
-            cmod = inst.GetSlot(mod)
+            cmod = instance.GetSlot(mod)
             if cmod is not None:
                 kwargs[mod] = subclasses[mcls].from_clips(cmod)
         return cls(**kwargs)

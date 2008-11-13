@@ -28,10 +28,10 @@ _m = []
 class Proposition(Name):
     """
     """
-    clp = '(defclass Proposition (is-a USER) (slot subject (type INSTANCE)) (slot predicate (type INSTANCE)) (slot time (type ?VARIABLE)))'
+    clp = '(defclass Proposition (is-a Name) (slot subject (type INSTANCE)) (slot predicate (type INSTANCE)) (slot time (type ?VARIABLE)))'
     logger.info(clp)
     clips.Build(clp)
-    clips_class = clips.FindClass('Proposition')
+    _v_clips_class = clips.FindClass('Proposition')
     def __init__(self, subj, pred, time):
         self.subject = subj
         self.predicate = pred
@@ -49,10 +49,11 @@ class Proposition(Name):
 
     @classmethod
     def from_clips(cls, instance):
-        i = clips.FindInstance(instance)
-        s = Thing.from_clips(i.GetSlot('subject'))
-        p = State.from_clips(i.GetSlot('predicate'))
-        t = Time.from_clips(i.GetSlot('time'))
+        if not isinstance(instance, clips._clips_wrap.Instance):
+            instance = clips.FindInstance(instance)
+        s = Thing.from_clips(instance.GetSlot('subject'))
+        p = State.from_clips(instance.GetSlot('predicate'))
+        t = Time.from_clips(instance.GetSlot('time'))
         return Prop(s, p, t)
 
     def get_ism(self, templs, queries, newvar='prop'):

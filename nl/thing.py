@@ -17,7 +17,7 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 from nl.log import logger
-from nl.utils import register, subclasses, clips, varpat, class_constraint, sec_var_constraint, Name
+from nl.utils import register, clips, varpat, class_constraint, sec_var_constraint, Name
 
 class MetaThing(type):
     """
@@ -30,7 +30,7 @@ class MetaThing(type):
         clp = '(defclass %s (is-a %s))' % (classname, bases[0].__name__)
         logger.info(clp)
         clips.Build(clp)
-        cls.clips_class = clips.FindClass(classname)
+        cls._v_clips_class = clips.FindClass(classname)
         register(classname, cls)
 
 # XXX ponerle adjetivos a thing?
@@ -41,12 +41,6 @@ class Thing(Name):
 
     def __init__(self, value):
         self.value = value
-
-    @classmethod
-    def from_clips(cls, instance):
-        inst = clips.FindInstance(instance)
-        cls = subclasses[str(inst.Class.Name)]
-        return cls(str(inst))
 
     def __str__(self):
         return '%s is a %s' % (self.value, self.__class__.__name__)

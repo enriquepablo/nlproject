@@ -18,16 +18,10 @@
 # utils module
 
 import re
-import os
-import md5
-import transaction
 from persistent import Persistent
-from ZODB.FileStorage import FileStorage
-from ZODB.DB import DB
-from BTrees.OOBTree import OOBTree
 
 import clips
-from nl.log import here, logger
+from nl.log import logger
 
 # vars are always XNUM
 varpat = re.compile(r'^X\d+$')
@@ -35,68 +29,38 @@ varpat = re.compile(r'^X\d+$')
 class_constraint = '?%(val)s&:(eq (class ?%(val)s) %(cls)s)|:(subclassp (class ?%(val)s) %(cls)s)'
 sec_var_constraint = '?%(val)s&:(eq ?%(val)s (send ?%(var)s get-%(mod)s))'
 _name_def = '(defclass Name (is-a USER))'
+a = '(defclass Thing (is-a Name))'
+b = '(defclass Cuerpo (is-a Thing))'
+c = '(make-instance [a] of Thing)'
 _reduce_class = '(deffunction reduce-class (?instance ?class) (if (or (eq (length$ (find-instance ((?a ?class)) (eq (instance-name ?a) ?instance))) 0) (subclassp ?class (class ?instance))) then (make-instance ?instance of ?class)))'
 _init_daemon = '(defmessage-handler Name init after () (python-call tonl (class ?self) ?self))'
 _del_daemon = '(defmessage-handler Name delete before () (python-call rmnl ?self))'
 
 clips.Build(_name_def)
 clips.Build(_reduce_class)
-#clips.Build(_init_daemon)
-#clips.Build(_del_daemon)
+clips.Build(_init_daemon)
+clips.Build(_del_daemon)
 logger.info(_name_def)
 logger.info(_reduce_class)
 logger.info(_init_daemon)
 logger.info(_del_daemon)
 
 
-
-def rmnl(classname, name):
-    pass
-
-clips.RegisterPythonFunction(rmnl)
-
-def tonl(classname, name):
-    cls = subclasses[classname]
-    sen = cls.from_clips(name)
-    m = md5.new()
-    m.update(str(sen))
-    md5sum = m.digest()
-    r = root()
-    if md5sum in r['sentences']:
-        return False
-    else:
-        r['sentences'][md5sum] = sen
-        transaction.commit()
-        return True
-
-clips.RegisterPythonFunction(tonl)
+subclasses = {}
+def register(clsname, cls):
+    subclasses[clsname] = cls
 
 
 class Name(Persistent):
     """
     """
-    clips_class = clips.FindClass('Name')
+    _v_clips_class = clips.FindClass('Name')
 
-subclasses = {}
-def register(clsname, cls):
-    subclasses[clsname] = cls
+    @classmethod
+    def from_clips(cls, instance):
+        if not isinstance(instance, clips._clips_wrap.Instance):
+            instance = clips.FindInstance(instance)
+        cls = subclasses[str(instance.Class.Name)]
+        return cls(str(instance))
 
-fs = os.path.join(here, 'var/data.fs')
-if not os.path.exists(fs):
-    base = FileStorage(fs)
-    db = DB(base)
-    conn = db.open()
-    conn.root()['sentences'] = OOBTree()
-    transaction.commit()
-    db.close()
-
-
-def root():
-    base = FileStorage(fs)
-    db = DB(base)
-    conn = db.open()
-    try:
-        while True:
-            yield conn.root()
-    finally:
-        db.close()
+register('Name', Name)

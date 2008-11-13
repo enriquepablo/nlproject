@@ -16,12 +16,39 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
-# import logging
-from log import logger
+import os
+import transaction
+from ZODB.FileStorage import FileStorage
+from ZODB.DB import DB
+from BTrees.OOBTree import OOBTree
+
+
+from nl.log import here, logger
 from nl.utils import clips, subclasses
 from nl.thing import Thing
 from nl.prop import Proposition
 from nl.rule import Rule
+
+
+app = None
+
+def open(name='data'):
+    global app
+    fs = os.path.join(here, 'var/%s.fs' % name)
+    base = FileStorage(fs)
+    db = DB(base)
+    app = db.open()
+    root = app.root()
+    if not root.has_key('sentences'):
+        root['sentences'] = OOBTree()
+        transaction.commit()
+
+
+def close():
+    global app
+    app.close()
+    app = None
+    return 'DB closed'
 
 
 def tell(*args):
@@ -86,3 +113,23 @@ def ask(sentence):
 
 def extend():
     return clips.Run()
+
+
+def rmnl(classname, name):
+    pass
+
+clips.RegisterPythonFunction(rmnl)
+
+def tonl(classname, name):
+    global mivar
+    cls = subclasses[str(classname)]
+    sen = cls.from_clips(name)
+    key = str(sen)
+    if app.root()['sentences'].has_key(key): # XXX index
+        return False
+    else:
+        app.root()['sentences'][key] = sen
+        transaction.commit()
+        return True
+
+clips.RegisterPythonFunction(tonl)
