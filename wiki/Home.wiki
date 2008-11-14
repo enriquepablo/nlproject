@@ -1,0 +1,31 @@
+= nl =
+
+== Introduction ==
+
+nl is a python API that aims to take the natural languages as its model. The idea is to use it to build rules and sentences, and to do it in a manner as close as possible to the way they are built in the natural languages. To be able to tanslate anything that may be said, to and from nl. To be able to describe or explain with nl anything that can be explained or described in one's mother tongue, and to obtain, in both cases, *texts* of similar complexity.
+
+The aim of this is not to propose any ontology, but a holder of ontologies. When using the natural languages, we rest on many ontologies. Different cultures use different ontologies, of course, but even within a single culture, a multititude of ontologies are used: in the same way as the quantum model and the relativist model use disjoint ontologies to speak of different aspects of the same thing, our description of the different aspects of our reality rests on different ontologies, some of which can be joined, some of which can't. So, nl wants to be able to express them all.
+
+But expressing them all is not enough. Esperanto, for example, is built on a grammar that can claim that. What is needed is to be able to obtain, given an ontology and the description of a state of affairs using that ontology (which we might term "a text"), all the logical consecuences of (or the contradictions in) that text. And that is what, using the clips inference engine, nl claims to provide. Partially. There are structures in the natural languages that cannot be expressed in nl. Modal logic, for example, is not implemented. I believe, however, that they can  be added without violence.
+
+== Usage ==
+
+The API consists of a few classes, basically Thing, State, Proposition, and Rule, and a few functions, basically, tell, extend and ask. These classes are used to build sentences, as instances of them. The function extend is used to obtain all logical consecuences of a set of sentences.
+
+=== Thing ===
+
+Thing is subclassed to make what will be used like common nouns, e.g., "man". Its subclasses are instantiated with a string representing a proper noun.
+
+{{{
+#!/usr/bin/python
+
+from nl import Thing
+
+class Man(Thing):
+    pass
+
+john = Man('john')
+
+}}}
+
+These instances can be used in two ways. They can be passed directly to tell, and that will be like asserting an attributive sentence, "<proper noun> is a <common noun>"; or they can be used in propositions, as subject or object.
