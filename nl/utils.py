@@ -29,20 +29,15 @@ varpat = re.compile(r'^X\d+$')
 class_constraint = '?%(val)s&:(eq (class ?%(val)s) %(cls)s)|:(subclassp (class ?%(val)s) %(cls)s)'
 sec_var_constraint = '?%(val)s&:(eq ?%(val)s (send ?%(var)s get-%(mod)s))'
 _name_def = '(defclass Name (is-a USER))'
-a = '(defclass Thing (is-a Name))'
-b = '(defclass Cuerpo (is-a Thing))'
-c = '(make-instance [a] of Thing)'
-_reduce_class = '(deffunction reduce-class (?instance ?class) (if (or (eq (length$ (find-instance ((?a ?class)) (eq (instance-name ?a) ?instance))) 0) (subclassp ?class (class ?instance))) then (make-instance ?instance of ?class)))'
-_init_daemon = '(defmessage-handler Name init after () (python-call tonl (class ?self) ?self))'
+_reduce_class = '(deffunction reduce-class (?instance ?class) (if (eq (length$ (find-instance ((?a ?class)) (eq (instance-name ?a) ?instance))) 0) then (make-instance ?instance of ?class) (python-call tonl ?class ?instance)))'
+# _init_daemon = '(defmessage-handler Name init after () (python-call tonl (class ?self) ?self))'
 _del_daemon = '(defmessage-handler Name delete before () (python-call rmnl ?self))'
 
 clips.Build(_name_def)
 clips.Build(_reduce_class)
-clips.Build(_init_daemon)
 clips.Build(_del_daemon)
 logger.info(_name_def)
 logger.info(_reduce_class)
-logger.info(_init_daemon)
 logger.info(_del_daemon)
 
 

@@ -1,31 +1,144 @@
-= nl =
+= nl
 
-== Introduction ==
+== Introduction
 
-nl is a python API that aims to take the natural languages as its model. The idea is to use it to build rules and sentences, and to do it in a manner as close as possible to the way they are built in the natural languages. To be able to tanslate anything that may be said, to and from nl. To be able to describe or explain with nl anything that can be explained or described in one's mother tongue, and to obtain, in both cases, *texts* of similar complexity.
+nl is a python API that aims to take the natural language as its model. The idea is to use it to build rules and sentences, and to do it in a manner as close as possible to the way they are built in the natural languages. The final goal of nl would be to be able to describe or explain with it anything that can be explained or described in one's own mother tongue, and to obtain, in both cases, //texts// of similar complexity.
 
-The aim of this is not to propose any ontology, but a holder of ontologies. When using the natural languages, we rest on many ontologies. Different cultures use different ontologies, of course, but even within a single culture, a multititude of ontologies are used: in the same way as the quantum model and the relativist model use disjoint ontologies to speak of different aspects of the same thing, our description of the different aspects of our reality rests on different ontologies, some of which can be joined, some of which can't. So, nl wants to be able to express them all.
+The aim of nl is not to propose any ontology, but a system to build ontologies; and a system, also, capable of obtaining, given an ontology and the description of a state of affairs using that ontology (which we might call "a text"), all the logical consecuences of (or the contradictions in) that text. nl relies internally on the [[http://clipsrules.sourceforge.net/|clips]] expert system for this.
 
-But expressing them all is not enough. Esperanto, for example, is built on a grammar that can claim that. What is needed is to be able to obtain, given an ontology and the description of a state of affairs using that ontology (which we might term "a text"), all the logical consecuences of (or the contradictions in) that text. And that is what, using the clips inference engine, nl claims to provide. Partially. There are structures in the natural languages that cannot be expressed in nl. Modal logic, for example, is not implemented. I believe, however, that they can  be added without violence.
+There are structures in the natural languages that cannot be expressed in nl in its present state. Modal logic, for example, is not implemented. I believe, however, that they can  be added without violence, and there is a short discussion on these issues at the end of this document.
 
-== Usage ==
+== Usage
 
-The API consists of a few classes, basically Thing, State, Proposition, and Rule, and a few functions, basically, tell, extend and ask. These classes are used to build sentences, as instances of them. The function extend is used to obtain all logical consecuences of a set of sentences.
+The API consists of a few classes, basically {{{ Thing }}}, {{{ State }}}, {{{ Number }}}, {{{ Proposition }}}, and {{{ Rule }}}, and a few functions, basically, {{{ tell }}}, {{{ extend }}} and {{{ ask }}}. These classes are used to build sentences, as instances of them. Afterwards, the function {{{ extend }}} is used to obtain all logical consecuences of a set of sentences, and {{{ ask }}} is used to query the system.
 
-=== Thing ===
+=== Thing
 
-Thing is subclassed to make what will be used like common nouns, e.g., "man". Its subclasses are instantiated with a string representing a proper noun.
+{{{Thing }}} is subclassed to make what will be used like common nouns, e.g., "man". The derived classes are instantiated with a string representing a proper noun. This strings have to be legal python names.
 
 {{{
-#!/usr/bin/python
+#!python
 
-from nl import Thing
+>>> from nl import Thing, State, Number, Prop, Rule, kb
 
-class Man(Thing):
-    pass
+>>> class Man(Thing):
+...     pass
 
-john = Man('john')
+>>> john = Man('john')
+
+>>> kb.open()
+>>> kb.tell(john)
+}}}
+
+These instances can be used in two ways. They can be passed directly to {{{ tell }}}, and that will be like asserting an attributive sentence, "John is a man". Once they have been added to the system with {{{ tell }}}, they can be used in propositions, as subject or object; more on this later.
+
+If you instantiate again {{{ Man }}} with {{{ 'john' }}}, you get another python instance, that, however, corresponds to the same underlying clips instance. This means that, logically, both instances are the same.
+
+=== State
+
+{{{ State }}} is subclassed to make what will be used as verbs. Its derived classes are defined with a dictionary {{{ mods }}} of strings to classes, which can be derived from {{{ Thing }}} or {{{ Number }}} (also from the nl namespace). This {{{ mods }}} dict represents the possible modificators that the verb can have when used in a proposition.
+
+{{{
+#!python
+
+>>> class Food(Thing): pass
+
+>>> class Eats(State):
+...     mods = {'edible': Food,
+...             'grams': Number}
+}}}
+
+When instantiating a verb, it is not necessary to provide all the names defined within {{{ mods }}}, and you can also provide names defined in a superclass' {{{ mods }}}.
+
+Classes derived from {{{ State }}} are only instantiated as predicates within propositions, and are given, as {{{ **kwargs }}}, a dictionary equivalent to the {{{ mods }}} of the class, but with instances instead of classes: {{{ Eats( edible = Food('banana'), grams = 300) }}}.
+
+One natural language verb that should not be represented in nl as subclass of {{{ State }}} is "to be". "To be" is given by the set theory implicit in the class system, as was seen when we built the "john is a man" sentence.
+
+=== Proposition
+
+{{{ Proposition }}} is instantiated to make propositions, with three positional args representing subject, predicate, and time. As subject, it requires a thing instance, as predicate a state instance, and as time, a number.
+
+{{{
+#!python
+
+>>> p1 = Proposition( john, Eats( edible = Food('banana'), grams = 300), 0 )
+
+>>> kb.tell(p1)
+}}}
+
+=== Rule
+
+{{{ Rule }}} is instantiated to build rules. The constuctor takes three positional arguments: a name string, and 2 lists of propositions and things, to act as premises and as consecuences. What clips will do with all this is to seek for instances that match the premises, and once it covers all of them, adds the consecuences as stand-alone sentences.
+
+Variables can be used within rules. They are given by a string composed by an upper case letter followed by digits. They can be used in the place of the subject, the predicate, any of its mods, or the time. Their scope is the rule where they appear, and their only role is to match, when present in the premises, and to be substituted by the match when present in the consecuences.
+
+{{{
+#!python
+
+>>> r1 = Rule('r1',
+...           [Proposition( Man('M1'),
+...                         Eats( edible = Food('banana'), grams = 'X1'),
+...                         'T1' )],
+...           [Proposition( Man('M1',
+...                         Eats( edible = Food('pie'), grams = '(+ X1 2)'),
+...                         'T1')])
+
+
+>>> kb.tell(r1)
+}}}
+
+This rule would mean (absurdly) that whenever a man eats bananas, he also eats 2 grams more of pie, as can be seen in the next section.
+
+=== extend and ask
+
+Now, we can extend the database to all its logical consecuences. With the previous sentences, there is only one consecuence: that john eats 302 grs of pie:
+
+{{{
+#!python
+
+>>> kb.extend()
+
+>>> kb.ask(Proposition( john, Eats( edible = Food('pie'), grams = 302), 0 ))
+john Eats ['edible=pie', 'grams=302'] at 0
+
+>>> kb.ask(Proposition( john, Eats( edible = Food('apple'), grams = 302), 0 ))
+'no'
+
+>>> kb.ask(Proposition( john, Eats( edible = Food('X1'), grams = 'X2'), 0 ))
+john Eats ['edible=pie', 'grams=302'] at 0, john Eats ['edible=banana', 'grams=300'] at 0
 
 }}}
 
-These instances can be used in two ways. They can be passed directly to tell, and that will be like asserting an attributive sentence, "<proper noun> is a <common noun>"; or they can be used in propositions, as subject or object.
+This won't actually work if typed in a python interactive interpreter; the classes have to be declared in the filesystem for nl to work. So, we should take the definitions of {{{ Man }}}, {{{ Food }}}, and {{{ Eats }}} to a python module, and import it from the interactive interpeter, for this example to work.
+
+finally, we must not forget to close the database.
+{{{
+#!python
+
+>>> kb.close()
+}}}
+
+=== Arithmetics
+
+Modificators in predicates can have a numeric value, specified in the verb definition as {{{ Number }}}. In stand alone propositions, numbers are just numbers, integers or floats. In a rule, they can be arithmetic operations in which variables take part. The syntax for this operations is consecuence of working with clips at the time of diciding it: {{{ (<op> <arg1> <arg2>) }}}. At the moment, only binary operations are allowed. Of course, any of the arguments can itself be an operation. The operators can be any of the arithmetic operators allowed in python.
+
+Additionally, we can include arithmetic sentences, with truth value instead of numeric value, as premises in a rule. The allowed predicates are the arithmetic predicates allowed in python, and the syntax is the same as that of operations.
+
+
+== Design decissions to take
+
+1.- Time. I have chosen to add a time component to propositions. Time could ovbiously be an optional modificator of verbs in predicates. But in //my// natural language it is always present, if only as verb conjugation.
+
+2.- No adjectives. This relates to the previous discussion about time. The different treatment of "to be" and the other verbs means that to be is timeless in this framework. Adjetives would also be timeless.
+
+3.- No Verbs/preds as mods in preds. to implement.
+
+4.- No negation. give it as an alternative. Closed world scenario (the present), were absence implies negation, and closed world, where there is proper negation and the unknown.
+
+5.- modal logic. Has no sense in the closed world scenario. and limited to the types of questions (ask) available in an open world scenario. This is, adding modal logic means adding a way of asking whether something is possible (is unknown; is in the consecuences of some almost covered rule; etc.) adding probability algebra can be done directly with normal propositions.
+
+6.- zodb. I have added zodb persistence. clips, as far as I can see, only allows me to load or save the whole file. With zodb i can atomically save sentences. And I already had objects that fitted in the zodb like in a glove. In any case the state of the system is maintained in clips, 
+
+----
+
+Enrique Pérez Arnaud © 2008 

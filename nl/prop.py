@@ -89,7 +89,12 @@ class Proposition(Name):
         s = self.subject.put(vrs)
         p = self.predicate.put(vrs)
         t = self.time.put(vrs)
-        return '(make-instance of Proposition (subject %s) (predicate %s) (time %s))' % (s, p, t)
+        return '(add-prop %s %s %s)' % (s, p, t)
 
 register('Proposition', Proposition)
 Prop = Proposition
+
+_add_prop = '(deffunction add-prop (?s ?p ?t) (if (python-call ptonl ?s ?p ?t) then (make-instance of Proposition (subject ?s) (predicate ?p) (time ?t))))'
+
+clips.Build(_add_prop)
+logger.info(_add_prop)

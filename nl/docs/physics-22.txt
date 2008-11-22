@@ -107,7 +107,7 @@
     >>> p9 = Prop(c1, SufreFuerza(newton=0), 1)
     
     >>> p10 = Prop(c2, SufreFuerza(newton=0), 1)
-    
+
     >>> kb.tell(r1)
 
     >>> kb.tell(r2)

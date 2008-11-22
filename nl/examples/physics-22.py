@@ -144,6 +144,8 @@ p9 = Prop(c1, SufreFuerza(x=0, y=0), 1)
 
 p10 = Prop(c2, SufreFuerza(x=0, y=0), 1)
 
+kb.open()
+
 for p in (c1, c2, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, r1, r2, r3, r4, r5):
     kb.tell(p)
 
@@ -155,6 +157,8 @@ resp2 = kb.ask_objs(Prop(c2, TienePosicion(x='X1', y='X2'), 'X3'))
 
 #resp1 = kb.ask_objs(Prop(c1, SufreFuerza(newton='X1'), 'X2'))
 #resp2 = kb.ask_objs(Prop(c2, SufreFuerza(newton='X1'), 'X2'))
+
+kb.close()
 
 
 line1 = [(float(p.predicate.x.value), float(p.predicate.y.value)) for p in resp1]

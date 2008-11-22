@@ -26,22 +26,50 @@ from BTrees.OOBTree import OOBTree
 from nl.log import here, logger
 from nl.utils import clips, subclasses
 from nl.thing import Thing
+from nl.state import State
+from nl.arith import Time
 from nl.prop import Proposition
 from nl.rule import Rule
 
 
 app = None
+_initializing = False
 
 def open(name='data'):
-    global app
+    global app, _initializing
     fs = os.path.join(here, 'var/%s.fs' % name)
     base = FileStorage(fs)
     db = DB(base)
     app = db.open()
     root = app.root()
-    if not root.has_key('sentences'):
-        root['sentences'] = OOBTree()
+    if not root.has_key('props'):
+        root['rules'] = OOBTree()
+        root['props'] = OOBTree()
+        root['things'] = OOBTree()
         transaction.commit()
+    else:
+        _initializing = True
+        _unreactive_classes()
+        for t in ('things', 'rules', 'props'):
+            for sen in app.root()[t].itervalues():
+              try:
+                tell(sen)
+              except:
+                logger.info('------>' + str(sen))
+        while True:
+            n = clips._clips.getNextActivation()
+            if n is None:
+                break
+            clips._clips.deleteActivation(n)
+        _reactive_classes()
+        _initializing = False
+        logger.info('ho ho ho')
+
+def _unreactive_classes():
+    pass
+
+def _reactive_classes():
+    pass
 
 
 def close():
@@ -56,7 +84,10 @@ def tell(*args):
         s = sentence.put_action({})
         logger.info(s)
         if isinstance(sentence, Rule):
-            clips.Build(s)
+            if not app.root()['rules'].has_key(sentence.name):
+                app.root()['rules'][sentence.name] = Rule
+                clips.Build(s)
+                transaction.commit()
         else:
             clips.Eval(s)
 
@@ -116,20 +147,32 @@ def extend():
 
 
 def rmnl(classname, name):
-    pass
+    return True
 
 clips.RegisterPythonFunction(rmnl)
 
 def tonl(classname, name):
-    global mivar
     cls = subclasses[str(classname)]
     sen = cls.from_clips(name)
     key = str(sen)
-    if app.root()['sentences'].has_key(key): # XXX index
-        return False
-    else:
-        app.root()['sentences'][key] = sen
+    if not app.root()['things'].has_key(key): # XXX index
+        app.root()['things'][key] = sen
         transaction.commit()
-        return True
+    return True
 
 clips.RegisterPythonFunction(tonl)
+
+def ptonl(subj, pred, time):
+    s = Thing.from_clips(subj)
+    p = State.from_clips(pred)
+    t = Time.from_clips(time)
+    sen = Proposition(s, p, t)
+    key = str(sen)
+    if not app.root()['props'].has_key(key): # XXX index
+        app.root()['props'][key] = sen
+        transaction.commit()
+    elif not _initializing:
+        return False
+    return True
+
+clips.RegisterPythonFunction(ptonl)
