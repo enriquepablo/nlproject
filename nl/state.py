@@ -91,7 +91,12 @@ class State(Verb):
             #    raise NlError("wrong modifier for verb")
 
     def __str__(self):
-        return ''
+        mods = []
+        for mod,cls in self.mods.items():
+            if getattr(self, mod, _m) is not _m:
+              mods.append('%s %s' % (mod, str(getattr(self, mod))))
+        return '%s %s' % (self.__class__.__name__.lower(),
+                          ' '.join(mods))
 
     @classmethod
     def from_clips(cls, instance):
@@ -145,7 +150,9 @@ class State(Verb):
             if mod_o is not _m:
                 slots.append('(%s %s)' % (mod, mod_o.put(vrs)))
         slots = ' '.join(slots)
-        return '(make-instance of %s %s)' % (self.__class__.__name__, slots)
+        name = str(self).replace('?', '').replace(' ', '_')
+        return '(make-instance of %s %s)' % (self.__class__.__name__,
+                                                  slots)
 
 
     def get_isc(self, templs, queries):

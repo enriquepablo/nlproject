@@ -49,32 +49,21 @@ def open(name='data'):
         transaction.commit()
     else:
         _initializing = True
-        _unreactive_classes()
         for t in ('things', 'rules', 'props'):
             for sen in app.root()[t].itervalues():
-              try:
                 tell(sen)
-              except:
-                logger.info('------>' + str(sen))
         while True:
             n = clips._clips.getNextActivation()
+            logger.info(n)
             if n is None:
                 break
             clips._clips.deleteActivation(n)
-        _reactive_classes()
         _initializing = False
-        logger.info('ho ho ho')
-
-def _unreactive_classes():
-    pass
-
-def _reactive_classes():
-    pass
-
 
 def close():
     global app
     app.close()
+    app.db().close()
     app = None
     return 'DB closed'
 
@@ -82,14 +71,25 @@ def close():
 def tell(*args):
     for sentence in args:
         s = sentence.put_action({})
-        logger.info(s)
         if isinstance(sentence, Rule):
             if not app.root()['rules'].has_key(sentence.name):
-                app.root()['rules'][sentence.name] = Rule
+                app.root()['rules'][sentence.name] = sentence
                 clips.Build(s)
                 transaction.commit()
-        else:
+                logger.info(s)
+            elif _initializing:
+                clips.Build(s)
+                logger.info(s)
+        elif isinstance(sentence, Proposition) and \
+               _initializing or \
+               not app.root()['props'].has_key(str(sentence)):
             clips.Eval(s)
+            logger.info(s)
+        elif isinstance(sentence, Thing) and \
+               _initializing or \
+               not app.root()['things'].has_key(str(sentence)):
+            clips.Eval(s)
+            logger.info(s)
 
 def get_instancesn(sentence):
     templs = []
@@ -155,6 +155,7 @@ def tonl(classname, name):
     cls = subclasses[str(classname)]
     sen = cls.from_clips(name)
     key = str(sen)
+    logger.info(key)
     if not app.root()['things'].has_key(key): # XXX index
         app.root()['things'][key] = sen
         transaction.commit()
@@ -172,7 +173,8 @@ def ptonl(subj, pred, time):
         app.root()['props'][key] = sen
         transaction.commit()
     elif not _initializing:
-        return False
+        return clips.Symbol('FALSE')
+    logger.info(key)
     return True
 
 clips.RegisterPythonFunction(ptonl)

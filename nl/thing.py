@@ -43,6 +43,9 @@ class Thing(Name):
         self.value = value
 
     def __str__(self):
+        return self.value
+
+    def __repr__(self):
         return '%s is a %s' % (self.value, self.__class__.__name__)
 
     def get_ce(self, vrs):

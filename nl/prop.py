@@ -38,14 +38,9 @@ class Proposition(Name):
         self.time = isinstance(time, Number) and time or Time(time)
 
     def __str__(self):
-        mods = []
-        for mod,cls in self.predicate.mods.items():
-            if getattr(self.predicate, mod, _m) is not _m:
-              mods.append('%s=%s' % (mod, getattr(self.predicate, mod).value))
-        return '%s %s %s at %s' % (self.subject.value,
-                                   self.predicate.__class__.__name__,
-                                   mods,
-                                   self.time.value)
+        return '%s %s at %s' % (str(self.subject),
+                                str(self.predicate),
+                                str(self.time))
 
     @classmethod
     def from_clips(cls, instance):

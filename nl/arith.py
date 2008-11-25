@@ -106,6 +106,9 @@ class Number(Name):
         """
         return self.put({})
 
+    def __str__(self):
+        return self.put({})
+
 register('Number', Number)
 
 
@@ -135,6 +138,11 @@ class Arith(Number):
         arg1 =  self.arg1.put({})
         arg2 =  self.arg2.put({})
         queries.append('(%s %s %s)' % (self.value, arg1, arg2))
+
+    def __str__(self):
+        queries = []
+        self.get_isc([], queries)
+        return queries.pop()
 
 register('Arith', Arith)
 
