@@ -20,7 +20,7 @@
 from persistent.dict import PersistentDict
 
 from log import logger
-from nl.utils import register, subclasses, clips, Name, varpat, class_constraint, sec_var_constraint
+from nl.utils import register, subclasses, clips, Name, varpat, class_constraint, clips_instance
 from nl.arith import Number
 from nl.thing import Thing
 
@@ -116,42 +116,52 @@ class State(Verb):
                 kwargs[mod] = subclasses[mcls].from_clips(cmod)
         return cls(**kwargs)
 
-    def get_slot_constraint(self, vrs, mod=''):
+    def get_slot_constraint(self, vrs):
         """
         build rule CE constraint for clips
         for a slot constraint for a prop in a rule
         """
         newvar = _newvar()
         if self.value in vrs:
-            return sec_var_constraint % {'val': newvar,
-                                         'var': vrs[self.value][0],
-                                         'mod': vrs[self.value][1]}
+            if vrs[self.value]:
+                return '?%(val)s&:(eq ?%(val)s %(var)s)' % {'val': newvar,
+                                           'var': clips_instance(*(vrs[self.value]))}
+            else:
+                return '?%s' % self.value
         elif self.value:
-            return '?%s' % self.value
-        newvar = _newvar()
-        constraint = class_constraint % {'val': newvar,
+            return class_constraint % {'val': self.value,
                                          'cls': self.__class__.__name__}
+            vrs[self.value] = ()
+        newvar = _newvar()
+        constraint = [class_constraint % {'val': newvar,
+                                         'cls': self.__class__.__name__}]
         for mod,cls in self.mods.items():
             mod_o =  getattr(self, mod, _m)
             if mod_o is not _m:
-                var = str(getattr(self, mod))
-                if varpat.match(var):
-                    if var in vrs:
-                        if vrs[var]:
-                            constraint += '&:(eq (send ?%s get-%s) (send ?%s get-%s))' % (newvar, mod, vrs[var][0], vrs[var][1])
-                        else:
-                            constraint += '&:(eq (send ?%s get-%s) ?%s)' % (newvar,
-                                                                   mod, var)
-                    else:
-                        vrs[var] = (newvar, mod)
+                constraint.append(mod_o.get_constraint(vrs, newvar, (mod,)))
+        return ''.join(constraint)
+
+    def get_constraint(self, vrs, ancestor, mod_path):
+        ci = clips_instance(ancestor, mod_path)
+        constraint = []
+        if self.value:
+            if self.value in vrs:
+                if vrs[self.value]:
+                    v_ci = clips_instance(*(vrs[self.value]))
+                    constraint.append('&:(eq %s %s)' % (v_ci, ci))
                 else:
-                    if isinstance(mod_o, Number):
-                        constraint += '&:(eq (send ?%s get-%s) %s)' % (newvar,
-                                       mod, mod_o.get_slot_constraint(vrs))
-                    else:
-                        constraint += '&:(eq (send ?%s get-%s) [%s])' % (newvar,
-                                                                   mod, var)
-        return constraint
+                    constraint.append('&:(eq %s ?%s)' % (ci, self.value))
+            else:
+                vrs[self.value] = (ancestor, mod_path)
+        else:
+            constraint.append('&:(eq (class ?%(val)s) %(cls)s)|:(subclassp (class ?%(val)s) %(cls)s)' % {'val': ci, 'cls': self.__class__.__name__})
+            for mod,cls in self.mods.items():
+                mod_o =  getattr(self, mod, _m)
+                if mod_o is not _m:
+                    constraint.append(mod_o.get_constraint(vrs,
+                                                       ancestor,
+                                                       mod_path + (mod,)))
+            return ''.join(constraint)
 
     def put(self, vrs, name=None):
         """
@@ -220,4 +230,3 @@ clips.Build(_add_pred)
 logger.info(_set_tal)
 logger.info(_set_slots)
 logger.info(_add_pred)
-

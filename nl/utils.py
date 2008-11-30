@@ -27,7 +27,6 @@ from nl.log import logger
 varpat = re.compile(r'^X\d+$')
 
 class_constraint = '?%(val)s&:(eq (class ?%(val)s) %(cls)s)|:(subclassp (class ?%(val)s) %(cls)s)'
-sec_var_constraint = '?%(val)s&:(eq ?%(val)s (send ?%(var)s get-%(mod)s))'
 _name_def = '(defclass Name (is-a USER))'
 _reduce_class = '(deffunction reduce-class (?instance ?class) (if (eq (length$ (find-instance ((?a ?class)) (eq (instance-name ?a) ?instance))) 0) then (make-instance ?instance of ?class) (python-call tonl ?class ?instance)))'
 _del_daemon = '(defmessage-handler Name delete before () (python-call rmnl ?self))'
@@ -58,3 +57,12 @@ class Name(Persistent):
         return cls(str(instance))
 
 register('Name', Name)
+
+
+def clips_instance(ancestor, mod_path):
+    core = '(send ?%s get-%s)' % (ancestor, mod_path[0])
+    mod_path = mod_path[1:]
+    while mod_path:
+        core = '(send %s get-%s)' % (core, mod_path[0])
+        mod_path = mod_path[1:]
+    return core

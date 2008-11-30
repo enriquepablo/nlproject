@@ -74,13 +74,13 @@ def tell(*args):
         s = sentence.put_action({})
         if isinstance(sentence, Rule):
             if not app.root()['rules'].has_key(sentence.name):
+                logger.info(s)
                 app.root()['rules'][sentence.name] = sentence
                 clips.Build(s)
                 transaction.commit()
-                logger.info(s)
             elif _initializing:
-                clips.Build(s)
                 logger.info(s)
+                clips.Build(s)
         elif isinstance(sentence, Proposition) and \
                _initializing or \
                not app.root()['props'].has_key(str(sentence)):
@@ -89,8 +89,8 @@ def tell(*args):
         elif isinstance(sentence, Thing) and \
                _initializing or \
                not app.root()['things'].has_key(str(sentence)):
-            clips.Eval(s)
             logger.info(s)
+            clips.Eval(s)
 
 def get_instancesn(sentence):
     templs = []

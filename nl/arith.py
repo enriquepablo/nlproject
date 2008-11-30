@@ -17,7 +17,7 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 # import logging
-from nl.utils import register, varpat, Name
+from nl.utils import register, varpat, Name, clips_instance
 
 # marker object
 _m = []
@@ -83,8 +83,7 @@ class Number(Name):
         """
         if varpat.match(self.value):
             if self.value in vrs and vrs[self.value]:
-                return '(send ?%s get-%s)' % (vrs[self.value][0],
-                                              vrs[self.value][1])
+                return clips_instance(*(vrs[self.value]))
             else:
                 return '?%s' % self.value
         try:
@@ -95,6 +94,22 @@ class Number(Name):
             arg1 = self.arg1 != '' and self.arg1.get_slot_constraint(vrs)
             arg2 =  self.arg1 != '' and self.arg2.get_slot_constraint(vrs)
             return '(%s %s %s)' % (self.value, arg1, arg2)
+
+    def get_constraint(self, vrs, ancestor, mod_path):
+        ci = clips_instance(ancestor, mod_path)
+        constraint = ''
+        if varpat.match(self.value):
+            if self.value in vrs:
+                if vrs[self.value]:
+                    v_ci = clips_instance(*(vrs[self.value]))
+                    constraint = '&:(eq %s %s)' % (v_ci, ci)
+                else:
+                    constraint = '&:(eq %s ?%s)' % (ci, self.value)
+            else:
+                vrs[self.value] = (ancestor, mod_path)
+        else:
+            constraint = '&:(eq %s %s)' % (ci, self.get_slot_constraint(vrs))
+        return constraint
 
     def put(self, vrs):
         return self.get_slot_constraint(vrs)

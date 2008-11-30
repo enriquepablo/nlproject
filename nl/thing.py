@@ -17,7 +17,7 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 from nl.log import logger
-from nl.utils import register, clips, varpat, class_constraint, sec_var_constraint, Name
+from nl.utils import register, clips, varpat, class_constraint, Name, clips_instance
 
 class MetaThing(type):
     """
@@ -68,9 +68,8 @@ class Thing(Name):
         if varpat.match(self.value):
             if self.value in vrs:
                 if vrs[self.value]:
-                    return sec_var_constraint % {'val': self.value,
-                                                 'var': vrs[self.value][0],
-                                                 'mod': vrs[self.value][1]}
+                    return '?%(val)s&:(eq ?%(val)s %(var)s)' % {'val': self.value,
+                                           'var': clips_instance(*(vrs[self.value]))}
                 else:
                     return '?%s' % self.value
             else:
@@ -78,6 +77,22 @@ class Thing(Name):
                 return class_constraint % {'val': self.value,
                                            'cls': self.__class__.__name__}
         return '[%s]' % self.value
+
+    def get_constraint(self, vrs, ancestor, mod_path):
+        ci = clips_instance(ancestor, mod_path)
+        constraint = ''
+        if varpat.match(self.value):
+            if self.value in vrs:
+                if vrs[self.value]:
+                    v_ci = clips_instance(*(vrs[self.value]))
+                    constraint = '&:(eq %s %s)' % (v_ci, ci)
+                else:
+                    constraint = '&:(eq %s ?%s)' % (ci, self.value)
+            else:
+                vrs[self.value] = (ancestor, mod_path)
+        else:
+            constraint = '&:(eq %s [%s])' % (ci, self.value)
+        return constraint
 
     def put_action(self, vrs):
         """
