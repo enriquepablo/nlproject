@@ -17,6 +17,7 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+#import re
 import transaction
 from ZODB.FileStorage import FileStorage
 from ZODB.DB import DB
@@ -83,8 +84,8 @@ def tell(*args):
         elif isinstance(sentence, Proposition) and \
                _initializing or \
                not app.root()['props'].has_key(str(sentence)):
-            clips.Eval(s)
             logger.info(s)
+            clips.Eval(s)
         elif isinstance(sentence, Thing) and \
                _initializing or \
                not app.root()['things'].has_key(str(sentence)):
@@ -164,6 +165,7 @@ def tonl(classname, name):
 clips.RegisterPythonFunction(tonl)
 
 def ptonl(subj, pred, time):
+    logger.info('--------> %s %s %s' % (subj, pred, time))
     s = Thing.from_clips(subj)
     p = State.from_clips(pred)
     t = Time.from_clips(time)
@@ -178,3 +180,14 @@ def ptonl(subj, pred, time):
     return True
 
 clips.RegisterPythonFunction(ptonl)
+
+# _pred_pat = re.compile('[()\s\[\]]')
+# def make_pred(classname, slots):
+#     key = classname + re.sub(_pred_pat, '', slots)
+#     clp_pred = clips.FindInstance(key)
+#     if not clp_pred:
+#         clp = 'make-instance [%s] of %s %s' % (key, classname, slots)
+#         clp_pred = clips.Eval(clp)
+#     return clp_pred
+# 
+# clips.RegisterPythonFunction(make_pred)

@@ -40,6 +40,8 @@ class Thing(Name):
     __metaclass__ = MetaThing
 
     def __init__(self, value):
+        if value.startswith('['):
+            value = value[1:-1]
         self.value = value
 
     def __str__(self):
