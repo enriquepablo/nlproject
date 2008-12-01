@@ -24,7 +24,7 @@ import clips
 from nl.log import logger
 
 # vars are always XNUM
-varpat = re.compile(r'^X\d+$')
+varpat = re.compile(r'^[A-Z]\w*\d+$')
 
 class_constraint = '?%(val)s&:(eq (class ?%(val)s) %(cls)s)|:(subclassp (class ?%(val)s) %(cls)s)'
 _name_def = '(defclass Name (is-a USER))'
