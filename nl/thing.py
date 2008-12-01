@@ -104,8 +104,7 @@ class Thing(Name):
     def put(self, vrs):
         if varpat.match(self.value):
             if self.value in vrs and vrs[self.value]:
-                return '(send ?%s get-%s)' % (vrs[self.value][0],
-                                              vrs[self.value][1])
+                return clips_instance(*(vrs[self.value]))
             else:
                 return '?%s' % self.value
         else:

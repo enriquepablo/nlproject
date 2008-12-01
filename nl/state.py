@@ -154,7 +154,7 @@ class State(Verb):
             else:
                 vrs[self.value] = (ancestor, mod_path)
         else:
-            constraint.append('&:(eq (class ?%(val)s) %(cls)s)|:(subclassp (class ?%(val)s) %(cls)s)' % {'val': ci, 'cls': self.__class__.__name__})
+            constraint.append('&:(eq (class %(val)s) %(cls)s)|:(subclassp (class %(val)s) %(cls)s)' % {'val': ci, 'cls': self.__class__.__name__})
             for mod,cls in self.mods.items():
                 mod_o =  getattr(self, mod, _m)
                 if mod_o is not _m:
@@ -166,7 +166,12 @@ class State(Verb):
     def put(self, vrs, name=None):
         """
         put pred in clips as a make-instance action.
-        """
+        """ # XXX what if self.value
+        if varpat.match(self.value):
+            if self.value in vrs and vrs[self.value]:
+                return clips_instance(*(vrs[self.value]))
+            else:
+                return '?%s' % self.value
         slots = []
         for mod in self.mods:
             mod_o = getattr(self, mod, _m)
@@ -181,6 +186,8 @@ class State(Verb):
         get instance-set condition;
         return (instance-set templates, instance-set queries)
         """
+        if self.value:
+            return '?' + self.value
         newvar = _newvar()
         templs.append('(?%s %s)' % (newvar, self.__class__.__name__))
         for mod,mcls in self.mods.items():
