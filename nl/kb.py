@@ -164,12 +164,11 @@ def tonl(classname, name):
 
 clips.RegisterPythonFunction(tonl)
 
-def ptonl(subj, pred, time):
-    logger.info('--------> %s %s %s' % (subj, pred, time))
+def ptonl(subj, pred, time, truth):
     s = Thing.from_clips(subj)
     p = State.from_clips(pred)
     t = Time.from_clips(time)
-    sen = Proposition(s, p, t)
+    sen = Proposition(s, p, t, truth=truth)
     key = str(sen)
     if not app.root()['props'].has_key(key): # XXX index
         app.root()['props'][key] = sen
