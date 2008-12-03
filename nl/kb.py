@@ -35,6 +35,7 @@ from nl.rule import Rule
 
 app = None
 _initializing = False
+_extending = False
 
 def open(name='data'):
     global app, _initializing
@@ -66,6 +67,7 @@ def close():
     app.close()
     app.db().close()
     app = None
+    logger.info('---------------------------------')
     return 'DB closed'
 
 
@@ -144,7 +146,12 @@ def ask(sentence):
         return '\n'.join(map(str, sens))
 
 def extend():
-    return clips.Run()
+    global _extending
+    _extending = True
+    acts = clips.Run()
+    _extending =False
+    transaction.commit()
+    return acts
 
 
 def rmnl(classname, name):
@@ -159,7 +166,8 @@ def tonl(classname, name):
     logger.info(key)
     if not app.root()['things'].has_key(key): # XXX index
         app.root()['things'][key] = sen
-        transaction.commit()
+        if not _extending:
+            transaction.commit()
     return True
 
 clips.RegisterPythonFunction(tonl)
@@ -172,7 +180,8 @@ def ptonl(subj, pred, time, truth):
     key = str(sen)
     if not app.root()['props'].has_key(key): # XXX index
         app.root()['props'][key] = sen
-        transaction.commit()
+        if not _extending:
+            transaction.commit()
     elif not _initializing:
         return clips.Symbol('FALSE')
     logger.info(key)
