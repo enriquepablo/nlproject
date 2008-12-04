@@ -28,7 +28,7 @@ _m = []
 class Proposition(Name):
     """
     """
-    clp = '(defclass Proposition (is-a Name) (slot truth (type INTEGER) (default 1)) (slot subject (type INSTANCE)) (slot predicate (type INSTANCE)) (slot time (type ?VARIABLE)))'
+    clp = '(defclass Proposition (is-a Name) (slot truth (type INTEGER) (default 1) (pattern-match reactive)) (slot subject (type INSTANCE) (pattern-match reactive)) (slot predicate (type INSTANCE) (pattern-match reactive)) (slot time (type ?VARIABLE) (pattern-match reactive)))'
     logger.info(clp)
     clips.Build(clp)
     _v_clips_class = clips.FindClass('Proposition')

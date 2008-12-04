@@ -6,7 +6,7 @@ nl is a python API that aims to take the natural language as its model. The idea
 
 The aim of nl is not to propose any ontology, but a system to build ontologies; and a system, also, capable of obtaining, given an ontology and the description of a state of affairs using that ontology (which we might call "a text"), all the logical consecuences of (or the contradictions in) that text. nl relies internally on the [[http://clipsrules.sourceforge.net/|clips]] expert system for this.
 
-There are structures in the natural languages that cannot be expressed in nl in its present state. Modal logic, for example, is not implemented. I believe, however, that they can  be added without violence, and there is a short discussion on these issues at the end of this document.
+There are many structures in the natural languages that cannot be expressed in nl in its present state. Conjunction is only implemented at the level of sentences, so there cannot be lists of things; negation is not clearly defined; modal logic is not implemented; and much more. I believe, however, that they can  be added without violence, and there is a short discussion on these issues at the end of this document.
 
 == Usage
 
@@ -36,7 +36,7 @@ If you instantiate again {{{ Man }}} with {{{ 'john' }}}, you get another python
 
 === State
 
-{{{ State }}} is subclassed to make what will be used as verbs. Its derived classes are defined with a dictionary {{{ mods }}} of strings to classes, which can be derived from {{{ Thing }}} or {{{ Number }}} (also from the nl namespace). This {{{ mods }}} dict represents the possible modificators that the verb can have when used in a proposition.
+{{{ State }}} is subclassed to make what will be used as verbs. Its derived classes are defined with a dictionary {{{ mods }}} of strings to classes, which have to be subclasses of {{{ Thing }}}, {{{ State }}}, or {{{ Number }}} (also from the nl namespace). This {{{ mods }}} dict represents the possible modificators that the verb can have when used in a proposition. The subclasses of State can also take an attribute named {{{ subject }}} of classx {{{ Thing }}}.
 
 {{{
 #!python
@@ -44,6 +44,7 @@ If you instantiate again {{{ Man }}} with {{{ 'john' }}}, you get another python
 >>> class Food(Thing): pass
 
 >>> class Eats(State):
+...     subject = Man
 ...     mods = {'edible': Food,
 ...             'grams': Number}
 }}}
@@ -137,7 +138,27 @@ Additionally, we can include arithmetic sentences, with truth value instead of n
 
 5.- modal logic. Has no sense in the closed world scenario. and limited to the types of questions (ask) available in an open world scenario. This is, adding modal logic means adding a way of asking whether something is possible (is unknown; is in the consecuences of some almost covered rule; etc.) adding probability algebra can be done directly with normal propositions.
 
-6.- zodb. I have added zodb persistence. clips, as far as I can see, only allows me to load or save the whole file. With zodb i can atomically save sentences. And I already had objects that fitted in the zodb like in a glove. In any case the state of the system is maintained in clips, 
+6.- zodb. I have added zodb persistence. clips, as far as I can see, only allows me to load or save the whole file. With zodb i can atomically save sentences. And I already had objects that fitted in the zodb like in a glove. In any case the state of the system is maintained in clips, so it is not critical. 
+
+
+== from the perspective of the semantic web
+
+The semantic web provides OWL, that is somewhat comparable to nl. Of course OWL and nl are quite different things. OWL is a markup language, with no logic, designed to speak about web resources, and to be understood by external inference engines. nl s a python API. However, they share a common characteristic. They both try to be machine languages modelled on the natural language.
+
+
+A key difference between OWL and nl is that nl is both a language and an inference machine, whereas OWL is just a language that can be processed by different inference machines. This means that OWL is much more verbose, as it has to make explicit many aspects that in nl can be implicit due to the close relation between language and inference machine. Following this, it could be thouhgt that nl might be used to make an inference machine for OWL. The basic formal structure is different, however. And it is this difference that this comparison is about.
+
+It could be said that the semantic web has gone the way of set theory. At first, Frege and Russell thought that (naïve) set theory was a "machine language" modelled on the natural language. Later, Russell discovered that one of the pillars of their edifice was planted on the mud of contradiction. Their edifice was essentially the same as that of the semantic web: classes of individuals, and predicates over those individuals with truth value, and first order logic's rules of inference.
+
+The pillar that was faulty was the axiom of unrestricted comprehension. This stated that every predicate has a corresponding class of individuals, those that make it true with it. And, what it effectively provided, was the ability of cuantifying over predicates. FOL doesn't allow that, but the natural languages allow it, so you can say: "whatever he does, he does it right". Unrestricted comprehension gave, for every predicate, a class, an individual in the universe of discourse, cuantifyable over; and it is the same to say "I am here now" than "I belong to the class of things that are here now". 
+
+Since they lost their axiom of UC, they stopped thinking that their system was modelled in the NL. They tried to circumvent that problem but did not succeed.
+
+The semantic web is in much the same position with regards to inference engines using it. When searching full expresiveness, in OWL Full, it allows classes to be treated as individuals. And classes cannot be treated as individuals because they correspond to predicates. You can even have an "unnamed class that represents the set of things with at least one madeFromGrape property" ([http://www.w3.org/TR/2003/PR-owl-guide-20031215#DefiningProperties w3c]). So this leads directly to contradiction.
+
+That is not something that the semantic web proponents try to hide. However, the only sound OWL system OWL DL, has no cuantification over predicates. And with very litle semantic addition to any ontology you can obtain an explosion of complexity. "whatever he does, he does it right" would have to become: "if he plays football with a few friends in such and such yard blah blah blah, he plays well"; etc.
+
+The language proposed here rests upon a FOL foundation that I think solves the problem outlined above. It basically takes the same initial road, up to defining the basic set-theoretic predicates and making them correspond with the natural verb "to be". The rest of the natural verbs, however, are introduced as operators, with the trick that a proposition made with an operator, corresponding in NL to a proposition with truth value, is an individual that belongs (or not) to the set of "facts", and this "belongs" is now a predicate of the language, with truth value. This way, predicates are actually individuals in the universe of discourse, and so, can be cuantifyed over.
 
 ----
 

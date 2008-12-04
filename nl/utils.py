@@ -26,7 +26,7 @@ from nl.log import logger
 # vars are always XNUM
 varpat = re.compile(r'^[A-Z]\w*\d+$')
 
-class_constraint = '?%(val)s&:(eq (class ?%(val)s) %(cls)s)|:(subclassp (class ?%(val)s) %(cls)s)'
+class_constraint = '?%(val)s&:(or (eq (class ?%(val)s) %(cls)s) (subclassp (class ?%(val)s) %(cls)s))'
 _name_def = '(defclass Name (is-a USER))'
 _reduce_class = '(deffunction reduce-class (?instance ?class) (if (eq (length$ (find-instance ((?a ?class)) (eq (instance-name ?a) ?instance))) 0) then (make-instance ?instance of ?class) (python-call tonl ?class ?instance)))'
 _del_daemon = '(defmessage-handler Name delete before () (python-call rmnl ?self))'

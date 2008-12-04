@@ -1,61 +1,12 @@
-This document establishes a comparison between certain aspects of the semantic web and nl.
-
-* Semantically, they both are quite similar, though not identical. They both try to reproduce the semantics of the natural languages, but in different ways. The semantic web talks about web resources, and tries to talk about them as humans would. So, its universe of interpretation, or its domain, is the universe of interpretation of the part of the human language that talks about web resources. Of course, web resources have **human** uses for humans, such as purchasing wines; so wines, and purchasing them, have to be in the domain of the semantic web. The domain of ln, on the other hand, is the natural language itself: the atoms, or individuals, of that domain, are the expressions of the natural language. So, it would achieve the interpretation of the natural language through replicating its structures.
-
- * formally, they both provide a means to build ontologies and assertions using these ontologies.There is a key difference between sw and nl, and it is that nl is both a language and an inference machine, whereas sw is just a language that can be processed by different inference machines. This means that sw is much more verbose, as it has to make explicit many aspects that in nl can be implicit due to the close relation between language and inference machine. Following this, it could be thouhgt that nl might be used to make an inference machine for sw. The basic formal structure is different, however. And it is this difference that this document is about.
 
 
-    >>> from nl import Thing, State, Number, Proposition
-
-    >>> class Winery(Thing): pass
-    >>> class Region(Thing): pass
-    >>> class ConsumableThing(Thing): pass
-    >>> class PotableLiquid(ConsumableThing): pass
-    >>> class EdibleThing(ConsumableThing): pass
-    >>> class Wine(PotableLiquid): pass
-    >>> class Pasta(EdibleThing): pass
+    >>> from nl import Thing, Proposition, Rule, kb
+    
+    >>> from nl.docs.wines import *
 
     >>> CentralCoastalRegion = Region('CentralCoastalRegion')
 
-    >>> class Grape(EdibleThing): pass
-    >>> class WineGrape(Grape): pass
-
     >>> CabernetSauvignonGrape = WineGrape('CabernetSauvignonGrape')
-
-    >>> class madeFromGrape(State):
-    ...       subject = Wine
-    ...       mods = {'from': WineGrape}
-
-    >>> class WineDescriptor(Thing): pass
-    >>> class WineColor(WineDescriptor): pass
-
-    >>> class HasWineDescriptor(State):
-    ...       subject = Wine
-    ...       mods = {'descriptor': WineDescriptor}
-
-    >>> class HasWineColor(HasWineDescriptor):
-    ...       subject = Wine
-    ...       mods = {'descriptor': WineColor}
-
-    >>> class HasMaker(State):
-    ...       subject = Wine
-    ...       mods = {'maker': Winery}
-
-    >>> class LocatedIn(State):
-    ...       subject = Thing
-    ...       mods = {'region': Region}
-
-    >>> class Vintage(Thing): pass
-
-    >>> class VintageOf(State):
-    ...       subject = Vintage
-    ...       mods = {'of': Wine}
-
-    >>> class VintageYear(Thing): pass
-
-    >>> class YearValue(State):
-    ...       subject = VintageYear
-    ...       mods = {'value': Number}
 
     >>> SantaCruzMountainsRegion = Region('SantaCruzMountainsRegion')
     >>> CaliforniaRegion = Region('CaliforniaRegion')
@@ -76,6 +27,39 @@ This document establishes a comparison between certain aspects of the semantic w
     ...                  HasMaker(maker=SantaCruzMountainVineyard),
     ...                  0)
 
+    >>> madrid = Region('madrid')
+    >>> sevilla = Region('sevilla')
+
+    >>> r1 = Rule('rr1',
+    ...           [Proposition(Thing('X1'), LocatedIn(region=sevilla), 0)],
+    ...           [Proposition(Thing('X1'), LocatedIn(region=madrid), 0, truth=0)])
 
 
+
+    >>> r2 = Rule('rr2',
+    ...           [Proposition(Thing('X1'), LocatedIn(region=sevilla), 0, truth=0)],
+    ...           [Proposition(Thing('X1'), LocatedIn(region=madrid), 0)])
+
+    >>> cibeles = Thing('cibeles')
+    >>> giralda = Thing('giralda')
+
+    >>> pp1 = Proposition(giralda, LocatedIn(region=sevilla), 0)
+    >>> pp2 = Proposition(cibeles, LocatedIn(region=sevilla), 0, truth=0)
+
+    >>> kb.open()
+    >>> kb.tell(madrid, sevilla, r1, r2, cibeles, giralda, pp1, pp2)
+    >>> kb.extend()
+    2
+
+    >>> kb.ask(Proposition(cibeles, LocatedIn(region=madrid), 0))
+    'cibeles locatedin region madrid at 0.0'
+
+    >>> kb.ask(Proposition(giralda, LocatedIn(region=madrid), 0, truth=0))
+    'giralda not locatedin region madrid at 0.0'
+
+    >>> kb.ask(Proposition(giralda, LocatedIn(region=madrid), 0))
+    'no'
+
+    >>> kb.close()
+    'DB closed'
 

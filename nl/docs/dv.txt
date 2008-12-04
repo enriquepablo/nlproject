@@ -4,7 +4,7 @@
     
     >>> from nl.docs import dv
 
-    >>> r1 = Rule('rr1',[Prop(dv.Hombre('X1'), dv.Quiere(que=dv.Ir(hacia=Thing('X2'))), 'X3')],
+    >>> r1 = Rule('rrr1',[Prop(dv.Hombre('X1'), dv.Quiere(que=dv.Ir(hacia=Thing('X2'))), 'X3')],
     ...                [Prop(dv.Hombre('X1'), dv.Ir(hacia=Thing('X2')), 'X3')])
 
     >>> kb.tell(r1)

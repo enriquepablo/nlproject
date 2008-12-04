@@ -53,7 +53,7 @@ class MetaState(type):
     def __init__(cls, classname, bases, newdict):
         super(MetaState, cls).__init__(classname, bases, newdict)
         #slots = ['(is-a %s)' % bases[0].__name__]
-        slots = ['(slot %s (type %s) (visibility public))' % (mod,
+        slots = ['(slot %s (type %s) (visibility public) (pattern-match reactive))' % (mod,
             issubclass(modclass, Number) and '?VARIABLE' or 'INSTANCE')
                   for mod,modclass in cls.mods.items()]
         slots = ' '.join(slots)
@@ -154,7 +154,7 @@ class State(Verb):
             else:
                 vrs[self.value] = (ancestor, mod_path)
         else:
-            constraint.append('&:(eq (class %(val)s) %(cls)s)|:(subclassp (class %(val)s) %(cls)s)' % {'val': ci, 'cls': self.__class__.__name__})
+            constraint.append('&:(or (eq (class %(val)s) %(cls)s) (subclassp (class %(val)s) %(cls)s))' % {'val': ci, 'cls': self.__class__.__name__})
             for mod,cls in self.mods.items():
                 mod_o =  getattr(self, mod, _m)
                 if mod_o is not _m:

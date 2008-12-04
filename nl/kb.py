@@ -149,7 +149,7 @@ def extend():
     global _extending
     _extending = True
     acts = clips.Run()
-    _extending =False
+    _extending = False
     transaction.commit()
     return acts
 
@@ -166,8 +166,8 @@ def tonl(classname, name):
     logger.info(key)
     if not app.root()['things'].has_key(key): # XXX index
         app.root()['things'][key] = sen
-        if not _extending:
-            transaction.commit()
+        #if not _extending:
+        transaction.commit()
     return True
 
 clips.RegisterPythonFunction(tonl)
@@ -180,8 +180,8 @@ def ptonl(subj, pred, time, truth):
     key = str(sen)
     if not app.root()['props'].has_key(key): # XXX index
         app.root()['props'][key] = sen
-        if not _extending:
-            transaction.commit()
+        #if not _extending:
+        transaction.commit()
     elif not _initializing:
         return clips.Symbol('FALSE')
     logger.info(key)
