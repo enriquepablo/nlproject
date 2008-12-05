@@ -1,5 +1,0 @@
-bootstrap.
-build nl in nl.
-
-    >>> from nl import kb
-    >>> class Nombre(kb.Thing): pass
