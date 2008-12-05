@@ -9,6 +9,8 @@
     
     >>> from nl import kb, Number, Arith, Prop, Rule
 
+    >>> secs = 100
+
     >>> kb.open()
     
     'cuerpo' es un nombre común
@@ -20,7 +22,7 @@
     >>> r1 = Rule('r1', [
     ...                Prop(Cuerpo('X1'), TienePosicion(metros='X2'), 'X4'),
     ...                Prop(Cuerpo('X3'), TienePosicion(metros='X5'), 'X4'),
-    ...                Arith('(< X4 2)'),
+    ...                Arith('(< X4 %s)' % secs),
     ...                Arith('(neq X2 X5)')
     ...                ], [
     ...                Prop(Cuerpo('X1'), EstaADistancia(metros='(- X2 X5)', otro=Cuerpo('X3')), 'X4')
@@ -32,7 +34,7 @@
     >>> r2 = Rule('r2', [
     ...            Prop(Cuerpo('X1'), TienePosicion(metros='X2'), 'X4'),
     ...            Prop(Cuerpo('X1'), TieneVelocidad(mps='X3'), 'X4'),
-    ...            Arith('(< X4 2)')
+    ...            Arith('(< X4 %s)' % secs)
     ...            ], [
     ...            Prop(Cuerpo('X1'), TienePosicion(metros='(+ X2 X3)'), '(+ X4 1)')
     ...            ])
@@ -42,7 +44,7 @@
     >>> r3 = Rule('r3', [
     ...            Prop(Cuerpo('X1'), TieneVelocidad(mps='X2'), 'X4'),
     ...            Prop(Cuerpo('X1'), TieneAceleracion(mps2='X3'), 'X4'),
-    ...            Arith('(< X4 2)')
+    ...            Arith('(< X4 %s)' % secs)
     ...            ], [
     ...            Prop(Cuerpo('X1'), TieneVelocidad(mps='(+ X2 X3)'), '(+ X4 1)')
     ...            ])
@@ -55,7 +57,7 @@
     ...            Prop(Cuerpo('X1'), SufreFuerza(newton='X2'), 'X4'),
     ...            Prop(Cuerpo('X1'), TieneAceleracion(mps2='X3'), 'X4'),
     ...            Prop(Cuerpo('X1'), TieneMasa(kgs=Number('X5')), Number('X4')),
-    ...            Arith('<', Number('X4'), Number(2))
+    ...            Arith('<', Number('X4'), Number(secs))
     ...            ], [
     ...            Prop(Cuerpo('X1'), TieneAceleracion(mps2='(+ X3 (** (/ X2 X5) (/ 1 2)))'), '(+ X4 1)')
     ...            ])
@@ -66,7 +68,7 @@
     ...            Prop(Cuerpo('X1'), EstaADistancia(metros='X2', otro=Cuerpo('X3')), 'X4'),
     ...            Prop(Cuerpo('X1'), TieneMasa(kgs='X5'), 'X4'),
     ...            Prop(Cuerpo('X3'), TieneMasa(kgs='X6'), 'X4'),
-    ...            Arith('<', Number('X4'), Number(2))
+    ...            Arith('<', Number('X4'), Number(secs))
     ...           ],
     ...          [                                                                                                  Prop(Cuerpo('X1'), SufreFuerza(newton='(/ (* X5 X6) (** X2 2))'), '(+ X4 1)')])
     
@@ -74,7 +76,7 @@
     
     >>> r6 = Rule('r6', [
     ...            Prop(Cuerpo('X1'), TieneMasa(kgs='X2'), 'X3'),
-    ...            Arith('(< X3 2)')
+    ...            Arith('(< X3 %s)' % secs)
     ...            ],
     ...            [
     ...            Prop(Cuerpo('X1'), TieneMasa(kgs='X2'), '(+ X3 1)')
@@ -88,7 +90,7 @@
     
     >>> c2 = Cuerpo('c2')
     
-    >>> p1 = Prop(c1, TieneMasa(kgs=2), 1)
+    >>> p1 = Prop(c1, TieneMasa(kgs=100), 1)
     
     >>> p2 = Prop(c2, TieneMasa(kgs=50), 1)
     
@@ -145,51 +147,25 @@
     >>> kb.tell(p10)
 
     >>> kb.extend()
-    1188
+    ...
     
     >>> kb.ask(Prop(c1, TienePosicion(metros=5), 1))
-    "c1 TienePosicion ['metros=5.0'] at 1.0"
+    'c1 tieneposicion metros 5.0 at 1.0'
     
     >>> kb.ask(Prop(c1, TienePosicion(metros='X1'), 2))
-    "c1 TienePosicion ['metros=6.0'] at 2.0"
+    'c1 tieneposicion metros 6.0 at 2.0'
     
-    >>> kb.ask(Prop(c2, TienePosicion(metros='X1'), 2))
-    "c2 TienePosicion ['metros=11.0'] at 2.0"
-
     >>> kb.ask(Prop(c1, TieneVelocidad(mps=1), 2))
-    "c1 TieneVelocidad ['mps=1.0'] at 2.0"
-    
-    >>> kb.ask(Prop(c1, TienePosicion(metros=7), 3))
-    "c1 TienePosicion ['metros=7.0'] at 3.0"
+    'c1 tienevelocidad mps 1.0 at 2.0'
     
     >>> kb.ask(Prop(c2, TieneMasa(kgs=50), 9))
-    "c2 TieneMasa ['kgs=50.0'] at 9.0"
-    
-    >>> kb.ask(Prop(c2, TieneMasa(kgs=50), 99))
-    "c2 TieneMasa ['kgs=50.0'] at 99.0"
-    
-    >>> kb.ask(Prop(c1, SufreFuerza(newton='X1'), 1))
-    "c1 SufreFuerza ['newton=0.0'] at 1.0"
+    'c2 tienemasa kgs 50.0 at 9.0'
     
     >>> kb.ask(Prop(c1, EstaADistancia(metros='X1', otro=c2), 19))
-    "c1 EstaADistancia ['otro=c2', 'metros=-317.169040648'] at 19.0"
+    'c1 estaadistancia otro c2 metros -317.169040648 at 19.0'
     
-    >>> kb.ask(Prop(c2, EstaADistancia(metros='X1', otro=c1), 19))
-    "c2 EstaADistancia ['otro=c1', 'metros=317.169040648'] at 19.0"
-    
-    >>> kb.ask(Prop(c1, EstaADistancia(metros='X1', otro=c2), 99))
-    "c1 EstaADistancia ['otro=c2', 'metros=-17628.3499113'] at 99.0"
-    
-    >>> kb.ask(Prop(c1, SufreFuerza(newton='X1'), 99))
-    "c1 SufreFuerza ['newton=1.681150856e-05'] at 99.0"
-    
-    >>> kb.ask(Prop(c1, TieneAceleracion(mps2='X1'), 99))
-    "c1 TieneAceleracion ['mps2=10.1847704426'] at 99.0"
-    
-    >>> kb.ask(Prop(c1, TieneAceleracion(mps2='X1'), 'X2'))
-
-    
-    >>> kb.ask(Prop(c1, EstaADistancia(metros='X1', otro=c2), 'X2'))
+    >>> # kb.ask(Prop(c1, TieneAceleracion(mps2='X1'), 'X2'))
+    ...
 
     >>> kb.close()
     'DB closed'

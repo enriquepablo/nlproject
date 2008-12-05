@@ -97,7 +97,21 @@ class Proposition(Name):
 register('Proposition', Proposition)
 Prop = Proposition
 
-_add_prop = '(deffunction add-prop (?s ?p ?t ?r) (if (python-call ptonl ?s ?p ?t ?r) then (make-instance of Proposition (subject ?s) (predicate ?p) (time ?t) (truth ?r)) else (return TRUE)))'
+#_add_prop = '(deffunction add-prop (?s ?p ?t ?r) (if (python-call ptonl ?s ?p ?t ?r) then (make-instance of Proposition (subject ?s) (predicate ?p) (time ?t) (truth ?r)) else (return TRUE)))'
+
+_add_prop = '''
+(deffunction add-prop (?s ?p ?t ?r)
+       (if (and (python-call ptonl ?s ?p ?t ?r)
+                (eq (length$ (find-instance ((?prop Proposition))
+                     (and (eq ?prop:subject ?s)
+                               (eq ?prop:predicate ?p)
+                               (eq ?prop:time ?t)
+                               (eq ?prop:truth ?r)))) 0))
+        then (make-instance of Proposition (subject ?s)
+                                           (predicate ?p)
+                                           (time ?t)
+                                           (truth ?r))
+        else (return TRUE)))'''
 
 clips.Build(_add_prop)
 logger.info(_add_prop)

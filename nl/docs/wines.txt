@@ -49,7 +49,7 @@
     >>> kb.open()
     >>> kb.tell(madrid, sevilla, r1, r2, cibeles, giralda, pp1, pp2)
     >>> kb.extend()
-    2
+    ...
 
     >>> kb.ask(Proposition(cibeles, LocatedIn(region=madrid), 0))
     'cibeles locatedin region madrid at 0.0'

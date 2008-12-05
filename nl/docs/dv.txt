@@ -18,7 +18,7 @@
     >>> kb.tell(Prop(juan, dv.Quiere(que=dv.Ir(hacia=madrid)), 1))
 
     >>> kb.extend()
-    1
+    ...
 
     >>> kb.ask(Prop(juan, dv.Ir(hacia=madrid), 1))
     'juan ir hacia madrid at 1.0'
