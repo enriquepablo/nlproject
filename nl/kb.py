@@ -39,6 +39,7 @@ _extending = False
 
 def open(name='data'):
     global app, _initializing
+    logger.info('------------OPEN---------------------')
     fs = os.path.join(here, 'var/%s.fs' % name)
     base = FileStorage(fs)
     db = DB(base)
@@ -54,20 +55,23 @@ def open(name='data'):
         for t in ('things', 'rules', 'props'):
             for sen in app.root()[t].itervalues():
                 tell(sen)
-        while True:
+        while True: # XXX try with clips.EngineConfig.IncrementalReset
             n = clips._clips.getNextActivation()
             logger.info(n)
             if n is None:
                 break
             clips._clips.deleteActivation(n)
         _initializing = False
+    logger.info('----------F-OPEN---------------------')
 
 def close():
     global app
     app.close()
     app.db().close()
     app = None
-    logger.info('---------------------------------')
+    logger.info('------------CLOSE---------------------')
+    #clips.Clear()
+    #clips.Reset()
     return 'DB closed'
 
 
@@ -166,9 +170,9 @@ def tonl(classname, name):
     logger.info(key)
     if not app.root()['things'].has_key(key): # XXX index
         app.root()['things'][key] = sen
-        #if not _extending:
-        transaction.commit()
-    return True
+        if not _extending:
+            transaction.commit()
+    return clips.Symbol('TRUE')
 
 clips.RegisterPythonFunction(tonl)
 
@@ -180,12 +184,12 @@ def ptonl(subj, pred, time, truth):
     key = str(sen)
     if not app.root()['props'].has_key(key): # XXX index
         app.root()['props'][key] = sen
-        #if not _extending:
-        transaction.commit()
+        if not _extending:
+            transaction.commit()
     elif not _initializing:
         return clips.Symbol('FALSE')
     logger.info(key)
-    return True
+    return clips.Symbol('TRUE')
 
 clips.RegisterPythonFunction(ptonl)
 
