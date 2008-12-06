@@ -147,7 +147,7 @@
     >>> kb.tell(p10)
 
     >>> kb.extend()
-    ...
+    ... ...
     
     >>> kb.ask(Prop(c1, TienePosicion(metros=5), 1))
     'c1 tieneposicion metros 5.0 at 1.0'
