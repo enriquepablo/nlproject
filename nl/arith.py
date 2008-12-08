@@ -114,12 +114,12 @@ class Number(Name):
     def put(self, vrs):
         return self.get_slot_constraint(vrs)
 
-    def get_isc(self, templs, queries):
+    def get_isc(self, templs, queries, vrs):
         """
         get instance-set condition;
         return (instance-set templates, instance-set queries)
         """
-        return self.put({})
+        return self.put(vrs)
 
     def __str__(self):
         return self.put({})

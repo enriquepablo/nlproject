@@ -22,18 +22,11 @@ from persistent.dict import PersistentDict
 from log import logger
 from nl.utils import register, subclasses, clips, Name, varpat, class_constraint, clips_instance
 from nl.arith import Number
-from nl.thing import Thing
+from nl.thing import Thing, _newvar
 
 
 # marker object
 _m = []
-
-_vn = 0
-
-def _newvar():
-    global _vn
-    _vn += 1
-    return 'Y%d' % _vn
 
 
 clp = '(defclass Verb (is-a USER))'
@@ -181,20 +174,30 @@ class State(Verb):
         return '(add-pred %s %s)' % (self.__class__.__name__, slots)
 
 
-    def get_isc(self, templs, queries):
+    def get_isc(self, templs, queries, vrs):
         """
         get instance-set condition;
         return (instance-set templates, instance-set queries)
         """
-        if self.value:
-            return '?' + self.value
         newvar = _newvar()
+        if self.value:
+            if self.value in vrs:
+                templs.append('(?%s %s)' % (newvar,
+                                        self.__class__.__name__))
+                if vrs[self.value]:
+                    queries.append('(eq ?%s %s)' % (newvar,
+                                     clips_instance(*(vrs[self.value]))))
+                else:
+                    queries.append('(eq ?%s %s)' % (newvar,
+                                     self.value))
+                return '?%s' % newvar
+            return '?' + self.value
         templs.append('(?%s %s)' % (newvar, self.__class__.__name__))
         for mod,mcls in self.mods.items():
             mod_o = getattr(self, mod, _m)
-            if mod_o is not _m and not varpat.match(mod_o.value):
+            if mod_o is not _m and not (varpat.match(mod_o.value) and mod_o.value not in vrs):
                 queries.append('(eq ?%s:%s %s)' % (newvar, mod,
-                                               mod_o.get_isc(templs, queries)))
+                                               mod_o.get_isc(templs, queries, vrs)))
         return '?' + newvar
 
 

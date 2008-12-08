@@ -101,7 +101,7 @@ def tell(*args):
 def get_instancesn(sentence):
     templs = []
     queries = []
-    sentence.get_ism(templs, queries)
+    sentence.get_ism(templs, queries, {})
     if len(queries) > 1:
         q = '(find-all-instances (%s) (and %s))' % (' '.join(templs),
                                                     ' '.join(queries))
@@ -111,15 +111,7 @@ def get_instancesn(sentence):
     return q
 
 def get_instances(sentence):
-    templs = []
-    queries = []
-    sentence.get_ism(templs, queries)
-    if len(queries) > 1:
-        q = '(find-all-instances (%s) (and %s))' % (' '.join(templs),
-                                                    ' '.join(queries))
-    else:
-        q = '(find-all-instances (%s) %s)' % (' '.join(templs),
-                                            queries and queries[0] or 'TRUE')
+    q = get_instancesn(sentence)
     logger.info(q)
     return clips.Eval(q)
 
@@ -150,16 +142,26 @@ def ask(sentence):
         return '\n'.join(map(str, sens))
 
 def extend():
+    logger.info('----------running---------------------')
     global _extending
     _extending = True
     acts = clips.Run()
     _extending = False
     transaction.commit()
+    logger.info('----------run---------------------')
     return acts
 
 
 def rmnl(classname, name):
-    return True
+    cls = subclasses[str(classname)]
+    sen = cls.from_clips(name)
+    key = str(sen)
+    if app.root()['things'].has_key(key): # XXX index
+        app.root()['things'][key] = None
+        del app.root()['things'][key]
+        transaction.commit()
+    logger.info('---------REMOVE - ' + key)
+    return clips.Symbol('TRUE')
 
 clips.RegisterPythonFunction(rmnl)
 

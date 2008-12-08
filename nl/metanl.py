@@ -50,7 +50,6 @@ class Equals(object):
 register('Equals', Equals)
 
 
-
 class Remove(object):
     '''
     remove prop from db
@@ -58,5 +57,10 @@ class Remove(object):
     def __init__(self, sen):
         self.sen = sen
 
-    def put_action(self):
-        pass
+    def __str__(self):
+        return 'remove ' + str(self.sen)
+
+    def put_action(self, vrs=None):
+        return self.sen.remove_action(vrs)
+
+register('Remove', Remove)

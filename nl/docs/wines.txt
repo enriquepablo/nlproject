@@ -1,6 +1,6 @@
 
 
-    >>> from nl import Thing, Proposition, Rule, kb
+    >>> from nl import Thing, Remove, Equals, Proposition, Rule, kb
     
     >>> from nl.docs.wines import *
 
@@ -31,14 +31,18 @@
     >>> sevilla = Region('sevilla')
 
     >>> r1 = Rule('rr1',
-    ...           [Proposition(Thing('X1'), LocatedIn(region=sevilla), 0)],
-    ...           [Proposition(Thing('X1'), LocatedIn(region=madrid), 0, truth=0)])
+    ...           [Proposition(Thing('X1'), LocatedIn(region=Region('X2')), 0),
+    ...            Region('X3'),
+    ...            Equals(0, Region('X2'), Region('X3'))],
+    ...           [Proposition(Thing('X1'), LocatedIn(region=Region('X3')), 0, truth=0)])
 
 
 
     >>> r2 = Rule('rr2',
-    ...           [Proposition(Thing('X1'), LocatedIn(region=sevilla), 0, truth=0)],
-    ...           [Proposition(Thing('X1'), LocatedIn(region=madrid), 0)])
+    ...           [Proposition(Thing('X1'), LocatedIn(region=Region('X2')), 0, truth=0),
+    ...            Region('X3'),
+    ...            Equals(0, Region('X2'), Region('X3'))],
+    ...           [Proposition(Thing('X1'), LocatedIn(region=Region('X3')), 0)])
 
     >>> cibeles = Thing('cibeles')
     >>> giralda = Thing('giralda')
@@ -60,6 +64,30 @@
     >>> kb.ask(Proposition(giralda, LocatedIn(region=madrid), 0))
     'no'
 
+    >>> kb.ask(Proposition(giralda, LocatedIn(region=sevilla), 0))
+    'giralda locatedin region sevilla at 0.0'
+
+    >>> r3 = Rule('rr3',
+    ...           [Proposition(Thing('X1'), Moves(frm=Region('X2'), to=Region('X3')), 0)],
+    ...           [Proposition(Thing('X1'), LocatedIn(region=Region('X3')), 0),
+    ...            Remove(Proposition(Thing('X1'), LocatedIn(region=Region('X2')), 0))])
+
+    >>> pp3 = Proposition(giralda, Moves(frm=sevilla, to=madrid), 0)
+
+    >>> kb.tell(r3, pp3)
+    >>> kb.extend()
+
+    >>> kb.ask(Proposition(giralda, LocatedIn(region=sevilla), 0))
+    'no'
+
+    >>> kb.ask(Proposition(giralda, LocatedIn(region=madrid), 0))
+    'giralda locatedin region madrid at 0.0'
+
+    >>> kb.ask(Proposition(giralda, LocatedIn(region=sevilla), 0, truth=0))
+    'giralda not locatedin region sevilla at 0.0'
+
+    >>> kb.ask(Proposition(giralda, LocatedIn(region=madrid), 0, truth=0))
+    'no'
+
     >>> kb.close()
     'DB closed'
-

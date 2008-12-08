@@ -34,6 +34,11 @@ class LocatedIn(State):
       subject = Thing
       mods = {'region': Region}
 
+class Moves(State):
+      subject = Thing
+      mods = {'frm': Region,
+              'to': Region}
+
 class Vintage(Thing): pass
 
 class VintageOf(State):

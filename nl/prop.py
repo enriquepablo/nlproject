@@ -56,20 +56,19 @@ class Proposition(Name):
         truth = instance.GetSlot('truth')
         return Prop(s, p, t, truth=truth)
 
-    def get_ism(self, templs, queries, newvar='prop'):
+    def get_ism(self, templs, queries, vrs, newvar='prop'):
         """
         get instance-set method;
         return (instance-set templates, instance-set queries)
         """
         templs.append('(?%s %s)' % (newvar, self.__class__.__name__))
-        s = self.subject.get_isc(templs, queries)
+        s = self.subject.get_isc(templs, queries, vrs)
         queries.append('(eq ?%s:subject %s)' % (newvar, s))
-        p = self.predicate.get_isc(templs, queries)
+        p = self.predicate.get_isc(templs, queries, vrs)
         queries.append('(eq ?%s:predicate %s)' % (newvar, p))
-        t = self.time.get_isc(templs, queries)
+        t = self.time.get_isc(templs, queries, vrs)
         if not varpat.match(t[1:]):
-            queries.append('(eq ?%s:time %s)' % (newvar,
-                                         self.time.get_isc(templs, queries)))
+            queries.append('(eq ?%s:time %s)' % (newvar, t))
         queries.append('(eq ?%s:truth %s)' % (newvar,
                                          self.truth))
         return newvar
@@ -93,6 +92,18 @@ class Proposition(Name):
         p = self.predicate.put(vrs)
         t = self.time.put(vrs)
         return '(add-prop %s %s %s %s)' % (s, p, t, self.truth)
+
+    def remove_action(self, vrs):
+        templs = []
+        queries = []
+        self.get_ism(templs, queries, vrs, newvar='prop')
+        if len(queries) > 1:
+            q = '(do-for-instance (%s) (and %s) (unmake-instance ?prop))' % (' '.join(templs),
+                                                        ' '.join(queries))
+        else:
+            q = '(do-for-instance (%s) %s (unmake-instance ?prop))' % (' '.join(templs),
+                                                queries and queries[0] or 'TRUE')
+        return q
 
 register('Proposition', Proposition)
 Prop = Proposition

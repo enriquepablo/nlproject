@@ -9,7 +9,7 @@
     
     >>> from nl import kb, Number, Arith, Prop, Rule
 
-    >>> secs = 100
+    >>> secs = 3
 
     >>> kb.open()
     

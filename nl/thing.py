@@ -19,6 +19,13 @@
 from nl.log import logger
 from nl.utils import register, clips, varpat, class_constraint, Name, clips_instance
 
+_vn = 0
+
+def _newvar():
+    global _vn
+    _vn += 1
+    return 'Y%d' % _vn
+
 class MetaThing(type):
     """
     When Name is extended, this adds 1 defclass to clips
@@ -94,30 +101,19 @@ class Thing(Name):
             constraint = '&:(eq %s [%s])' % (ci, self.value)
         return constraint
 
-    def put_action(self, vrs):
-        """
-        put name in clips as a make-instance action.
-        """
-        val = self.put(vrs)
-        return '(reduce-class %s %s)' % (val, self.__class__.__name__)
-
-    def put(self, vrs):
-        if varpat.match(self.value):
-            if self.value in vrs and vrs[self.value]:
-                return clips_instance(*(vrs[self.value]))
-            else:
-                return '?%s' % self.value
-        else:
-            return '[%s]' % self.value
-
-    def get_isc(self, templs, queries):
+    def get_isc(self, templs, queries, vrs):
         """
         get instance-set condition;
         return (instance-set templates, instance-set queries)
         """
         if varpat.match(self.value):
-            templs.append('(?%s %s)' % (self.value,
+            if self.value in vrs and vrs[self.value]:
+                newvar = _newvar()
+                templs.append('(?%s %s)' % (newvar,
                                         self.__class__.__name__))
+                queries.append('(eq ?%s %s)' % (newvar,
+                                     clips_instance(*(vrs[self.value]))))
+                return '?%s' % newvar
             return '?%s' % self.value
         else:
             return '[%s]' % self.value
@@ -133,6 +129,34 @@ class Thing(Name):
         else:
             templs.append('(?%s %s)' % (newvar, self.__class__.__name__))
             queries.append('(eq ?%s [%s])' % (newvar, self.value))
+
+    def put(self, vrs):
+        if varpat.match(self.value):
+            if self.value in vrs and vrs[self.value]:
+                return clips_instance(*(vrs[self.value]))
+            else:
+                return '?%s' % self.value
+        else:
+            return '[%s]' % self.value
+
+    def put_action(self, vrs):
+        """
+        put name in clips as a make-instance action.
+        """
+        val = self.put(vrs)
+        return '(reduce-class %s %s)' % (val, self.__class__.__name__)
+
+    def remove_action(self, vrs=None):
+        templs = []
+        queries = []
+        self.get_ism(templs, queries, newvar='sen')
+        if len(queries) > 1:
+            q = '(do-for-all-instances (%s) (and %s) (send ?sen delete))' % (' '.join(templs),
+                                                        ' '.join(queries))
+        else:
+            q = '(do-for-all-instances (%s) %s (send ?sen delete))' % (' '.join(templs),
+                                                queries and queries[0] or 'TRUE')
+        return q
 
 register('Thing', Thing)
 
