@@ -159,7 +159,8 @@ def rmnl(classname, name):
     if app.root()['things'].has_key(key): # XXX index
         app.root()['things'][key] = None
         del app.root()['things'][key]
-        transaction.commit()
+        if not _extending:
+            transaction.commit()
     logger.info('---------REMOVE - ' + key)
     return clips.Symbol('TRUE')
 
