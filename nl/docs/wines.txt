@@ -69,8 +69,9 @@
 
     >>> r3 = Rule('rr3',
     ...           [Proposition(Thing('X1'), Moves(frm=Region('X2'), to=Region('X3')), 0)],
-    ...           [Proposition(Thing('X1'), LocatedIn(region=Region('X3')), 0),
-    ...            Remove(Proposition(Thing('X1'), LocatedIn(region=Region('X2')), 0))])
+    ...           [Remove(Proposition(Thing('X1'), LocatedIn(region=Region('X2')), 0)),
+    ...            Proposition(Thing('X1'), LocatedIn(region=Region('X3')), 0)
+    ...            ])
 
     >>> pp3 = Proposition(giralda, Moves(frm=sevilla, to=madrid), 0)
 
@@ -88,6 +89,10 @@
 
     >>> kb.ask(Proposition(giralda, LocatedIn(region=madrid), 0, truth=0))
     'no'
+
+    >>> pp4 = Proposition(giralda, LocatedIn(region=madrid), 0, truth=0)
+
+    >>> kb.tell(pp4)
 
     >>> kb.close()
     'DB closed'

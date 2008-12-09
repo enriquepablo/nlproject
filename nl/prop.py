@@ -56,6 +56,12 @@ class Proposition(Name):
         truth = instance.GetSlot('truth')
         return Prop(s, p, t, truth=truth)
 
+    def negate(self):
+        self.truth = not self.truth and 1 or 0
+        negated = str(self)
+        self.truth = not self.truth and 1 or 0
+        return negated
+
     def get_ism(self, templs, queries, vrs, newvar='prop'):
         """
         get instance-set method;

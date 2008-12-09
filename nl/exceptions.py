@@ -25,7 +25,7 @@ class Paradox(Exception):
         self.message = messg
 
     def __str__(self):
-        return """Contradiction between \n%s\nand\n%s\n%s""" % (self.expr1,
+        return "Contradiction between \n%s\nand\n%s\n%s" % (self.expr1,
                                                             self.expr2,
                                                             self.message)
 

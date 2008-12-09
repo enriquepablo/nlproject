@@ -23,7 +23,7 @@ from ZODB.FileStorage import FileStorage
 from ZODB.DB import DB
 from BTrees.OOBTree import OOBTree
 
-
+from nl.exceptions import Paradox
 from nl.log import here, logger
 from nl.utils import clips, subclasses
 from nl.thing import Thing
@@ -87,16 +87,24 @@ def tell(*args):
             elif _initializing:
                 logger.info(s)
                 clips.Build(s)
-        elif isinstance(sentence, Proposition) and \
-               _initializing or \
-               not app.root()['props'].has_key(str(sentence)):
-            logger.info(s)
-            clips.Eval(s)
-        elif isinstance(sentence, Thing) and \
-               _initializing or \
-               not app.root()['things'].has_key(str(sentence)):
-            logger.info(s)
-            clips.Eval(s)
+        else:
+            kind = isinstance(sentence, Thing) and 'things' or 'props'
+            is_new = not app.root()[kind].has_key(str(sentence))
+            if _initializing or is_new:
+                if is_new and kind == 'props':
+                    try:
+                        check_inconsistency(sentence)
+                    except Paradox:
+                        return 'Contradiction found'
+                logger.info(s)
+                clips.Eval(s)
+
+def check_inconsistency(sentence):
+    negated = sentence.negate()
+    if app.root()['props'].has_key(negated):
+        raise Paradox(sentence,
+                      app.root()['props'][negated],
+                      'Contradiction found')
 
 def get_instancesn(sentence):
     templs = []
@@ -145,9 +153,15 @@ def extend():
     logger.info('----------running---------------------')
     global _extending
     _extending = True
-    acts = clips.Run()
+    transaction.begin()
+    try:
+        acts = clips.Run()
+    except Paradox, clips.ClipsError:
+        transaction.abort()
+        return 'Contradiction found'
+    else:
+        transaction.commit()
     _extending = False
-    transaction.commit()
     logger.info('----------run---------------------')
     return acts
 
@@ -156,9 +170,9 @@ def rmnl(classname, name):
     cls = subclasses[str(classname)]
     sen = cls.from_clips(name)
     key = str(sen)
-    if app.root()['things'].has_key(key): # XXX index
-        app.root()['things'][key] = None
-        del app.root()['things'][key]
+    kind = isinstance(sen, Thing) and 'things' or 'props'
+    if app.root()[kind].has_key(key): # XXX index
+        app.root()[kind].pop(key)
         if not _extending:
             transaction.commit()
     logger.info('---------REMOVE - ' + key)
@@ -184,6 +198,7 @@ def ptonl(subj, pred, time, truth):
     p = State.from_clips(pred)
     t = Time.from_clips(time)
     sen = Proposition(s, p, t, truth=truth)
+    check_inconsistency(sen)
     key = str(sen)
     if not app.root()['props'].has_key(key): # XXX index
         app.root()['props'][key] = sen
@@ -206,4 +221,6 @@ clips.RegisterPythonFunction(ptonl)
 #     return clp_pred
 # 
 # clips.RegisterPythonFunction(make_pred)
+
+# que pasen las excepciones de python
 
