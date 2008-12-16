@@ -30,13 +30,13 @@ class Paradox(Exception):
                                                             self.message)
 
 
-class NlError(Exception):
+class NameNotFound(Exception):
     """
     """
-    def __init__(self, messg):
-        self.message = messg
+    def __init__(self, name):
+        self.name = name
 
     def __str__(self):
-        return self.message
+        return "I don't know this name: " + self.name
 
 
