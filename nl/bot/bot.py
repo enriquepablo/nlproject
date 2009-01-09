@@ -81,9 +81,11 @@ import sys
 from twisted.internet import reactor
 
 if __name__ == "__main__":
-    chan = sys.argv[1]
-    reactor.connectTCP('irc.freenode.net', 6667, MacarronicBotFactory('#' + chan))
-    nl.kb.open()
+    nick = sys.argv[1]
+    chan = sys.argv[2]
+    reactor.connectTCP('irc.freenode.net', 6667,
+                       MacarronicBotFactory('#' + chan, nickname=nick))
+    nl.kb.open(nick)
     try:
         reactor.run()
     finally:
