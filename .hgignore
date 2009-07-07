@@ -3,3 +3,6 @@ syntax: glob
 *~
 *.old
 *.swp
+bin/*
+lib/*
+*egg-info*
