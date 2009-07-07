@@ -6,3 +6,6 @@ syntax: glob
 bin/*
 lib/*
 *egg-info*
+.installed.cfg
+develop-eggs/*
+include/*
