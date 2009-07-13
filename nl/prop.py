@@ -24,6 +24,7 @@ from nl.thing import Thing
 from nl.state import State
 
 _m = []
+now = Time('now')
 
 class Proposition(Name):
     """
@@ -33,7 +34,7 @@ class Proposition(Name):
     clips.Build(clp)
     _v_clips_class = clips.FindClass('Proposition')
 
-    def __init__(self, subj, pred, time, truth=1):
+    def __init__(self, subj, pred, time=now, truth=1):
         self.truth = truth
         self.subject = subj
         self.predicate = pred
