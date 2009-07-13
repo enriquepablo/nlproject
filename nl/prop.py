@@ -50,7 +50,7 @@ class Proposition(Name):
     def from_clips(cls, instance):
         if not isinstance(instance, clips._clips_wrap.Instance):
             instance = clips.FindInstance(instance)
-        s = Thing.from_clips(instance.GetSlot('subject'))
+        s = Name.from_clips(instance.GetSlot('subject'))
         p = State.from_clips(instance.GetSlot('predicate'))
         t = Time.from_clips(instance.GetSlot('time'))
         truth = instance.GetSlot('truth')
