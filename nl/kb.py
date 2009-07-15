@@ -185,10 +185,14 @@ def tonl(classname, name):
     sen = cls.from_clips(name)
     key = str(sen)
     logger.info(key)
-    if not app.root()['things'].has_key(key): # XXX index
+    try:
+        old = app.root()['things'][key] # XXX index
+    except KeyError:
         app.root()['things'][key] = sen
         if not _extending:
             transaction.commit()
+    else:
+        pass # XXX raise exception if cls & old.__class__ are not one subclass of the other
     return clips.Symbol('TRUE')
 
 clips.RegisterPythonFunction(tonl)
