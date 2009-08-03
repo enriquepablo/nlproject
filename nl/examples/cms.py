@@ -196,8 +196,6 @@ class Publish(State):
 # 
 r15 = Rule('r15', [
         Prop(Person('X1'), Publish(what=Content('X2'))),
-        Prop(Content('X2'), Has(what=Status('X4'))),
-        Equals(False, Status('X4'), public)
         ],[
         Remove(Prop(Content('X2'), Has(what=Status('X4')))),
         Prop(Content('X2'), Has(what=public))])
