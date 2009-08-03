@@ -1,3 +1,0 @@
-#generated
-from nl import *
-
