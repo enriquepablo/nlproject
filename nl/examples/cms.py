@@ -193,34 +193,39 @@ class Publish(State):
     subject = Person
     mods = {'what': Content,}
 
-# 
+# If someone publishes some content, it stops having any previous state and has public
 r15 = Rule('r15', [
         Prop(Person('X1'), Publish(what=Content('X2'))),
         ],[
         Remove(Prop(Content('X2'), Has(what=Status('X4')))),
         Prop(Content('X2'), Has(what=public))])
 
+# manage_perm is needed to publish anything
 r16 = Rule('r16', [
         Content('X1')
         ],[
         Prop(manage_perm, IsNeeded(for_action=Publish(what=Content('X1'))))])
 
+# Hide is a verb that takes a person as subject and a content as object
 class Hide(State):
     subject = Person
     mods = {'what': Content,}
 
+# If someone hides some content, it stops having any previous state and has private
 r17 = Rule('r17', [
         Prop(Person('X1'), Hide(what=Content('X2')))
         ],[
         Remove(Prop(Content('X2'), Has(what=Status('X3')))),
         Prop(Content('X2'), Has(what=private))])
 
+# if a person is the owner of some content, she can hide it
 r18 = Rule('r18', [
         Prop(Person('X1'), IsOwner(of=Content('X2')))
         ],[
         Prop(Person('X1'), Can(what=Hide(what=Content('X2'))))])
 
 
+# enter everything into the database
 kb.tell(admin, member, manager, basic_perm, manage_perm, create_perm, public, private,
        p1, p2, r10, r1, r2, r3, r4, r5, r6, r7, r9, r12, r13, r14, r15, r16, r17, r18)
 
