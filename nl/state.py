@@ -71,13 +71,11 @@ class State(Verb):
     """
     __metaclass__ = MetaState
 
-    value = ''
     subject = Thing
     mods = PersistentDict()
 
     def __init__(self, *args, **kwargs):
-        if args:
-            self.value = args[0]
+        self.value = args and args[0] or ''
         for mod,cls in self.mods.items():
             if kwargs.get(mod, _m) is not _m:
                 if isinstance(kwargs[mod], subclasses[cls]):
@@ -122,9 +120,9 @@ class State(Verb):
             else:
                 return '?%s' % self.value
         elif self.value:
+            vrs[self.value] = ()
             return class_constraint % {'val': self.value,
                                          'cls': self.__class__.__name__}
-            vrs[self.value] = ()
         newvar = _newvar()
         constraint = [class_constraint % {'val': newvar,
                                          'cls': self.__class__.__name__}]
@@ -154,13 +152,13 @@ class State(Verb):
                     constraint.append(mod_o.get_constraint(vrs,
                                                        ancestor,
                                                        mod_path + (mod,)))
-            return ''.join(constraint)
+        return ''.join(constraint)
 
     def put(self, vrs, name=None):
         """
         put pred in clips as a make-instance action.
-        """ # XXX what if self.value
-        if varpat.match(self.value):
+        """
+        if self.value and varpat.match(self.value):
             if self.value in vrs and vrs[self.value]:
                 return clips_instance(*(vrs[self.value]))
             else:
@@ -220,7 +218,7 @@ _add_pred ="""
 (deffunction add-pred (?class $?slots)
         (bind ?key (str-cat ?class $?slots))
         (bind ?pos (str-index "." ?key))
-        (while ?pos do 
+        (while ?pos do
             (bind ?key (str-cat (sub-string 1 (- ?pos 1) ?key)
                                 "_"
                                 (sub-string (+ ?pos 1) (str-length ?key) ?key)))
@@ -230,7 +228,7 @@ _add_pred ="""
             (return (instance-name ?key))
          else
             (make-instance ?key of ?class)
-            (send (instance-name ?key) set-slots $?slots)))
+            (return (send (instance-name ?key) set-slots $?slots))))
 """
 
 
