@@ -45,7 +45,9 @@ class cms_test(object):
         nl.kb.tell(nl.Prop(john, self.cms.Wants(to=self.cms.Publish(what=c1))))
         nl.kb.extend()
         assert nl.kb.ask(nl.Prop(c1, self.cms.Has(what=self.cms.private))) == 'no'
-        #assert nl.kb.ask(nl.Prop(c1, self.cms.Has(what=self.cms.public))) == 'c1 has what public at now'
-        #assert nl.kb.ask(nl.Prop(pete, self.cms.Can(what=self.cms.View(what=c1)))) == 'pete can what view what c1 at now'
+        assert nl.kb.ask(nl.Prop(c1, self.cms.Has(what=self.cms.public))) == 'c1 has what public at now'
+        assert nl.kb.ask(nl.Prop(pete, self.cms.Can(what=self.cms.View(what=c1)))) == 'pete can what view what c1 at now'
+        assert not nl.kb.app.root()['props'].has_key('c1 has what private at now')
+        assert nl.kb.app.root()['props'].has_key('c1 has what public at now')
 
 

@@ -105,10 +105,10 @@ class Proposition(Name):
         queries = []
         self.get_ism(templs, queries, vrs, newvar='prop')
         if len(queries) > 1:
-            q = '(do-for-instance (%s) (and %s) (unmake-instance ?prop))' % (' '.join(templs),
+            q = '(do-for-instance (%s) (and %s) (python-call rmnl (class ?prop) ?prop) (unmake-instance ?prop))' % (' '.join(templs),
                                                         ' '.join(queries))
         else:
-            q = '(do-for-instance (%s) %s (unmake-instance ?prop))' % (' '.join(templs),
+            q = '(do-for-instance (%s) %s (python-call rmnl (class ?prop) ?prop) (unmake-instance ?prop))' % (' '.join(templs),
                                                 queries and queries[0] or 'TRUE')
         return q
 

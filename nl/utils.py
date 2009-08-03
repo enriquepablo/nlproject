@@ -29,14 +29,14 @@ varpat = re.compile(r'^[A-Z]\w*\d+$')
 class_constraint = '?%(val)s&:(or (eq (class ?%(val)s) %(cls)s) (subclassp (class ?%(val)s) %(cls)s))'
 _name_def = '(defclass Name (is-a USER))'
 _reduce_class = '(deffunction reduce-class (?instance ?class) (if (eq (length$ (find-instance ((?a ?class)) (eq (instance-name ?a) ?instance))) 0) then (make-instance ?instance of ?class) (python-call tonl ?class ?instance)))'
-_del_daemon = '(defmessage-handler Name delete before () (python-call rmnl (class ?self) ?self))'
+#_del_daemon = '(defmessage-handler Name delete before () (python-call rmnl (class ?self) ?self))'
 
 clips.Build(_name_def)
 clips.Build(_reduce_class)
-clips.Build(_del_daemon)
+#clips.Build(_del_daemon)
 logger.info(_name_def)
 logger.info(_reduce_class)
-logger.info(_del_daemon)
+#logger.info(_del_daemon)
 
 
 subclasses = {}

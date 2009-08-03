@@ -171,7 +171,7 @@ def rmnl(classname, name):
     sen = cls.from_clips(name)
     key = str(sen)
     kind = isinstance(sen, Thing) and 'things' or 'props'
-    if app.root()[kind].has_key(key): # XXX index
+    if app.root()[kind].has_key(key):
         app.root()[kind].pop(key)
         if not _extending:
             transaction.commit()
@@ -186,7 +186,7 @@ def tonl(classname, name):
     key = str(sen)
     logger.info(key)
     try:
-        old = app.root()['things'][key] # XXX index
+        old = app.root()['things'][key]
     except KeyError:
         app.root()['things'][key] = sen
         if not _extending:
@@ -204,7 +204,7 @@ def ptonl(subj, pred, time, truth):
     sen = Proposition(s, p, t, truth=truth)
     check_inconsistency(sen)
     key = str(sen)
-    if not app.root()['props'].has_key(key): # XXX index
+    if not app.root()['props'].has_key(key):
         app.root()['props'][key] = sen
         if not _extending:
             transaction.commit()
