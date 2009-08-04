@@ -40,6 +40,8 @@ _extending = False
 def open(name='data'):
     global app, _initializing
     logger.info('------------OPEN---------------------')
+    if not os.path.isdir(os.path.join(here, 'var')):
+        os.mkdir(os.path.join(here, 'var'))
     fs = os.path.join(here, 'var/%s.fs' % name)
     base = FileStorage(fs)
     db = DB(base)
