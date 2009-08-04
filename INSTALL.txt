@@ -12,7 +12,7 @@ If you want to run the tests and hack at it, you can use buildout:
 
 $ hg clone https://enriquepablo@bitbucket.org/enriquepablo/nl/
 $ cd nl
-$ python bootstrap.py
+$ python2.5 bootstrap.py
 $ bin/buildout
 $ bin/test
 $ bin/ipython
