@@ -1,0 +1,20 @@
+= Requirements
+
+Python-2.5
+
+= Installation instructions.
+
+To just use the system, you can use setuptools to install it from Pypi:
+
+$ easy_install nl
+
+If you want to run the tests and hack at it, you can use buildout:
+
+$ hg clone https://enriquepablo@bitbucket.org/enriquepablo/nl/
+$ cd nl
+$ python bootstrap.py
+$ bin/buildout
+$ bin/test
+$ bin/ipython
+
+Of course, you can always just grab the nl package from the repository and put it somewhere in your python path.
