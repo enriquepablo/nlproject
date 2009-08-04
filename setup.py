@@ -7,7 +7,7 @@ setup(
     url = 'http://bitbucket.org/enriquepablo/nl/wiki/Home',
     license = 'GPL',
     description = "A python library that provides a production system with an API modelled on the natural language",
-    author = 'Enrique Pérez Arnaud',
+    author = 'Enrique Perez Arnaud',
     author_email = 'enriquepablo@gmail.com',
     packages = find_packages('nl'),
     package_dir = {'': 'nl'},
