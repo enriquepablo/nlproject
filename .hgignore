@@ -10,3 +10,4 @@ lib/*
 develop-eggs/*
 include/*
 log.clp
+*.tar.gz
