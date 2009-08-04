@@ -19,13 +19,22 @@
 # this snippet comes from
 # http://www.mechanicalcat.net/richard/log/Python/Simple_usage_of_Python_s_logging_module
 
-from os import path
+import os
 import logging
+
 logger = logging.getLogger('nl')
-here = path.join(path.dirname(__file__))
-hdlr = logging.FileHandler(here + '/clips/log.clp')
+here = os.path.join(os.path.dirname(__file__))
+log_dir = here + '/clips/'
+log_file = log_dir + 'log.clp'
+if not os.path.isfile(log_file):
+    if not os.path.isdir(log_dir):
+        os.mkdir(log_dir)
+    f = open(log_file, 'w')
+    f.write('log file for nl\n\n')
+    f.close()
+hdlr = logging.FileHandler(log_file)
 formatter = logging.Formatter('%(message)s')
 # formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 hdlr.setFormatter(formatter)
 logger.addHandler(hdlr)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.FATAL)
