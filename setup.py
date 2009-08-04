@@ -8,6 +8,7 @@ setup(
     license = 'GPL',
     description = "A python library that provides a production system with an API modelled on the natural language",
     author = 'Enrique Pérez Arnaud',
+    author_email = 'enriquepablo@gmail.com',
     packages = find_packages('nl'),
     package_dir = {'': 'nl'},
     install_requires = ['setuptools', 'ZODB3', 'pyclips'],
