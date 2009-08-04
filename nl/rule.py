@@ -16,13 +16,14 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
+import uuid
 from nl.utils import Name
 
 class Rule(Name):
     """
     """
-    def __init__(self, name, prems, cons):
-        self.name = name
+    def __init__(self, prems, cons):
+        self.name = uuid.uuid1().get_hex()
         self.prems = prems
         self.cons = cons
 

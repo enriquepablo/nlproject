@@ -34,7 +34,7 @@ class Wants(State):
     mods = {'to': State}
 
 # if someone wants to do something, and can do it, she does it
-r1 = Rule('r1', [
+r1 = Rule([
         Prop(Person('X1'), Wants(to=State('X4'))), # XXX only State can be a var
         Prop(Person('X1'), Can(what=State('X4')))
         ],[
@@ -51,7 +51,7 @@ class IsNeeded(State):
     mods = {'for_action': State}
 
 # If something is needed for some state, and something else has it, that something else can be in that state
-r2 = Rule('r2', [
+r2 = Rule([
         Prop(Thing('X2'), IsNeeded(for_action=State('X4'))),
         Prop(Thing('X1'), Has(what=Thing('X2')))
         ],[
@@ -63,7 +63,7 @@ class IsIn(State):
     mods = {'what': Thing}
 
 # if a thing is in another thing, and that another thing is in yet another, the first is in the third as well
-r3 = Rule('r3', [
+r3 = Rule([
         Prop(Thing('X1'), IsIn(what=Thing('X2'))),
         Prop(Thing('X2'), IsIn(what=Thing('X3')))
         ],[
@@ -78,7 +78,7 @@ class Group(Person): pass
 class Permission(Thing): pass
 
 # If a person is in a group, and that group has some permission, the person also has it
-r4 = Rule('r4', [
+r4 = Rule([
         Prop(Person('X1'), IsIn(group=Group('X2'))),
         Prop(Group('X2'), Has(what=Permission('X4')))
         ],[
@@ -88,7 +88,7 @@ r4 = Rule('r4', [
 class Role(Person): pass
 
 # If a person has a role, and that role has some permission, the person also has it
-r5 = Rule('r5', [
+r5 = Rule([
         Prop(Person('X1'), Has(what=Role('X2'))),
         Prop(Role('X2'), Has(what=Permission('X4')))
         ],[
@@ -103,13 +103,13 @@ member = Role('member')
 manager = Role('manager')
 
 # everyperson has role member
-r6 = Rule('r6', [
+r6 = Rule([
         Person('X1')
         ],[
         Prop(Person('X1'), Has(what=member))])
 
 # the manager role has every permission
-r9 = Rule('r9', [
+r9 = Rule([
         Permission('X2'),
         ],[
         Prop(manager, Has(what=Permission('X2'))),])
@@ -142,7 +142,7 @@ class IsOwner(State):
 create_perm = Permission('create_content')
 
 # if a person wants to create something, and has create_perm, he creates it
-r10 = Rule('r10', [
+r10 = Rule([
         Prop(Person('X1'), Wants(to=Create(what=Thing('X33')))),
         Prop(Person('X1'), Has(what=create_perm))
         ],[
@@ -157,7 +157,7 @@ private = Status('private')
 public = Status('public')
 
 # if a person creates some content, the content is private and that person is its owner.
-r7 = Rule('r7', [
+r7 = Rule([
         Prop(Person('X1'), Create(what=Content('X2'))),
         ],[
         Content('X2'),
@@ -170,19 +170,19 @@ class View(State):
     mods = {'what': Thing}
 
 # if some content is public, the basic_perm is needed to view it
-r12 = Rule('r12', [
+r12 = Rule([
         Prop(Content('X1'), Has(what=public))
         ],[
         Prop(basic_perm, IsNeeded(for_action=View(what=Content('X1'))))])
 
 # if some content is private, the manage_perm is needed to view it
-r13 = Rule('r13', [
+r13 = Rule([
         Prop(Content('X1'), Has(what=private))
         ],[
         Prop(manage_perm, IsNeeded(for_action=View(what=Content('X1'))))])
 
 # if someone is owner of some content that is private, she can view it
-r14 = Rule('r14', [
+r14 = Rule([
         Prop(Content('X1'), Has(what=private)),
         Prop(Person('X2'), IsOwner(of=Content('X1')))
         ],[
@@ -194,14 +194,14 @@ class Publish(State):
     mods = {'what': Content,}
 
 # If someone publishes some content, it stops having any previous state and has public
-r15 = Rule('r15', [
+r15 = Rule([
         Prop(Person('X1'), Publish(what=Content('X2'))),
         ],[
         Remove(Prop(Content('X2'), Has(what=Status('X4')))),
         Prop(Content('X2'), Has(what=public))])
 
 # manage_perm is needed to publish anything
-r16 = Rule('r16', [
+r16 = Rule([
         Content('X1')
         ],[
         Prop(manage_perm, IsNeeded(for_action=Publish(what=Content('X1'))))])
@@ -212,14 +212,14 @@ class Hide(State):
     mods = {'what': Content,}
 
 # If someone hides some content, it stops having any previous state and has private
-r17 = Rule('r17', [
+r17 = Rule([
         Prop(Person('X1'), Hide(what=Content('X2')))
         ],[
         Remove(Prop(Content('X2'), Has(what=Status('X3')))),
         Prop(Content('X2'), Has(what=private))])
 
 # if a person is the owner of some content, she can hide it
-r18 = Rule('r18', [
+r18 = Rule([
         Prop(Person('X1'), IsOwner(of=Content('X2')))
         ],[
         Prop(Person('X1'), Can(what=Hide(what=Content('X2'))))])

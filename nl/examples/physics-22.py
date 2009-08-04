@@ -67,7 +67,7 @@ class IsForced(State):
 # rules
 
 
-r1 = Rule('r1', [
+r1 = Rule([
            Prop(Body('X1'), HasPosition(x='X2', y='X3'), 'X4'),
            Prop(Body('X1'), HasSpeed(x='X5', y='X6'), 'X4'),
            Arith('(< X4 %s)' % time)
@@ -76,7 +76,7 @@ r1 = Rule('r1', [
            ])
 
 
-r2 = Rule('r2', [
+r2 = Rule([
            Prop(Body('X1'), HasSpeed(x='X2', y='X3'), 'X4'),
            Prop(Body('X1'), HasAcceleration(x='X5', y='X6'), 'X4'),
            Arith('(< X4 %s)' % time)
@@ -85,7 +85,7 @@ r2 = Rule('r2', [
            ])
 
 
-r3 = Rule('r3', [
+r3 = Rule([
            Prop(Body('X1'), IsForced(x='X2', y='X3'), 'X4'),
            Prop(Body('X1'), HasMass(kgs='X5'), 'X4'),
            Arith('(< X4 %s)' % time)
@@ -93,7 +93,7 @@ r3 = Rule('r3', [
            Prop(Body('X1'), HasAcceleration(x='(/ X2 X5)', y='(/ X3 X5)'), '(+ X4 1)')
            ])
 
-r4 = Rule('r4', [
+r4 = Rule([
            Prop(Body('X1'), HasPosition(x='X2', y='X3'), 'X4'),
            Prop(Body('X1'), HasMass(kgs='X5'), 'X4'),
            Prop(Body('X6'), HasPosition(x='X7', y='X8'), 'X4'),
@@ -106,7 +106,7 @@ r4 = Rule('r4', [
               y='(- 0 (/ (* (* X5 X9) (- X3 X8)) (** (+ (** (- X2 X7) 2) (** (- X3 X8) 2)) (/ 3 2))))'),
               '(+ X4 1)')])
 
-r5 = Rule('r5', [
+r5 = Rule([
            Prop(Body('X1'), HasMass(kgs='X2'), 'X3'),
            Arith('(< X3 %s)' % time)
            ],
