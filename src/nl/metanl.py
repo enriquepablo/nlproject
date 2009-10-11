@@ -64,3 +64,24 @@ class Remove(object):
         return self.sen.remove_action(vrs)
 
 register('Remove', Remove)
+
+
+class Unknown(object):
+    '''
+    Negation as failure
+    '''
+    def __init__(self, sen):
+        self.sen = sen
+
+    def __str__(self):
+        return 'unknown: %s' % str(self.sen)
+
+    def get_ce(self, vrs=None):
+        sen = self.sen.put(vrs)
+        return '(not (%s))' % (sen)
+
+    def get_isc(self, templs, queries):
+        sen =  self.sen.put({})
+        queries.append('(not %s)' % (truth, sen))
+
+register('Unknown', Unknown)
