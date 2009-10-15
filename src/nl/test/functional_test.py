@@ -45,9 +45,9 @@ class cms_test(object):
         # extend the db
         nl.kb.extend()
         # to the question is jane owner of c1?, the answer is yes
-        assert nl.kb.ask(nl.Prop(jane, self.cms.IsOwner(of=c1))) == 'jane isowner of c1 at now'
+        assert nl.kb.ask(nl.Prop(jane, self.cms.IsOwner(of=c1))) == 'jane isowner of c1 at %s.0' % nl.time._now
         # to the question has c1 private state?, the answer is yes
-        assert nl.kb.ask(nl.Prop(c1, self.cms.Has(what=self.cms.private))) == 'c1 has what private at now'
+        assert nl.kb.ask(nl.Prop(c1, self.cms.Has(what=self.cms.private))) == 'c1 has what private at %s.0' % nl.time._now
         # to the question is pete owner of c2?, the answer is no
         assert nl.kb.ask(nl.Prop(pete, self.cms.IsOwner(of=c2))) == 'no'
         # jane wants to publish c1
@@ -61,7 +61,7 @@ class cms_test(object):
         # to the question is c2 public?, the answer is no
         assert nl.kb.ask(nl.Prop(c2, self.cms.Has(what=self.cms.public))) == 'no'
         # to the question can jane view c1?, the answer is yes
-        assert nl.kb.ask(nl.Prop(jane, self.cms.Can(what=self.cms.View(what=c1)))) == 'jane can what view what c1 at now'
+        assert nl.kb.ask(nl.Prop(jane, self.cms.Can(what=self.cms.View(what=c1)))) == 'jane can what view what c1 at %s.0' % nl.time._now
         # to the question can pete view c1?, the answer is no
         assert nl.kb.ask(nl.Prop(pete, self.cms.Can(what=self.cms.View(what=c1)))) == 'no'
         # john wants to publish c1
@@ -71,13 +71,13 @@ class cms_test(object):
         # to the question is c1 private?, the answer is no
         assert nl.kb.ask(nl.Prop(c1, self.cms.Has(what=self.cms.private))) == 'no'
         # to the question is c1 public?, the answer is yes
-        assert nl.kb.ask(nl.Prop(c1, self.cms.Has(what=self.cms.public))) == 'c1 has what public at now'
+        assert nl.kb.ask(nl.Prop(c1, self.cms.Has(what=self.cms.public))) == 'c1 has what public at %s.0' % nl.time._now
         # to the question can pete view c1?, the answer is yes
-        assert nl.kb.ask(nl.Prop(pete, self.cms.Can(what=self.cms.View(what=c1)))) == 'pete can what view what c1 at now'
+        assert nl.kb.ask(nl.Prop(pete, self.cms.Can(what=self.cms.View(what=c1)))) == 'pete can what view what c1 at %s.0' % nl.time._now
 
 
 
-        assert not nl.kb.app.root()['props'].has_key('c1 has what private at now')
-        assert nl.kb.app.root()['props'].has_key('c1 has what public at now')
+        assert not nl.kb.app.root()['props'].has_key('c1 has what private at %s.0' % nl.time._now)
+        assert nl.kb.app.root()['props'].has_key('c1 has what public at %s.0' % nl.time._now)
 
 

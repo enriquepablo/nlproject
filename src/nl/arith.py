@@ -25,7 +25,6 @@ _m = []
 
 def parens(expr):
     """
-    quick and dirty parens parser
     """
     if expr[0] != '(':
         return expr
@@ -66,12 +65,10 @@ class Number(Name):
                 self.arg2 = Number(args[2])
             else:
                 self.value = value
-                if arg1 != '':
-                    self.arg1 = isinstance(arg1,
-                                           Number) and arg1 or Number(arg1)
-                if arg2 != '':
-                    self.arg2 = isinstance(arg2,
-                                           Number) and arg2 or Number(arg2)
+                if self.arg1 != '':
+                    self.arg1 = isinstance(arg1, Number) and arg1 or Number(arg1)
+                if self.arg2 != '':
+                    self.arg2 = isinstance(arg2, Number) and arg2 or Number(arg2)
 
     @classmethod
     def from_clips(cls, instance):
@@ -79,34 +76,20 @@ class Number(Name):
 
     def get_slot_constraint(self, vrs):
         """
-        in a make-instance of a proposition
         """
         if varpat.match(self.value):
-            if self.value in vrs and vrs[self.value]:
-                return clips_instance(*(vrs[self.value]))
-            else:
-                return '?%s' % self.value
+            return self.put_var(vrs)
         try:
             return str(float(self.value))
         except ValueError:
-            if self.value == 'now':
-                return 'now'
             arg1 = self.arg1 != '' and self.arg1.get_slot_constraint(vrs)
-            arg2 =  self.arg1 != '' and self.arg2.get_slot_constraint(vrs)
+            arg2 = self.arg2 != '' and self.arg2.get_slot_constraint(vrs)
             return '(%s %s %s)' % (self.value, arg1, arg2)
 
     def get_constraint(self, vrs, ancestor, mod_path):
         ci = clips_instance(ancestor, mod_path)
-        constraint = ''
         if varpat.match(self.value):
-            if self.value in vrs:
-                if vrs[self.value]:
-                    v_ci = clips_instance(*(vrs[self.value]))
-                    constraint = '&:(eq %s %s)' % (v_ci, ci)
-                else:
-                    constraint = '&:(eq %s ?%s)' % (ci, self.value)
-            else:
-                vrs[self.value] = (ancestor, mod_path)
+            constraint = self.get_var_constraint(vrs, ancestor, mod_path, ci)
         else:
             constraint = '&:(eq %s %s)' % (ci, self.get_slot_constraint(vrs))
         return constraint
@@ -160,13 +143,3 @@ class Arith(Number):
         return queries.pop()
 
 register('Arith', Arith)
-
-
-class Time(Number):
-    """
-    """
-
-    @classmethod
-    def from_clips(cls, instance):
-        return Time(instance)
-

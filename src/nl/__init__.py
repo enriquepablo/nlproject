@@ -18,9 +18,10 @@
 
 
 import kb
-from arith import Number, Arith, Time
+from arith import Number, Arith
 from thing import Thing
 from state import State
 from prop import Proposition, Prop
+from time import Time, Instant, Duration, Finish, During
 from rule import Rule
 from metanl import Remove, Equals

@@ -113,17 +113,8 @@ class State(Verb):
         for a slot constraint for a prop in a rule
         """
         newvar = _newvar()
-        if self.value in vrs:
-            if vrs[self.value]:
-                return '?%(val)s&:(eq ?%(val)s %(var)s)' % {'val': newvar,
-                                           'var': clips_instance(*(vrs[self.value]))}
-            else:
-                return '?%s' % self.value
-        elif self.value:
-            vrs[self.value] = ()
-            return class_constraint % {'val': self.value,
-                                         'cls': self.__class__.__name__}
-        newvar = _newvar()
+        if varpat.match(self.value):
+            return self.get_var_slot_constraint(vrs, newvar)
         constraint = [class_constraint % {'val': newvar,
                                          'cls': self.__class__.__name__}]
         for mod,cls in self.mods.items():
@@ -159,10 +150,7 @@ class State(Verb):
         put pred in clips as a make-instance action.
         """
         if self.value and varpat.match(self.value):
-            if self.value in vrs and vrs[self.value]:
-                return clips_instance(*(vrs[self.value]))
-            else:
-                return '?%s' % self.value
+            return self.put_var(vrs)
         slots = []
         for mod in self.mods:
             mod_o = getattr(self, mod, _m)
@@ -180,23 +168,20 @@ class State(Verb):
         newvar = _newvar()
         if self.value:
             if self.value in vrs:
-                templs.append('(?%s %s)' % (newvar,
-                                        self.__class__.__name__))
                 if vrs[self.value]:
                     queries.append('(eq ?%s %s)' % (newvar,
                                      clips_instance(*(vrs[self.value]))))
                 else:
-                    queries.append('(eq ?%s %s)' % (newvar,
-                                     self.value))
-                return '?%s' % newvar
-            return '?' + self.value
+                    newvar = self.value
+            else:
+                newvar = self.value
         templs.append('(?%s %s)' % (newvar, self.__class__.__name__))
         for mod,mcls in self.mods.items():
             mod_o = getattr(self, mod, _m)
             if mod_o is not _m and not (varpat.match(mod_o.value) and mod_o.value not in vrs):
                 queries.append('(eq ?%s:%s %s)' % (newvar, mod,
                                                mod_o.get_isc(templs, queries, vrs)))
-        return '?' + newvar
+        return '?%s' % newvar
 
 
 register('State', State)

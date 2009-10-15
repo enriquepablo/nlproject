@@ -19,12 +19,12 @@
 # import logging
 from log import logger
 from nl.utils import clips, register, Name, varpat
-from nl.arith import Number, Time
+from nl.arith import Number
+from nl.time import Time, now
 from nl.thing import Thing
 from nl.state import State
 
 _m = []
-now = Time('now')
 
 class Proposition(Name):
     """

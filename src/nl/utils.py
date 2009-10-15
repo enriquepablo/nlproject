@@ -56,13 +56,41 @@ class Name(Persistent):
         cls = subclasses[str(instance.Class.Name)]
         return cls(str(instance))
 
+    def get_var_constraint(self, vrs, ancestor, mod_path, ci):
+        constraint = ''
+        if self.value in vrs:
+            if vrs[self.value]:
+                v_ci = clips_instance(*(vrs[self.value]))
+                constraint = '&:(eq %s %s)' % (v_ci, ci)
+            else:
+                constraint = '&:(eq %s ?%s)' % (ci, self.value)
+        else:
+            vrs[self.value] = (ancestor, mod_path)
+        return constraint
+
+    def get_var_slot_constraint(self, vrs, val):
+        if self.value in vrs:
+            if vrs[self.value]:
+                return '?%(val)s&:(eq ?%(val)s %(var)s)' % {'val': val,
+                                       'var': clips_instance(*(vrs[self.value]))}
+            else:
+                return '?%s' % self.value
+        else:
+            vrs[self.value]= ()
+            return class_constraint % {'val': self.value,
+                                           'cls': self.__class__.__name__}
+
+    def put_var(self, vrs):
+        if self.value in vrs and vrs[self.value]:
+            return clips_instance(*(vrs[self.value]))
+        return '?%s' % self.value
+
 register('Name', Name)
 
 
 def clips_instance(ancestor, mod_path):
-    core = '(send ?%s get-%s)' % (ancestor, mod_path[0])
-    mod_path = mod_path[1:]
-    while mod_path:
-        core = '(send %s get-%s)' % (core, mod_path[0])
-        mod_path = mod_path[1:]
-    return core
+    send_str = '(send ?%s get-%s)'
+    for mod in mod_path:
+        ancestor = send_str % (ancestor, mod)
+        send_str = '(send %s get-%s)'
+    return ancestor

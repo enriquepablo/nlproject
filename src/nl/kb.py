@@ -28,7 +28,7 @@ from nl.log import here, logger
 from nl.utils import clips, subclasses
 from nl.thing import Thing
 from nl.state import State
-from nl.arith import Time
+from nl.time import Time
 from nl.prop import Proposition
 from nl.rule import Rule
 

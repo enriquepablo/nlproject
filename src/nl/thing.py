@@ -73,30 +73,13 @@ class Thing(Name):
         for a slot constraint for a pred in a prop in a rule
         """
         if varpat.match(self.value):
-            if self.value in vrs:
-                if vrs[self.value]:
-                    return '?%(val)s&:(eq ?%(val)s %(var)s)' % {'val': self.value,
-                                           'var': clips_instance(*(vrs[self.value]))}
-                else:
-                    return '?%s' % self.value
-            else:
-                vrs[self.value]= ()
-                return class_constraint % {'val': self.value,
-                                           'cls': self.__class__.__name__}
+            return self.get_var_slot_constraint(vrs, self.value)
         return '[%s]' % self.value
 
     def get_constraint(self, vrs, ancestor, mod_path):
         ci = clips_instance(ancestor, mod_path)
-        constraint = ''
         if varpat.match(self.value):
-            if self.value in vrs:
-                if vrs[self.value]:
-                    v_ci = clips_instance(*(vrs[self.value]))
-                    constraint = '&:(eq %s %s)' % (v_ci, ci)
-                else:
-                    constraint = '&:(eq %s ?%s)' % (ci, self.value)
-            else:
-                vrs[self.value] = (ancestor, mod_path)
+            constraint = self.get_var_constraint(vrs, ancestor, mod_path, ci)
         else:
             constraint = '&:(eq %s [%s])' % (ci, self.value)
         return constraint
@@ -132,10 +115,7 @@ class Thing(Name):
 
     def put(self, vrs):
         if varpat.match(self.value):
-            if self.value in vrs and vrs[self.value]:
-                return clips_instance(*(vrs[self.value]))
-            else:
-                return '?%s' % self.value
+            return self.put_var(vrs)
         else:
             return '[%s]' % self.value
 
