@@ -53,47 +53,62 @@ class Time(Number):
     """
     """
 
+    @classmethod
+    def from_clips(cls, instance):
+        if not isinstance(instance, clips._clips_wrap.Instance):
+            try:
+                return Instant(str(float(instance)))
+            except ValueError:
+                instance = clips.FindInstance(instance)
+        if str(instance.Class) == 'Duration':
+            return Duration.from_clips(instance)
+        return Instant(instance)
+
 register('Time', Time)
 
 class Instant(Time):
 
     def __init__(self, *args, **kwargs):
         if args and args[0] == 'now':
-            self.value = _now
+            self.value = '-1'
         else:
             super(Instant, self).__init__(*args, **kwargs)
-
-    def get_slot_constraint(self, vrs):
-        """
-        in a make-instance of a proposition
-        """
-        if self.value == _now:
-            return _now
-        return super(Instant, self).get_slot_constraint(vrs)
 
 register('Instant', Instant)
 
 now = Instant('now')
 
 class Duration(Time):
-    clp = '(defclass Duration (is-a Name) (slot start (type INTEGER) (pattern-match reactive)) (slot end (type INTEGER) (pattern-match reactive)))'
+    clp = '(defclass Duration (is-a Name) (slot start (type NUMBER) (pattern-match reactive)) (slot end (type NUMBER) (pattern-match reactive)))'
     logger.info(clp)
     clips.Build(clp) # XXX esto no debbería ir aquí, sino en un método de inicialización.
 
     def __init__(self, var='', start=-1, end=-1):
         self.value = var
-        self.start = isinstance(start, Instant) and start or \
+        if isinstance(start, MinComStart):
+            self.pstart = start
+        else:
+            if (isinstance(start, Instant) and start.value in ('-1', '-1.0', 'now')) or start in ('-1', '-1.0', 'now'):
+                self.start = Instant(_now)
+            else:
+                self.start = isinstance(start, Instant) and start or \
                                                  Instant(start)
-        self.end = isinstance(end, Instant) and end or \
+        if isinstance(end, MaxComEnd):
+            self.pend = end
+        else:
+            self.end = isinstance(end, Instant) and end or \
                                                   Instant(end)
 
-    def from_clips(self, instance):
+    @classmethod
+    def from_clips(cls, instance):
         '''
         '''
         if not isinstance(instance, clips._clips_wrap.Instance):
             instance = clips.FindInstance(instance)
-        start = instance.GetSlot('start')
-        end = instance.GetSlot('end')
+        start = Instant(instance.GetSlot('start'))
+        if start.value in ('-1', '-1.0', 'now'):
+            start = Instant(_now)
+        end = Instant(instance.GetSlot('end'))
         return Duration(start=start, end=end)
 
     def get_constraint(self, vrs, ancestor, mod_path):
@@ -125,8 +140,9 @@ class Duration(Time):
         if self.value and varpat.match(self.value):
             return self.put_var(vrs)
         else:
-            core = '(start %s)' % self.start.get_slot_constraint()
-            return '(make-instance of Duration %s (end %s))' % (core, self.end.get_slot_constraint())
+            if getattr(self, 'pstart', False):
+                return '(make-instance of Duration (start %s) (end %s))' % (self.pstart.put(vrs), self.pend.put(vrs))
+            return '(make-instance of Duration (start %s) (end %s))' % (self.start.get_slot_constraint(vrs), self.end.get_slot_constraint(vrs))
 
     def get_isc(self, templs, queries, vrs):
         """
@@ -164,7 +180,7 @@ class Finish(Name):
         self.duration = duration
 
     def put_action(self, vrs):
-        return '(send %s set-end %s)' % (self.duration.put(vrs), _now)
+        return '(send %s put-end %s)' % (self.duration.put(vrs), _now)
 
 register('Finish', Finish)
 
@@ -174,9 +190,72 @@ class During(Name):
     '''
     def __init__(self, instant, duration):
         self.instant = instant
-        self.duration = self.duration
+        self.duration = duration
 
     def get_ce(self, vrs):
         return '(test (and (<= (send %(dur)s get-start) %(ins)s) (or (eq (send %(dur)s get-end) -1) (>= (send %(dur)s get-end) %(ins)s))))' % {'dur': self.duration.put(vrs), 'ins': self.instant.put(vrs)}
 
 register('During', During)
+
+
+class Coincide(Name):
+    '''
+    '''
+    def __init__(self, dur1, dur2):
+        self.dur1 = isinstance(dur1, Duration) and dur1 or Duration(dur1)
+        self.dur2 = isinstance(dur2, Duration) and dur1 or Duration(dur2)
+
+    def get_ce(self, vrs):
+        return '(test (or (and (>= (send %(dur1)s get-start) (send %(dur2)s get-start)) (or (<= (send %(dur1)s get-start) (send %(dur2)s get-end)) (eq (send %(dur2)s get-end) -1))) (and (>= (send %(dur2)s get-start) (send %(dur1)s get-start)) (or (<= (send %(dur2)s get-start) (send %(dur1)s get-end)) (eq (send %(dur2)s get-end) -1)))))' % {'dur1': self.dur1.put(vrs), 'dur2': self.dur2.put(vrs)}
+
+register('Coincide', Coincide)
+
+mincomstart_clps = '''
+
+(deffunction mincomstart (?dur1 ?dur2)
+    (return (max (send ?dur1 get-start) (send ?dur2 get-start)))
+)
+'''
+
+clips.Build(mincomstart_clps)
+logger.info(mincomstart_clps)
+
+class MinComStart(Name):
+    def __init__(self, dur1, dur2):
+        self.dur1 = isinstance(dur1, Duration) and dur1 or Duration(dur1)
+        self.dur2 = isinstance(dur2, Duration) and dur1 or Duration(dur2)
+
+    def put(self, vrs):
+        return '(mincomstart %s %s)' % (self.dur1.put(vrs), self.dur2.put(vrs))
+
+register('MinComStart', MinComStart)
+
+maxcomend_clps = '''
+
+(deffunction maxcomend (?dur1 ?dur2)
+    (bind ?e1 (send ?dur1 get-end))
+    (bind ?e2 (send ?dur2 get-end))
+    (if (= ?e1 ?e2) then (return ?e1))
+    (if (eq ?e2 -1) then
+        (return ?e1)
+    )
+    (if (eq ?e1 -1) then
+        (return ?e2)
+    )
+    (return (min ?e1 ?e2))
+)
+'''
+
+
+logger.info(maxcomend_clps)
+clips.Build(maxcomend_clps)
+
+class MaxComEnd(Name):
+    def __init__(self, dur1, dur2):
+        self.dur1 = isinstance(dur1, Duration) and dur1 or Duration(dur1)
+        self.dur2 = isinstance(dur2, Duration) and dur1 or Duration(dur2)
+
+    def put(self, vrs):
+        return '(maxcomend %s %s)' % (self.dur1.put(vrs), self.dur2.put(vrs))
+
+register('MaxComEnd', MaxComEnd)

@@ -23,6 +23,8 @@ from persistent import Persistent
 import clips
 from nl.log import logger
 
+clips.DebugConfig.ExternalTraceback = True
+
 # vars are always XNUM
 varpat = re.compile(r'^[A-Z]\w*\d+$')
 

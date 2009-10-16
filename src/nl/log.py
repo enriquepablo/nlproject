@@ -37,4 +37,9 @@ formatter = logging.Formatter('%(message)s')
 # formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 hdlr.setFormatter(formatter)
 logger.addHandler(hdlr)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
+
+def hard_debug(self, msg):
+    self.debug(80*'\n'+msg+80*'\n')
+
+setattr(logger, 'hard_debug', hard_debug)

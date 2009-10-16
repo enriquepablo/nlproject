@@ -23,7 +23,7 @@ class Rule(Name):
     """
     """
     def __init__(self, prems, cons):
-        self.name = uuid.uuid1().get_hex()
+        self.name = uuid.uuid4().get_hex()
         self.prems = prems
         self.cons = cons
 

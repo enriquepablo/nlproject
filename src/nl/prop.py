@@ -38,7 +38,7 @@ class Proposition(Name):
         self.truth = truth
         self.subject = subj
         self.predicate = pred
-        self.time = isinstance(time, Number) and time or Time(time)
+        self.time = time
 
     def __str__(self):
         negation = not self.truth and ' not' or ''
@@ -98,6 +98,7 @@ class Proposition(Name):
         s = self.subject.put(vrs)
         p = self.predicate.put(vrs)
         t = self.time.put(vrs)
+        logger.debug(t)
         return '(add-prop %s %s %s %s)' % (s, p, t, self.truth)
 
     def remove_action(self, vrs):
