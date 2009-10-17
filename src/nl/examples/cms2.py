@@ -90,7 +90,7 @@ r4 = Rule([
         Prop(Person('X1'), Has(what=Permission('X4')), Duration(start=MinComStart('X3', 'X5'), end=MaxComEnd('X3', 'X5')))])
 
 # a role s a person
-class Role(Person): pass
+class Role(Thing): pass
 
 # If a person has a role, and that role has some permission, the person also has it
 r5 = Rule([
@@ -145,7 +145,7 @@ class IsOwner(State):
     mods = {'of': Content}
 
 # create_perm  is a permission
-create_perm = Permission('create_content')
+create_perm = Permission('create_perm')
 
 # if a person wants to create something, and has create_perm, he creates it
 r10 = Rule([

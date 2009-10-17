@@ -60,7 +60,7 @@ class Time(Number):
                 return Instant(str(float(instance)))
             except ValueError:
                 instance = clips.FindInstance(instance)
-        if str(instance.Class) == 'Duration':
+        if str(instance.Class.Name) == 'Duration':
             return Duration.from_clips(instance)
         return Instant(instance)
 
@@ -70,7 +70,7 @@ class Instant(Time):
 
     def __init__(self, *args, **kwargs):
         if args and args[0] == 'now':
-            self.value = '-1'
+            self.value = _now
         else:
             super(Instant, self).__init__(*args, **kwargs)
 
@@ -79,25 +79,21 @@ register('Instant', Instant)
 now = Instant('now')
 
 class Duration(Time):
-    clp = '(defclass Duration (is-a Name) (slot start (type NUMBER) (pattern-match reactive)) (slot end (type NUMBER) (pattern-match reactive)))'
-    logger.info(clp)
-    clips.Build(clp) # XXX esto no debbería ir aquí, sino en un método de inicialización.
 
     def __init__(self, var='', start=-1, end=-1):
         self.value = var
         if isinstance(start, MinComStart):
             self.pstart = start
         else:
-            if (isinstance(start, Instant) and start.value in ('-1', '-1.0', 'now')) or start in ('-1', '-1.0', 'now'):
-                self.start = Instant(_now)
-            else:
-                self.start = isinstance(start, Instant) and start or \
+            self.start = isinstance(start, Instant) and start or \
                                                  Instant(start)
         if isinstance(end, MaxComEnd):
             self.pend = end
         else:
             self.end = isinstance(end, Instant) and end or \
                                                   Instant(end)
+            if self.end.value == _now:
+                self.end = Instant('-1')
 
     @classmethod
     def from_clips(cls, instance):
@@ -120,8 +116,8 @@ class Duration(Time):
         if varpat.match(self.value):
             return self.get_var_constraint(vrs, ancestor, mod_path, ci)
         else:
-            core = '(eq (send %s get-start) %s)' % (ci, self.start.get_slot_constraint(vrs))
-            return '&:(and %s (eq (send %s get-end) %s))' % (core, ci, self.end.get_slot_constraint(vrs))
+            core = '(= (send %s get-start) %s)' % (ci, self.start.get_slot_constraint(vrs))
+            return '&:(and %s (= (send %s get-end) %s))' % (core, ci, self.end.get_slot_constraint(vrs))
 
 # XXX falta resolver el caso en ambos get constraint de que no haya end.
 
@@ -137,7 +133,7 @@ class Duration(Time):
         return '?%(var)s&:(and %(core)s (eq (send %(var)s get-end) %(end)s))' % {'core': core, 'var': newvar, 'end': self.end.get_slot_constraint(vrs)}
 
     def put(self, vrs):
-        if self.value and varpat.match(self.value):
+        if varpat.match(self.value):
             return self.put_var(vrs)
         else:
             if getattr(self, 'pstart', False):
@@ -150,7 +146,7 @@ class Duration(Time):
         modify (instance-set templates, instance-set queries)
         """
         newvar = _newvar()
-        if self.value:
+        if varpat.match(self.value):
             if self.value in vrs:
                 if vrs[self.value]:
                     queries.append('(eq ?%s %s)' % (newvar,
@@ -162,16 +158,19 @@ class Duration(Time):
         templs.append('(?%s Duration)' % newvar)
         start = getattr(self, 'start', _m)
         if start is not _m and not (varpat.match(start.value) and start.value not in vrs):
-            queries.append('(eq ?%s:start %s)' % (newvar,
+            queries.append('(= ?%s:start %s)' % (newvar,
                                            start.get_isc(templs, queries, vrs)))
-        end = getattr(self, 'start', _m)
+        end = getattr(self, 'end', _m)
         if end is not _m and not (varpat.match(end.value) and end.value not in vrs):
-            queries.append('(eq ?%s:end %s)' % (newvar,
+            queries.append('(= ?%s:end %s)' % (newvar,
                                            end.get_isc(templs, queries, vrs)))
         return '?%s' % newvar
 
     def __str__(self):
-        return self.put({})
+        if varpat.match(self.value):
+            return self.put_var({})
+        else:
+            return 'from %s till %s' % (self.start.put({}), self.end.put({}))
 
 register('Duration', Duration)
 
@@ -193,7 +192,7 @@ class During(Name):
         self.duration = duration
 
     def get_ce(self, vrs):
-        return '(test (and (<= (send %(dur)s get-start) %(ins)s) (or (eq (send %(dur)s get-end) -1) (>= (send %(dur)s get-end) %(ins)s))))' % {'dur': self.duration.put(vrs), 'ins': self.instant.put(vrs)}
+        return '(test (and (<= (send %(dur)s get-start) %(ins)s) (or (= (send %(dur)s get-end) -1) (>= (send %(dur)s get-end) %(ins)s))))' % {'dur': self.duration.put(vrs), 'ins': self.instant.put(vrs)}
 
 register('During', During)
 
@@ -206,9 +205,14 @@ class Coincide(Name):
         self.dur2 = isinstance(dur2, Duration) and dur1 or Duration(dur2)
 
     def get_ce(self, vrs):
-        return '(test (or (and (>= (send %(dur1)s get-start) (send %(dur2)s get-start)) (or (<= (send %(dur1)s get-start) (send %(dur2)s get-end)) (eq (send %(dur2)s get-end) -1))) (and (>= (send %(dur2)s get-start) (send %(dur1)s get-start)) (or (<= (send %(dur2)s get-start) (send %(dur1)s get-end)) (eq (send %(dur2)s get-end) -1)))))' % {'dur1': self.dur1.put(vrs), 'dur2': self.dur2.put(vrs)}
+        return '(test (or (and (>= (send %(dur1)s get-start) (send %(dur2)s get-start)) (or (<= (send %(dur1)s get-start) (send %(dur2)s get-end)) (= (send %(dur2)s get-end) -1))) (and (>= (send %(dur2)s get-start) (send %(dur1)s get-start)) (or (<= (send %(dur2)s get-start) (send %(dur1)s get-end)) (= (send %(dur2)s get-end) -1)))))' % {'dur1': self.dur1.put(vrs), 'dur2': self.dur2.put(vrs)}
 
 register('Coincide', Coincide)
+
+
+duration_clps = '(defclass Duration (is-a Name) (slot start (type NUMBER) (pattern-match reactive)) (slot end (type NUMBER) (pattern-match reactive)))'
+logger.info(duration_clps)
+clips.Build(duration_clps) # XXX esto no debbería ir aquí, sino en un método de inicialización.
 
 mincomstart_clps = '''
 
@@ -236,10 +240,10 @@ maxcomend_clps = '''
     (bind ?e1 (send ?dur1 get-end))
     (bind ?e2 (send ?dur2 get-end))
     (if (= ?e1 ?e2) then (return ?e1))
-    (if (eq ?e2 -1) then
+    (if (= ?e2 -1) then
         (return ?e1)
     )
-    (if (eq ?e1 -1) then
+    (if (= ?e1 -1) then
         (return ?e2)
     )
     (return (min ?e1 ?e2))

@@ -17,7 +17,7 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 from nl.log import logger
-from nl.utils import register, clips, varpat, class_constraint, Name, clips_instance
+from nl.utils import register, clips, varpat, class_constraint, Name, clips_instance, subclasses
 
 _vn = 0
 
@@ -139,4 +139,3 @@ class Thing(Name):
         return q
 
 register('Thing', Thing)
-

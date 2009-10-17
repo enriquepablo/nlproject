@@ -18,7 +18,7 @@
 
 # import logging
 from log import logger
-from nl.utils import clips, register, Name, varpat
+from nl.utils import clips, register, Name, varpat, subclasses
 from nl.arith import Number
 from nl.time import Time, now
 from nl.thing import Thing
@@ -98,7 +98,6 @@ class Proposition(Name):
         s = self.subject.put(vrs)
         p = self.predicate.put(vrs)
         t = self.time.put(vrs)
-        logger.debug(t)
         return '(add-prop %s %s %s %s)' % (s, p, t, self.truth)
 
     def remove_action(self, vrs):
@@ -121,16 +120,24 @@ Prop = Proposition
 _add_prop = '''
 (deffunction add-prop (?s ?p ?t ?r)
        (if (and (python-call ptonl ?s ?p ?t ?r)
-                (eq (length$ (find-instance ((?prop Proposition))
-                     (and (eq ?prop:subject ?s)
+                (= (+ (length$ (find-instance ((?prop Proposition) (?dur Duration))
+                          (and (eq ?prop:subject ?s)
                                (eq ?prop:predicate ?p)
-                               (eq ?prop:time ?t)
-                               (eq ?prop:truth ?r)))) 0))
+                               (eq ?prop:time ?dur)
+                               (= ?dur:start (send ?t get-start))
+                               (= ?dur:end (send ?t get-end))
+                               (eq ?prop:truth ?r))))
+                      (length$ (find-instance ((?prop Proposition))
+                          (and (eq ?prop:subject ?s)
+                               (eq ?prop:predicate ?p)
+                               (= ?prop:time ?t)
+                               (eq ?prop:truth ?r)))))
+                 0))
         then (make-instance of Proposition (subject ?s)
                                            (predicate ?p)
                                            (time ?t)
                                            (truth ?r))
         else (return TRUE)))'''
 
-clips.Build(_add_prop)
 logger.info(_add_prop)
+clips.Build(_add_prop)

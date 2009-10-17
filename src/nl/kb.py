@@ -147,9 +147,11 @@ def ask_objs(sentence):
 def ask(sentence):
     sens = ask_objs(sentence)
     if not sens:
-        return 'no'
+        resp = 'no'
     else:
-        return '\n'.join(map(str, sens))
+        resp = '\n'.join(map(str, sens))
+    logger.info(str(len(sens))+'\n\n\n'+resp)
+    return resp
 
 def extend():
     logger.info('----------running---------------------')
@@ -160,27 +162,26 @@ def extend():
         acts = clips.Run()
     except Paradox, clips.ClipsError:
         transaction.abort()
-        return 'Contradiction found'
+        return 'contradiction found'
     else:
         transaction.commit()
     _extending = False
-    logger.info('----------run---------------------')
+    logger.info('----------runned: %d---------------------' % acts)
     return acts
 
+# _pred_pat = re.compile('[()\s\[\]]')
+# def make_pred(classname, slots):
+#     key = classname + re.sub(_pred_pat, '', slots)
+#     clp_pred = clips.FindInstance(key)
+#     if not clp_pred:
+#         clp = 'make-instance [%s] of %s %s' % (key, classname, slots)
+#         clp_pred = clips.Eval(clp)
+#     return clp_pred
+# 
+# clips.RegisterPythonFunction(make_pred)
 
-def rmnl(classname, name):
-    cls = subclasses[str(classname)]
-    sen = cls.from_clips(name)
-    key = str(sen)
-    kind = isinstance(sen, Thing) and 'things' or 'props'
-    if app.root()[kind].has_key(key):
-        app.root()[kind].pop(key)
-        if not _extending:
-            transaction.commit()
-    logger.info('---------REMOVE - ' + key)
-    return clips.Symbol('TRUE')
+# que pasen las excepciones de python
 
-clips.RegisterPythonFunction(rmnl)
 
 def tonl(classname, name):
     cls = subclasses[str(classname)]
@@ -199,6 +200,20 @@ def tonl(classname, name):
 
 clips.RegisterPythonFunction(tonl)
 
+def rmnl(classname, name):
+    cls = subclasses[str(classname)]
+    sen = cls.from_clips(name)
+    key = str(sen)
+    kind = isinstance(sen, Thing) and 'things' or 'props'
+    if app.root()[kind].has_key(key):
+        app.root()[kind].pop(key)
+        if not _extending:
+            transaction.commit()
+    logger.info('---------REMOVE - ' + key)
+    return clips.Symbol('TRUE')
+
+clips.RegisterPythonFunction(rmnl)
+
 def ptonl(subj, pred, time, truth):
     s = Thing.from_clips(subj)
     p = State.from_clips(pred)
@@ -216,17 +231,3 @@ def ptonl(subj, pred, time, truth):
     return clips.Symbol('TRUE')
 
 clips.RegisterPythonFunction(ptonl)
-
-# _pred_pat = re.compile('[()\s\[\]]')
-# def make_pred(classname, slots):
-#     key = classname + re.sub(_pred_pat, '', slots)
-#     clp_pred = clips.FindInstance(key)
-#     if not clp_pred:
-#         clp = 'make-instance [%s] of %s %s' % (key, classname, slots)
-#         clp_pred = clips.Eval(clp)
-#     return clp_pred
-# 
-# clips.RegisterPythonFunction(make_pred)
-
-# que pasen las excepciones de python
-
