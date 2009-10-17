@@ -3432,3 +3432,242 @@ c1 has what private at from 733697.0 till 733697.0
 c1 has what private at from 733697.0 till 733697.0
 c1 has what private at from 733697.0 till 733697.0
 c1 has what private at from 733697.0 till 733697.0
+(defclass Name (is-a USER))
+(deffunction reduce-class (?instance ?class) (if (eq (length$ (find-instance ((?a ?class)) (eq (instance-name ?a) ?instance))) 0) then (make-instance ?instance of ?class) (python-call tonl ?class ?instance)))
+(defclass Thing (is-a Name))
+(defclass Verb (is-a USER))
+(defclass State (is-a Verb) )
+(set-sequence-operator-recognition TRUE)
+(defmessage-handler State set-slots primary ($?slots)
+        (while (> (length$ ?slots) 0) do
+            (bind ?slot (first$ ?slots))
+            (bind ?vslots (rest$ ?slots))
+            (bind ?value (first$ ?vslots))
+            (bind ?slots (rest$ ?vslots))
+            (dynamic-put $?slot $?value))
+        (return (instance-name ?self)))
+
+
+(deffunction add-pred (?class $?slots)
+        (bind ?key (str-cat ?class $?slots))
+        (bind ?pos (str-index "." ?key))
+        (while ?pos do
+            (bind ?key (str-cat (sub-string 1 (- ?pos 1) ?key)
+                                "_"
+                                (sub-string (+ ?pos 1) (str-length ?key) ?key)))
+            (bind ?pos (str-index "." ?key)))
+        (bind ?key (sym-cat ?key))
+        (if (instance-existp ?key) then
+            (return (instance-name ?key))
+         else
+            (make-instance ?key of ?class)
+            (return (send (instance-name ?key) set-slots $?slots))))
+
+(defclass Duration (is-a Name) (slot start (type NUMBER) (pattern-match reactive)) (slot end (type NUMBER) (pattern-match reactive)))
+
+
+(deffunction mincomstart (?dur1 ?dur2)
+    (return (max (send ?dur1 get-start) (send ?dur2 get-start)))
+)
+
+
+
+(deffunction maxcomend (?dur1 ?dur2)
+    (bind ?e1 (send ?dur1 get-end))
+    (bind ?e2 (send ?dur2 get-end))
+    (if (= ?e1 ?e2) then (return ?e1))
+    (if (= ?e2 -1) then
+        (return ?e1)
+    )
+    (if (= ?e1 -1) then
+        (return ?e2)
+    )
+    (return (min ?e1 ?e2))
+)
+
+(defclass Proposition (is-a Name) (slot truth (type INTEGER) (default 1) (pattern-match reactive)) (slot subject (type INSTANCE) (pattern-match reactive)) (slot predicate (type INSTANCE) (pattern-match reactive)) (slot time (type ?VARIABLE) (pattern-match reactive)))
+
+(deffunction add-prop (?s ?p ?t ?r)
+       (if (and (python-call ptonl ?s ?p ?t ?r)
+                (= (+ (length$ (find-instance ((?prop Proposition) (?dur Duration))
+                          (and (eq ?prop:subject ?s)
+                               (eq ?prop:predicate ?p)
+                               (eq ?prop:time ?dur)
+                               (= ?dur:start (send ?t get-start))
+                               (= ?dur:end (send ?t get-end))
+                               (eq ?prop:truth ?r))))
+                      (length$ (find-instance ((?prop Proposition))
+                          (and (eq ?prop:subject ?s)
+                               (eq ?prop:predicate ?p)
+                               (= ?prop:time ?t)
+                               (eq ?prop:truth ?r)))))
+                 0))
+        then (make-instance of Proposition (subject ?s)
+                                           (predicate ?p)
+                                           (time ?t)
+                                           (truth ?r))
+        else (return TRUE)))
+------------OPEN---------------------
+----------F-OPEN---------------------
+(defclass Person (is-a Thing))
+(defclass Can (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Wants (is-a State) (slot to (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Has (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass IsNeeded (is-a State) (slot for_action (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass IsIn (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Group (is-a Thing))
+(defclass Permission (is-a Thing))
+(defclass Role (is-a Thing))
+(defclass Content (is-a Thing))
+(defclass Create (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass IsOwner (is-a State) (slot of (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Status (is-a Thing))
+(defclass View (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Publish (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Hide (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(reduce-class [admin] Person)
+admin
+(reduce-class [member] Role)
+member
+(reduce-class [manager] Role)
+manager
+(reduce-class [basic_perm] Permission)
+basic_perm
+(reduce-class [manage_perm] Permission)
+manage_perm
+(reduce-class [create_perm] Permission)
+create_perm
+(reduce-class [public] Status)
+public
+(reduce-class [private] Status)
+private
+(add-prop [admin] (add-pred Has what [manager]) (make-instance of Duration (start 733697.0) (end -1.0)) 1)
+admin has what manager at from 733697.0 till -1.0
+(add-prop [member] (add-pred Has what [basic_perm]) (make-instance of Duration (start 733697.0) (end -1.0)) 1)
+member has what basic_perm at from 733697.0 till -1.0
+(defrule 7f0cfd307f0b4a76acfa490f8f93c79b (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y1&:(or (eq (class ?Y1) Wants) (subclassp (class ?Y1) Wants))&:(or (eq (class (send ?Y1 get-to)) Create) (subclassp (class (send ?Y1 get-to)) Create))&:(or (eq (class (send (send ?Y1 get-to) get-what)) Thing) (subclassp (class (send (send ?Y1 get-to) get-what)) Thing))) (time ?X2) (truth 1))) (logical (object (is-a Proposition) (subject ?X1) (predicate ?Y2&:(or (eq (class ?Y2) Has) (subclassp (class ?Y2) Has))&:(eq (send ?Y2 get-what) [create_perm])) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (test (and (<= (send ?X3 get-start) ?X2) (or (= (send ?X3 get-end) -1) (>= (send ?X3 get-end) ?X2)))) => (add-prop ?X1 (add-pred Create what (send (send ?Y1 get-to) get-what)) ?X2 1))
+(defrule 79c59fa06bbe4f7a934d97e2017f8b76 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y4&:(or (eq (class ?Y4) Wants) (subclassp (class ?Y4) Wants))) (time ?X2) (truth 1))) (logical (object (is-a Proposition) (subject ?X1) (predicate ?Y5&:(or (eq (class ?Y5) Can) (subclassp (class ?Y5) Can))&:(eq (send ?Y4 get-to) (send ?Y5 get-what))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (test (and (<= (send ?X3 get-start) ?X2) (or (= (send ?X3 get-end) -1) (>= (send ?X3 get-end) ?X2)))) => (add-prop ?X1 (send ?Y4 get-to) ?X2 1))
+(defrule 491a0c6a08744d2aa7fabd43d460f773 (logical (object (is-a Proposition) (subject ?X2&:(or (eq (class ?X2) Thing) (subclassp (class ?X2) Thing))) (predicate ?Y7&:(or (eq (class ?Y7) IsNeeded) (subclassp (class ?Y7) IsNeeded))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Thing) (subclassp (class ?X1) Thing))) (predicate ?Y9&:(or (eq (class ?Y9) Has) (subclassp (class ?Y9) Has))&:(eq (send ?Y9 get-what) ?X2)) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) (test (or (and (>= (send ?X3 get-start) (send ?X3 get-start)) (or (<= (send ?X3 get-start) (send ?X3 get-end)) (= (send ?X3 get-end) -1))) (and (>= (send ?X3 get-start) (send ?X3 get-start)) (or (<= (send ?X3 get-start) (send ?X3 get-end)) (= (send ?X3 get-end) -1))))) => (add-prop ?X1 (add-pred Can what (send ?Y7 get-for_action)) (make-instance of Duration (start (mincomstart ?X3 ?X5)) (end (maxcomend ?X3 ?X5))) 1))
+(defrule 0cf58d9d054641a4b11032f3c7d86732 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Thing) (subclassp (class ?X1) Thing))) (predicate ?Y11&:(or (eq (class ?Y11) IsIn) (subclassp (class ?Y11) IsIn))&:(or (eq (class (send ?Y11 get-what)) Thing) (subclassp (class (send ?Y11 get-what)) Thing))) (time ?X4&:(or (eq (class ?X4) Duration) (subclassp (class ?X4) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y11 get-what))) (predicate ?Y13&:(or (eq (class ?Y13) IsIn) (subclassp (class ?Y13) IsIn))&:(or (eq (class (send ?Y13 get-what)) Thing) (subclassp (class (send ?Y13 get-what)) Thing))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) (test (or (and (>= (send ?X4 get-start) (send ?X4 get-start)) (or (<= (send ?X4 get-start) (send ?X4 get-end)) (= (send ?X4 get-end) -1))) (and (>= (send ?X4 get-start) (send ?X4 get-start)) (or (<= (send ?X4 get-start) (send ?X4 get-end)) (= (send ?X4 get-end) -1))))) => (add-prop ?X1 (add-pred IsIn what (send ?Y13 get-what)) (make-instance of Duration (start (mincomstart ?X4 ?X5)) (end (maxcomend ?X4 ?X5))) 1))
+(defrule 35a026f441ec476f86a63129a38a9892 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y15&:(or (eq (class ?Y15) IsIn) (subclassp (class ?Y15) IsIn))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(or (eq (class ?X2) Group) (subclassp (class ?X2) Group))) (predicate ?Y17&:(or (eq (class ?Y17) Has) (subclassp (class ?Y17) Has))&:(or (eq (class (send ?Y17 get-what)) Permission) (subclassp (class (send ?Y17 get-what)) Permission))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) (test (or (and (>= (send ?X3 get-start) (send ?X3 get-start)) (or (<= (send ?X3 get-start) (send ?X3 get-end)) (= (send ?X3 get-end) -1))) (and (>= (send ?X3 get-start) (send ?X3 get-start)) (or (<= (send ?X3 get-start) (send ?X3 get-end)) (= (send ?X3 get-end) -1))))) => (add-prop ?X1 (add-pred Has what (send ?Y17 get-what)) (make-instance of Duration (start (mincomstart ?X3 ?X5)) (end (maxcomend ?X3 ?X5))) 1))
+(defrule 3eb05905e41f40ea838e4d84f57dcdb6 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y19&:(or (eq (class ?Y19) Has) (subclassp (class ?Y19) Has))&:(or (eq (class (send ?Y19 get-what)) Role) (subclassp (class (send ?Y19 get-what)) Role))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y19 get-what))) (predicate ?Y21&:(or (eq (class ?Y21) Has) (subclassp (class ?Y21) Has))&:(or (eq (class (send ?Y21 get-what)) Permission) (subclassp (class (send ?Y21 get-what)) Permission))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) (test (or (and (>= (send ?X3 get-start) (send ?X3 get-start)) (or (<= (send ?X3 get-start) (send ?X3 get-end)) (= (send ?X3 get-end) -1))) (and (>= (send ?X3 get-start) (send ?X3 get-start)) (or (<= (send ?X3 get-start) (send ?X3 get-end)) (= (send ?X3 get-end) -1))))) => (add-prop ?X1 (add-pred Has what (send ?Y21 get-what)) (make-instance of Duration (start (mincomstart ?X3 ?X5)) (end (maxcomend ?X3 ?X5))) 1))
+(defrule 9c6211b527374816a8ff290ba8741f72 (logical (object (is-a Person) (name ?X1))) => (add-prop ?X1 (add-pred Has what [member]) (make-instance of Duration (start 733697.0) (end -1.0)) 1))
+(defrule 8f8f2ec089494e79ab7091b4bf392a9b (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y23&:(or (eq (class ?Y23) Create) (subclassp (class ?Y23) Create))&:(or (eq (class (send ?Y23 get-what)) Content) (subclassp (class (send ?Y23 get-what)) Content))) (time ?X3) (truth 1))) => (reduce-class (send ?Y23 get-what) Content) (add-prop ?X1 (add-pred IsOwner of (send ?Y23 get-what)) (make-instance of Duration (start ?X3) (end -1.0)) 1) (add-prop (send ?Y23 get-what) (add-pred Has what [private]) (make-instance of Duration (start ?X3) (end -1.0)) 1))
+(defrule 5361f4e4745c4b2ab48eb3d9599ad67d (logical (object (is-a Permission) (name ?X2))) => (add-prop [manager] (add-pred Has what ?X2) (make-instance of Duration (start 733697.0) (end -1.0)) 1))
+(defrule 5d2120c8469e40439b8789782fde69e6 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Content) (subclassp (class ?X1) Content))) (predicate ?Y24&:(or (eq (class ?Y24) Has) (subclassp (class ?Y24) Has))&:(eq (send ?Y24 get-what) [public])) (time ?X2&:(or (eq (class ?X2) Duration) (subclassp (class ?X2) Duration))) (truth 1))) => (add-prop [basic_perm] (add-pred IsNeeded for_action (add-pred View what ?X1)) ?X2 1))
+(defrule 49f9c865b6104c939529c533dcc3c6b9 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Content) (subclassp (class ?X1) Content))) (predicate ?Y26&:(or (eq (class ?Y26) Has) (subclassp (class ?Y26) Has))&:(eq (send ?Y26 get-what) [private])) (time ?X2&:(or (eq (class ?X2) Duration) (subclassp (class ?X2) Duration))) (truth 1))) => (add-prop [manage_perm] (add-pred IsNeeded for_action (add-pred View what ?X1)) ?X2 1))
+(defrule a008f9c9da764d5d86637d31aab41bf6 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Content) (subclassp (class ?X1) Content))) (predicate ?Y28&:(or (eq (class ?Y28) Has) (subclassp (class ?Y28) Has))&:(eq (send ?Y28 get-what) [private])) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(or (eq (class ?X2) Person) (subclassp (class ?X2) Person))) (predicate ?Y30&:(or (eq (class ?Y30) IsOwner) (subclassp (class ?Y30) IsOwner))&:(eq (send ?Y30 get-of) ?X1)) (time ?X4&:(or (eq (class ?X4) Duration) (subclassp (class ?X4) Duration))) (truth 1))) (test (or (and (>= (send ?X3 get-start) (send ?X3 get-start)) (or (<= (send ?X3 get-start) (send ?X3 get-end)) (= (send ?X3 get-end) -1))) (and (>= (send ?X3 get-start) (send ?X3 get-start)) (or (<= (send ?X3 get-start) (send ?X3 get-end)) (= (send ?X3 get-end) -1))))) => (add-prop ?X2 (add-pred Can what (add-pred View what ?X1)) (make-instance of Duration (start (mincomstart ?X3 ?X4)) (end (maxcomend ?X3 ?X4))) 1))
+(defrule 4071f4fb71c3473dad6c2a605c4f9fb6 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y32&:(or (eq (class ?Y32) Publish) (subclassp (class ?Y32) Publish))&:(or (eq (class (send ?Y32 get-what)) Content) (subclassp (class (send ?Y32 get-what)) Content))) (time ?X3) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y32 get-what))) (predicate ?Y33&:(or (eq (class ?Y33) Has) (subclassp (class ?Y33) Has))&:(or (eq (class (send ?Y33 get-what)) Status) (subclassp (class (send ?Y33 get-what)) Status))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) => (send ?X5 put-end 733697) (add-prop (send ?Y32 get-what) (add-pred Has what [public]) (make-instance of Duration (start ?X3) (end -1.0)) 1))
+(defrule 2f083f0b3bca4e8eb71994b3c5b798f3 (logical (object (is-a Content) (name ?X1))) => (add-prop [manage_perm] (add-pred IsNeeded for_action (add-pred Publish what ?X1)) (make-instance of Duration (start 733697.0) (end -1.0)) 1))
+(defrule 55fb72e94702487ab876042bfd82ecbb (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y35&:(or (eq (class ?Y35) Hide) (subclassp (class ?Y35) Hide))&:(or (eq (class (send ?Y35 get-what)) Content) (subclassp (class (send ?Y35 get-what)) Content))) (time ?X3) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y35 get-what))) (predicate ?Y36&:(or (eq (class ?Y36) Has) (subclassp (class ?Y36) Has))&:(or (eq (class (send ?Y36 get-what)) Status) (subclassp (class (send ?Y36 get-what)) Status))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) => (send ?X5 put-end 733697) (add-prop (send ?Y35 get-what) (add-pred Has what [private]) (make-instance of Duration (start ?X3) (end -1.0)) 1))
+(defrule df8f205b7f4d404b84eb9f8b7627b260 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y38&:(or (eq (class ?Y38) IsOwner) (subclassp (class ?Y38) IsOwner))&:(or (eq (class (send ?Y38 get-of)) Content) (subclassp (class (send ?Y38 get-of)) Content))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) => (add-prop ?X1 (add-pred Can what (add-pred Hide what (send ?Y38 get-of))) ?X3 1))
+(reduce-class [john] Person)
+john
+(reduce-class [pete] Person)
+pete
+(reduce-class [jane] Person)
+jane
+(reduce-class [c1] Content)
+c1
+(reduce-class [c2] Content)
+c2
+(add-prop [john] (add-pred Has what [manager]) (make-instance of Duration (start 733697.0) (end -1.0)) 1)
+john has what manager at from 733697.0 till -1.0
+(add-prop [jane] (add-pred Has what [create_perm]) (make-instance of Duration (start 733697.0) (end -1.0)) 1)
+jane has what create_perm at from 733697.0 till -1.0
+(add-prop [jane] (add-pred Wants to (add-pred Create what [c1])) 733697.0 1)
+jane wants to create what c1 at 733697.0
+(add-prop [pete] (add-pred Wants to (add-pred Create what [c2])) 733697.0 1)
+pete wants to create what c2 at 733697.0
+(add-prop [jane] (add-pred Wants to (add-pred Publish what [c1])) 733697.0 1)
+jane wants to publish what c1 at 733697.0
+(add-prop [pete] (add-pred Wants to (add-pred Publish what [c2])) 733697.0 1)
+pete wants to publish what c2 at 733697.0
+----------running---------------------
+jane create what c1 at 733697.0
+jane isowner of c1 at from 733697.0 till -1.0
+c1 has what private at from 733697.0 till -1.0
+jane can what view what c1 at from 733697.0 till -1.0
+manage_perm isneeded for_action view what c1 at from 733697.0 till -1.0
+jane can what hide what c1 at from 733697.0 till -1.0
+manage_perm isneeded for_action publish what c2 at from 733697.0 till -1.0
+manage_perm isneeded for_action publish what c1 at from 733697.0 till -1.0
+jane has what member at from 733697.0 till -1.0
+jane has what basic_perm at from 733697.0 till -1.0
+pete has what member at from 733697.0 till -1.0
+pete has what basic_perm at from 733697.0 till -1.0
+john has what member at from 733697.0 till -1.0
+john has what basic_perm at from 733697.0 till -1.0
+manager has what create_perm at from 733697.0 till -1.0
+admin has what create_perm at from 733697.0 till -1.0
+john has what create_perm at from 733697.0 till -1.0
+manager has what manage_perm at from 733697.0 till -1.0
+manager can what view what c1 at from 733697.0 till -1.0
+manager can what publish what c2 at from 733697.0 till -1.0
+manager can what publish what c1 at from 733697.0 till -1.0
+admin has what manage_perm at from 733697.0 till -1.0
+admin can what view what c1 at from 733697.0 till -1.0
+admin can what publish what c2 at from 733697.0 till -1.0
+admin can what publish what c1 at from 733697.0 till -1.0
+john has what manage_perm at from 733697.0 till -1.0
+john can what view what c1 at from 733697.0 till -1.0
+john can what publish what c2 at from 733697.0 till -1.0
+john can what publish what c1 at from 733697.0 till -1.0
+manager has what basic_perm at from 733697.0 till -1.0
+admin has what basic_perm at from 733697.0 till -1.0
+admin has what member at from 733697.0 till -1.0
+----------runned: 33---------------------
+(add-prop [john] (add-pred Wants to (add-pred Publish what [c1])) 733697.0 1)
+john wants to publish what c1 at 733697.0
+----------running---------------------
+john publish what c1 at 733697.0
+c1 has what public at from 733697.0 till -1.0
+basic_perm isneeded for_action view what c1 at from 733697.0 till -1.0
+pete can what view what c1 at from 733697.0 till -1.0
+member can what view what c1 at from 733697.0 till -1.0
+----------runned: 10---------------------
+(find-all-instances ((?prop Proposition) (?Y40 Has) (?Y41 Duration)) (and (eq ?prop:subject [c1]) (eq ?Y40:what [private]) (eq ?prop:predicate ?Y40) (= ?Y41:start 733697.0) (= ?Y41:end -1.0) (eq ?prop:truth 1)))
+41
+
+
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0
+c1 has what private at from 733697.0 till 733697.0

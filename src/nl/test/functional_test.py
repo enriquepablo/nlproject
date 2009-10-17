@@ -118,7 +118,7 @@ class cms_test(object):
         # pete wants to publish c2
         nl.kb.tell(nl.Prop(pete, self.cms.Wants(to=self.cms.Publish(what=c2)), self.cms.Instant('now')))
         # extend the db
-        nl.kb.extend()
+        #nl.kb.extend()
         # to the question is c1 public?, the answer is no
         #assert nl.kb.ask(nl.Prop(c1, self.cms.Has(what=self.cms.public))) == 'no'
         # to the question is c2 public?, the answer is no
