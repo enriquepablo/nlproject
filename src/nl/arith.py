@@ -74,7 +74,7 @@ class Number(Name):
     def from_clips(cls, instance):
         return Number(instance)
 
-    def get_slot_constraint(self, vrs):
+    def _get_number(self, vrs):
         """
         """
         if varpat.match(self.value):
@@ -86,6 +86,9 @@ class Number(Name):
             arg2 = self.arg2 != '' and self.arg2.get_slot_constraint(vrs)
             return '(%s %s %s)' % (self.value, arg1, arg2)
 
+    def get_slot_constraint(self, vrs):
+        return self._get_number(vrs)
+
     def get_constraint(self, vrs, ancestor, mod_path):
         ci = clips_instance(ancestor, mod_path)
         if varpat.match(self.value):
@@ -95,17 +98,17 @@ class Number(Name):
         return constraint
 
     def put(self, vrs):
-        return self.get_slot_constraint(vrs)
+        return self._get_number(vrs)
 
     def get_isc(self, templs, queries, vrs):
         """
         get instance-set condition;
         return (instance-set templates, instance-set queries)
         """
-        return self.put(vrs)
+        return self._get_number(vrs)
 
     def __str__(self):
-        return self.put({})
+        return self._get_number({})
 
 register('Number', Number)
 
