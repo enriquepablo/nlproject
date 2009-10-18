@@ -37,7 +37,7 @@ from nl.thing import _newvar
 _m = []
 
 
-# not thread safe
+# XXX not thread safe
 _now = str(datetime.now().toordinal())
 
 def start_instant():
@@ -92,8 +92,14 @@ class Duration(Time):
         else:
             self.end = isinstance(end, Instant) and end or \
                                                   Instant(end)
-            if self.end.value == _now:
-                self.end = Instant('-1')
+            if float(self.end.value) == float(_now):
+                self.end = Instant('-1.0')
+
+    def __str__(self):
+        if varpat.match(self.value):
+            return self.put_var({})
+        else:
+            return 'from %s till %s' % (self.start.put({}), self.end.put({}))
 
     @classmethod
     def from_clips(cls, instance):
@@ -165,12 +171,6 @@ class Duration(Time):
             queries.append('(= ?%s:end %s)' % (newvar,
                                            end.get_isc(templs, queries, vrs)))
         return '?%s' % newvar
-
-    def __str__(self):
-        if varpat.match(self.value):
-            return self.put_var({})
-        else:
-            return 'from %s till %s' % (self.start.put({}), self.end.put({}))
 
 register('Duration', Duration)
 

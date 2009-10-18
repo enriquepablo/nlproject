@@ -186,7 +186,6 @@ class State(Verb):
 
 register('State', State)
 
-#_init_daemon = '(defmessage-handler State init after () (python-call pred_tonl ?self))'
 _set_tal = '(set-sequence-operator-recognition TRUE)'
 
 _set_slots = """(defmessage-handler State set-slots primary ($?slots)

@@ -18,10 +18,6 @@
 
 import os
 #import re
-import transaction
-from ZODB.FileStorage import FileStorage
-from ZODB.DB import DB
-from BTrees.OOBTree import OOBTree
 
 from nl.exceptions import Paradox
 from nl.log import here, logger
@@ -33,80 +29,15 @@ from nl.prop import Proposition
 from nl.rule import Rule
 
 
-app = None
-_initializing = False
-_extending = False
-
-def open(name='data'):
-    global app, _initializing
-    logger.info('------------OPEN---------------------')
-    if not os.path.isdir(os.path.join(here, 'var')):
-        os.mkdir(os.path.join(here, 'var'))
-    fs = os.path.join(here, 'var/%s.fs' % name)
-    base = FileStorage(fs)
-    db = DB(base)
-    app = db.open()
-    root = app.root()
-    if not root.has_key('props'):
-        root['rules'] = OOBTree()
-        root['props'] = OOBTree()
-        root['things'] = OOBTree()
-        transaction.commit()
-    else:
-        _initializing = True
-        for t in ('things', 'rules', 'props'):
-            for sen in app.root()[t].itervalues():
-                tell(sen)
-        while True: # XXX try with clips.EngineConfig.IncrementalReset
-            n = clips._clips.getNextActivation()
-            logger.info(n)
-            if n is None:
-                break
-            clips._clips.deleteActivation(n)
-        _initializing = False
-    logger.info('----------F-OPEN---------------------')
-
-def close():
-    global app
-    app.close()
-    app.db().close()
-    app = None
-    logger.info('------------CLOSE---------------------')
-    #clips.Clear()
-    #clips.Reset()
-    return 'DB closed'
-
-
 def tell(*args):
     for sentence in args:
         s = sentence.put_action({})
         if isinstance(sentence, Rule):
-            if not app.root()['rules'].has_key(sentence.name):
-                logger.info(s)
-                app.root()['rules'][sentence.name] = sentence
-                clips.Build(s)
-                transaction.commit()
-            elif _initializing:
-                logger.info(s)
-                clips.Build(s)
+            logger.info(s)
+            clips.Build(s)
         else:
-            kind = isinstance(sentence, Thing) and 'things' or 'props'
-            is_new = not app.root()[kind].has_key(str(sentence))
-            if _initializing or is_new:
-                if is_new and kind == 'props':
-                    try:
-                        check_inconsistency(sentence)
-                    except Paradox:
-                        return 'Contradiction found'
-                logger.info(s)
-                clips.Eval(s)
-
-def check_inconsistency(sentence):
-    negated = sentence.negate()
-    if app.root()['props'].has_key(negated):
-        raise Paradox(sentence,
-                      app.root()['props'][negated],
-                      'Contradiction found')
+            logger.info(s)
+            clips.Eval(s)
 
 def get_instancesn(sentence):
     templs = []
@@ -149,23 +80,13 @@ def ask(sentence):
     if not sens:
         resp = 'no'
     else:
-        resp = '\n'.join(map(str, sens))
+        resp = str(sens[0])
     logger.info(str(len(sens))+'\n\n\n'+resp)
     return resp
 
 def extend():
     logger.info('----------running---------------------')
-    global _extending
-    _extending = True
-    transaction.begin()
-    try:
-        acts = clips.Run()
-    except Paradox, clips.ClipsError:
-        transaction.abort()
-        return 'contradiction found'
-    else:
-        transaction.commit()
-    _extending = False
+    acts = clips.Run()
     logger.info('----------runned: %d---------------------' % acts)
     return acts
 
@@ -180,54 +101,3 @@ def extend():
 # 
 # clips.RegisterPythonFunction(make_pred)
 
-# que pasen las excepciones de python
-
-
-def tonl(classname, name):
-    cls = subclasses[str(classname)]
-    sen = cls.from_clips(name)
-    key = str(sen)
-    logger.info(key)
-    try:
-        old = app.root()['things'][key]
-    except KeyError:
-        app.root()['things'][key] = sen
-        if not _extending:
-            transaction.commit()
-    else:
-        pass # XXX raise exception if cls & old.__class__ are not one subclass of the other
-    return clips.Symbol('TRUE')
-
-clips.RegisterPythonFunction(tonl)
-
-def rmnl(classname, name):
-    cls = subclasses[str(classname)]
-    sen = cls.from_clips(name)
-    key = str(sen)
-    kind = isinstance(sen, Thing) and 'things' or 'props'
-    if app.root()[kind].has_key(key):
-        app.root()[kind].pop(key)
-        if not _extending:
-            transaction.commit()
-    logger.info('---------REMOVE - ' + key)
-    return clips.Symbol('TRUE')
-
-clips.RegisterPythonFunction(rmnl)
-
-def ptonl(subj, pred, time, truth):
-    s = Thing.from_clips(subj)
-    p = State.from_clips(pred)
-    t = Time.from_clips(time)
-    sen = Proposition(s, p, t, truth=truth)
-    check_inconsistency(sen)
-    key = str(sen)
-    if not app.root()['props'].has_key(key):
-        app.root()['props'][key] = sen
-        if not _extending:
-            transaction.commit()
-    elif not _initializing:
-        return clips.Symbol('FALSE')
-    logger.info(key)
-    return clips.Symbol('TRUE')
-
-clips.RegisterPythonFunction(ptonl)

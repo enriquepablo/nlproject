@@ -105,34 +105,29 @@ class Proposition(Name):
         queries = []
         self.get_ism(templs, queries, vrs, newvar='prop')
         if len(queries) > 1:
-            q = '(do-for-instance (%s) (and %s) (python-call rmnl (class ?prop) ?prop) (unmake-instance ?prop))' % (' '.join(templs),
+            q = '(do-for-instance (%s) (and %s) (unmake-instance ?prop))' % (' '.join(templs),
                                                         ' '.join(queries))
         else:
-            q = '(do-for-instance (%s) %s (python-call rmnl (class ?prop) ?prop) (unmake-instance ?prop))' % (' '.join(templs),
+            q = '(do-for-instance (%s) %s (unmake-instance ?prop))' % (' '.join(templs),
                                                 queries and queries[0] or 'TRUE')
         return q
 
 register('Proposition', Proposition)
 Prop = Proposition
 
-#_add_prop = '(deffunction add-prop (?s ?p ?t ?r) (if (python-call ptonl ?s ?p ?t ?r) then (make-instance of Proposition (subject ?s) (predicate ?p) (time ?t) (truth ?r)) else (return TRUE)))'
-
 _add_prop = '''
 (deffunction add-prop (?s ?p ?t ?r)
-       (if (and (python-call ptonl ?s ?p ?t ?r)
-                (= (+ (length$ (find-instance ((?prop Proposition) (?dur Duration))
+       (bind ?count 0)
+       (do-for-all-instances ((?prop Proposition))
                           (and (eq ?prop:subject ?s)
                                (eq ?prop:predicate ?p)
-                               (eq ?prop:time ?dur)
-                               (= ?dur:start (send ?t get-start))
-                               (= ?dur:end (send ?t get-end))
-                               (eq ?prop:truth ?r))))
-                      (length$ (find-instance ((?prop Proposition))
-                          (and (eq ?prop:subject ?s)
-                               (eq ?prop:predicate ?p)
-                               (= ?prop:time ?t)
-                               (eq ?prop:truth ?r)))))
-                 0))
+                               (or (and (eq (class ?t) Duration)
+                                        (= (send (send ?prop get-time) get-start) (send ?t get-start))
+                                        (= (send (send ?prop get-time) get-end) (send ?t get-end)))
+                                   (= ?prop:time ?t))
+                               (= ?prop:truth ?r))
+               (bind ?count (+ ?count 1)))
+        (if (= ?count 0)
         then (make-instance of Proposition (subject ?s)
                                            (predicate ?p)
                                            (time ?t)
