@@ -82,8 +82,8 @@ class Number(Name):
         try:
             return str(float(self.value))
         except ValueError:
-            arg1 = self.arg1 != '' and self.arg1.get_slot_constraint(vrs)
-            arg2 = self.arg2 != '' and self.arg2.get_slot_constraint(vrs)
+            arg1 = self.arg1 != '' and self.arg1.get_slot_constraint(vrs) or ''
+            arg2 = self.arg2 != '' and self.arg2.get_slot_constraint(vrs) or ''
             return '(%s %s %s)' % (self.value, arg1, arg2)
 
     def get_slot_constraint(self, vrs):
