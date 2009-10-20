@@ -72,7 +72,7 @@ class Name(Persistent):
             else:
                 constraint = '&:(eq %s ?%s)' % (ci, self.value)
         else:
-            constraint = '&:(or (eq (class %(val)s) %(cls)s) (subclassp (class %(val)s) %(cls)s))' % {'val': ci, 'cls': self.__class__.__name__}
+            constraint = '&:(or (eq (class %(ci)s) %(cls)s) (subclassp (class %(ci)s) %(cls)s))' % {'ci': ci, 'cls': self.__class__.__name__}
             vrs[self.value] = (ancestor, mod_path)
         return constraint
 

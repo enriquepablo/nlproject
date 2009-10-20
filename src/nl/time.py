@@ -74,6 +74,22 @@ class Instant(Time):
         else:
             super(Instant, self).__init__(*args, **kwargs)
 
+#    def get_isc(self, vrs):
+#        """
+#        """
+#        if varpat.match(self.value):
+#            if self.value in vrs and vrs[self.value]:
+#                return clips_instance(*(vrs[self.value]))
+#            return '?%s' % self.value
+#        try:
+#            return str(float(self.value))
+#        except ValueError:
+#            arg1 = self.arg1 != '' and self.arg1._get_number(vrs) or ''
+#            arg2 = self.arg2 != '' and self.arg2._get_number(vrs) or ''
+#            val '(%s %s %s)' % (self.value, arg1, arg2)
+#
+#'(or (and (eq (class %(ci)s) Duration) (<= (send %(ci)s get-start) %(val)s)) ())'
+
 register('Instant', Instant)
 
 now = Instant('now')
@@ -122,8 +138,8 @@ class Duration(Time):
         if varpat.match(self.value):
             return self.get_var_constraint(vrs, ancestor, mod_path, ci)
         else:
-            core = '(= (send %s get-start) %s)' % (ci, self.start.get_slot_constraint(vrs))
-            return '&:(and %s (= (send %s get-end) %s))' % (core, ci, self.end.get_slot_constraint(vrs))
+            core = '(= (send %s get-start) %s)' % (ci, self.start.get_constraint(vrs))
+            return '&:(and %s (= (send %s get-end) %s))' % (core, ci, self.end.get_constraint(vrs))
 
 # XXX falta resolver el caso en ambos get constraint de que no haya end.
 
