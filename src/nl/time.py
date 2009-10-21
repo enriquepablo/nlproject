@@ -215,7 +215,7 @@ class During(Name):
 register('During', During)
 
 
-class Coincide(Name):
+class DurationOpMixin(Name):
     '''
     given a set of durations, build a condition for a rule
     that tests whether there is an intersection between them
@@ -223,6 +223,16 @@ class Coincide(Name):
     def __init__(self, *args):
         self.durations = \
           [isinstance(dur, Duration) and dur or Duration(dur) for dur in args]
+
+
+register('DurationOpMixin', DurationOpMixin)
+
+
+class Coincide(DurationOpMixin):
+    '''
+    given a set of durations, build a condition for a rule
+    that tests whether there is an intersection between them
+    '''
 
     def get_ce(self, vrs):
         return """
@@ -299,13 +309,10 @@ clips.Build(maxcomend_clp)
 logger.info(mincomstart_clp)
 clips.Build(mincomstart_clp)
 
-class MinComStart(Name):
+class MinComStart(DurationOpMixin):
     """
     given a set of durations, find out the minimum common instant
     """
-    def __init__(self, *args):
-        self.durations = \
-          [isinstance(dur, Duration) and dur or Duration(dur) for dur in args]
 
     def put(self, vrs):
         instants = [dur.put(vrs) for dur in self.durations]
@@ -313,13 +320,10 @@ class MinComStart(Name):
 
 register('MinComStart', MinComStart)
 
-class MaxComEnd(Name):
+class MaxComEnd(DurationOpMixin):
     """
     given a set of durations, find out the maximum common instant
     """
-    def __init__(self, *args):
-        self.durations = \
-          [isinstance(dur, Duration) and dur or Duration(dur) for dur in args]
 
     def put(self, vrs):
         instants = [dur.put(vrs) for dur in self.durations]
