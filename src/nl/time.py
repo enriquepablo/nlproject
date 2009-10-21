@@ -192,7 +192,8 @@ register('Duration', Duration)
 
 class Finish(Name):
     def __init__(self, duration):
-        self.duration = duration
+        self.duration = isinstance(duration, Duration) and \
+                                duration or Duration(duration)
 
     def put_action(self, vrs):
         return '(send %s put-end %s)' % (self.duration.put(vrs), _now)
