@@ -3558,3 +3558,945 @@ c1 has what public at from 733702.0 till -1.0
 
 
 pete can what view what c1 at from 733702.0 till -1.0
+(defclass Name (is-a USER))
+
+(deffunction reduce-class (?instance ?class)
+    (if (eq (length$
+                (find-all-instances ((?a ?class))(eq (instance-name ?a) ?instance)))
+             0)
+    then (make-instance ?instance of ?class)
+    else (return TRUE)))
+(defclass Thing (is-a Name))
+(defclass Verb (is-a USER))
+(defclass State (is-a Verb) )
+(set-sequence-operator-recognition TRUE)
+(defmessage-handler State set-slots primary ($?slots)
+        (while (> (length$ ?slots) 0) do
+            (bind ?slot (first$ ?slots))
+            (bind ?vslots (rest$ ?slots))
+            (bind ?value (first$ ?vslots))
+            (bind ?slots (rest$ ?vslots))
+            (dynamic-put $?slot $?value))
+        (return (instance-name ?self)))
+
+
+(deffunction add-pred (?class $?slots)
+        (bind ?key (str-cat ?class $?slots))
+        (bind ?pos (str-index "." ?key))
+        (while ?pos do
+            (bind ?key (str-cat (sub-string 1 (- ?pos 1) ?key)
+                                "_"
+                                (sub-string (+ ?pos 1) (str-length ?key) ?key)))
+            (bind ?pos (str-index "." ?key)))
+        (bind ?key (sym-cat ?key))
+        (if (instance-existp ?key) then
+            (return (instance-name ?key))
+         else
+            (make-instance ?key of ?class)
+            (return (send (instance-name ?key) set-slots $?slots))))
+
+(defclass Duration (is-a Name) (slot start (type NUMBER) (pattern-match reactive)) (slot end (type NUMBER) (pattern-match reactive)))
+
+(deffunction extract-now ($?instants)
+    (if (= (length$ ?instants) 0) then
+        (return -1)
+    else
+        (bind ?count 0)
+        (bind ?not-now (create$))
+        (while (> (length$ ?instants) 0) do
+            (bind ?instant (nth$ 1 ?instants))
+            (bind ?instants (rest$ ?instants))
+            (if (= ?instant -1)
+            then (bind ?count (+ ?count 1))
+            else (bind ?not-now (insert$ ?not-now 1 ?instant)))
+            )
+        (return (insert$ ?not-now 1 ?count))
+    )
+)
+
+
+(deffunction maxcomend ($?durations)
+    (bind ?ends (create$))
+    (while (> (length$ ?durations) 0)
+        (bind ?ends (insert$ ?ends 1 (send (nth$ 1 ?durations) get-end)))
+        (bind ?durations (rest$ ?durations))
+        )
+    (bind ?ret (extract-now ?ends))
+    (bind ?pasts (rest$ ?ret))
+    (if (> (length$ ?pasts) 0)
+    then (return (min (expand$ ?pasts)))
+    else (return -1)
+    )
+)
+
+
+(deffunction mincomstart ($?durations)
+    (bind ?starts (create$))
+    (while (> (length$ ?durations) 0)
+        (bind ?starts (insert$ ?starts 1 (send (nth$ 1 ?durations) get-start)))
+        (bind ?durations (rest$ ?durations))
+        )
+    (bind ?ret (extract-now ?starts))
+    (bind ?nows (nth$ 1 ?ret))
+    (if (> ?nows 0)
+    then (return -1)
+    else (bind ?ret (rest$ ?ret))
+         (return (max (expand$ ?ret)))
+    )
+)
+
+(defclass Proposition (is-a Name) (slot truth (type INTEGER) (default 1) (pattern-match reactive)) (slot subject (type INSTANCE) (pattern-match reactive)) (slot predicate (type INSTANCE) (pattern-match reactive)) (slot time (type ?VARIABLE) (pattern-match reactive)))
+
+(deffunction add-prop (?s ?p ?t ?r)
+       (bind ?count 0)
+       (do-for-all-instances ((?prop Proposition))
+                          (and (eq ?prop:subject ?s)
+                               (eq ?prop:predicate ?p)
+                               (or (and (eq (class ?t) Duration)
+                                        (= (send (send ?prop get-time) get-start) (send ?t get-start))
+                                        (= (send (send ?prop get-time) get-end) (send ?t get-end)))
+                                   (= ?prop:time ?t))
+                               (= ?prop:truth ?r))
+               (bind ?count (+ ?count 1)))
+        (if (= ?count 0)
+        then (make-instance of Proposition (subject ?s)
+                                           (predicate ?p)
+                                           (time ?t)
+                                           (truth ?r))
+        else (return TRUE)))
+(defclass Person (is-a Thing))
+(defclass Can (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Wants (is-a State) (slot to (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Has (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass IsNeeded (is-a State) (slot for_action (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass IsIn (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Group (is-a Thing))
+(defclass Permission (is-a Thing))
+(defclass Role (is-a Thing))
+(defclass Content (is-a Thing))
+(defclass Create (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass IsOwner (is-a State) (slot of (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Status (is-a Thing))
+(defclass View (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Publish (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Hide (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(reduce-class [admin] Person)
+(reduce-class [member] Role)
+(reduce-class [manager] Role)
+(reduce-class [basic_perm] Permission)
+(reduce-class [manage_perm] Permission)
+(reduce-class [create_perm] Permission)
+(reduce-class [public] Status)
+(reduce-class [private] Status)
+(add-prop [admin] (add-pred Has what [manager]) (make-instance of Duration (start 733702.0) (end -1.0)) 1)
+(add-prop [member] (add-pred Has what [basic_perm]) (make-instance of Duration (start 733702.0) (end -1.0)) 1)
+(defrule ec18378ab80b41c29ab7c8cfb8bc9905 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y1&:(or (eq (class ?Y1) Wants) (subclassp (class ?Y1) Wants))&:(or (eq (class (send ?Y1 get-to)) Create) (subclassp (class (send ?Y1 get-to)) Create))&:(or (eq (class (send (send ?Y1 get-to) get-what)) Thing) (subclassp (class (send (send ?Y1 get-to) get-what)) Thing))) (time ?X2) (truth 1))) (logical (object (is-a Proposition) (subject ?X1) (predicate ?Y2&:(or (eq (class ?Y2) Has) (subclassp (class ?Y2) Has))&:(eq (send ?Y2 get-what) [create_perm])) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (test (and (<= (send ?X3 get-start) ?X2) (or (= (send ?X3 get-end) -1) (>= (send ?X3 get-end) ?X2)))) => (add-prop ?X1 (add-pred Create what (send (send ?Y1 get-to) get-what)) ?X2 1))
+(defrule 397c3696b9664a0d8f18cd26e775c242 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y4&:(or (eq (class ?Y4) Wants) (subclassp (class ?Y4) Wants))) (time ?X2) (truth 1))) (logical (object (is-a Proposition) (subject ?X1) (predicate ?Y5&:(or (eq (class ?Y5) Can) (subclassp (class ?Y5) Can))&:(eq (send ?Y4 get-to) (send ?Y5 get-what))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (test (and (<= (send ?X3 get-start) ?X2) (or (= (send ?X3 get-end) -1) (>= (send ?X3 get-end) ?X2)))) => (add-prop ?X1 (send ?Y4 get-to) ?X2 1))
+(defrule e4f6129158054ae29fcb3bb5ca35f163 (logical (object (is-a Proposition) (subject ?X2&:(or (eq (class ?X2) Thing) (subclassp (class ?X2) Thing))) (predicate ?Y7&:(or (eq (class ?Y7) IsNeeded) (subclassp (class ?Y7) IsNeeded))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Thing) (subclassp (class ?X1) Thing))) (predicate ?Y9&:(or (eq (class ?Y9) Has) (subclassp (class ?Y9) Has))&:(eq (send ?Y9 get-what) ?X2)) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X3 ?X5) -1)
+                               (<= (mincomstart ?X3 ?X5) (maxcomend ?X3 ?X5)))
+                          (= (maxcomend ?X3 ?X5) -1))
+                )
+                 => (add-prop ?X1 (add-pred Can what (send ?Y7 get-for_action)) (make-instance of Duration (start (mincomstart ?X3 ?X5)) (end (maxcomend ?X3 ?X5))) 1))
+(defrule e344628d573c416eb966cce50f4741c7 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Thing) (subclassp (class ?X1) Thing))) (predicate ?Y11&:(or (eq (class ?Y11) IsIn) (subclassp (class ?Y11) IsIn))&:(or (eq (class (send ?Y11 get-what)) Thing) (subclassp (class (send ?Y11 get-what)) Thing))) (time ?X4&:(or (eq (class ?X4) Duration) (subclassp (class ?X4) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y11 get-what))) (predicate ?Y13&:(or (eq (class ?Y13) IsIn) (subclassp (class ?Y13) IsIn))&:(or (eq (class (send ?Y13 get-what)) Thing) (subclassp (class (send ?Y13 get-what)) Thing))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X4 ?X5) -1)
+                               (<= (mincomstart ?X4 ?X5) (maxcomend ?X4 ?X5)))
+                          (= (maxcomend ?X4 ?X5) -1))
+                )
+                 => (add-prop ?X1 (add-pred IsIn what (send ?Y13 get-what)) (make-instance of Duration (start (mincomstart ?X4 ?X5)) (end (maxcomend ?X4 ?X5))) 1))
+(defrule 8da1c03143f446a7aac70debc2c00cad (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y15&:(or (eq (class ?Y15) IsIn) (subclassp (class ?Y15) IsIn))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(or (eq (class ?X2) Group) (subclassp (class ?X2) Group))) (predicate ?Y17&:(or (eq (class ?Y17) Has) (subclassp (class ?Y17) Has))&:(or (eq (class (send ?Y17 get-what)) Permission) (subclassp (class (send ?Y17 get-what)) Permission))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X3 ?X5) -1)
+                               (<= (mincomstart ?X3 ?X5) (maxcomend ?X3 ?X5)))
+                          (= (maxcomend ?X3 ?X5) -1))
+                )
+                 => (add-prop ?X1 (add-pred Has what (send ?Y17 get-what)) (make-instance of Duration (start (mincomstart ?X3 ?X5)) (end (maxcomend ?X3 ?X5))) 1))
+(defrule 11c9b53befcd42e1808a53b567a49b09 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y19&:(or (eq (class ?Y19) Has) (subclassp (class ?Y19) Has))&:(or (eq (class (send ?Y19 get-what)) Role) (subclassp (class (send ?Y19 get-what)) Role))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y19 get-what))) (predicate ?Y21&:(or (eq (class ?Y21) Has) (subclassp (class ?Y21) Has))&:(or (eq (class (send ?Y21 get-what)) Permission) (subclassp (class (send ?Y21 get-what)) Permission))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X3 ?X5) -1)
+                               (<= (mincomstart ?X3 ?X5) (maxcomend ?X3 ?X5)))
+                          (= (maxcomend ?X3 ?X5) -1))
+                )
+                 => (add-prop ?X1 (add-pred Has what (send ?Y21 get-what)) (make-instance of Duration (start (mincomstart ?X3 ?X5)) (end (maxcomend ?X3 ?X5))) 1))
+(defrule 59e3ebcd071940ab902bd529aca81ad8 (logical (object (is-a Person) (name ?X1))) => (add-prop ?X1 (add-pred Has what [member]) (make-instance of Duration (start 733702.0) (end -1.0)) 1))
+(defrule e2c4b7a31ae7421a99adbcd9f0579d57 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y23&:(or (eq (class ?Y23) Create) (subclassp (class ?Y23) Create))&:(or (eq (class (send ?Y23 get-what)) Content) (subclassp (class (send ?Y23 get-what)) Content))) (time ?X3) (truth 1))) => (reduce-class (send ?Y23 get-what) Content) (add-prop ?X1 (add-pred IsOwner of (send ?Y23 get-what)) (make-instance of Duration (start ?X3) (end -1.0)) 1) (add-prop (send ?Y23 get-what) (add-pred Has what [private]) (make-instance of Duration (start ?X3) (end -1.0)) 1))
+(defrule 39d89c4d0b3d495a936db4d2cf5c6447 (logical (object (is-a Permission) (name ?X2))) => (add-prop [manager] (add-pred Has what ?X2) (make-instance of Duration (start 733702.0) (end -1.0)) 1))
+(defrule 43a511d2b13844e6844f99496ce886bf (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Content) (subclassp (class ?X1) Content))) (predicate ?Y24&:(or (eq (class ?Y24) Has) (subclassp (class ?Y24) Has))&:(eq (send ?Y24 get-what) [public])) (time ?X2&:(or (eq (class ?X2) Duration) (subclassp (class ?X2) Duration))) (truth 1))) => (add-prop [basic_perm] (add-pred IsNeeded for_action (add-pred View what ?X1)) ?X2 1))
+(defrule d7f87850b13f4e54a060baa4c226b161 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Content) (subclassp (class ?X1) Content))) (predicate ?Y26&:(or (eq (class ?Y26) Has) (subclassp (class ?Y26) Has))&:(eq (send ?Y26 get-what) [private])) (time ?X2&:(or (eq (class ?X2) Duration) (subclassp (class ?X2) Duration))) (truth 1))) => (add-prop [manage_perm] (add-pred IsNeeded for_action (add-pred View what ?X1)) ?X2 1))
+(defrule 898f5484599b44cb835440cb2b2eed3b (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Content) (subclassp (class ?X1) Content))) (predicate ?Y28&:(or (eq (class ?Y28) Has) (subclassp (class ?Y28) Has))&:(eq (send ?Y28 get-what) [private])) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(or (eq (class ?X2) Person) (subclassp (class ?X2) Person))) (predicate ?Y30&:(or (eq (class ?Y30) IsOwner) (subclassp (class ?Y30) IsOwner))&:(eq (send ?Y30 get-of) ?X1)) (time ?X4&:(or (eq (class ?X4) Duration) (subclassp (class ?X4) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X3 ?X4) -1)
+                               (<= (mincomstart ?X3 ?X4) (maxcomend ?X3 ?X4)))
+                          (= (maxcomend ?X3 ?X4) -1))
+                )
+                 => (add-prop ?X2 (add-pred Can what (add-pred View what ?X1)) (make-instance of Duration (start (mincomstart ?X3 ?X4)) (end (maxcomend ?X3 ?X4))) 1))
+(defrule 822bf8e66a2a493cbd0c4e233f2dc199 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y32&:(or (eq (class ?Y32) Publish) (subclassp (class ?Y32) Publish))&:(or (eq (class (send ?Y32 get-what)) Content) (subclassp (class (send ?Y32 get-what)) Content))) (time ?X3) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y32 get-what))) (predicate ?Y33&:(or (eq (class ?Y33) Has) (subclassp (class ?Y33) Has))&:(or (eq (class (send ?Y33 get-what)) Status) (subclassp (class (send ?Y33 get-what)) Status))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) => (send ?X5 put-end 733702) (add-prop (send ?Y32 get-what) (add-pred Has what [public]) (make-instance of Duration (start ?X3) (end -1.0)) 1))
+(defrule 8598a44ddc954c8388a2b803a6527fc1 (logical (object (is-a Content) (name ?X1))) => (add-prop [manage_perm] (add-pred IsNeeded for_action (add-pred Publish what ?X1)) (make-instance of Duration (start 733702.0) (end -1.0)) 1))
+(defrule d19ff2a1d0b34e998ffa4bddb5b65156 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y35&:(or (eq (class ?Y35) Hide) (subclassp (class ?Y35) Hide))&:(or (eq (class (send ?Y35 get-what)) Content) (subclassp (class (send ?Y35 get-what)) Content))) (time ?X3) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y35 get-what))) (predicate ?Y36&:(or (eq (class ?Y36) Has) (subclassp (class ?Y36) Has))&:(or (eq (class (send ?Y36 get-what)) Status) (subclassp (class (send ?Y36 get-what)) Status))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) => (send ?X5 put-end 733702) (add-prop (send ?Y35 get-what) (add-pred Has what [private]) (make-instance of Duration (start ?X3) (end -1.0)) 1))
+(defrule b30e3b520c6c4997af5a9f6730a82440 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y38&:(or (eq (class ?Y38) IsOwner) (subclassp (class ?Y38) IsOwner))&:(or (eq (class (send ?Y38 get-of)) Content) (subclassp (class (send ?Y38 get-of)) Content))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) => (add-prop ?X1 (add-pred Can what (add-pred Hide what (send ?Y38 get-of))) ?X3 1))
+(reduce-class [john] Person)
+(reduce-class [pete] Person)
+(reduce-class [jane] Person)
+(reduce-class [c1] Content)
+(reduce-class [c2] Content)
+(add-prop [john] (add-pred Has what [manager]) (make-instance of Duration (start 733702.0) (end -1.0)) 1)
+(add-prop [jane] (add-pred Has what [create_perm]) (make-instance of Duration (start 733702.0) (end -1.0)) 1)
+(add-prop [jane] (add-pred Wants to (add-pred Create what [c1])) 733702.0 1)
+(add-prop [pete] (add-pred Wants to (add-pred Create what [c2])) 733702.0 1)
+(find-all-instances ((?prop Proposition) (?Y40 IsOwner) (?Y41 Duration)) (and (eq ?prop:subject [jane]) (eq ?Y40:of [c1]) (eq ?prop:predicate ?Y40) (= ?Y41:start 733702.0) (= ?Y41:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+----------running---------------------
+----------runned: 33---------------------
+(find-all-instances ((?prop Proposition) (?Y42 IsOwner) (?Y43 Duration)) (and (eq ?prop:subject [jane]) (eq ?Y42:of [c1]) (eq ?prop:predicate ?Y42) (= ?Y43:start 733702.0) (= ?Y43:end -1.0) (eq ?prop:truth 1)))
+35
+
+
+jane isowner of c1 at from 733702.0 till -1.0
+(find-all-instances ((?prop Proposition) (?Y44 Has) (?Y45 Duration)) (and (eq ?prop:subject [c1]) (eq ?Y44:what [private]) (eq ?prop:predicate ?Y44) (= ?Y45:start 733702.0) (= ?Y45:end -1.0) (eq ?prop:truth 1)))
+35
+
+
+c1 has what private at from 733702.0 till -1.0
+(find-all-instances ((?prop Proposition) (?Y46 IsOwner) (?Y47 Duration)) (and (eq ?prop:subject [pete]) (eq ?Y46:of [c2]) (eq ?prop:predicate ?Y46) (= ?Y47:start 733702.0) (= ?Y47:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+(defclass Name (is-a USER))
+
+(deffunction reduce-class (?instance ?class)
+    (if (eq (length$
+                (find-all-instances ((?a ?class))(eq (instance-name ?a) ?instance)))
+             0)
+    then (make-instance ?instance of ?class)
+    else (return TRUE)))
+(defclass Thing (is-a Name))
+(defclass Verb (is-a USER))
+(defclass State (is-a Verb) )
+(set-sequence-operator-recognition TRUE)
+(defmessage-handler State set-slots primary ($?slots)
+        (while (> (length$ ?slots) 0) do
+            (bind ?slot (first$ ?slots))
+            (bind ?vslots (rest$ ?slots))
+            (bind ?value (first$ ?vslots))
+            (bind ?slots (rest$ ?vslots))
+            (dynamic-put $?slot $?value))
+        (return (instance-name ?self)))
+
+
+(deffunction add-pred (?class $?slots)
+        (bind ?key (str-cat ?class $?slots))
+        (bind ?pos (str-index "." ?key))
+        (while ?pos do
+            (bind ?key (str-cat (sub-string 1 (- ?pos 1) ?key)
+                                "_"
+                                (sub-string (+ ?pos 1) (str-length ?key) ?key)))
+            (bind ?pos (str-index "." ?key)))
+        (bind ?key (sym-cat ?key))
+        (if (instance-existp ?key) then
+            (return (instance-name ?key))
+         else
+            (make-instance ?key of ?class)
+            (return (send (instance-name ?key) set-slots $?slots))))
+
+(defclass Duration (is-a Name) (slot start (type NUMBER) (pattern-match reactive)) (slot end (type NUMBER) (pattern-match reactive)))
+
+(deffunction extract-now ($?instants)
+    (if (= (length$ ?instants) 0) then
+        (return -1)
+    else
+        (bind ?count 0)
+        (bind ?not-now (create$))
+        (while (> (length$ ?instants) 0) do
+            (bind ?instant (nth$ 1 ?instants))
+            (bind ?instants (rest$ ?instants))
+            (if (= ?instant -1)
+            then (bind ?count (+ ?count 1))
+            else (bind ?not-now (insert$ ?not-now 1 ?instant)))
+            )
+        (return (insert$ ?not-now 1 ?count))
+    )
+)
+
+
+(deffunction maxcomend ($?durations)
+    (bind ?ends (create$))
+    (while (> (length$ ?durations) 0)
+        (bind ?ends (insert$ ?ends 1 (send (nth$ 1 ?durations) get-end)))
+        (bind ?durations (rest$ ?durations))
+        )
+    (bind ?ret (extract-now ?ends))
+    (bind ?pasts (rest$ ?ret))
+    (if (> (length$ ?pasts) 0)
+    then (return (min (expand$ ?pasts)))
+    else (return -1)
+    )
+)
+
+
+(deffunction mincomstart ($?durations)
+    (bind ?starts (create$))
+    (while (> (length$ ?durations) 0)
+        (bind ?starts (insert$ ?starts 1 (send (nth$ 1 ?durations) get-start)))
+        (bind ?durations (rest$ ?durations))
+        )
+    (bind ?ret (extract-now ?starts))
+    (bind ?nows (nth$ 1 ?ret))
+    (if (> ?nows 0)
+    then (return -1)
+    else (bind ?ret (rest$ ?ret))
+         (return (max (expand$ ?ret)))
+    )
+)
+
+(defclass Proposition (is-a Name) (slot truth (type INTEGER) (default 1) (pattern-match reactive)) (slot subject (type INSTANCE) (pattern-match reactive)) (slot predicate (type INSTANCE) (pattern-match reactive)) (slot time (type ?VARIABLE) (pattern-match reactive)))
+
+(deffunction add-prop (?s ?p ?t ?r)
+       (bind ?count 0)
+       (do-for-all-instances ((?prop Proposition))
+                          (and (eq ?prop:subject ?s)
+                               (eq ?prop:predicate ?p)
+                               (or (and (eq (class ?t) Duration)
+                                        (= (send (send ?prop get-time) get-start) (send ?t get-start))
+                                        (= (send (send ?prop get-time) get-end) (send ?t get-end)))
+                                   (= ?prop:time ?t))
+                               (= ?prop:truth ?r))
+               (bind ?count (+ ?count 1)))
+        (if (= ?count 0)
+        then (make-instance of Proposition (subject ?s)
+                                           (predicate ?p)
+                                           (time ?t)
+                                           (truth ?r))
+        else (return TRUE)))
+(defclass Person (is-a Thing))
+(defclass Can (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Wants (is-a State) (slot to (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Has (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass IsNeeded (is-a State) (slot for_action (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass IsIn (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Group (is-a Thing))
+(defclass Permission (is-a Thing))
+(defclass Role (is-a Thing))
+(defclass Content (is-a Thing))
+(defclass Create (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass IsOwner (is-a State) (slot of (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Status (is-a Thing))
+(defclass View (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Publish (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Hide (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(reduce-class [admin] Person)
+(reduce-class [member] Role)
+(reduce-class [manager] Role)
+(reduce-class [basic_perm] Permission)
+(reduce-class [manage_perm] Permission)
+(reduce-class [create_perm] Permission)
+(reduce-class [public] Status)
+(reduce-class [private] Status)
+(add-prop [admin] (add-pred Has what [manager]) (make-instance of Duration (start 733702.0) (end -1.0)) 1)
+(add-prop [member] (add-pred Has what [basic_perm]) (make-instance of Duration (start 733702.0) (end -1.0)) 1)
+(defrule 719509861a2d44f792ea83e48f5cf6a9 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y1&:(or (eq (class ?Y1) Wants) (subclassp (class ?Y1) Wants))&:(or (eq (class (send ?Y1 get-to)) Create) (subclassp (class (send ?Y1 get-to)) Create))&:(or (eq (class (send (send ?Y1 get-to) get-what)) Thing) (subclassp (class (send (send ?Y1 get-to) get-what)) Thing))) (time ?X2) (truth 1))) (logical (object (is-a Proposition) (subject ?X1) (predicate ?Y2&:(or (eq (class ?Y2) Has) (subclassp (class ?Y2) Has))&:(eq (send ?Y2 get-what) [create_perm])) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (test (and (<= (send ?X3 get-start) ?X2) (or (= (send ?X3 get-end) -1) (>= (send ?X3 get-end) ?X2)))) => (add-prop ?X1 (add-pred Create what (send (send ?Y1 get-to) get-what)) ?X2 1))
+(defrule e11ca5a643c643e0a3c6b2d4fdb2239e (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y4&:(or (eq (class ?Y4) Wants) (subclassp (class ?Y4) Wants))) (time ?X2) (truth 1))) (logical (object (is-a Proposition) (subject ?X1) (predicate ?Y5&:(or (eq (class ?Y5) Can) (subclassp (class ?Y5) Can))&:(eq (send ?Y4 get-to) (send ?Y5 get-what))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (test (and (<= (send ?X3 get-start) ?X2) (or (= (send ?X3 get-end) -1) (>= (send ?X3 get-end) ?X2)))) => (add-prop ?X1 (send ?Y4 get-to) ?X2 1))
+(defrule 67d7441efd41419a8c73bc9527e6b779 (logical (object (is-a Proposition) (subject ?X2&:(or (eq (class ?X2) Thing) (subclassp (class ?X2) Thing))) (predicate ?Y7&:(or (eq (class ?Y7) IsNeeded) (subclassp (class ?Y7) IsNeeded))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Thing) (subclassp (class ?X1) Thing))) (predicate ?Y9&:(or (eq (class ?Y9) Has) (subclassp (class ?Y9) Has))&:(eq (send ?Y9 get-what) ?X2)) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X3 ?X5) -1)
+                               (<= (mincomstart ?X3 ?X5) (maxcomend ?X3 ?X5)))
+                          (= (maxcomend ?X3 ?X5) -1))
+                )
+                 => (add-prop ?X1 (add-pred Can what (send ?Y7 get-for_action)) (make-instance of Duration (start (mincomstart ?X3 ?X5)) (end (maxcomend ?X3 ?X5))) 1))
+(defrule ee616001dd7740c58aad1e03b87861b7 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Thing) (subclassp (class ?X1) Thing))) (predicate ?Y11&:(or (eq (class ?Y11) IsIn) (subclassp (class ?Y11) IsIn))&:(or (eq (class (send ?Y11 get-what)) Thing) (subclassp (class (send ?Y11 get-what)) Thing))) (time ?X4&:(or (eq (class ?X4) Duration) (subclassp (class ?X4) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y11 get-what))) (predicate ?Y13&:(or (eq (class ?Y13) IsIn) (subclassp (class ?Y13) IsIn))&:(or (eq (class (send ?Y13 get-what)) Thing) (subclassp (class (send ?Y13 get-what)) Thing))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X4 ?X5) -1)
+                               (<= (mincomstart ?X4 ?X5) (maxcomend ?X4 ?X5)))
+                          (= (maxcomend ?X4 ?X5) -1))
+                )
+                 => (add-prop ?X1 (add-pred IsIn what (send ?Y13 get-what)) (make-instance of Duration (start (mincomstart ?X4 ?X5)) (end (maxcomend ?X4 ?X5))) 1))
+(defrule 4b28ecc438fc4068aa81d3220cdc22f1 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y15&:(or (eq (class ?Y15) IsIn) (subclassp (class ?Y15) IsIn))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(or (eq (class ?X2) Group) (subclassp (class ?X2) Group))) (predicate ?Y17&:(or (eq (class ?Y17) Has) (subclassp (class ?Y17) Has))&:(or (eq (class (send ?Y17 get-what)) Permission) (subclassp (class (send ?Y17 get-what)) Permission))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X3 ?X5) -1)
+                               (<= (mincomstart ?X3 ?X5) (maxcomend ?X3 ?X5)))
+                          (= (maxcomend ?X3 ?X5) -1))
+                )
+                 => (add-prop ?X1 (add-pred Has what (send ?Y17 get-what)) (make-instance of Duration (start (mincomstart ?X3 ?X5)) (end (maxcomend ?X3 ?X5))) 1))
+(defrule 5b3740638ae44f64a61cbf7febcdc124 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y19&:(or (eq (class ?Y19) Has) (subclassp (class ?Y19) Has))&:(or (eq (class (send ?Y19 get-what)) Role) (subclassp (class (send ?Y19 get-what)) Role))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y19 get-what))) (predicate ?Y21&:(or (eq (class ?Y21) Has) (subclassp (class ?Y21) Has))&:(or (eq (class (send ?Y21 get-what)) Permission) (subclassp (class (send ?Y21 get-what)) Permission))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X3 ?X5) -1)
+                               (<= (mincomstart ?X3 ?X5) (maxcomend ?X3 ?X5)))
+                          (= (maxcomend ?X3 ?X5) -1))
+                )
+                 => (add-prop ?X1 (add-pred Has what (send ?Y21 get-what)) (make-instance of Duration (start (mincomstart ?X3 ?X5)) (end (maxcomend ?X3 ?X5))) 1))
+(defrule 975d79a695f24066b476284ed1024ba3 (logical (object (is-a Person) (name ?X1))) => (add-prop ?X1 (add-pred Has what [member]) (make-instance of Duration (start 733702.0) (end -1.0)) 1))
+(defrule 7d44fba4500a490f8834a0fd6cf658c5 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y23&:(or (eq (class ?Y23) Create) (subclassp (class ?Y23) Create))&:(or (eq (class (send ?Y23 get-what)) Content) (subclassp (class (send ?Y23 get-what)) Content))) (time ?X3) (truth 1))) => (reduce-class (send ?Y23 get-what) Content) (add-prop ?X1 (add-pred IsOwner of (send ?Y23 get-what)) (make-instance of Duration (start ?X3) (end -1.0)) 1) (add-prop (send ?Y23 get-what) (add-pred Has what [private]) (make-instance of Duration (start ?X3) (end -1.0)) 1))
+(defrule bcc42dfad337419bacab34741f8cf010 (logical (object (is-a Permission) (name ?X2))) => (add-prop [manager] (add-pred Has what ?X2) (make-instance of Duration (start 733702.0) (end -1.0)) 1))
+(defrule 2a6dc77691094e2d82c53a0c7c6b37ed (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Content) (subclassp (class ?X1) Content))) (predicate ?Y24&:(or (eq (class ?Y24) Has) (subclassp (class ?Y24) Has))&:(eq (send ?Y24 get-what) [public])) (time ?X2&:(or (eq (class ?X2) Duration) (subclassp (class ?X2) Duration))) (truth 1))) => (add-prop [basic_perm] (add-pred IsNeeded for_action (add-pred View what ?X1)) ?X2 1))
+(defrule ecdd6364487845d5a18938606f5e859b (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Content) (subclassp (class ?X1) Content))) (predicate ?Y26&:(or (eq (class ?Y26) Has) (subclassp (class ?Y26) Has))&:(eq (send ?Y26 get-what) [private])) (time ?X2&:(or (eq (class ?X2) Duration) (subclassp (class ?X2) Duration))) (truth 1))) => (add-prop [manage_perm] (add-pred IsNeeded for_action (add-pred View what ?X1)) ?X2 1))
+(defrule 0d2fe57925d24a588800be71ae74f8e6 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Content) (subclassp (class ?X1) Content))) (predicate ?Y28&:(or (eq (class ?Y28) Has) (subclassp (class ?Y28) Has))&:(eq (send ?Y28 get-what) [private])) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(or (eq (class ?X2) Person) (subclassp (class ?X2) Person))) (predicate ?Y30&:(or (eq (class ?Y30) IsOwner) (subclassp (class ?Y30) IsOwner))&:(eq (send ?Y30 get-of) ?X1)) (time ?X4&:(or (eq (class ?X4) Duration) (subclassp (class ?X4) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X3 ?X4) -1)
+                               (<= (mincomstart ?X3 ?X4) (maxcomend ?X3 ?X4)))
+                          (= (maxcomend ?X3 ?X4) -1))
+                )
+                 => (add-prop ?X2 (add-pred Can what (add-pred View what ?X1)) (make-instance of Duration (start (mincomstart ?X3 ?X4)) (end (maxcomend ?X3 ?X4))) 1))
+(defrule 75a3a0e9052945b5b3de5ee013e66425 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y32&:(or (eq (class ?Y32) Publish) (subclassp (class ?Y32) Publish))&:(or (eq (class (send ?Y32 get-what)) Content) (subclassp (class (send ?Y32 get-what)) Content))) (time ?X3) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y32 get-what))) (predicate ?Y33&:(or (eq (class ?Y33) Has) (subclassp (class ?Y33) Has))&:(or (eq (class (send ?Y33 get-what)) Status) (subclassp (class (send ?Y33 get-what)) Status))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) => (send ?X5 put-end 733702) (add-prop (send ?Y32 get-what) (add-pred Has what [public]) (make-instance of Duration (start ?X3) (end -1.0)) 1))
+(defrule 5b44f20f5e984a7782055cece44a0f90 (logical (object (is-a Content) (name ?X1))) => (add-prop [manage_perm] (add-pred IsNeeded for_action (add-pred Publish what ?X1)) (make-instance of Duration (start 733702.0) (end -1.0)) 1))
+(defrule 82615670813148468b524eb3f674a718 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y35&:(or (eq (class ?Y35) Hide) (subclassp (class ?Y35) Hide))&:(or (eq (class (send ?Y35 get-what)) Content) (subclassp (class (send ?Y35 get-what)) Content))) (time ?X3) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y35 get-what))) (predicate ?Y36&:(or (eq (class ?Y36) Has) (subclassp (class ?Y36) Has))&:(or (eq (class (send ?Y36 get-what)) Status) (subclassp (class (send ?Y36 get-what)) Status))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) => (send ?X5 put-end 733702) (add-prop (send ?Y35 get-what) (add-pred Has what [private]) (make-instance of Duration (start ?X3) (end -1.0)) 1))
+(defrule e365886efe2844b686b8e243de8a2fec (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y38&:(or (eq (class ?Y38) IsOwner) (subclassp (class ?Y38) IsOwner))&:(or (eq (class (send ?Y38 get-of)) Content) (subclassp (class (send ?Y38 get-of)) Content))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) => (add-prop ?X1 (add-pred Can what (add-pred Hide what (send ?Y38 get-of))) ?X3 1))
+(reduce-class [john] Person)
+(reduce-class [pete] Person)
+(reduce-class [jane] Person)
+(reduce-class [c1] Content)
+(reduce-class [c2] Content)
+(add-prop [john] (add-pred Has what [manager]) (make-instance of Duration (start 733702.0) (end -1.0)) 1)
+(add-prop [jane] (add-pred Has what [create_perm]) (make-instance of Duration (start 733702.0) (end -1.0)) 1)
+(add-prop [jane] (add-pred Wants to (add-pred Create what [c1])) 733702.0 1)
+(add-prop [pete] (add-pred Wants to (add-pred Create what [c2])) 733702.0 1)
+(find-all-instances ((?prop Proposition) (?Y40 IsOwner) (?Y41 Duration)) (and (eq ?prop:subject [jane]) (eq ?Y40:of [c1]) (eq ?prop:predicate ?Y40) (= ?Y41:start 733702.0) (= ?Y41:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+----------running---------------------
+----------runned: 33---------------------
+(find-all-instances ((?prop Proposition) (?Y42 IsOwner) (?Y43 Duration)) (and (eq ?prop:subject [jane]) (eq ?Y42:of [c1]) (eq ?prop:predicate ?Y42) (= ?Y43:start 733702.0) (= ?Y43:end -1.0) (eq ?prop:truth 1)))
+35
+
+
+jane isowner of c1 at from 733702.0 till -1.0
+(find-all-instances ((?prop Proposition) (?Y44 Has) (?Y45 Duration)) (and (eq ?prop:subject [c1]) (eq ?Y44:what [private]) (eq ?prop:predicate ?Y44) (= ?Y45:start 733702.0) (= ?Y45:end -1.0) (eq ?prop:truth 1)))
+35
+
+
+c1 has what private at from 733702.0 till -1.0
+(find-all-instances ((?prop Proposition) (?Y46 IsOwner) (?Y47 Duration)) (and (eq ?prop:subject [pete]) (eq ?Y46:of [c2]) (eq ?prop:predicate ?Y46) (= ?Y47:start 733702.0) (= ?Y47:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+(add-prop [jane] (add-pred Wants to (add-pred Publish what [c1])) 733702.0 1)
+(add-prop [pete] (add-pred Wants to (add-pred Publish what [c2])) 733702.0 1)
+----------running---------------------
+----------runned: 0---------------------
+(find-all-instances ((?prop Proposition) (?Y48 Has) (?Y49 Duration)) (and (eq ?prop:subject [c1]) (eq ?Y48:what [public]) (eq ?prop:predicate ?Y48) (= ?Y49:start 733702.0) (= ?Y49:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+(find-all-instances ((?prop Proposition) (?Y50 Has) (?Y51 Duration)) (and (eq ?prop:subject [c2]) (eq ?Y50:what [public]) (eq ?prop:predicate ?Y50) (= ?Y51:start 733702.0) (= ?Y51:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+(find-all-instances ((?prop Proposition) (?Y52 Can) (?Y53 View) (?Y54 Duration)) (and (eq ?prop:subject [jane]) (eq ?Y53:what [c1]) (eq ?Y52:what ?Y53) (eq ?prop:predicate ?Y52) (= ?Y54:start 733702.0) (= ?Y54:end -1.0) (eq ?prop:truth 1)))
+35
+
+
+jane can what view what c1 at from 733702.0 till -1.0
+(find-all-instances ((?prop Proposition) (?Y55 Can) (?Y56 View) (?Y57 Duration)) (and (eq ?prop:subject [pete]) (eq ?Y56:what [c1]) (eq ?Y55:what ?Y56) (eq ?prop:predicate ?Y55) (= ?Y57:start 733702.0) (= ?Y57:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+(add-prop [john] (add-pred Wants to (add-pred Publish what [c1])) 733702.0 1)
+----------running---------------------
+----------runned: 10---------------------
+(find-all-instances ((?prop Proposition) (?Y58 Has) (?Y59 Duration)) (and (eq ?prop:subject [c1]) (eq ?Y58:what [private]) (eq ?prop:predicate ?Y58) (= ?Y59:start 733702.0) (= ?Y59:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+(find-all-instances ((?prop Proposition) (?Y60 Has) (?Y61 Duration)) (and (eq ?prop:subject [c1]) (eq ?Y60:what [public]) (eq ?prop:predicate ?Y60) (= ?Y61:start 733702.0) (= ?Y61:end -1.0) (eq ?prop:truth 1)))
+41
+
+
+c1 has what public at from 733702.0 till -1.0
+(find-all-instances ((?prop Proposition) (?Y62 Can) (?Y63 View) (?Y64 Duration)) (and (eq ?prop:subject [pete]) (eq ?Y63:what [c1]) (eq ?Y62:what ?Y63) (eq ?prop:predicate ?Y62) (= ?Y64:start 733702.0) (= ?Y64:end -1.0) (eq ?prop:truth 1)))
+41
+
+
+pete can what view what c1 at from 733702.0 till -1.0
+(defclass Name (is-a USER))
+
+(deffunction reduce-class (?instance ?class)
+    (if (eq (length$
+                (find-all-instances ((?a ?class))(eq (instance-name ?a) ?instance)))
+             0)
+    then (make-instance ?instance of ?class)
+    else (return TRUE)))
+(defclass Thing (is-a Name))
+(defclass Verb (is-a USER))
+(defclass State (is-a Verb) )
+(set-sequence-operator-recognition TRUE)
+(defmessage-handler State set-slots primary ($?slots)
+        (while (> (length$ ?slots) 0) do
+            (bind ?slot (first$ ?slots))
+            (bind ?vslots (rest$ ?slots))
+            (bind ?value (first$ ?vslots))
+            (bind ?slots (rest$ ?vslots))
+            (dynamic-put $?slot $?value))
+        (return (instance-name ?self)))
+
+
+(deffunction add-pred (?class $?slots)
+        (bind ?key (str-cat ?class $?slots))
+        (bind ?pos (str-index "." ?key))
+        (while ?pos do
+            (bind ?key (str-cat (sub-string 1 (- ?pos 1) ?key)
+                                "_"
+                                (sub-string (+ ?pos 1) (str-length ?key) ?key)))
+            (bind ?pos (str-index "." ?key)))
+        (bind ?key (sym-cat ?key))
+        (if (instance-existp ?key) then
+            (return (instance-name ?key))
+         else
+            (make-instance ?key of ?class)
+            (return (send (instance-name ?key) set-slots $?slots))))
+
+(defclass Duration (is-a Name) (slot start (type NUMBER) (pattern-match reactive)) (slot end (type NUMBER) (pattern-match reactive)))
+
+(deffunction extract-now ($?instants)
+    (if (= (length$ ?instants) 0) then
+        (return -1)
+    else
+        (bind ?count 0)
+        (bind ?not-now (create$))
+        (while (> (length$ ?instants) 0) do
+            (bind ?instant (nth$ 1 ?instants))
+            (bind ?instants (rest$ ?instants))
+            (if (= ?instant -1)
+            then (bind ?count (+ ?count 1))
+            else (bind ?not-now (insert$ ?not-now 1 ?instant)))
+            )
+        (return (insert$ ?not-now 1 ?count))
+    )
+)
+
+
+(deffunction maxcomend ($?durations)
+    (bind ?ends (create$))
+    (while (> (length$ ?durations) 0)
+        (bind ?ends (insert$ ?ends 1 (send (nth$ 1 ?durations) get-end)))
+        (bind ?durations (rest$ ?durations))
+        )
+    (bind ?ret (extract-now ?ends))
+    (bind ?pasts (rest$ ?ret))
+    (if (> (length$ ?pasts) 0)
+    then (return (min (expand$ ?pasts)))
+    else (return -1)
+    )
+)
+
+
+(deffunction mincomstart ($?durations)
+    (bind ?starts (create$))
+    (while (> (length$ ?durations) 0)
+        (bind ?starts (insert$ ?starts 1 (send (nth$ 1 ?durations) get-start)))
+        (bind ?durations (rest$ ?durations))
+        )
+    (bind ?ret (extract-now ?starts))
+    (bind ?nows (nth$ 1 ?ret))
+    (if (> ?nows 0)
+    then (return -1)
+    else (bind ?ret (rest$ ?ret))
+         (return (max (expand$ ?ret)))
+    )
+)
+
+(defclass Proposition (is-a Name) (slot truth (type INTEGER) (default 1) (pattern-match reactive)) (slot subject (type INSTANCE) (pattern-match reactive)) (slot predicate (type INSTANCE) (pattern-match reactive)) (slot time (type ?VARIABLE) (pattern-match reactive)))
+
+(deffunction add-prop (?s ?p ?t ?r)
+       (bind ?count 0)
+       (do-for-all-instances ((?prop Proposition))
+                          (and (eq ?prop:subject ?s)
+                               (eq ?prop:predicate ?p)
+                               (or (and (eq (class ?t) Duration)
+                                        (= (send (send ?prop get-time) get-start) (send ?t get-start))
+                                        (= (send (send ?prop get-time) get-end) (send ?t get-end)))
+                                   (= ?prop:time ?t))
+                               (= ?prop:truth ?r))
+               (bind ?count (+ ?count 1)))
+        (if (= ?count 0)
+        then (make-instance of Proposition (subject ?s)
+                                           (predicate ?p)
+                                           (time ?t)
+                                           (truth ?r))
+        else (return TRUE)))
+(defclass Person (is-a Thing))
+(defclass Can (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Wants (is-a State) (slot to (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Has (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass IsNeeded (is-a State) (slot for_action (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass IsIn (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Group (is-a Thing))
+(defclass Permission (is-a Thing))
+(defclass Role (is-a Thing))
+(defclass Content (is-a Thing))
+(defclass Create (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass IsOwner (is-a State) (slot of (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Status (is-a Thing))
+(defclass View (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Publish (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Hide (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(reduce-class [admin] Person)
+(reduce-class [member] Role)
+(reduce-class [manager] Role)
+(reduce-class [basic_perm] Permission)
+(reduce-class [manage_perm] Permission)
+(reduce-class [create_perm] Permission)
+(reduce-class [public] Status)
+(reduce-class [private] Status)
+(add-prop [admin] (add-pred Has what [manager]) (make-instance of Duration (start 733702.0) (end -1.0)) 1)
+(add-prop [member] (add-pred Has what [basic_perm]) (make-instance of Duration (start 733702.0) (end -1.0)) 1)
+(defrule 732e6e2bb8e24ed89c86da89fc8739a8 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y1&:(or (eq (class ?Y1) Wants) (subclassp (class ?Y1) Wants))&:(or (eq (class (send ?Y1 get-to)) Create) (subclassp (class (send ?Y1 get-to)) Create))&:(or (eq (class (send (send ?Y1 get-to) get-what)) Thing) (subclassp (class (send (send ?Y1 get-to) get-what)) Thing))) (time ?X2) (truth 1))) (logical (object (is-a Proposition) (subject ?X1) (predicate ?Y2&:(or (eq (class ?Y2) Has) (subclassp (class ?Y2) Has))&:(eq (send ?Y2 get-what) [create_perm])) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (test (and (<= (send ?X3 get-start) ?X2) (or (= (send ?X3 get-end) -1) (>= (send ?X3 get-end) ?X2)))) => (add-prop ?X1 (add-pred Create what (send (send ?Y1 get-to) get-what)) ?X2 1))
+(defrule f8a3a4d5c6674aceaf8c77e81730b239 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y4&:(or (eq (class ?Y4) Wants) (subclassp (class ?Y4) Wants))) (time ?X2) (truth 1))) (logical (object (is-a Proposition) (subject ?X1) (predicate ?Y5&:(or (eq (class ?Y5) Can) (subclassp (class ?Y5) Can))&:(eq (send ?Y4 get-to) (send ?Y5 get-what))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (test (and (<= (send ?X3 get-start) ?X2) (or (= (send ?X3 get-end) -1) (>= (send ?X3 get-end) ?X2)))) => (add-prop ?X1 (send ?Y4 get-to) ?X2 1))
+(defrule 69733bd2a30b4375a169e8d482edf4af (logical (object (is-a Proposition) (subject ?X2&:(or (eq (class ?X2) Thing) (subclassp (class ?X2) Thing))) (predicate ?Y7&:(or (eq (class ?Y7) IsNeeded) (subclassp (class ?Y7) IsNeeded))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Thing) (subclassp (class ?X1) Thing))) (predicate ?Y9&:(or (eq (class ?Y9) Has) (subclassp (class ?Y9) Has))&:(eq (send ?Y9 get-what) ?X2)) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X3 ?X5) -1)
+                               (<= (mincomstart ?X3 ?X5) (maxcomend ?X3 ?X5)))
+                          (= (maxcomend ?X3 ?X5) -1))
+                )
+                 => (add-prop ?X1 (add-pred Can what (send ?Y7 get-for_action)) (make-instance of Duration (start (mincomstart ?X3 ?X5)) (end (maxcomend ?X3 ?X5))) 1))
+(defrule 7d53f7070e96470596a1650cc488b371 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Thing) (subclassp (class ?X1) Thing))) (predicate ?Y11&:(or (eq (class ?Y11) IsIn) (subclassp (class ?Y11) IsIn))&:(or (eq (class (send ?Y11 get-what)) Thing) (subclassp (class (send ?Y11 get-what)) Thing))) (time ?X4&:(or (eq (class ?X4) Duration) (subclassp (class ?X4) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y11 get-what))) (predicate ?Y13&:(or (eq (class ?Y13) IsIn) (subclassp (class ?Y13) IsIn))&:(or (eq (class (send ?Y13 get-what)) Thing) (subclassp (class (send ?Y13 get-what)) Thing))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X4 ?X5) -1)
+                               (<= (mincomstart ?X4 ?X5) (maxcomend ?X4 ?X5)))
+                          (= (maxcomend ?X4 ?X5) -1))
+                )
+                 => (add-prop ?X1 (add-pred IsIn what (send ?Y13 get-what)) (make-instance of Duration (start (mincomstart ?X4 ?X5)) (end (maxcomend ?X4 ?X5))) 1))
+(defrule de09932498884cc6be90efbd1d507fd3 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y15&:(or (eq (class ?Y15) IsIn) (subclassp (class ?Y15) IsIn))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(or (eq (class ?X2) Group) (subclassp (class ?X2) Group))) (predicate ?Y17&:(or (eq (class ?Y17) Has) (subclassp (class ?Y17) Has))&:(or (eq (class (send ?Y17 get-what)) Permission) (subclassp (class (send ?Y17 get-what)) Permission))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X3 ?X5) -1)
+                               (<= (mincomstart ?X3 ?X5) (maxcomend ?X3 ?X5)))
+                          (= (maxcomend ?X3 ?X5) -1))
+                )
+                 => (add-prop ?X1 (add-pred Has what (send ?Y17 get-what)) (make-instance of Duration (start (mincomstart ?X3 ?X5)) (end (maxcomend ?X3 ?X5))) 1))
+(defrule 9894739b178d4793972ce4b82a6fc95c (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y19&:(or (eq (class ?Y19) Has) (subclassp (class ?Y19) Has))&:(or (eq (class (send ?Y19 get-what)) Role) (subclassp (class (send ?Y19 get-what)) Role))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y19 get-what))) (predicate ?Y21&:(or (eq (class ?Y21) Has) (subclassp (class ?Y21) Has))&:(or (eq (class (send ?Y21 get-what)) Permission) (subclassp (class (send ?Y21 get-what)) Permission))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X3 ?X5) -1)
+                               (<= (mincomstart ?X3 ?X5) (maxcomend ?X3 ?X5)))
+                          (= (maxcomend ?X3 ?X5) -1))
+                )
+                 => (add-prop ?X1 (add-pred Has what (send ?Y21 get-what)) (make-instance of Duration (start (mincomstart ?X3 ?X5)) (end (maxcomend ?X3 ?X5))) 1))
+(defrule 8ee5cffece66455e8c8a7c7ff2132098 (logical (object (is-a Person) (name ?X1))) => (add-prop ?X1 (add-pred Has what [member]) (make-instance of Duration (start 733702.0) (end -1.0)) 1))
+(defrule 2fcc031014614fb3931f57f338bfb82c (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y23&:(or (eq (class ?Y23) Create) (subclassp (class ?Y23) Create))&:(or (eq (class (send ?Y23 get-what)) Content) (subclassp (class (send ?Y23 get-what)) Content))) (time ?X3) (truth 1))) => (reduce-class (send ?Y23 get-what) Content) (add-prop ?X1 (add-pred IsOwner of (send ?Y23 get-what)) (make-instance of Duration (start ?X3) (end -1.0)) 1) (add-prop (send ?Y23 get-what) (add-pred Has what [private]) (make-instance of Duration (start ?X3) (end -1.0)) 1))
+(defrule 6f606982b53c4d20a7df6f3786bac2ea (logical (object (is-a Permission) (name ?X2))) => (add-prop [manager] (add-pred Has what ?X2) (make-instance of Duration (start 733702.0) (end -1.0)) 1))
+(defrule e17c49520c4a433da0ee3555fef26eaa (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Content) (subclassp (class ?X1) Content))) (predicate ?Y24&:(or (eq (class ?Y24) Has) (subclassp (class ?Y24) Has))&:(eq (send ?Y24 get-what) [public])) (time ?X2&:(or (eq (class ?X2) Duration) (subclassp (class ?X2) Duration))) (truth 1))) => (add-prop [basic_perm] (add-pred IsNeeded for_action (add-pred View what ?X1)) ?X2 1))
+(defrule 110fd63d1c0b4c5298d4830275c7bf1a (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Content) (subclassp (class ?X1) Content))) (predicate ?Y26&:(or (eq (class ?Y26) Has) (subclassp (class ?Y26) Has))&:(eq (send ?Y26 get-what) [private])) (time ?X2&:(or (eq (class ?X2) Duration) (subclassp (class ?X2) Duration))) (truth 1))) => (add-prop [manage_perm] (add-pred IsNeeded for_action (add-pred View what ?X1)) ?X2 1))
+(defrule 3a98c862b346475a9a193fcfdc7e8412 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Content) (subclassp (class ?X1) Content))) (predicate ?Y28&:(or (eq (class ?Y28) Has) (subclassp (class ?Y28) Has))&:(eq (send ?Y28 get-what) [private])) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(or (eq (class ?X2) Person) (subclassp (class ?X2) Person))) (predicate ?Y30&:(or (eq (class ?Y30) IsOwner) (subclassp (class ?Y30) IsOwner))&:(eq (send ?Y30 get-of) ?X1)) (time ?X4&:(or (eq (class ?X4) Duration) (subclassp (class ?X4) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X3 ?X4) -1)
+                               (<= (mincomstart ?X3 ?X4) (maxcomend ?X3 ?X4)))
+                          (= (maxcomend ?X3 ?X4) -1))
+                )
+                 => (add-prop ?X2 (add-pred Can what (add-pred View what ?X1)) (make-instance of Duration (start (mincomstart ?X3 ?X4)) (end (maxcomend ?X3 ?X4))) 1))
+(defrule 3421e83875b24213a9d1bce982664e79 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y32&:(or (eq (class ?Y32) Publish) (subclassp (class ?Y32) Publish))&:(or (eq (class (send ?Y32 get-what)) Content) (subclassp (class (send ?Y32 get-what)) Content))) (time ?X3) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y32 get-what))) (predicate ?Y33&:(or (eq (class ?Y33) Has) (subclassp (class ?Y33) Has))&:(or (eq (class (send ?Y33 get-what)) Status) (subclassp (class (send ?Y33 get-what)) Status))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) => (send ?X5 put-end 733702) (add-prop (send ?Y32 get-what) (add-pred Has what [public]) (make-instance of Duration (start ?X3) (end -1.0)) 1))
+(defrule 220476fe5eb047ef8e3563c0c315e3d4 (logical (object (is-a Content) (name ?X1))) => (add-prop [manage_perm] (add-pred IsNeeded for_action (add-pred Publish what ?X1)) (make-instance of Duration (start 733702.0) (end -1.0)) 1))
+(defrule d6aeed7d05404ef7bec7730fb49a765b (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y35&:(or (eq (class ?Y35) Hide) (subclassp (class ?Y35) Hide))&:(or (eq (class (send ?Y35 get-what)) Content) (subclassp (class (send ?Y35 get-what)) Content))) (time ?X3) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y35 get-what))) (predicate ?Y36&:(or (eq (class ?Y36) Has) (subclassp (class ?Y36) Has))&:(or (eq (class (send ?Y36 get-what)) Status) (subclassp (class (send ?Y36 get-what)) Status))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) => (send ?X5 put-end 733702) (add-prop (send ?Y35 get-what) (add-pred Has what [private]) (make-instance of Duration (start ?X3) (end -1.0)) 1))
+(defrule 56dddbc0529c4b958b96bafd0134b2cb (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y38&:(or (eq (class ?Y38) IsOwner) (subclassp (class ?Y38) IsOwner))&:(or (eq (class (send ?Y38 get-of)) Content) (subclassp (class (send ?Y38 get-of)) Content))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) => (add-prop ?X1 (add-pred Can what (add-pred Hide what (send ?Y38 get-of))) ?X3 1))
+(reduce-class [john] Person)
+(reduce-class [pete] Person)
+(reduce-class [jane] Person)
+(reduce-class [c1] Content)
+(reduce-class [c2] Content)
+(add-prop [john] (add-pred Has what [manager]) (make-instance of Duration (start 733702.0) (end -1.0)) 1)
+(add-prop [jane] (add-pred Has what [create_perm]) (make-instance of Duration (start 733702.0) (end -1.0)) 1)
+(add-prop [jane] (add-pred Wants to (add-pred Create what [c1])) 733702.0 1)
+(add-prop [pete] (add-pred Wants to (add-pred Create what [c2])) 733702.0 1)
+(find-all-instances ((?prop Proposition) (?Y40 IsOwner) (?Y41 Duration)) (and (eq ?prop:subject [jane]) (eq ?Y40:of [c1]) (eq ?prop:predicate ?Y40) (= ?Y41:start 733702.0) (= ?Y41:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+----------running---------------------
+----------runned: 33---------------------
+(find-all-instances ((?prop Proposition) (?Y42 IsOwner) (?Y43 Duration)) (and (eq ?prop:subject [jane]) (eq ?Y42:of [c1]) (eq ?prop:predicate ?Y42) (= ?Y43:start 733702.0) (= ?Y43:end -1.0) (eq ?prop:truth 1)))
+35
+
+
+jane isowner of c1 at from 733702.0 till -1.0
+(find-all-instances ((?prop Proposition) (?Y44 Has) (?Y45 Duration)) (and (eq ?prop:subject [c1]) (eq ?Y44:what [private]) (eq ?prop:predicate ?Y44) (= ?Y45:start 733702.0) (= ?Y45:end -1.0) (eq ?prop:truth 1)))
+35
+
+
+c1 has what private at from 733702.0 till -1.0
+(find-all-instances ((?prop Proposition) (?Y46 IsOwner) (?Y47 Duration)) (and (eq ?prop:subject [pete]) (eq ?Y46:of [c2]) (eq ?prop:predicate ?Y46) (= ?Y47:start 733702.0) (= ?Y47:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+(add-prop [jane] (add-pred Wants to (add-pred Publish what [c1])) 733702.0 1)
+(add-prop [pete] (add-pred Wants to (add-pred Publish what [c2])) 733702.0 1)
+----------running---------------------
+----------runned: 0---------------------
+(find-all-instances ((?prop Proposition) (?Y48 Has) (?Y49 Duration)) (and (eq ?prop:subject [c1]) (eq ?Y48:what [public]) (eq ?prop:predicate ?Y48) (= ?Y49:start 733702.0) (= ?Y49:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+(find-all-instances ((?prop Proposition) (?Y50 Has) (?Y51 Duration)) (and (eq ?prop:subject [c2]) (eq ?Y50:what [public]) (eq ?prop:predicate ?Y50) (= ?Y51:start 733702.0) (= ?Y51:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+(find-all-instances ((?prop Proposition) (?Y52 Can) (?Y53 View) (?Y54 Duration)) (and (eq ?prop:subject [jane]) (eq ?Y53:what [c1]) (eq ?Y52:what ?Y53) (eq ?prop:predicate ?Y52) (= ?Y54:start 733702.0) (= ?Y54:end -1.0) (eq ?prop:truth 1)))
+35
+
+
+jane can what view what c1 at from 733702.0 till -1.0
+(find-all-instances ((?prop Proposition) (?Y55 Can) (?Y56 View) (?Y57 Duration)) (and (eq ?prop:subject [pete]) (eq ?Y56:what [c1]) (eq ?Y55:what ?Y56) (eq ?prop:predicate ?Y55) (= ?Y57:start 733702.0) (= ?Y57:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+(add-prop [john] (add-pred Wants to (add-pred Publish what [c1])) 733702.0 1)
+----------running---------------------
+----------runned: 10---------------------
+(find-all-instances ((?prop Proposition) (?Y58 Has) (?Y59 Duration)) (and (eq ?prop:subject [c1]) (eq ?Y58:what [private]) (eq ?prop:predicate ?Y58) (= ?Y59:start 733702.0) (= ?Y59:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+(find-all-instances ((?prop Proposition) (?Y60 Has) (?Y61 Duration)) (and (eq ?prop:subject [c1]) (eq ?Y60:what [public]) (eq ?prop:predicate ?Y60) (= ?Y61:start 733702.0) (= ?Y61:end -1.0) (eq ?prop:truth 1)))
+41
+
+
+c1 has what public at from 733702.0 till -1.0
+(find-all-instances ((?prop Proposition) (?Y62 Can) (?Y63 View) (?Y64 Duration)) (and (eq ?prop:subject [pete]) (eq ?Y63:what [c1]) (eq ?Y62:what ?Y63) (eq ?prop:predicate ?Y62) (= ?Y64:start 733702.0) (= ?Y64:end -1.0) (eq ?prop:truth 1)))
+41
+
+
+pete can what view what c1 at from 733702.0 till -1.0
+(defclass Name (is-a USER))
+
+(deffunction reduce-class (?instance ?class)
+    (if (eq (length$
+                (find-all-instances ((?a ?class))(eq (instance-name ?a) ?instance)))
+             0)
+    then (make-instance ?instance of ?class)
+    else (return TRUE)))
+(defclass Thing (is-a Name))
+(defclass Verb (is-a USER))
+(defclass State (is-a Verb) )
+(set-sequence-operator-recognition TRUE)
+(defmessage-handler State set-slots primary ($?slots)
+        (while (> (length$ ?slots) 0) do
+            (bind ?slot (first$ ?slots))
+            (bind ?vslots (rest$ ?slots))
+            (bind ?value (first$ ?vslots))
+            (bind ?slots (rest$ ?vslots))
+            (dynamic-put $?slot $?value))
+        (return (instance-name ?self)))
+
+
+(deffunction add-pred (?class $?slots)
+        (bind ?key (str-cat ?class $?slots))
+        (bind ?pos (str-index "." ?key))
+        (while ?pos do
+            (bind ?key (str-cat (sub-string 1 (- ?pos 1) ?key)
+                                "_"
+                                (sub-string (+ ?pos 1) (str-length ?key) ?key)))
+            (bind ?pos (str-index "." ?key)))
+        (bind ?key (sym-cat ?key))
+        (if (instance-existp ?key) then
+            (return (instance-name ?key))
+         else
+            (make-instance ?key of ?class)
+            (return (send (instance-name ?key) set-slots $?slots))))
+
+(defclass Duration (is-a Name) (slot start (type NUMBER) (pattern-match reactive)) (slot end (type NUMBER) (pattern-match reactive)))
+
+(deffunction extract-now ($?instants)
+    (if (= (length$ ?instants) 0) then
+        (return -1)
+    else
+        (bind ?count 0)
+        (bind ?not-now (create$))
+        (while (> (length$ ?instants) 0) do
+            (bind ?instant (nth$ 1 ?instants))
+            (bind ?instants (rest$ ?instants))
+            (if (= ?instant -1)
+            then (bind ?count (+ ?count 1))
+            else (bind ?not-now (insert$ ?not-now 1 ?instant)))
+            )
+        (return (insert$ ?not-now 1 ?count))
+    )
+)
+
+
+(deffunction maxcomend ($?durations)
+    (bind ?ends (create$))
+    (while (> (length$ ?durations) 0)
+        (bind ?ends (insert$ ?ends 1 (send (nth$ 1 ?durations) get-end)))
+        (bind ?durations (rest$ ?durations))
+        )
+    (bind ?ret (extract-now ?ends))
+    (bind ?pasts (rest$ ?ret))
+    (if (> (length$ ?pasts) 0)
+    then (return (min (expand$ ?pasts)))
+    else (return -1)
+    )
+)
+
+
+(deffunction mincomstart ($?durations)
+    (bind ?starts (create$))
+    (while (> (length$ ?durations) 0)
+        (bind ?starts (insert$ ?starts 1 (send (nth$ 1 ?durations) get-start)))
+        (bind ?durations (rest$ ?durations))
+        )
+    (bind ?ret (extract-now ?starts))
+    (bind ?nows (nth$ 1 ?ret))
+    (if (> ?nows 0)
+    then (return -1)
+    else (bind ?ret (rest$ ?ret))
+         (return (max (expand$ ?ret)))
+    )
+)
+
+(defclass Proposition (is-a Name) (slot truth (type INTEGER) (default 1) (pattern-match reactive)) (slot subject (type INSTANCE) (pattern-match reactive)) (slot predicate (type INSTANCE) (pattern-match reactive)) (slot time (type ?VARIABLE) (pattern-match reactive)))
+
+(deffunction add-prop (?s ?p ?t ?r)
+       (bind ?count 0)
+       (do-for-all-instances ((?prop Proposition))
+                          (and (eq ?prop:subject ?s)
+                               (eq ?prop:predicate ?p)
+                               (or (and (eq (class ?t) Duration)
+                                        (= (send (send ?prop get-time) get-start) (send ?t get-start))
+                                        (= (send (send ?prop get-time) get-end) (send ?t get-end)))
+                                   (= ?prop:time ?t))
+                               (= ?prop:truth ?r))
+               (bind ?count (+ ?count 1)))
+        (if (= ?count 0)
+        then (make-instance of Proposition (subject ?s)
+                                           (predicate ?p)
+                                           (time ?t)
+                                           (truth ?r))
+        else (return TRUE)))
+(defclass Person (is-a Thing))
+(defclass Can (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Wants (is-a State) (slot to (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Has (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass IsNeeded (is-a State) (slot for_action (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass IsIn (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Group (is-a Thing))
+(defclass Permission (is-a Thing))
+(defclass Role (is-a Thing))
+(defclass Content (is-a Thing))
+(defclass Create (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass IsOwner (is-a State) (slot of (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Status (is-a Thing))
+(defclass View (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Publish (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(defclass Hide (is-a State) (slot what (type INSTANCE) (visibility public) (pattern-match reactive)))
+(reduce-class [admin] Person)
+(reduce-class [member] Role)
+(reduce-class [manager] Role)
+(reduce-class [basic_perm] Permission)
+(reduce-class [manage_perm] Permission)
+(reduce-class [create_perm] Permission)
+(reduce-class [public] Status)
+(reduce-class [private] Status)
+(add-prop [admin] (add-pred Has what [manager]) (make-instance of Duration (start 733702.0) (end -1.0)) 1)
+(add-prop [member] (add-pred Has what [basic_perm]) (make-instance of Duration (start 733702.0) (end -1.0)) 1)
+(defrule 693a873f191e45468f8c4d3553dd7277 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y1&:(or (eq (class ?Y1) Wants) (subclassp (class ?Y1) Wants))&:(or (eq (class (send ?Y1 get-to)) Create) (subclassp (class (send ?Y1 get-to)) Create))&:(or (eq (class (send (send ?Y1 get-to) get-what)) Thing) (subclassp (class (send (send ?Y1 get-to) get-what)) Thing))) (time ?X2) (truth 1))) (logical (object (is-a Proposition) (subject ?X1) (predicate ?Y2&:(or (eq (class ?Y2) Has) (subclassp (class ?Y2) Has))&:(eq (send ?Y2 get-what) [create_perm])) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (test (and (<= (send ?X3 get-start) ?X2) (or (= (send ?X3 get-end) -1) (>= (send ?X3 get-end) ?X2)))) => (add-prop ?X1 (add-pred Create what (send (send ?Y1 get-to) get-what)) ?X2 1))
+(defrule 037986ebfee54c869d9c2430c09c2d75 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y4&:(or (eq (class ?Y4) Wants) (subclassp (class ?Y4) Wants))) (time ?X2) (truth 1))) (logical (object (is-a Proposition) (subject ?X1) (predicate ?Y5&:(or (eq (class ?Y5) Can) (subclassp (class ?Y5) Can))&:(eq (send ?Y4 get-to) (send ?Y5 get-what))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (test (and (<= (send ?X3 get-start) ?X2) (or (= (send ?X3 get-end) -1) (>= (send ?X3 get-end) ?X2)))) => (add-prop ?X1 (send ?Y4 get-to) ?X2 1))
+(defrule 69431bbb6ed142328cb2fa83b5b958f5 (logical (object (is-a Proposition) (subject ?X2&:(or (eq (class ?X2) Thing) (subclassp (class ?X2) Thing))) (predicate ?Y7&:(or (eq (class ?Y7) IsNeeded) (subclassp (class ?Y7) IsNeeded))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Thing) (subclassp (class ?X1) Thing))) (predicate ?Y9&:(or (eq (class ?Y9) Has) (subclassp (class ?Y9) Has))&:(eq (send ?Y9 get-what) ?X2)) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X3 ?X5) -1)
+                               (<= (mincomstart ?X3 ?X5) (maxcomend ?X3 ?X5)))
+                          (= (maxcomend ?X3 ?X5) -1))
+                )
+                 => (add-prop ?X1 (add-pred Can what (send ?Y7 get-for_action)) (make-instance of Duration (start (mincomstart ?X3 ?X5)) (end (maxcomend ?X3 ?X5))) 1))
+(defrule 52b0095bc0a44dcfacc87f0b8efdec15 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Thing) (subclassp (class ?X1) Thing))) (predicate ?Y11&:(or (eq (class ?Y11) IsIn) (subclassp (class ?Y11) IsIn))&:(or (eq (class (send ?Y11 get-what)) Thing) (subclassp (class (send ?Y11 get-what)) Thing))) (time ?X4&:(or (eq (class ?X4) Duration) (subclassp (class ?X4) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y11 get-what))) (predicate ?Y13&:(or (eq (class ?Y13) IsIn) (subclassp (class ?Y13) IsIn))&:(or (eq (class (send ?Y13 get-what)) Thing) (subclassp (class (send ?Y13 get-what)) Thing))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X4 ?X5) -1)
+                               (<= (mincomstart ?X4 ?X5) (maxcomend ?X4 ?X5)))
+                          (= (maxcomend ?X4 ?X5) -1))
+                )
+                 => (add-prop ?X1 (add-pred IsIn what (send ?Y13 get-what)) (make-instance of Duration (start (mincomstart ?X4 ?X5)) (end (maxcomend ?X4 ?X5))) 1))
+(defrule dd1096d3e97e4816ae54630e5e886d70 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y15&:(or (eq (class ?Y15) IsIn) (subclassp (class ?Y15) IsIn))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(or (eq (class ?X2) Group) (subclassp (class ?X2) Group))) (predicate ?Y17&:(or (eq (class ?Y17) Has) (subclassp (class ?Y17) Has))&:(or (eq (class (send ?Y17 get-what)) Permission) (subclassp (class (send ?Y17 get-what)) Permission))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X3 ?X5) -1)
+                               (<= (mincomstart ?X3 ?X5) (maxcomend ?X3 ?X5)))
+                          (= (maxcomend ?X3 ?X5) -1))
+                )
+                 => (add-prop ?X1 (add-pred Has what (send ?Y17 get-what)) (make-instance of Duration (start (mincomstart ?X3 ?X5)) (end (maxcomend ?X3 ?X5))) 1))
+(defrule 7bf52f7453034f9993b142352060f237 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y19&:(or (eq (class ?Y19) Has) (subclassp (class ?Y19) Has))&:(or (eq (class (send ?Y19 get-what)) Role) (subclassp (class (send ?Y19 get-what)) Role))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y19 get-what))) (predicate ?Y21&:(or (eq (class ?Y21) Has) (subclassp (class ?Y21) Has))&:(or (eq (class (send ?Y21 get-what)) Permission) (subclassp (class (send ?Y21 get-what)) Permission))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X3 ?X5) -1)
+                               (<= (mincomstart ?X3 ?X5) (maxcomend ?X3 ?X5)))
+                          (= (maxcomend ?X3 ?X5) -1))
+                )
+                 => (add-prop ?X1 (add-pred Has what (send ?Y21 get-what)) (make-instance of Duration (start (mincomstart ?X3 ?X5)) (end (maxcomend ?X3 ?X5))) 1))
+(defrule e46190caf84f4d0f8167a24ec3ab8451 (logical (object (is-a Person) (name ?X1))) => (add-prop ?X1 (add-pred Has what [member]) (make-instance of Duration (start 733702.0) (end -1.0)) 1))
+(defrule 9c154e88c66d41d48269ff07e8a563cf (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y23&:(or (eq (class ?Y23) Create) (subclassp (class ?Y23) Create))&:(or (eq (class (send ?Y23 get-what)) Content) (subclassp (class (send ?Y23 get-what)) Content))) (time ?X3) (truth 1))) => (reduce-class (send ?Y23 get-what) Content) (add-prop ?X1 (add-pred IsOwner of (send ?Y23 get-what)) (make-instance of Duration (start ?X3) (end -1.0)) 1) (add-prop (send ?Y23 get-what) (add-pred Has what [private]) (make-instance of Duration (start ?X3) (end -1.0)) 1))
+(defrule 8e38e78624b7479085d37fb836ad990b (logical (object (is-a Permission) (name ?X2))) => (add-prop [manager] (add-pred Has what ?X2) (make-instance of Duration (start 733702.0) (end -1.0)) 1))
+(defrule 8543f56b047e4f628622df8a4d1a820c (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Content) (subclassp (class ?X1) Content))) (predicate ?Y24&:(or (eq (class ?Y24) Has) (subclassp (class ?Y24) Has))&:(eq (send ?Y24 get-what) [public])) (time ?X2&:(or (eq (class ?X2) Duration) (subclassp (class ?X2) Duration))) (truth 1))) => (add-prop [basic_perm] (add-pred IsNeeded for_action (add-pred View what ?X1)) ?X2 1))
+(defrule bbfd825bfbd34fe9b87dfbd71d6e3cde (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Content) (subclassp (class ?X1) Content))) (predicate ?Y26&:(or (eq (class ?Y26) Has) (subclassp (class ?Y26) Has))&:(eq (send ?Y26 get-what) [private])) (time ?X2&:(or (eq (class ?X2) Duration) (subclassp (class ?X2) Duration))) (truth 1))) => (add-prop [manage_perm] (add-pred IsNeeded for_action (add-pred View what ?X1)) ?X2 1))
+(defrule 0c8c256a1c4040d48f7d3f4bba2ba694 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Content) (subclassp (class ?X1) Content))) (predicate ?Y28&:(or (eq (class ?Y28) Has) (subclassp (class ?Y28) Has))&:(eq (send ?Y28 get-what) [private])) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(or (eq (class ?X2) Person) (subclassp (class ?X2) Person))) (predicate ?Y30&:(or (eq (class ?Y30) IsOwner) (subclassp (class ?Y30) IsOwner))&:(eq (send ?Y30 get-of) ?X1)) (time ?X4&:(or (eq (class ?X4) Duration) (subclassp (class ?X4) Duration))) (truth 1))) 
+                (test (or (and (> (mincomstart ?X3 ?X4) -1)
+                               (<= (mincomstart ?X3 ?X4) (maxcomend ?X3 ?X4)))
+                          (= (maxcomend ?X3 ?X4) -1))
+                )
+                 => (add-prop ?X2 (add-pred Can what (add-pred View what ?X1)) (make-instance of Duration (start (mincomstart ?X3 ?X4)) (end (maxcomend ?X3 ?X4))) 1))
+(defrule 8ac48ff5fdd9492d9523b923eac3d9d1 (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y32&:(or (eq (class ?Y32) Publish) (subclassp (class ?Y32) Publish))&:(or (eq (class (send ?Y32 get-what)) Content) (subclassp (class (send ?Y32 get-what)) Content))) (time ?X3) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y32 get-what))) (predicate ?Y33&:(or (eq (class ?Y33) Has) (subclassp (class ?Y33) Has))&:(or (eq (class (send ?Y33 get-what)) Status) (subclassp (class (send ?Y33 get-what)) Status))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) => (send ?X5 put-end 733702) (add-prop (send ?Y32 get-what) (add-pred Has what [public]) (make-instance of Duration (start ?X3) (end -1.0)) 1))
+(defrule 5ac2856707ec4a8b80a99ed804ae3fcf (logical (object (is-a Content) (name ?X1))) => (add-prop [manage_perm] (add-pred IsNeeded for_action (add-pred Publish what ?X1)) (make-instance of Duration (start 733702.0) (end -1.0)) 1))
+(defrule c21c46ceca28415b94039cc42de54bda (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y35&:(or (eq (class ?Y35) Hide) (subclassp (class ?Y35) Hide))&:(or (eq (class (send ?Y35 get-what)) Content) (subclassp (class (send ?Y35 get-what)) Content))) (time ?X3) (truth 1))) (logical (object (is-a Proposition) (subject ?X2&:(eq ?X2 (send ?Y35 get-what))) (predicate ?Y36&:(or (eq (class ?Y36) Has) (subclassp (class ?Y36) Has))&:(or (eq (class (send ?Y36 get-what)) Status) (subclassp (class (send ?Y36 get-what)) Status))) (time ?X5&:(or (eq (class ?X5) Duration) (subclassp (class ?X5) Duration))) (truth 1))) => (send ?X5 put-end 733702) (add-prop (send ?Y35 get-what) (add-pred Has what [private]) (make-instance of Duration (start ?X3) (end -1.0)) 1))
+(defrule 1aeb437138304d6584ff3932c462f8fe (logical (object (is-a Proposition) (subject ?X1&:(or (eq (class ?X1) Person) (subclassp (class ?X1) Person))) (predicate ?Y38&:(or (eq (class ?Y38) IsOwner) (subclassp (class ?Y38) IsOwner))&:(or (eq (class (send ?Y38 get-of)) Content) (subclassp (class (send ?Y38 get-of)) Content))) (time ?X3&:(or (eq (class ?X3) Duration) (subclassp (class ?X3) Duration))) (truth 1))) => (add-prop ?X1 (add-pred Can what (add-pred Hide what (send ?Y38 get-of))) ?X3 1))
+(reduce-class [john] Person)
+(reduce-class [pete] Person)
+(reduce-class [jane] Person)
+(reduce-class [c1] Content)
+(reduce-class [c2] Content)
+(add-prop [john] (add-pred Has what [manager]) (make-instance of Duration (start 733702.0) (end -1.0)) 1)
+(add-prop [jane] (add-pred Has what [create_perm]) (make-instance of Duration (start 733702.0) (end -1.0)) 1)
+(add-prop [jane] (add-pred Wants to (add-pred Create what [c1])) 733702.0 1)
+(add-prop [pete] (add-pred Wants to (add-pred Create what [c2])) 733702.0 1)
+(find-all-instances ((?prop Proposition) (?Y40 IsOwner) (?Y41 Duration)) (and (eq ?prop:subject [jane]) (eq ?Y40:of [c1]) (eq ?prop:predicate ?Y40) (= ?Y41:start 733702.0) (= ?Y41:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+----------running---------------------
+----------runned: 33---------------------
+(find-all-instances ((?prop Proposition) (?Y42 IsOwner) (?Y43 Duration)) (and (eq ?prop:subject [jane]) (eq ?Y42:of [c1]) (eq ?prop:predicate ?Y42) (= ?Y43:start 733702.0) (= ?Y43:end -1.0) (eq ?prop:truth 1)))
+35
+
+
+jane isowner of c1 at from 733702.0 till -1.0
+(find-all-instances ((?prop Proposition) (?Y44 Has) (?Y45 Duration)) (and (eq ?prop:subject [c1]) (eq ?Y44:what [private]) (eq ?prop:predicate ?Y44) (= ?Y45:start 733702.0) (= ?Y45:end -1.0) (eq ?prop:truth 1)))
+35
+
+
+c1 has what private at from 733702.0 till -1.0
+(find-all-instances ((?prop Proposition) (?Y46 IsOwner) (?Y47 Duration)) (and (eq ?prop:subject [pete]) (eq ?Y46:of [c2]) (eq ?prop:predicate ?Y46) (= ?Y47:start 733702.0) (= ?Y47:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+(add-prop [jane] (add-pred Wants to (add-pred Publish what [c1])) 733702.0 1)
+(add-prop [pete] (add-pred Wants to (add-pred Publish what [c2])) 733702.0 1)
+----------running---------------------
+----------runned: 0---------------------
+(find-all-instances ((?prop Proposition) (?Y48 Has) (?Y49 Duration)) (and (eq ?prop:subject [c1]) (eq ?Y48:what [public]) (eq ?prop:predicate ?Y48) (= ?Y49:start 733702.0) (= ?Y49:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+(find-all-instances ((?prop Proposition) (?Y50 Has) (?Y51 Duration)) (and (eq ?prop:subject [c2]) (eq ?Y50:what [public]) (eq ?prop:predicate ?Y50) (= ?Y51:start 733702.0) (= ?Y51:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+(find-all-instances ((?prop Proposition) (?Y52 Can) (?Y53 View) (?Y54 Duration)) (and (eq ?prop:subject [jane]) (eq ?Y53:what [c1]) (eq ?Y52:what ?Y53) (eq ?prop:predicate ?Y52) (= ?Y54:start 733702.0) (= ?Y54:end -1.0) (eq ?prop:truth 1)))
+35
+
+
+jane can what view what c1 at from 733702.0 till -1.0
+(find-all-instances ((?prop Proposition) (?Y55 Can) (?Y56 View) (?Y57 Duration)) (and (eq ?prop:subject [pete]) (eq ?Y56:what [c1]) (eq ?Y55:what ?Y56) (eq ?prop:predicate ?Y55) (= ?Y57:start 733702.0) (= ?Y57:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+(add-prop [john] (add-pred Wants to (add-pred Publish what [c1])) 733702.0 1)
+----------running---------------------
+----------runned: 10---------------------
+(find-all-instances ((?prop Proposition) (?Y58 Has) (?Y59 Duration)) (and (eq ?prop:subject [c1]) (eq ?Y58:what [private]) (eq ?prop:predicate ?Y58) (= ?Y59:start 733702.0) (= ?Y59:end -1.0) (eq ?prop:truth 1)))
+0
+
+
+no
+(find-all-instances ((?prop Proposition) (?Y60 Has) (?Y61 Duration)) (and (eq ?prop:subject [c1]) (eq ?Y60:what [public]) (eq ?prop:predicate ?Y60) (= ?Y61:start 733702.0) (= ?Y61:end -1.0) (eq ?prop:truth 1)))
+41
+
+
+c1 has what public at from 733702.0 till -1.0
+(find-all-instances ((?prop Proposition) (?Y62 Can) (?Y63 View) (?Y64 Duration)) (and (eq ?prop:subject [pete]) (eq ?Y63:what [c1]) (eq ?Y62:what ?Y63) (eq ?prop:predicate ?Y62) (= ?Y64:start 733702.0) (= ?Y64:end -1.0) (eq ?prop:truth 1)))
+41
+
+
+pete can what view what c1 at from 733702.0 till -1.0
