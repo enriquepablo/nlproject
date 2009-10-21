@@ -250,6 +250,7 @@ class Intersection(DurationOpMixin):
     '''
     given a set of durations,
     put a duration that is the intersection of them all
+    assume that the intersection exists
     '''
 
     def put(self, vrs):
