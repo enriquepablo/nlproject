@@ -202,6 +202,8 @@ register('Finish', Finish)
 
 class During(Name):
     '''
+    given an instant and a duration, build a condition for a rule
+    that tests whether the instant is within the duration
     '''
     def __init__(self, instant, duration):
         self.instant = instant
@@ -215,67 +217,112 @@ register('During', During)
 
 class Coincide(Name):
     '''
+    given a set of durations, build a condition for a rule
+    that tests whether there is an intersection between them
     '''
-    def __init__(self, dur1, dur2):
-        self.dur1 = isinstance(dur1, Duration) and dur1 or Duration(dur1)
-        self.dur2 = isinstance(dur2, Duration) and dur1 or Duration(dur2)
+    def __init__(self, *args):
+        self.durations = \
+          [isinstance(dur, Duration) and dur or Duration(dur) for dur in args]
 
     def get_ce(self, vrs):
-        return '(test (or (and (>= (send %(dur1)s get-start) (send %(dur2)s get-start)) (or (<= (send %(dur1)s get-start) (send %(dur2)s get-end)) (= (send %(dur2)s get-end) -1))) (and (>= (send %(dur2)s get-start) (send %(dur1)s get-start)) (or (<= (send %(dur2)s get-start) (send %(dur1)s get-end)) (= (send %(dur2)s get-end) -1)))))' % {'dur1': self.dur1.put(vrs), 'dur2': self.dur2.put(vrs)}
+        return """
+                (test (or (and (> (mincomstart %(durs)s) -1)
+                               (<= (mincomstart %(durs)s) (maxcomend %(durs)s)))
+                          (= (maxcomend %(durs)s) -1))
+                )
+                """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations])}
+
 
 register('Coincide', Coincide)
 
 
 duration_clps = '(defclass Duration (is-a Name) (slot start (type NUMBER) (pattern-match reactive)) (slot end (type NUMBER) (pattern-match reactive)))'
 logger.info(duration_clps)
-clips.Build(duration_clps) # XXX esto no debbería ir aquí, sino en un método de inicialización.
+clips.Build(duration_clps)
 
-mincomstart_clps = '''
-
-(deffunction mincomstart (?dur1 ?dur2)
-    (return (max (send ?dur1 get-start) (send ?dur2 get-start)))
+extract_clp = '''
+(deffunction extract-now ($?instants)
+    (if (= (length$ ?instants) 0) then
+        (return -1)
+    else
+        (bind ?count 0)
+        (bind ?not-now (create$))
+        (while (> (length$ ?instants) 0) do
+            (bind ?instant (nth$ 1 ?instants))
+            (bind ?instants (rest$ ?instants))
+            (if (= ?instant -1)
+            then (bind ?count (+ ?count 1))
+            else (bind ?not-now (insert$ ?not-now 1 ?instant)))
+            )
+        (return (insert$ ?not-now 1 ?count))
+    )
 )
 '''
 
-clips.Build(mincomstart_clps)
-logger.info(mincomstart_clps)
+maxcomend_clp = '''
+(deffunction maxcomend ($?durations)
+    (bind ?ends (create$))
+    (while (> (length$ ?durations) 0)
+        (bind ?ends (insert$ ?ends 1 (send (nth$ 1 ?durations) get-end)))
+        (bind ?durations (rest$ ?durations))
+        )
+    (bind ?ret (extract-now ?ends))
+    (bind ?pasts (rest$ ?ret))
+    (if (> (length$ ?pasts) 0)
+    then (return (min (expand$ ?pasts)))
+    else (return -1)
+    )
+)
+'''
+
+mincomstart_clp = '''
+(deffunction mincomstart ($?durations)
+    (bind ?starts (create$))
+    (while (> (length$ ?durations) 0)
+        (bind ?starts (insert$ ?starts 1 (send (nth$ 1 ?durations) get-start)))
+        (bind ?durations (rest$ ?durations))
+        )
+    (bind ?ret (extract-now ?starts))
+    (bind ?nows (nth$ 1 ?ret))
+    (if (> ?nows 0)
+    then (return -1)
+    else (bind ?ret (rest$ ?ret))
+         (return (max (expand$ ?ret)))
+    )
+)
+'''
+
+logger.info(extract_clp)
+clips.Build(extract_clp)
+logger.info(maxcomend_clp)
+clips.Build(maxcomend_clp)
+logger.info(mincomstart_clp)
+clips.Build(mincomstart_clp)
 
 class MinComStart(Name):
-    def __init__(self, dur1, dur2):
-        self.dur1 = isinstance(dur1, Duration) and dur1 or Duration(dur1)
-        self.dur2 = isinstance(dur2, Duration) and dur1 or Duration(dur2)
+    """
+    given a set of durations, find out the minimum common instant
+    """
+    def __init__(self, *args):
+        self.durations = \
+          [isinstance(dur, Duration) and dur or Duration(dur) for dur in args]
 
     def put(self, vrs):
-        return '(mincomstart %s %s)' % (self.dur1.put(vrs), self.dur2.put(vrs))
+        instants = [dur.put(vrs) for dur in self.durations]
+        return '(mincomstart %s)' % ' '.join(instants)
 
 register('MinComStart', MinComStart)
 
-maxcomend_clps = '''
-
-(deffunction maxcomend (?dur1 ?dur2)
-    (bind ?e1 (send ?dur1 get-end))
-    (bind ?e2 (send ?dur2 get-end))
-    (if (= ?e1 ?e2) then (return ?e1))
-    (if (= ?e2 -1) then
-        (return ?e1)
-    )
-    (if (= ?e1 -1) then
-        (return ?e2)
-    )
-    (return (min ?e1 ?e2))
-)
-'''
-
-
-logger.info(maxcomend_clps)
-clips.Build(maxcomend_clps)
-
 class MaxComEnd(Name):
-    def __init__(self, dur1, dur2):
-        self.dur1 = isinstance(dur1, Duration) and dur1 or Duration(dur1)
-        self.dur2 = isinstance(dur2, Duration) and dur1 or Duration(dur2)
+    """
+    given a set of durations, find out the maximum common instant
+    """
+    def __init__(self, *args):
+        self.durations = \
+          [isinstance(dur, Duration) and dur or Duration(dur) for dur in args]
 
     def put(self, vrs):
-        return '(maxcomend %s %s)' % (self.dur1.put(vrs), self.dur2.put(vrs))
+        instants = [dur.put(vrs) for dur in self.durations]
+        return '(maxcomend %s)' % ' '.join(instants)
 
 register('MaxComEnd', MaxComEnd)
