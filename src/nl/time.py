@@ -206,8 +206,10 @@ class During(Name):
     that tests whether the instant is within the duration
     '''
     def __init__(self, instant, duration):
-        self.instant = instant
-        self.duration = duration
+        self.instant = isinstance(instant, Instant) and \
+                                   instant or Instant(instant)
+        self.duration = isinstance(duration, str) and \
+                                   Duration(duration) or duration
 
     def get_ce(self, vrs):
         return '(test (and (<= (send %(dur)s get-start) %(ins)s) (or (= (send %(dur)s get-end) -1) (>= (send %(dur)s get-end) %(ins)s))))' % {'dur': self.duration.put(vrs), 'ins': self.instant.put(vrs)}
