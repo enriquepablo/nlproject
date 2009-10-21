@@ -217,8 +217,7 @@ register('During', During)
 
 class DurationOpMixin(Name):
     '''
-    given a set of durations, build a condition for a rule
-    that tests whether there is an intersection between them
+    Abstract ancestor of classes constructed with a sequence of durations
     '''
     def __init__(self, *args):
         self.durations = \
@@ -244,6 +243,20 @@ class Coincide(DurationOpMixin):
 
 
 register('Coincide', Coincide)
+
+class Intersection(DurationOpMixin):
+    '''
+    given a set of durations,
+    put a duration that is the intersection of them all
+    '''
+
+    def put(self, vrs):
+        return """
+                (make-instance of Duration (start (mincomstart %(durs)s))
+                                           (end (maxcomend %(durs)s)))
+                """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations])}
+
+register('Intersection', Intersection)
 
 
 duration_clps = '(defclass Duration (is-a Name) (slot start (type NUMBER) (pattern-match reactive)) (slot end (type NUMBER) (pattern-match reactive)))'
