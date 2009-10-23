@@ -197,10 +197,6 @@ def r_transition(action, workflow, initial, final):
         Finish('T1'),
         Prop(Content('C1'), Has(what=final), Duration(start=Instant('I1'), end=Instant('now')))]))
 
-r_transition(Publish, private, public)
-
-r_transition(Hide, public, private)
-
 def r_workflow_for_content(content_type, workflow, context):
     """
     assign workflow to content_type
@@ -219,6 +215,10 @@ doc_workflow = Workflow('doc_workflow')
 kb.tell(doc_workflow)
 
 r_workflow_for_content(Document, doc_workflow, basic_context)
+
+r_transition(Publish, doc_workflow, private, public)
+
+r_transition(Hide, doc_workflow, public, private)
 
 class Owns(State):
     """
