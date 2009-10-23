@@ -57,6 +57,10 @@ class Thing(Name):
     def __repr__(self):
         return '%s is a %s' % (self.value, self.__class__.__name__)
 
+    @classmethod
+    def from_clips(cls, instance):
+        return cls(str(instance))
+
     def get_ce(self, vrs):
         """
         build CE for clips
