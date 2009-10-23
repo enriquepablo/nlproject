@@ -17,7 +17,7 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from nl import kb, State, Thing, Prop, Rule, Remove, Equals, Instant, Duration, During, Finish, Coincide, MinComStart, MaxComEnd, now
+from nl import kb, State, Thing, Prop, Rule, Remove, Equals, Instant, Duration, During, Finish, Coincide, MinComStart, MaxComEnd
 
 # BASIC STUFF
 
@@ -204,7 +204,8 @@ class Publish(State):
 # If someone publishes some content, it stops having any previous state and has public XXX ¿y si X5 ya termino?
 r15 = Rule([
         Prop(Person('X1'), Publish(what=Content('X2')), Instant('X3')),
-        Prop(Content('X2'), Has(what=Status('X4')), Duration('X5')),
+        Prop(Content('X2'), Has(what=private), Duration('X5')),
+        During(Instant('X3'), Duration('X5'))
         ],[
         Finish(Duration('X5')),
         Prop(Content('X2'), Has(what=public), Duration(start=Instant('X3')))])
@@ -223,7 +224,8 @@ class Hide(State):
 # If someone hides some content, it stops having any previous state and has private
 r17 = Rule([
         Prop(Person('X1'), Hide(what=Content('X2')), Instant('X3')),
-        Prop(Content('X2'), Has(what=Status('X4')), Duration('X5')),
+        Prop(Content('X2'), Has(what=public), Duration('X5')),
+        During(Instant('X3'), Duration('X5'))
         ],[
         Finish(Duration('X5')),
         Prop(Content('X2'), Has(what=private), Duration(start=Instant('X3')))])

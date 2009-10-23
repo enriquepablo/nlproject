@@ -79,12 +79,11 @@ def ask(*sentences):
                     rsp[templ[0]] = str(first[templs.index(templ)])
             if rsp:
                 resp.append(rsp)
-            logger.info('RESP ' + str(resp))
-            resp = 'yes'
         if not resp:
             resp = 'yes'
     else:
         resp = 'no'
+    logger.info('RESP ' + str(resp))
     return resp
 
 def ask_objs(*sentences):

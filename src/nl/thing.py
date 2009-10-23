@@ -105,13 +105,14 @@ class Thing(Name):
         else:
             return '[%s]' % self.value
 
-    def get_ism(self,  templs, queries, newvar='sen'):
+    def get_ism(self,  templs, queries, vrs, newvar='sen'):
         """
         get instance-set method;
         return (instance-set templates, instance-set queries)
         """
         if varpat.match(self.value):
             templs.append((self.value, self.__class__.__name__))
+            vrs[self.value] = ()
         else:
             templs.append((newvar, self.__class__.__name__))
             queries.append('(eq ?%s [%s])' % (newvar, self.value))

@@ -20,7 +20,7 @@
 from log import logger
 from nl.utils import clips, register, Name, varpat, subclasses
 from nl.arith import Number
-from nl.time import Time, now
+from nl.time import Time, Instant
 from nl.thing import Thing
 from nl.state import State
 
@@ -34,7 +34,7 @@ class Proposition(Name):
     clips.Build(clp)
     _v_clips_class = clips.FindClass('Proposition')
 
-    def __init__(self, subj, pred, time=now, truth=1):
+    def __init__(self, subj, pred, time=Instant('now'), truth=1):
         self.truth = truth
         self.subject = subj
         self.predicate = pred
@@ -74,8 +74,7 @@ class Proposition(Name):
         p = self.predicate.get_isc(templs, queries, vrs)
         queries.append('(eq ?%s:predicate %s)' % (newvar, p))
         t = self.time.get_isc(templs, queries, vrs)
-        if not varpat.match(t[1:]):
-            queries.append('(eq ?%s:time %s)' % (newvar, t))
+        queries.append('(eq ?%s:time %s)' % (newvar, t))
         queries.append('(eq ?%s:truth %s)' % (newvar,
                                          self.truth))
         return newvar

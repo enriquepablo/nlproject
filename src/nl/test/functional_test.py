@@ -89,7 +89,7 @@ class cms_test(object):
         # c2 is a content
         c2 = self.cms.Content('c2')
         # john has role manager
-        p1 = nl.Prop(john, self.cms.Has(what=self.cms.manager), self.cms.Duration(start=self.cms.now))
+        p1 = nl.Prop(john, self.cms.Has(what=self.cms.manager), self.cms.Duration(start=self.cms.Instant('now')))
         # jane has create_perm
         p2 = nl.Prop(jane, self.cms.Has(what=self.cms.create_perm), self.cms.Duration(start=self.cms.Instant('now')))
         # jane wants to create c1
@@ -132,6 +132,8 @@ class cms_test(object):
         assert nl.kb.ask(nl.Prop(c1, self.cms.Has(what=self.cms.public), nl.Duration(start=nl.Instant('now')))) == 'yes'
         # to the question can pete view c1?, the answer is yes
         assert nl.kb.ask(nl.Prop(pete, self.cms.Can(what=self.cms.View(what=c1)), nl.Duration(start=nl.Instant('now')))) == 'yes'
+
+        assert nl.kb.ask(self.cms.Content('X1'), nl.Prop(pete, self.cms.Can(what=self.cms.View(what='X1')), nl.Duration(start=nl.Instant('now')))) == [{'X1': 'c1'}]
 
 
 

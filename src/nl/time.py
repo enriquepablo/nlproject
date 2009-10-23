@@ -92,8 +92,6 @@ class Instant(Time):
 
 register('Instant', Instant)
 
-now = Instant('now')
-
 class Duration(Time):
 
     def __init__(self, var='', start=-1, end=-1):
