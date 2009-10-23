@@ -176,8 +176,9 @@ class Duration(Time):
                 else:
                     newvar = self.value
             else:
+                vrs[self.value] = ()
                 newvar = self.value
-        templs.append('(?%s Duration)' % newvar)
+        templs.append((newvar, 'Duration'))
         start = getattr(self, 'start', _m)
         if start is not _m and not (varpat.match(start.value) and start.value not in vrs):
             queries.append('(= ?%s:start %s)' % (newvar,

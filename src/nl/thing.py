@@ -96,11 +96,11 @@ class Thing(Name):
         if varpat.match(self.value):
             if self.value in vrs and vrs[self.value]:
                 newvar = _newvar()
-                templs.append('(?%s %s)' % (newvar,
-                                        self.__class__.__name__))
+                templs.append((newvar, self.__class__.__name__))
                 queries.append('(eq ?%s %s)' % (newvar,
                                      clips_instance(*(vrs[self.value]))))
                 return '?%s' % newvar
+            vrs[self.value] = ()
             return '?%s' % self.value
         else:
             return '[%s]' % self.value
@@ -111,10 +111,9 @@ class Thing(Name):
         return (instance-set templates, instance-set queries)
         """
         if varpat.match(self.value):
-            templs.append('(?%s %s)' % (self.value,
-                                        self.__class__.__name__))
+            templs.append((self.value, self.__class__.__name__))
         else:
-            templs.append('(?%s %s)' % (newvar, self.__class__.__name__))
+            templs.append((newvar, self.__class__.__name__))
             queries.append('(eq ?%s [%s])' % (newvar, self.value))
 
     def put(self, vrs):
@@ -135,10 +134,12 @@ class Thing(Name):
         queries = []
         self.get_ism(templs, queries, newvar='sen')
         if len(queries) > 1:
-            q = '(do-for-all-instances (%s) (and %s) (send ?sen delete))' % (' '.join(templs),
+            q = '(do-for-all-instances (%s) (and %s) (send ?sen delete))' % \
+                       (' '.join(['(?%s %s)' % templ for templ in templs]),
                                                         ' '.join(queries))
         else:
-            q = '(do-for-all-instances (%s) %s (send ?sen delete))' % (' '.join(templs),
+            q = '(do-for-all-instances (%s) %s (send ?sen delete))' % \
+                  (' '.join(['(?%s %s)' % templ for templ in templs]),
                                                 queries and queries[0] or 'TRUE')
         return q
 

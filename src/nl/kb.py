@@ -17,11 +17,12 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import itertools
 #import re
 
 from nl.exceptions import Paradox
 from nl.log import here, logger
-from nl.utils import clips, subclasses
+from nl.utils import clips, subclasses, Name, varpat
 from nl.thing import Thing
 from nl.state import State
 from nl.time import Time
@@ -39,30 +40,55 @@ def tell(*args):
             logger.info(s)
             clips.Eval(s)
 
-def get_instancesn(sentence):
+def get_instancesn(*sentences):
     templs = []
     queries = []
-    sentence.get_ism(templs, queries, {})
+    vrs = {}
+    for sentence in sentences:
+        sentence.get_ism(templs, queries, vrs)
     if len(queries) > 1:
-        q = '(find-all-instances (%s) (and %s))' % (' '.join(templs),
-                                                    ' '.join(queries))
+        q = '(find-all-instances (%s) (and %s))' % \
+            (' '.join(['(?%s %s)' % templ for templ in templs]),
+                               ' '.join(queries))
     else:
-        q = '(find-all-instances (%s) %s)' % (' '.join(templs),
-                                            queries and queries[0] or 'TRUE')
-    return q
+        q = '(find-all-instances (%s) %s)' % \
+                (' '.join(['(?%s %s)' % templ for templ in templs]),
+                               queries and queries[0] or 'TRUE')
+    return q, templs
 
-def get_instances(sentence):
-    q = get_instancesn(sentence)
-    logger.info(q)
-    return clips.Eval(q)
+def get_instances(*sentences):
+    q, templs = get_instancesn(*sentences)
+    logger.info('query: %s\ntempls: %s' % (q, str(templs)))
+    return clips.Eval(q), templs
 
 def retract(sentence):
     for ins in get_instances(sentence):
         clips.FindInstance(ins).Remove()
 
+def ask(*sentences):
+    clps, templs = get_instances(*sentences)
+    resp = []
+    if clps:
+        names = [Name.from_clips(ins) for ins in clps]
+        while names:
+            first = names[:len(templs)]
+            names = names[len(templs):]
+            rsp = {}
+            for templ in templs:
+                if varpat.match(templ[0]) and not templ[0].startswith('Y'):
+                    rsp[templ[0]] = str(first[templs.index(templ)])
+            if rsp:
+                resp.append(rsp)
+            logger.info('RESP ' + str(resp))
+            resp = 'yes'
+        if not resp:
+            resp = 'yes'
+    else:
+        resp = 'no'
+    return resp
 
-def ask_objs(sentence):
-    clps = get_instances(sentence)
+def ask_objs(*sentences):
+    clps = get_instances(*sentences)
     sens = []
     if clps:
         for ins in clps:
@@ -75,8 +101,8 @@ def ask_objs(sentence):
     return sens
 
 
-def ask(sentence):
-    sens = ask_objs(sentence)
+def ask_old(*sentences):
+    sens = ask_objs(*sentences)
     if not sens:
         resp = 'no'
     else:

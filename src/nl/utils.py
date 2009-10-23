@@ -95,6 +95,8 @@ class Name(Persistent):
     def put_var(self, vrs):
         if self.value in vrs and vrs[self.value]:
             return clips_instance(*(vrs[self.value]))
+        if self.value not in vrs:
+            vrs[self.value] = ()
         return '?%s' % self.value
 
 register('Name', Name)

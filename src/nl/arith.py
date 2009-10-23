@@ -135,9 +135,9 @@ class Arith(Number):
         arg2 = self.arg2.put(vrs)
         return '(test (%s %s %s))' % (self.value, arg1, arg2)
 
-    def get_isc(self, templs, queries):
-        arg1 =  self.arg1.put({})
-        arg2 =  self.arg2.put({})
+    def get_isc(self, templs, queries, vrs):
+        arg1 =  self.arg1.put(vrs)
+        arg2 =  self.arg2.put(vrs)
         queries.append('(%s %s %s)' % (self.value, arg1, arg2))
 
     def __str__(self):

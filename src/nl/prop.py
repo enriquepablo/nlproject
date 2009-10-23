@@ -68,7 +68,7 @@ class Proposition(Name):
         get instance-set method;
         return (instance-set templates, instance-set queries)
         """
-        templs.append('(?%s %s)' % (newvar, self.__class__.__name__))
+        templs.append((newvar, self.__class__.__name__))
         s = self.subject.get_isc(templs, queries, vrs)
         queries.append('(eq ?%s:subject %s)' % (newvar, s))
         p = self.predicate.get_isc(templs, queries, vrs)
@@ -105,11 +105,13 @@ class Proposition(Name):
         queries = []
         self.get_ism(templs, queries, vrs, newvar='prop')
         if len(queries) > 1:
-            q = '(do-for-instance (%s) (and %s) (unmake-instance ?prop))' % (' '.join(templs),
-                                                        ' '.join(queries))
+            q = '(do-for-instance (%s) (and %s) (unmake-instance ?prop))' % \
+                     (' '.join(['(?%s %s)' % templ for templ in templs]),
+                                ' '.join(queries))
         else:
-            q = '(do-for-instance (%s) %s (unmake-instance ?prop))' % (' '.join(templs),
-                                                queries and queries[0] or 'TRUE')
+            q = '(do-for-instance (%s) %s (unmake-instance ?prop))' % \
+                     (' '.join(['(?%s %s)' % templ for templ in templs]),
+                                queries and queries[0] or 'TRUE')
         return q
 
 register('Proposition', Proposition)

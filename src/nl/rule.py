@@ -49,7 +49,7 @@ class Rule(Name):
 #         for c in self.cons:
 #             cons.append(c.put_isc(vrs))
 #         if len(queries) > 1:
-#             return '(do-for-all-instances (%s) (and %s) %s)' % (' '.join(templs), ' '.join(queries), ' '.join(cons))
+#             return '(do-for-all-instances (%s) (and %s) %s)' % (' '.join()['(?%s %s)' % templ for templ in templs], ' '.join(queries), ' '.join(cons))
 #         else:
-#             return '(do-for-all-instances (%s) %s %s)' % (' '.join(templs), ' '.join(queries), ' '.join(cons))
+#             return '(do-for-all-instances (%s) %s %s)' % (' '.join(['(?%s %s)' % templ for templ in templs]), ' '.join(queries), ' '.join(cons))
 

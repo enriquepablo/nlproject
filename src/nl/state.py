@@ -174,8 +174,9 @@ class State(Verb):
                 else:
                     newvar = self.value
             else:
+                vrs[self.value] = ()
                 newvar = self.value
-        templs.append('(?%s %s)' % (newvar, self.__class__.__name__))
+        templs.append((newvar, self.__class__.__name__))
         for mod,mcls in self.mods.items():
             mod_o = getattr(self, mod, _m)
             if mod_o is not _m and not (varpat.match(mod_o.value) and mod_o.value not in vrs):
