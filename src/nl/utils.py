@@ -60,8 +60,12 @@ class Name(Persistent):
     def from_clips(cls, instance):
         if not isinstance(instance, clips._clips_wrap.Instance):
             instance = clips.FindInstance(instance)
-        cls = subclasses[str(instance.Class.Name)]
-        return cls(str(instance))
+        clsname = str(instance.Class.Name)
+        cls = subclasses[clsname]
+        if clsname == 'Name':
+            return cls(str(instance))
+        else:
+            return cls.from_clips(instance)
 
     def get_var_constraint(self, vrs, ancestor, mod_path, ci):
         constraint = ''
