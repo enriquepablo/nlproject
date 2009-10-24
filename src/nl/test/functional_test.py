@@ -133,9 +133,24 @@ class cms_test(object):
         # to the question can pete view c1?, the answer is yes
         assert nl.kb.ask(nl.Prop(pete, self.cms.Can(what=self.cms.View(what=c1)), nl.Duration(start=nl.Instant('now')))) == 'yes'
 
+        # what can pete view? -> c1
         assert nl.kb.ask(self.cms.Content('X1'), nl.Prop(pete, self.cms.Can(what=self.cms.View(what='X1')), nl.Duration(start=nl.Instant('now')))) == [{'X1': 'c1'}]
 
+        # who can view what?
+        assert nl.kb.ask(self.cms.Content('X1'), self.cms.Person('X2'), nl.Prop(self.cms.Person('X2'), self.cms.Can(what=self.cms.View(what='X1')), nl.Duration(start=nl.Instant('now')))) == [{'X2': 'admin', 'X1': 'c1'}, {'X2': 'john', 'X1': 'c1'}, {'X2': 'pete', 'X1': 'c1'}, {'X2': 'jane', 'X1': 'c1'}]
 
+        # c2 is private
+        nl.kb.tell(nl.Prop(c2, self.cms.Has(what=self.cms.private), nl.Duration(start=nl.Instant('now'))))
+        nl.kb.extend()
+
+        # who can view what?
+        assert nl.kb.ask(self.cms.Content('X1'), self.cms.Person('X2'), nl.Prop(self.cms.Person('X2'), self.cms.Can(what=self.cms.View(what='X1')), nl.Duration(start=nl.Instant('now')))) == [{'X2': 'admin', 'X1': 'c1'}, {'X2': 'john', 'X1': 'c1'}, {'X2': 'pete', 'X1': 'c1'}, {'X2': 'jane', 'X1': 'c1'}, {'X2': 'admin', 'X1': 'c2'}, {'X2': 'john', 'X1': 'c2'}]
+
+        # what permissions has admin?
+        assert nl.kb.ask(self.cms.Permission('X2'), nl.Prop(self.cms.manager, self.cms.Has(what=self.cms.Permission('X2')), nl.Duration(start=nl.Instant('X3')))) == [{'X2': 'basic_perm'}, {'X2': 'manage_perm'}, {'X2': 'create_perm'}]
+
+        # can admin view c2?
+        assert nl.kb.ask(nl.Prop(self.cms.admin, self.cms.Can(what=self.cms.View(what=c2)), nl.Duration(start=nl.Instant('now')))) == 'yes'
 
 
 
