@@ -20,7 +20,7 @@
 from persistent.dict import PersistentDict
 
 from log import logger
-from nl.utils import register, subclasses, clips, Name, varpat, class_constraint, clips_instance
+from nl.utils import register, subclasses, clips, Name, varpat, class_constraint, clips_instance, get_class
 from nl.arith import Number
 from nl.thing import Thing, _newvar
 
@@ -46,7 +46,8 @@ class MetaState(type):
     def __init__(cls, classname, bases, newdict):
         super(MetaState, cls).__init__(classname, bases, newdict)
         slots = ['(slot %s (type %s) (visibility public) (pattern-match reactive))' % (mod,
-            issubclass(modclass, Number) and '?VARIABLE' or 'INSTANCE')
+            issubclass(get_class(modclass), Number) and \
+                                    '?VARIABLE' or 'INSTANCE')
                   for mod,modclass in cls.mods.items()]
         slots = ' '.join(slots)
         clp = '(defclass %s (is-a %s) %s)' % (classname,

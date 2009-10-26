@@ -1,4 +1,4 @@
-from nl import (Thing, State, Prop, Duration, Instant, During, Coincide,
+from nl import (Thing, State, Prop, Rule, Duration, Instant, During, Coincide,
                 Intersection, Finish, MinComStart, MaxComEnd, kb)
 
 class Person(Thing):
@@ -236,7 +236,7 @@ def r_owner_can_action(action):
     kb.tell( Rule([
         Prop(Person('P1'), Wants(to=action(what=Content('C1'))), Instant('I1')),
         Prop(Person('P1'), Owns(what=Content('C1')), Duration('T1')),
-        Coincide('T1','T2','T3')
+        During('I1','T1')
     ],[
         Prop(Person('P1'), action(what=Content('C1')), Instant('I1'))]))
 
@@ -272,4 +272,4 @@ kb.tell(Rule([
         During('I1', 'T1')
     ],[
         Finish('T1'),
-        Prop(Person('P2'), Owns(what=Content('C1')), Duration(starting=Instant('I1')))]))
+        Prop(Person('P2'), Owns(what=Content('C1')), Duration(start=Instant('I1')))]))

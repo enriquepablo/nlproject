@@ -50,6 +50,9 @@ subclasses = {}
 def register(clsname, cls):
     subclasses[clsname] = cls
 
+def get_class(cls):
+    return isinstance(cls, str) and subclasses[cls] or cls
+
 
 class Name(Persistent):
     """
@@ -108,3 +111,5 @@ def clips_instance(ancestor, mod_path):
         ancestor = send_str % (ancestor, mod)
         send_str = '(send %s get-%s)'
     return ancestor
+
+
