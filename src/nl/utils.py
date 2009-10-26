@@ -18,7 +18,6 @@
 # utils module
 
 import re
-from persistent import Persistent
 
 import clips
 from nl.log import logger
@@ -54,7 +53,7 @@ def get_class(cls):
     return isinstance(cls, str) and subclasses[cls] or cls
 
 
-class Name(Persistent):
+class Name(object):
     """
     """
     _v_clips_class = clips.FindClass('Name')
