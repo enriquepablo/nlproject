@@ -9,11 +9,11 @@ Instant
 
 # if someone wants to do something, and can do it, she does it
 r1 = Rule([
-        Prop(Person('X1'), Wants(to=State('X4')), Time('X2')),
-        Prop(Person('X1'), Can(what=State('X4')), Time('X3')),
+        Fact(Person('X1'), Wants(to=State('X4')), Time('X2')),
+        Fact(Person('X1'), Can(what=State('X4')), Time('X3')),
         During(Time('X2'), Time('X3'))
         ],[
-        Prop(Person('X1'), State('X4'), Time('X2'))])
+        Fact(Person('X1'), State('X4'), Time('X2'))])
 
 def During(inst i, dur d)
     i > d.start and

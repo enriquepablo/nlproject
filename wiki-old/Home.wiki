@@ -10,7 +10,7 @@ There are many structures in the natural languages that cannot be expressed in n
 
 == Usage
 
-The API consists of a few classes, basically {{{ Thing }}}, {{{ State }}}, {{{ Number }}}, {{{ Proposition }}}, and {{{ Rule }}}, and a few functions, basically, {{{ tell }}}, {{{ extend }}} and {{{ ask }}}. These classes are used to build sentences, as instances of them. Afterwards, the function {{{ extend }}} is used to obtain all logical consecuences of a set of sentences, and {{{ ask }}} is used to query the system.
+The API consists of a few classes, basically {{{ Thing }}}, {{{ State }}}, {{{ Number }}}, {{{ Fact }}}, and {{{ Rule }}}, and a few functions, basically, {{{ tell }}}, {{{ extend }}} and {{{ ask }}}. These classes are used to build sentences, as instances of them. Afterwards, the function {{{ extend }}} is used to obtain all logical consecuences of a set of sentences, and {{{ ask }}} is used to query the system.
 
 === Thing
 
@@ -55,9 +55,9 @@ Classes derived from {{{ State }}} are only instantiated as predicates within pr
 
 One natural language verb that should not be represented in nl as subclass of {{{ State }}} is "to be". "To be" is given by the set theory implicit in the class system, as was seen when we built the "john is a man" sentence.
 
-=== Proposition
+=== Fact
 
-{{{ Proposition }}} is instantiated to make propositions, with three positional args representing subject, predicate, and time. As subject, it requires a thing instance, as predicate a state instance, and as time, a number.
+{{{ Fact }}} is instantiated to make propositions, with three positional args representing subject, predicate, and time. As subject, it requires a thing instance, as predicate a state instance, and as time, a number.
 
 {{{
 #!python

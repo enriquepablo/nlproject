@@ -26,13 +26,13 @@ from nl.state import State
 
 _m = []
 
-class Proposition(Name):
+class Fact(Name):
     """
     """
-    clp = '(defclass Proposition (is-a Name) (slot truth (type INTEGER) (default 1) (pattern-match reactive)) (slot subject (type INSTANCE) (pattern-match reactive)) (slot predicate (type INSTANCE) (pattern-match reactive)) (slot time (type ?VARIABLE) (pattern-match reactive)))'
+    clp = '(defclass Fact (is-a Name) (slot truth (type INTEGER) (default 1) (pattern-match reactive)) (slot subject (type INSTANCE) (pattern-match reactive)) (slot predicate (type INSTANCE) (pattern-match reactive)) (slot time (type ?VARIABLE) (pattern-match reactive)))'
     logger.info(clp)
     clips.Build(clp)
-    _v_clips_class = clips.FindClass('Proposition')
+    _v_clips_class = clips.FindClass('Fact')
 
     def __init__(self, subj, pred, time=Instant('now'), truth=1):
         self.truth = truth
@@ -55,7 +55,7 @@ class Proposition(Name):
         p = State.from_clips(instance.GetSlot('predicate'))
         t = Time.from_clips(instance.GetSlot('time'))
         truth = instance.GetSlot('truth')
-        return Prop(s, p, t, truth=truth)
+        return Fact(s, p, t, truth=truth)
 
     def negate(self):
         self.truth = not self.truth and 1 or 0
@@ -83,7 +83,7 @@ class Proposition(Name):
         """
         put proposition in clips as a conditional element of a rule
         """
-        ce = '(logical (object (is-a Proposition) (subject %s) (predicate %s) (time %s) (truth %s)))'
+        ce = '(logical (object (is-a Fact) (subject %s) (predicate %s) (time %s) (truth %s)))'
         return ce % (self.subject.get_slot_constraint(vrs),
                      self.predicate.get_slot_constraint(vrs),
                      self.time.get_slot_constraint(vrs),
@@ -113,13 +113,13 @@ class Proposition(Name):
                                 queries and queries[0] or 'TRUE')
         return q
 
-register('Proposition', Proposition)
-Prop = Proposition
+register('Fact', Fact)
+Fact = Fact
 
 _add_prop = '''
 (deffunction add-prop (?s ?p ?t ?r)
        (bind ?count 0)
-       (do-for-all-instances ((?prop Proposition))
+       (do-for-all-instances ((?prop Fact))
                           (and (eq ?prop:subject ?s)
                                (eq ?prop:predicate ?p)
                                (or (and (eq (class ?t) Duration)
@@ -129,7 +129,7 @@ _add_prop = '''
                                (= ?prop:truth ?r))
                (bind ?count (+ ?count 1)))
         (if (= ?count 0)
-        then (make-instance of Proposition (subject ?s)
+        then (make-instance of Fact (subject ?s)
                                            (predicate ?p)
                                            (time ?t)
                                            (truth ?r))

@@ -17,7 +17,7 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 import Gnuplot
-from nl import kb, State, Thing, Number, Arith, Prop, Rule
+from nl import kb, State, Thing, Number, Arith, Fact, Rule
 
 
 time = '1000'
@@ -68,50 +68,50 @@ class IsForced(State):
 
 
 r1 = Rule([
-           Prop(Body('X1'), HasPosition(x='X2', y='X3'), 'X4'),
-           Prop(Body('X1'), HasSpeed(x='X5', y='X6'), 'X4'),
+           Fact(Body('X1'), HasPosition(x='X2', y='X3'), 'X4'),
+           Fact(Body('X1'), HasSpeed(x='X5', y='X6'), 'X4'),
            Arith('(< X4 %s)' % time)
            ], [
-           Prop(Body('X1'), HasPosition(x='(+ X2 X5)', y='(+ X3 X6)'), '(+ X4 1)')
+           Fact(Body('X1'), HasPosition(x='(+ X2 X5)', y='(+ X3 X6)'), '(+ X4 1)')
            ])
 
 
 r2 = Rule([
-           Prop(Body('X1'), HasSpeed(x='X2', y='X3'), 'X4'),
-           Prop(Body('X1'), HasAcceleration(x='X5', y='X6'), 'X4'),
+           Fact(Body('X1'), HasSpeed(x='X2', y='X3'), 'X4'),
+           Fact(Body('X1'), HasAcceleration(x='X5', y='X6'), 'X4'),
            Arith('(< X4 %s)' % time)
            ], [
-           Prop(Body('X1'), HasSpeed(x='(+ X2 X5)', y='(+ X3 X6)'), '(+ X4 1)')
+           Fact(Body('X1'), HasSpeed(x='(+ X2 X5)', y='(+ X3 X6)'), '(+ X4 1)')
            ])
 
 
 r3 = Rule([
-           Prop(Body('X1'), IsForced(x='X2', y='X3'), 'X4'),
-           Prop(Body('X1'), HasMass(kgs='X5'), 'X4'),
+           Fact(Body('X1'), IsForced(x='X2', y='X3'), 'X4'),
+           Fact(Body('X1'), HasMass(kgs='X5'), 'X4'),
            Arith('(< X4 %s)' % time)
            ], [
-           Prop(Body('X1'), HasAcceleration(x='(/ X2 X5)', y='(/ X3 X5)'), '(+ X4 1)')
+           Fact(Body('X1'), HasAcceleration(x='(/ X2 X5)', y='(/ X3 X5)'), '(+ X4 1)')
            ])
 
 r4 = Rule([
-           Prop(Body('X1'), HasPosition(x='X2', y='X3'), 'X4'),
-           Prop(Body('X1'), HasMass(kgs='X5'), 'X4'),
-           Prop(Body('X6'), HasPosition(x='X7', y='X8'), 'X4'),
-           Prop(Body('X6'), HasMass(kgs='X9'), 'X4'),
+           Fact(Body('X1'), HasPosition(x='X2', y='X3'), 'X4'),
+           Fact(Body('X1'), HasMass(kgs='X5'), 'X4'),
+           Fact(Body('X6'), HasPosition(x='X7', y='X8'), 'X4'),
+           Fact(Body('X6'), HasMass(kgs='X9'), 'X4'),
            Arith('(< X4 %s)' % time),
            Arith('(neq X1 X6)')
            ], [
-           Prop(Body('X1'), IsForced(
+           Fact(Body('X1'), IsForced(
               x='(- 0 (/ (* (* X5 X9) (- X2 X7)) (** (+ (** (- X2 X7) 2) (** (- X3 X8) 2)) (/ 3 2))))',
               y='(- 0 (/ (* (* X5 X9) (- X3 X8)) (** (+ (** (- X2 X7) 2) (** (- X3 X8) 2)) (/ 3 2))))'),
               '(+ X4 1)')])
 
 r5 = Rule([
-           Prop(Body('X1'), HasMass(kgs='X2'), 'X3'),
+           Fact(Body('X1'), HasMass(kgs='X2'), 'X3'),
            Arith('(< X3 %s)' % time)
            ],
            [
-           Prop(Body('X1'), HasMass(kgs='X2'), '(+ X3 1)')
+           Fact(Body('X1'), HasMass(kgs='X2'), '(+ X3 1)')
            ])
 
 
@@ -124,25 +124,25 @@ c2 = Body('c2')
 
 # propositions
 
-p1 = Prop(c1, HasMass(kgs=750), 1)
+p1 = Fact(c1, HasMass(kgs=750), 1)
 
-p2 = Prop(c2, HasMass(kgs=750), 1)
+p2 = Fact(c2, HasMass(kgs=750), 1)
 
-p3 = Prop(c1, HasPosition(x=0, y=0), 1)
+p3 = Fact(c1, HasPosition(x=0, y=0), 1)
 
-p4 = Prop(c2, HasPosition(x=0, y=100), 1)
+p4 = Fact(c2, HasPosition(x=0, y=100), 1)
 
-p5 = Prop(c1, HasSpeed(x=-2, y=0), 1)
+p5 = Fact(c1, HasSpeed(x=-2, y=0), 1)
 
-p6 = Prop(c2, HasSpeed(x=2, y=0), 1)
+p6 = Fact(c2, HasSpeed(x=2, y=0), 1)
 
-p7 = Prop(c1, HasAcceleration(x=0, y=0), 1)
+p7 = Fact(c1, HasAcceleration(x=0, y=0), 1)
 
-p8 = Prop(c2, HasAcceleration(x=0, y=0), 1)
+p8 = Fact(c2, HasAcceleration(x=0, y=0), 1)
 
-p9 = Prop(c1, IsForced(x=0, y=0), 1)
+p9 = Fact(c1, IsForced(x=0, y=0), 1)
 
-p10 = Prop(c2, IsForced(x=0, y=0), 1)
+p10 = Fact(c2, IsForced(x=0, y=0), 1)
 
 kb.open()
 
@@ -152,11 +152,11 @@ for p in (c1, c2, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, r1, r2, r3, r4, r5):
 kb.extend()
 
 
-resp1 = kb.ask_objs(Prop(c1, HasPosition(x='X1', y='X2'), 'X3'))
-resp2 = kb.ask_objs(Prop(c2, HasPosition(x='X1', y='X2'), 'X3'))
+resp1 = kb.ask_objs(Fact(c1, HasPosition(x='X1', y='X2'), 'X3'))
+resp2 = kb.ask_objs(Fact(c2, HasPosition(x='X1', y='X2'), 'X3'))
 
-#resp1 = kb.ask_objs(Prop(c1, IsForced(newton='X1'), 'X2'))
-#resp2 = kb.ask_objs(Prop(c2, IsForced(newton='X1'), 'X2'))
+#resp1 = kb.ask_objs(Fact(c1, IsForced(newton='X1'), 'X2'))
+#resp2 = kb.ask_objs(Fact(c2, IsForced(newton='X1'), 'X2'))
 
 kb.close()
 

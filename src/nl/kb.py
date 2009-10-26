@@ -26,7 +26,7 @@ from nl.utils import clips, subclasses, Name, varpat
 from nl.thing import Thing
 from nl.state import State
 from nl.time import Time
-from nl.prop import Proposition
+from nl.prop import Fact
 from nl.rule import Rule
 
 
@@ -93,10 +93,10 @@ def ask_objs(*sentences):
         for ins in clps:
             if isinstance(sentence, Thing):
                 sens.append(Thing.from_clips(ins))
-            elif isinstance(sentence, Proposition):
+            elif isinstance(sentence, Fact):
                 i = clips.FindInstance(ins)
-                if issubclass(subclasses[str(i.Class.Name)], Proposition):
-                    sens.append(Proposition.from_clips(ins))
+                if issubclass(subclasses[str(i.Class.Name)], Fact):
+                    sens.append(Fact.from_clips(ins))
     return sens
 
 

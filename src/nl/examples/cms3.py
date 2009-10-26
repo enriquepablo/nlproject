@@ -1,4 +1,4 @@
-from nl import (Thing, State, Prop, Rule, Duration, Instant, During, Coincide,
+from nl import (Thing, State, Fact, Rule, Duration, Instant, During, Coincide,
                 Intersection, Finish, MinComStart, MaxComEnd, kb)
 
 class Person(Thing):
@@ -60,7 +60,7 @@ class Has(State):
             'where': Context}
 
 # admin is a manager in the basic context from now on
-kb.tell( Prop(admin, Has(what=manager, where=basic_context), Duration(start='now')) )
+kb.tell( Fact(admin, Has(what=manager, where=basic_context), Duration(start='now')) )
 
 class Permission(Thing):
     """
@@ -80,7 +80,7 @@ def p_role_has_perm(role, perm):
     """
     Role role has permission perm from now on
     """
-    kb.tell( Prop(role, Has(what=perm), Duration(start='now')) )
+    kb.tell( Fact(role, Has(what=perm), Duration(start='now')) )
 
 p_role_has_perm(member, view_perm)
 
@@ -163,14 +163,14 @@ def r_permission(action, status, perm):
     the person performs the given action
     """
     kb.tell( Rule([
-        Prop(Person('P1'), Wants(to=action(what=Content('C1'))), Instant('I1')),
-        Prop(Content('C1'), Has(what=status), Duration('T1')),
-        Prop(Content('C1'), Located(where=Context('X1')), Duration('T1')),
-        Prop(Person('P1'), Has(what=Role('R1'), where=Context('X1')), Duration('T2')),
-        Prop(Role('R1'), Has(what=perm), Duration('T3')),
+        Fact(Person('P1'), Wants(to=action(what=Content('C1'))), Instant('I1')),
+        Fact(Content('C1'), Has(what=status), Duration('T1')),
+        Fact(Content('C1'), Located(where=Context('X1')), Duration('T1')),
+        Fact(Person('P1'), Has(what=Role('R1'), where=Context('X1')), Duration('T2')),
+        Fact(Role('R1'), Has(what=perm), Duration('T3')),
         Coincide('T1','T2','T3')
     ],[
-        Prop(Person('P1'), action(what=Content('C1')), Instant('I1'))]))
+        Fact(Person('P1'), action(what=Content('C1')), Instant('I1'))]))
 
 r_permission(View, public, view_perm)
 
@@ -191,22 +191,22 @@ def r_transition(action, workflow, initial, final):
     from now on it has status final
     """
     kb.tell( Rule([
-        Prop(Person('P1'), action(what=Content('C1')), Instant('I1')),
-        Prop(Content('C1'), Has(what=initial), Duration('T1')),
-        Prop(Content('C1'), Has(what=workflow), Duration('T2')),
+        Fact(Person('P1'), action(what=Content('C1')), Instant('I1')),
+        Fact(Content('C1'), Has(what=initial), Duration('T1')),
+        Fact(Content('C1'), Has(what=workflow), Duration('T2')),
         During('I1', Intersection('T1','T2'))
     ],[
         Finish('T1'),
-        Prop(Content('C1'), Has(what=final), Duration(start=Instant('I1'), end=Instant('now')))]))
+        Fact(Content('C1'), Has(what=final), Duration(start=Instant('I1'), end=Instant('now')))]))
 
 def r_workflow_for_content(content_type, workflow, context):
     """
     assign workflow to content_type
     """
     kb.tell( Rule([
-        Prop(content_type('C1'), Located(where=context), Duration('T1'))
+        Fact(content_type('C1'), Located(where=context), Duration('T1'))
     ],[
-        Prop(content_type('C1'), Has(what=workflow), Duration('T1'))]))
+        Fact(content_type('C1'), Has(what=workflow), Duration('T1'))]))
 
 class Document(Content):
     """
@@ -234,11 +234,11 @@ def r_owner_can_action(action):
     The owner of a content can perform the given action on the content
     """
     kb.tell( Rule([
-        Prop(Person('P1'), Wants(to=action(what=Content('C1'))), Instant('I1')),
-        Prop(Person('P1'), Owns(what=Content('C1')), Duration('T1')),
+        Fact(Person('P1'), Wants(to=action(what=Content('C1'))), Instant('I1')),
+        Fact(Person('P1'), Owns(what=Content('C1')), Duration('T1')),
         During('I1','T1')
     ],[
-        Prop(Person('P1'), action(what=Content('C1')), Instant('I1'))]))
+        Fact(Person('P1'), action(what=Content('C1')), Instant('I1'))]))
 
 r_owner_can_action(View)
 
@@ -258,18 +258,18 @@ class Give(State):
 # if someone wants to give some content to someone else, and owns the content,
 # then he gives it to her
 kb.tell(Rule([
-        Prop(Person('P1'), Wants(to=Give(what=Content('C1'), whom=Person('P2'))), Instant('I1')),
-        Prop(Person('P1'), Owns(what=Content('C1')), Duration('T1')),
+        Fact(Person('P1'), Wants(to=Give(what=Content('C1'), whom=Person('P2'))), Instant('I1')),
+        Fact(Person('P1'), Owns(what=Content('C1')), Duration('T1')),
         During('I1', 'T1')
     ],[
-        Prop(Person('P1'), Give(what=Content('C1'), whom=Person('P2')), Instant('I1'))]))
+        Fact(Person('P1'), Give(what=Content('C1'), whom=Person('P2')), Instant('I1'))]))
 
 # If someone gives some content to someone else, and owns it,
 # then the other owns it from then on
 kb.tell(Rule([
-        Prop(Person('P1'), Give(what=Content('C1'), whom=Person('P2')), Instant('I1')),
-        Prop(Person('P3'), Owns(what=Content('C1')), Duration('T1')),
+        Fact(Person('P1'), Give(what=Content('C1'), whom=Person('P2')), Instant('I1')),
+        Fact(Person('P3'), Owns(what=Content('C1')), Duration('T1')),
         During('I1', 'T1')
     ],[
         Finish('T1'),
-        Prop(Person('P2'), Owns(what=Content('C1')), Duration(start=Instant('I1')))]))
+        Fact(Person('P2'), Owns(what=Content('C1')), Duration(start=Instant('I1')))]))
