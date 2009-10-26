@@ -28,11 +28,10 @@ El put action no hace un make instance en una conclusión; de modo que al cerrar
 
 '''
 from datetime import datetime
-from log import logger
-
-from nl.utils import register, subclasses, clips, Name, varpat, class_constraint, clips_instance
+import clips
+from nl.clps import class_constraint
+from nl.utils import register, subclasses, Name, varpat, clips_instance, _newvar
 from nl.arith import Number
-from nl.thing import _newvar
 
 _m = []
 
@@ -260,70 +259,6 @@ class Intersection(DurationOpMixin):
                 """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations])}
 
 register('Intersection', Intersection)
-
-
-duration_clps = '(defclass Duration (is-a Name) (slot start (type NUMBER) (pattern-match reactive)) (slot end (type NUMBER) (pattern-match reactive)))'
-logger.info(duration_clps)
-clips.Build(duration_clps)
-
-extract_clp = '''
-(deffunction extract-now ($?instants)
-    (if (= (length$ ?instants) 0) then
-        (return -1)
-    else
-        (bind ?count 0)
-        (bind ?not-now (create$))
-        (while (> (length$ ?instants) 0) do
-            (bind ?instant (nth$ 1 ?instants))
-            (bind ?instants (rest$ ?instants))
-            (if (= ?instant -1)
-            then (bind ?count (+ ?count 1))
-            else (bind ?not-now (insert$ ?not-now 1 ?instant)))
-            )
-        (return (insert$ ?not-now 1 ?count))
-    )
-)
-'''
-
-maxcomend_clp = '''
-(deffunction maxcomend ($?durations)
-    (bind ?ends (create$))
-    (while (> (length$ ?durations) 0)
-        (bind ?ends (insert$ ?ends 1 (send (nth$ 1 ?durations) get-end)))
-        (bind ?durations (rest$ ?durations))
-        )
-    (bind ?ret (extract-now ?ends))
-    (bind ?pasts (rest$ ?ret))
-    (if (> (length$ ?pasts) 0)
-    then (return (min (expand$ ?pasts)))
-    else (return -1)
-    )
-)
-'''
-
-mincomstart_clp = '''
-(deffunction mincomstart ($?durations)
-    (bind ?starts (create$))
-    (while (> (length$ ?durations) 0)
-        (bind ?starts (insert$ ?starts 1 (send (nth$ 1 ?durations) get-start)))
-        (bind ?durations (rest$ ?durations))
-        )
-    (bind ?ret (extract-now ?starts))
-    (bind ?nows (nth$ 1 ?ret))
-    (if (> ?nows 0)
-    then (return -1)
-    else (bind ?ret (rest$ ?ret))
-         (return (max (expand$ ?ret)))
-    )
-)
-'''
-
-logger.info(extract_clp)
-clips.Build(extract_clp)
-logger.info(maxcomend_clp)
-clips.Build(maxcomend_clp)
-logger.info(mincomstart_clp)
-clips.Build(mincomstart_clp)
 
 class MinComStart(DurationOpMixin):
     """

@@ -17,26 +17,16 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 #import uuid
-from persistent.dict import PersistentDict
-
+import clips
 from log import logger
-from nl.utils import register, subclasses, clips, Name, varpat, class_constraint, clips_instance, get_class
+from nl.clps import class_constraint
+from nl.utils import register, subclasses, Name, varpat, clips_instance, get_class, _newvar
 from nl.arith import Number
-from nl.thing import Thing, _newvar
+from nl.thing import Thing
 
 
 # marker object
 _m = []
-
-
-clp = '(defclass Verb (is-a USER))'
-logger.info(clp)
-clips.Build(clp)
-
-class Verb(Name):
-    """
-    """
-    _v_clips_class = clips.FindClass('Verb')
 
 
 class MetaState(type):
@@ -45,6 +35,8 @@ class MetaState(type):
     """
     def __init__(cls, classname, bases, newdict):
         super(MetaState, cls).__init__(classname, bases, newdict)
+        if classname == 'State':
+            return
         slots = ['(slot %s (type %s) (visibility public) (pattern-match reactive))' % (mod,
             issubclass(get_class(modclass), Number) and \
                                     '?VARIABLE' or 'INSTANCE')
@@ -65,13 +57,13 @@ class MetaState(type):
         register(classname, cls)
 
 
-class State(Verb):
+class State(Name):
     """
     """
     __metaclass__ = MetaState
 
     subject = Thing
-    mods = PersistentDict()
+    mods = {}
 
     def __init__(self, *args, **kwargs):
         self.value = args and args[0] or ''
@@ -185,40 +177,3 @@ class State(Verb):
 
 
 register('State', State)
-
-_set_tal = '(set-sequence-operator-recognition TRUE)'
-
-_set_slots = """(defmessage-handler State set-slots primary ($?slots)
-        (while (> (length$ ?slots) 0) do
-            (bind ?slot (first$ ?slots))
-            (bind ?vslots (rest$ ?slots))
-            (bind ?value (first$ ?vslots))
-            (bind ?slots (rest$ ?vslots))
-            (dynamic-put $?slot $?value))
-        (return (instance-name ?self)))
-"""
-
-_add_pred ="""
-(deffunction add-pred (?class $?slots)
-        (bind ?key (str-cat ?class $?slots))
-        (bind ?pos (str-index "." ?key))
-        (while ?pos do
-            (bind ?key (str-cat (sub-string 1 (- ?pos 1) ?key)
-                                "_"
-                                (sub-string (+ ?pos 1) (str-length ?key) ?key)))
-            (bind ?pos (str-index "." ?key)))
-        (bind ?key (sym-cat ?key))
-        (if (instance-existp ?key) then
-            (return (instance-name ?key))
-         else
-            (make-instance ?key of ?class)
-            (return (send (instance-name ?key) set-slots $?slots))))
-"""
-
-
-clips.Eval(_set_tal)
-clips.Build(_set_slots)
-clips.Build(_add_pred)
-logger.info(_set_tal)
-logger.info(_set_slots)
-logger.info(_add_pred)

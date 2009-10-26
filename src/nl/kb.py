@@ -19,10 +19,11 @@
 import os
 import itertools
 #import re
+import clips
 
 from nl.exceptions import Paradox
 from nl.log import here, logger
-from nl.utils import clips, subclasses, Name, varpat
+from nl.utils import subclasses, Name, varpat
 from nl.thing import Thing
 from nl.state import State
 from nl.time import Time
@@ -114,15 +115,4 @@ def extend():
     acts = clips.Run()
     logger.info('----------runned: %d---------------------' % acts)
     return acts
-
-# _pred_pat = re.compile('[()\s\[\]]')
-# def make_pred(classname, slots):
-#     key = classname + re.sub(_pred_pat, '', slots)
-#     clp_pred = clips.FindInstance(key)
-#     if not clp_pred:
-#         clp = 'make-instance [%s] of %s %s' % (key, classname, slots)
-#         clp_pred = clips.Eval(clp)
-#     return clp_pred
-# 
-# clips.RegisterPythonFunction(make_pred)
 

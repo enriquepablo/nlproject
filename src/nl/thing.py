@@ -16,15 +16,11 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
+import clips
 from nl.log import logger
-from nl.utils import register, clips, varpat, class_constraint, Name, clips_instance, subclasses
+from nl.clps import class_constraint
+from nl.utils import register, varpat, Name, clips_instance, subclasses, _newvar
 
-_vn = 0
-
-def _newvar():
-    global _vn
-    _vn += 1
-    return 'Y%d' % _vn
 
 class MetaThing(type):
     """

@@ -16,9 +16,10 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
+import clips
 # import logging
-from log import logger
-from nl.utils import clips, register, Name, varpat, subclasses
+from nl.log import logger
+from nl.utils import register, Name, varpat, subclasses
 from nl.arith import Number
 from nl.time import Time, Instant
 from nl.thing import Thing
@@ -29,9 +30,6 @@ _m = []
 class Fact(Name):
     """
     """
-    clp = '(defclass Fact (is-a Name) (slot truth (type INTEGER) (default 1) (pattern-match reactive)) (slot subject (type INSTANCE) (pattern-match reactive)) (slot predicate (type INSTANCE) (pattern-match reactive)) (slot time (type ?VARIABLE) (pattern-match reactive)))'
-    logger.info(clp)
-    clips.Build(clp)
     _v_clips_class = clips.FindClass('Fact')
 
     def __init__(self, subj, pred, time=Instant('now'), truth=1):
@@ -114,26 +112,3 @@ class Fact(Name):
         return q
 
 register('Fact', Fact)
-Fact = Fact
-
-_add_prop = '''
-(deffunction add-prop (?s ?p ?t ?r)
-       (bind ?count 0)
-       (do-for-all-instances ((?prop Fact))
-                          (and (eq ?prop:subject ?s)
-                               (eq ?prop:predicate ?p)
-                               (or (and (eq (class ?t) Duration)
-                                        (= (send (send ?prop get-time) get-start) (send ?t get-start))
-                                        (= (send (send ?prop get-time) get-end) (send ?t get-end)))
-                                   (= ?prop:time ?t))
-                               (= ?prop:truth ?r))
-               (bind ?count (+ ?count 1)))
-        (if (= ?count 0)
-        then (make-instance of Fact (subject ?s)
-                                           (predicate ?p)
-                                           (time ?t)
-                                           (truth ?r))
-        else (return TRUE)))'''
-
-logger.info(_add_prop)
-clips.Build(_add_prop)

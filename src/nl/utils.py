@@ -21,28 +21,17 @@ import re
 
 import clips
 from nl.log import logger
-
-clips.DebugConfig.ExternalTraceback = True
+from nl.clps import class_constraint
 
 # vars are always XNUM
 varpat = re.compile(r'^[A-Z]\w*\d+$')
 
-class_constraint = '?%(val)s&:(or (eq (class ?%(val)s) %(cls)s) (subclassp (class ?%(val)s) %(cls)s))'
-_name_def = '(defclass Name (is-a USER))'
-_reduce_class = '''
-(deffunction reduce-class (?instance ?class)
-    (if (eq (length$
-                (find-all-instances ((?a ?class))(eq (instance-name ?a) ?instance)))
-             0)
-    then (make-instance ?instance of ?class)
-    else (return TRUE)))'''
+_vn = 0
 
-clips.Build(_name_def)
-clips.Build(_reduce_class)
-#clips.Build(_del_daemon)
-logger.info(_name_def)
-logger.info(_reduce_class)
-#logger.info(_del_daemon)
+def _newvar():
+    global _vn
+    _vn += 1
+    return 'Y%d' % _vn
 
 
 subclasses = {}
