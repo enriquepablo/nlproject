@@ -1,3 +1,5 @@
+from nl import (Thing, State, Prop, Duration, Instant, During, Coincide,
+                Intersection, Finish, MinComStart, MaxComEnd, kb)
 
 class Person(Thing):
     """
@@ -41,6 +43,14 @@ kb.tell(editor)
 manager = Role('manager')
 kb.tell(manager)
 
+class Context(Thing):
+    """
+    content can be located in some context
+    """
+
+basic_context = Context('basic_context')
+kb.tell(basic_context)
+
 class Has(State):
     """
     a thing can have other things in a certain context
@@ -50,7 +60,7 @@ class Has(State):
             'where': Context}
 
 # admin is a manager in the basic context from now on
-kb.tell( Prop(admin, Has(what=manager, where=basic_context), Duration(starting='now')) )
+kb.tell( Prop(admin, Has(what=manager, where=basic_context), Duration(start='now')) )
 
 class Permission(Thing):
     """
@@ -70,7 +80,7 @@ def p_role_has_perm(role, perm):
     """
     Role role has permission perm from now on
     """
-    kb.tell( Prop(role, Has(what=perm), Duration(starting='now')) )
+    kb.tell( Prop(role, Has(what=perm), Duration(start='now')) )
 
 p_role_has_perm(member, view_perm)
 
@@ -83,14 +93,6 @@ p_role_has_perm(manager, view_perm)
 p_role_has_perm(manager, edit_perm)
 
 p_role_has_perm(manager, manage_perm)
-
-class Context(Thing):
-    """
-    content can be located in some context
-    """
-
-basic_context = Context('basic_context')
-kb.tell(basic_context)
 
 class Content(Thing):
     """
