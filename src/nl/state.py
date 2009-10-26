@@ -45,7 +45,6 @@ class MetaState(type):
     """
     def __init__(cls, classname, bases, newdict):
         super(MetaState, cls).__init__(classname, bases, newdict)
-        #slots = ['(is-a %s)' % bases[0].__name__]
         slots = ['(slot %s (type %s) (visibility public) (pattern-match reactive))' % (mod,
             issubclass(modclass, Number) and '?VARIABLE' or 'INSTANCE')
                   for mod,modclass in cls.mods.items()]
@@ -53,7 +52,6 @@ class MetaState(type):
         clp = '(defclass %s (is-a %s) %s)' % (classname,
                                               bases[0].__name__,
                                               slots)
-        clp_r = '(defrule (prop(s, p)) => s is-a S)' # XXX follow this? too many rules?
         logger.info(clp)
         clips.Build(clp)
         cls._v_clips_class = clips.FindClass(classname)
