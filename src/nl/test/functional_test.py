@@ -1,4 +1,20 @@
 import nl
+from nl.log import logger
+
+def reset():
+    logger.info('\n\n\n---------RESET-----------\n\n\n')
+    nl.clps.clips.Reset()
+    nl.clps.clips.Clear()
+    reload(nl.clps.clips)
+    reload(nl.clps)
+    reload(nl.thing)
+    reload(nl.state)
+    reload(nl.prop)
+    reload(nl.arith)
+    reload(nl.time)
+    reload(nl.rule)
+    reload(nl.kb)
+    reload(nl)
 
 
 class cms_test(object):
@@ -7,73 +23,14 @@ class cms_test(object):
         self.cms = cms2
 
     def teardown(self):
-        pass
+        reset()
+        del self.cms
 
 #    def thing_test(self):
 #        pooh = self.cms.Person('pooh')
 #        assert repr(pooh) == 'pooh is a Person'
 #        assert str(pooh) == 'pooh'
 
-#    def second_test(self):
-#        # john is a person
-#        john = self.cms.Person('john')
-#        # pete is a person
-#        pete = self.cms.Person('pete')
-#        # jane is a person
-#        jane = self.cms.Person('jane')
-#        # c1 is a content
-#        c1 = self.cms.Content('c1')
-#        # c2 is a content
-#        c2 = self.cms.Content('c2')
-#        # john has role manager
-#        p1 = nl.Fact(john, self.cms.Has(what=self.cms.manager))
-#        # jane has create_perm
-#        p2 = nl.Fact(jane, self.cms.Has(what=self.cms.create_perm))
-#        # jane wants to create c1
-#        p3 = nl.Fact(jane, self.cms.Wants(to=self.cms.Create(what=c1)))
-#        # pete wants to create c2
-#        p4 = nl.Fact(pete, self.cms.Wants(to=self.cms.Create(what=c2)))
-#        # input everything into the db
-#        nl.kb.tell(john, pete, jane, c1, c2, p1, p2, p3, p4)
-#        # to the question is jane owner of c1?, the answer is no
-#        assert nl.kb.ask(nl.Fact(jane, self.cms.IsOwner(of=c1))) == 'no'
-#        # extend the db
-#        nl.kb.extend()
-#        # to the question is jane owner of c1?, the answer is yes
-#        assert nl.kb.ask(nl.Fact(jane, self.cms.IsOwner(of=c1), nl.Duration(start=nl.now))) == 'jane isowner of c1 at %s.0' % nl.time._now
-#        # to the question has c1 private state?, the answer is yes
-#        assert nl.kb.ask(nl.Fact(c1, self.cms.Has(what=self.cms.private))) == 'c1 has what private at %s.0' % nl.time._now
-#        # to the question is pete owner of c2?, the answer is no
-#        assert nl.kb.ask(nl.Fact(pete, self.cms.IsOwner(of=c2))) == 'no'
-#        # jane wants to publish c1
-#        nl.kb.tell(nl.Fact(jane, self.cms.Wants(to=self.cms.Publish(what=c1))))
-#        # pete wants to publish c2
-#        nl.kb.tell(nl.Fact(pete, self.cms.Wants(to=self.cms.Publish(what=c2))))
-#        # extend the db
-#        nl.kb.extend()
-#        # to the question is c1 public?, the answer is no
-#        assert nl.kb.ask(nl.Fact(c1, self.cms.Has(what=self.cms.public))) == 'no'
-#        # to the question is c2 public?, the answer is no
-#        assert nl.kb.ask(nl.Fact(c2, self.cms.Has(what=self.cms.public))) == 'no'
-#        # to the question can jane view c1?, the answer is yes
-#        assert nl.kb.ask(nl.Fact(jane, self.cms.Can(what=self.cms.View(what=c1)))) == 'jane can what view what c1 at %s.0' % nl.time._now
-#        # to the question can pete view c1?, the answer is no
-#        assert nl.kb.ask(nl.Fact(pete, self.cms.Can(what=self.cms.View(what=c1)))) == 'no'
-#        # john wants to publish c1
-#        nl.kb.tell(nl.Fact(john, self.cms.Wants(to=self.cms.Publish(what=c1))))
-#        # extend the db
-#        nl.kb.extend()
-#        # to the question is c1 private?, the answer is no
-#        assert nl.kb.ask(nl.Fact(c1, self.cms.Has(what=self.cms.private))) == 'no'
-#        # to the question is c1 public?, the answer is yes
-#        assert nl.kb.ask(nl.Fact(c1, self.cms.Has(what=self.cms.public))) == 'c1 has what public at -1.0'
-#        # to the question can pete view c1?, the answer is yes
-#        assert nl.kb.ask(nl.Fact(pete, self.cms.Can(what=self.cms.View(what=c1)))) == 'pete can what view what c1 at -1.0'
-#
-#
-#
-#        assert not nl.kb.app.root()['props'].has_key('c1 has what private at -1.0')
-#        assert nl.kb.app.root()['props'].has_key('c1 has what public at -1.0')
 
     def third_test(self):
         #from nl.examples import cms2
@@ -153,4 +110,17 @@ class cms_test(object):
         assert nl.kb.ask(nl.Fact(self.cms.admin, self.cms.Can(what=self.cms.View(what=c2)), nl.Duration(start=nl.Instant('now')))) == 'yes'
 
 
+class cms3_test(object):
+    def setup(self):
+        from nl.examples import cms3
+        self.cms3 = cms3
+
+    def teardown(self):
+        reset()
+        del self.cms3
+
+    def thing_test(self):
+        pooh = self.cms3.Person('pooh')
+        assert repr(pooh) == 'pooh is a Person'
+        assert str(pooh) == 'pooh'
 

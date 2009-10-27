@@ -36,7 +36,6 @@ class MetaThing(type):
         cls._v_clips_class = clips.FindClass(classname)
         register(classname, cls)
 
-# XXX ponerle adjetivos a thing?
 class Thing(Name):
     """
     """
