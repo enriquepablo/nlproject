@@ -123,7 +123,7 @@ class cms3_test(object):
         nl.kb.tell(self.cms.Context(context))
 
     def _add_content(self, content, status, context):
-        nl.kb.tell(self.cms.Content(content),
+        nl.kb.tell(self.cms.Document(content),
                    nl.Fact(self.cms.Content(content),
                            self.cms.Has(what=self.cms.Status(status)),
                            nl.Duration(start=nl.Instant('now'))),
@@ -142,6 +142,9 @@ class cms3_test(object):
         contexts = ('one', 'two', 'three')
         for c in contexts:
             self._add_context(c)
+        self.cms.r_workflow_for_content(self.cms.Document,
+                                        self.cms.doc_workflow,
+                                        self.cms.Context('one'))
         for n in xrange(0, 100, 3):
             for m, c in enumerate(contexts):
                 self._add_content('cpu%d' % (n+m), 'public', c)
@@ -168,3 +171,6 @@ class cms3_test(object):
         assert nl.kb.ask(nl.Fact(self.cms.Person('m3'),
                                  self.cms.Publish(what=self.cms.Content('cpr3')),
                                  nl.Instant('now'))) == 'yes'
+        assert nl.kb.ask(nl.Fact(self.cms.Document('cpr3'),
+                                 self.cms.Has(what=self.cms.Status('public')),
+                                 nl.Duration(start=nl.Instant('now')))) == 'yes'
