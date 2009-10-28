@@ -4,6 +4,8 @@ import clips
 from nl.log import logger
 
 clips.DebugConfig.ExternalTraceback = True
+clips.EngineConfig.ResetGlobals = True
+clips.EngineConfig.IncrementalReset = True
 
 
 # CLIPS SNIPPETS
