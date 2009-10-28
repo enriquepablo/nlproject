@@ -113,14 +113,58 @@ class cms_test(object):
 class cms3_test(object):
     def setup(self):
         from nl.examples import cms3
-        self.cms3 = cms3
+        self.cms = cms3
 
     def teardown(self):
         reset()
-        del self.cms3
+        del self.cms
 
-    def thing_test(self):
-        pooh = self.cms3.Person('pooh')
-        assert repr(pooh) == 'pooh is a Person'
-        assert str(pooh) == 'pooh'
+    def _add_context(self, context):
+        nl.kb.tell(self.cms.Context(context))
 
+    def _add_content(self, content, status, context):
+        nl.kb.tell(self.cms.Content(content),
+                   nl.Fact(self.cms.Content(content),
+                           self.cms.Has(what=self.cms.Status(status)),
+                           nl.Duration(start=nl.Instant('now'))),
+                   nl.Fact(self.cms.Content(content),
+                           self.cms.Located(where=self.cms.Context(context)),
+                           nl.Duration(start=nl.Instant('now'))))
+
+    def _add_user(self, user, role, context):
+        nl.kb.tell(self.cms.Person(user),
+                   nl.Fact(self.cms.Person(user),
+                           self.cms.Has(what=self.cms.Role(role),
+                                        where=self.cms.Context(context)),
+                           nl.Duration(start=nl.Instant('now'))))
+
+    def cms_test(self):
+        contexts = ('one', 'two', 'three')
+        for c in contexts:
+            self._add_context(c)
+        for n in xrange(0, 100, 3):
+            for m, c in enumerate(contexts):
+                self._add_content('cpu%d' % (n+m), 'public', c)
+        for n in xrange(0, 100, 3):
+            for m, c in enumerate(contexts):
+                self._add_content('cpr%d' % (n+m), 'private', c)
+        for n in xrange(0, 50, 3):
+            for m, c in enumerate(contexts):
+                self._add_user('m%d' % (n+m), 'manager', c)
+        for n in xrange(0, 100, 3):
+            for m, c in enumerate(contexts):
+                self._add_user('e%d' % (n+m), 'editor', c)
+        for n in xrange(0, 300, 3):
+            for m, c in enumerate(contexts):
+                self._add_user('u%d' % (n+m), 'member', c)
+
+        nl.kb.tell(nl.Fact(self.cms.Person('m3'),
+                           self.cms.Wants(
+                                   to=self.cms.Publish(
+                                             what=self.cms.Content('cpr3'))),
+                           self.cms.Instant('now')))
+
+        nl.kb.extend()
+        assert nl.kb.ask(nl.Fact(self.cms.Person('m3'),
+                                 self.cms.Publish(what=self.cms.Content('cpr3')),
+                                 nl.Instant('now'))) == 'yes'

@@ -165,10 +165,10 @@ def r_permission(action, status, perm):
     kb.tell( Rule([
         Fact(Person('P1'), Wants(to=action(what=Content('C1'))), Instant('I1')),
         Fact(Content('C1'), Has(what=status), Duration('T1')),
-        Fact(Content('C1'), Located(where=Context('X1')), Duration('T1')),
-        Fact(Person('P1'), Has(what=Role('R1'), where=Context('X1')), Duration('T2')),
-        Fact(Role('R1'), Has(what=perm), Duration('T3')),
-        Coincide('T1','T2','T3')
+        Fact(Content('C1'), Located(where=Context('X1')), Duration('T2')),
+        Fact(Person('P1'), Has(what=Role('R1'), where=Context('X1')), Duration('T3')),
+        Fact(Role('R1'), Has(what=perm), Duration('T4')),
+        During('I1', 'T1','T2','T3','T4')
     ],[
         Fact(Person('P1'), action(what=Content('C1')), Instant('I1'))]))
 
@@ -194,7 +194,7 @@ def r_transition(action, workflow, initial, final):
         Fact(Person('P1'), action(what=Content('C1')), Instant('I1')),
         Fact(Content('C1'), Has(what=initial), Duration('T1')),
         Fact(Content('C1'), Has(what=workflow), Duration('T2')),
-        During('I1', Intersection('T1','T2'))
+        During('I1', 'T1','T2')
     ],[
         Finish('T1'),
         Fact(Content('C1'), Has(what=final), Duration(start=Instant('I1'), end=Instant('now')))]))
