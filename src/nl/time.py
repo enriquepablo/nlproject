@@ -204,14 +204,18 @@ class During(Name):
     given an instant and a duration, build a condition for a rule
     that tests whether the instant is within the duration
     '''
-    def __init__(self, instant, duration):
+    def __init__(self, instant, *durations):
         self.instant = isinstance(instant, Instant) and \
                                    instant or Instant(instant)
-        self.duration = isinstance(duration, str) and \
+        self.durations = [isinstance(duration, str) and \
                                    Duration(duration) or duration
+                                         for duration in durations]
 
     def get_ce(self, vrs):
-        return '(test (and (<= (send %(dur)s get-start) %(ins)s) (or (= (send %(dur)s get-end) -1) (>= (send %(dur)s get-end) %(ins)s))))' % {'dur': self.duration.put(vrs), 'ins': self.instant.put(vrs)}
+        durs = []
+        for duration in self.durations:
+            durs.append('(test (and (<= (send %(dur)s get-start) %(ins)s) (or (= (send %(dur)s get-end) -1) (>= (send %(dur)s get-end) %(ins)s))))' % {'dur': duration.put(vrs), 'ins': self.instant.put(vrs)})
+        return ' '.join(durs)
 
 register('During', During)
 
