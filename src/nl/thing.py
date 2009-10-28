@@ -16,15 +16,11 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
+import clips
 from nl.log import logger
-from nl.utils import register, clips, varpat, class_constraint, Name, clips_instance, subclasses
+from nl.clps import class_constraint
+from nl.utils import register, varpat, Name, clips_instance, subclasses, _newvar
 
-_vn = 0
-
-def _newvar():
-    global _vn
-    _vn += 1
-    return 'Y%d' % _vn
 
 class MetaThing(type):
     """
@@ -40,7 +36,6 @@ class MetaThing(type):
         cls._v_clips_class = clips.FindClass(classname)
         register(classname, cls)
 
-# XXX ponerle adjetivos a thing?
 class Thing(Name):
     """
     """
@@ -56,6 +51,10 @@ class Thing(Name):
 
     def __repr__(self):
         return '%s is a %s' % (self.value, self.__class__.__name__)
+
+    @classmethod
+    def from_clips(cls, instance):
+        return cls(str(instance))
 
     def get_ce(self, vrs):
         """
@@ -92,25 +91,25 @@ class Thing(Name):
         if varpat.match(self.value):
             if self.value in vrs and vrs[self.value]:
                 newvar = _newvar()
-                templs.append('(?%s %s)' % (newvar,
-                                        self.__class__.__name__))
+                templs.append((newvar, self.__class__.__name__))
                 queries.append('(eq ?%s %s)' % (newvar,
                                      clips_instance(*(vrs[self.value]))))
                 return '?%s' % newvar
+            vrs[self.value] = ()
             return '?%s' % self.value
         else:
             return '[%s]' % self.value
 
-    def get_ism(self,  templs, queries, newvar='sen'):
+    def get_ism(self,  templs, queries, vrs, newvar='sen'):
         """
         get instance-set method;
         return (instance-set templates, instance-set queries)
         """
         if varpat.match(self.value):
-            templs.append('(?%s %s)' % (self.value,
-                                        self.__class__.__name__))
+            templs.append((self.value, self.__class__.__name__))
+            vrs[self.value] = ()
         else:
-            templs.append('(?%s %s)' % (newvar, self.__class__.__name__))
+            templs.append((newvar, self.__class__.__name__))
             queries.append('(eq ?%s [%s])' % (newvar, self.value))
 
     def put(self, vrs):
@@ -131,10 +130,12 @@ class Thing(Name):
         queries = []
         self.get_ism(templs, queries, newvar='sen')
         if len(queries) > 1:
-            q = '(do-for-all-instances (%s) (and %s) (send ?sen delete))' % (' '.join(templs),
+            q = '(do-for-all-instances (%s) (and %s) (send ?sen delete))' % \
+                       (' '.join(['(?%s %s)' % templ for templ in templs]),
                                                         ' '.join(queries))
         else:
-            q = '(do-for-all-instances (%s) %s (send ?sen delete))' % (' '.join(templs),
+            q = '(do-for-all-instances (%s) %s (send ?sen delete))' % \
+                  (' '.join(['(?%s %s)' % templ for templ in templs]),
                                                 queries and queries[0] or 'TRUE')
         return q
 

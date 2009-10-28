@@ -11,3 +11,4 @@ develop-eggs/*
 include/*
 log.clp
 *.tar.gz
+.coverage

@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
-from nl import kb, State, Thing, Prop, Rule, Remove, Equals
+from nl import kb, State, Thing, Fact, Rule, Remove, Equals
 
 # BASIC STUFF
 
@@ -35,10 +35,10 @@ class Wants(State):
 
 # if someone wants to do something, and can do it, she does it
 r1 = Rule([
-        Prop(Person('X1'), Wants(to=State('X4'))), # XXX only State can be a var
-        Prop(Person('X1'), Can(what=State('X4')))
+        Fact(Person('X1'), Wants(to=State('X4'))), # XXX only State can be a var
+        Fact(Person('X1'), Can(what=State('X4')))
         ],[
-        Prop(Person('X1'), State('X4'))])
+        Fact(Person('X1'), State('X4'))])
 
 # Has is a verb that takes a person as a subject and a thing as a modificator
 class Has(State):
@@ -52,10 +52,10 @@ class IsNeeded(State):
 
 # If something is needed for some state, and something else has it, that something else can be in that state
 r2 = Rule([
-        Prop(Thing('X2'), IsNeeded(for_action=State('X4'))),
-        Prop(Thing('X1'), Has(what=Thing('X2')))
+        Fact(Thing('X2'), IsNeeded(for_action=State('X4'))),
+        Fact(Thing('X1'), Has(what=Thing('X2')))
         ],[
-        Prop(Thing('X1'), Can(what=State('X4')))])
+        Fact(Thing('X1'), Can(what=State('X4')))])
 
 # IsIn is a verb that takes a Thing as a subject and a Thing as a modificator
 class IsIn(State):
@@ -64,10 +64,10 @@ class IsIn(State):
 
 # if a thing is in another thing, and that another thing is in yet another, the first is in the third as well
 r3 = Rule([
-        Prop(Thing('X1'), IsIn(what=Thing('X2'))),
-        Prop(Thing('X2'), IsIn(what=Thing('X3')))
+        Fact(Thing('X1'), IsIn(what=Thing('X2'))),
+        Fact(Thing('X2'), IsIn(what=Thing('X3')))
         ],[
-        Prop(Thing('X1'), IsIn(what=Thing('X3')))])
+        Fact(Thing('X1'), IsIn(what=Thing('X3')))])
 
 # CONTENT MANAGEMENT
 
@@ -79,20 +79,20 @@ class Permission(Thing): pass
 
 # If a person is in a group, and that group has some permission, the person also has it
 r4 = Rule([
-        Prop(Person('X1'), IsIn(group=Group('X2'))),
-        Prop(Group('X2'), Has(what=Permission('X4')))
+        Fact(Person('X1'), IsIn(group=Group('X2'))),
+        Fact(Group('X2'), Has(what=Permission('X4')))
         ],[
-        Prop(Person('X1'), Has(what=Permission('X4')))])
+        Fact(Person('X1'), Has(what=Permission('X4')))])
 
 # a role s a person
 class Role(Person): pass
 
 # If a person has a role, and that role has some permission, the person also has it
 r5 = Rule([
-        Prop(Person('X1'), Has(what=Role('X2'))),
-        Prop(Role('X2'), Has(what=Permission('X4')))
+        Fact(Person('X1'), Has(what=Role('X2'))),
+        Fact(Role('X2'), Has(what=Permission('X4')))
         ],[
-        Prop(Person('X1'), Has(what=Permission('X4')))])
+        Fact(Person('X1'), Has(what=Permission('X4')))])
 
 # admin is a person
 admin = Person('admin')
@@ -106,16 +106,16 @@ manager = Role('manager')
 r6 = Rule([
         Person('X1')
         ],[
-        Prop(Person('X1'), Has(what=member))])
+        Fact(Person('X1'), Has(what=member))])
 
 # the manager role has every permission
 r9 = Rule([
         Permission('X2'),
         ],[
-        Prop(manager, Has(what=Permission('X2'))),])
+        Fact(manager, Has(what=Permission('X2'))),])
 
 # admin has role manager
-p1 = Prop(admin, Has(what=manager))
+p1 = Fact(admin, Has(what=manager))
 
 # basic_perm is a permission
 basic_perm = Permission('basic_perm')
@@ -123,7 +123,7 @@ basic_perm = Permission('basic_perm')
 manage_perm = Permission('manage_perm')
 
 # the member role has the basic_perm
-p2 = Prop(member, Has(what=basic_perm))
+p2 = Fact(member, Has(what=basic_perm))
 
 # a content is a thing
 class Content(Thing): pass
@@ -143,10 +143,10 @@ create_perm = Permission('create_content')
 
 # if a person wants to create something, and has create_perm, he creates it
 r10 = Rule([
-        Prop(Person('X1'), Wants(to=Create(what=Thing('X33')))),
-        Prop(Person('X1'), Has(what=create_perm))
+        Fact(Person('X1'), Wants(to=Create(what=Thing('X33')))),
+        Fact(Person('X1'), Has(what=create_perm))
         ],[
-        Prop(Person('X1'), Create(what=Thing('X33')))])
+        Fact(Person('X1'), Create(what=Thing('X33')))])
 
 # a status is a thing
 class Status(Thing): pass
@@ -158,11 +158,11 @@ public = Status('public')
 
 # if a person creates some content, the content is private and that person is its owner.
 r7 = Rule([
-        Prop(Person('X1'), Create(what=Content('X2'))),
+        Fact(Person('X1'), Create(what=Content('X2'))),
         ],[
         Content('X2'),
-        Prop(Person('X1'), IsOwner(of=Content('X2'))),
-        Prop(Content('X2'), Has(what=private))])
+        Fact(Person('X1'), IsOwner(of=Content('X2'))),
+        Fact(Content('X2'), Has(what=private))])
 
 # View is a verb that takes a person as subject and a thing as modificator.
 class View(State):
@@ -171,22 +171,22 @@ class View(State):
 
 # if some content is public, the basic_perm is needed to view it
 r12 = Rule([
-        Prop(Content('X1'), Has(what=public))
+        Fact(Content('X1'), Has(what=public))
         ],[
-        Prop(basic_perm, IsNeeded(for_action=View(what=Content('X1'))))])
+        Fact(basic_perm, IsNeeded(for_action=View(what=Content('X1'))))])
 
 # if some content is private, the manage_perm is needed to view it
 r13 = Rule([
-        Prop(Content('X1'), Has(what=private))
+        Fact(Content('X1'), Has(what=private))
         ],[
-        Prop(manage_perm, IsNeeded(for_action=View(what=Content('X1'))))])
+        Fact(manage_perm, IsNeeded(for_action=View(what=Content('X1'))))])
 
 # if someone is owner of some content that is private, she can view it
 r14 = Rule([
-        Prop(Content('X1'), Has(what=private)),
-        Prop(Person('X2'), IsOwner(of=Content('X1')))
+        Fact(Content('X1'), Has(what=private)),
+        Fact(Person('X2'), IsOwner(of=Content('X1')))
         ],[
-        Prop(Person('X2'), Can(what=View(what=Content('X1'))))])
+        Fact(Person('X2'), Can(what=View(what=Content('X1'))))])
 
 # Publish is a verb that takes a person as subject and some content as modificator
 class Publish(State):
@@ -195,16 +195,16 @@ class Publish(State):
 
 # If someone publishes some content, it stops having any previous state and has public
 r15 = Rule([
-        Prop(Person('X1'), Publish(what=Content('X2'))),
+        Fact(Person('X1'), Publish(what=Content('X2'))),
         ],[
-        Remove(Prop(Content('X2'), Has(what=Status('X4')))),
-        Prop(Content('X2'), Has(what=public))])
+        Remove(Fact(Content('X2'), Has(what=Status('X4')))),
+        Fact(Content('X2'), Has(what=public))])
 
 # manage_perm is needed to publish anything
 r16 = Rule([
         Content('X1')
         ],[
-        Prop(manage_perm, IsNeeded(for_action=Publish(what=Content('X1'))))])
+        Fact(manage_perm, IsNeeded(for_action=Publish(what=Content('X1'))))])
 
 # Hide is a verb that takes a person as subject and a content as object
 class Hide(State):
@@ -213,16 +213,16 @@ class Hide(State):
 
 # If someone hides some content, it stops having any previous state and has private
 r17 = Rule([
-        Prop(Person('X1'), Hide(what=Content('X2')))
+        Fact(Person('X1'), Hide(what=Content('X2')))
         ],[
-        Remove(Prop(Content('X2'), Has(what=Status('X3')))),
-        Prop(Content('X2'), Has(what=private))])
+        Remove(Fact(Content('X2'), Has(what=Status('X3')))),
+        Fact(Content('X2'), Has(what=private))])
 
 # if a person is the owner of some content, she can hide it
 r18 = Rule([
-        Prop(Person('X1'), IsOwner(of=Content('X2')))
+        Fact(Person('X1'), IsOwner(of=Content('X2')))
         ],[
-        Prop(Person('X1'), Can(what=Hide(what=Content('X2'))))])
+        Fact(Person('X1'), Can(what=Hide(what=Content('X2'))))])
 
 
 # enter everything into the database

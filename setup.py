@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "nl",
-    version = "0.77",
+    version = "0.81",
     url = 'http://bitbucket.org/enriquepablo/nl/wiki/Home',
     license = 'GPL',
     description = "A python library that provides a production system with an API modelled on the natural language",
@@ -17,7 +17,7 @@ setup(
                    "Topic :: Software Development :: Libraries :: Python Modules"
                   ],
     zip_safe = False,
-    install_requires = ['setuptools', 'ZODB3', 'pyclips'],
+    install_requires = ['setuptools', 'pyclips'],
     dependency_links = [
         'http://downloads.sourceforge.net/sourceforge/pyclips/pyclips-1.0.7.348_clips_6.24-py2.5-linux-i686.egg',
     ]

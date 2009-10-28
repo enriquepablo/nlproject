@@ -18,35 +18,31 @@
 # utils module
 
 import re
-from persistent import Persistent
 
 import clips
 from nl.log import logger
-
-clips.DebugConfig.ExternalTraceback = True
+from nl.clps import class_constraint
 
 # vars are always XNUM
 varpat = re.compile(r'^[A-Z]\w*\d+$')
 
-class_constraint = '?%(val)s&:(or (eq (class ?%(val)s) %(cls)s) (subclassp (class ?%(val)s) %(cls)s))'
-_name_def = '(defclass Name (is-a USER))'
-_reduce_class = '(deffunction reduce-class (?instance ?class) (if (eq (length$ (find-instance ((?a ?class)) (eq (instance-name ?a) ?instance))) 0) then (make-instance ?instance of ?class) (python-call tonl ?class ?instance)))'
-#_del_daemon = '(defmessage-handler Name delete before () (python-call rmnl (class ?self) ?self))'
+_vn = 0
 
-clips.Build(_name_def)
-clips.Build(_reduce_class)
-#clips.Build(_del_daemon)
-logger.info(_name_def)
-logger.info(_reduce_class)
-#logger.info(_del_daemon)
+def _newvar():
+    global _vn
+    _vn += 1
+    return 'Y%d' % _vn
 
 
 subclasses = {}
 def register(clsname, cls):
     subclasses[clsname] = cls
 
+def get_class(cls):
+    return isinstance(cls, str) and subclasses[cls] or cls
 
-class Name(Persistent):
+
+class Name(object):
     """
     """
     _v_clips_class = clips.FindClass('Name')
@@ -55,8 +51,12 @@ class Name(Persistent):
     def from_clips(cls, instance):
         if not isinstance(instance, clips._clips_wrap.Instance):
             instance = clips.FindInstance(instance)
-        cls = subclasses[str(instance.Class.Name)]
-        return cls(str(instance))
+        clsname = str(instance.Class.Name)
+        cls = subclasses[clsname]
+        if clsname == 'Name':
+            return cls(str(instance))
+        else:
+            return cls.from_clips(instance)
 
     def get_var_constraint(self, vrs, ancestor, mod_path, ci):
         constraint = ''
@@ -67,7 +67,7 @@ class Name(Persistent):
             else:
                 constraint = '&:(eq %s ?%s)' % (ci, self.value)
         else:
-            constraint = '&:(or (eq (class %(val)s) %(cls)s) (subclassp (class %(val)s) %(cls)s))' % {'val': ci, 'cls': self.__class__.__name__}
+            constraint = '&:(or (eq (class %(ci)s) %(cls)s) (subclassp (class %(ci)s) %(cls)s))' % {'ci': ci, 'cls': self.__class__.__name__}
             vrs[self.value] = (ancestor, mod_path)
         return constraint
 
@@ -86,6 +86,8 @@ class Name(Persistent):
     def put_var(self, vrs):
         if self.value in vrs and vrs[self.value]:
             return clips_instance(*(vrs[self.value]))
+        if self.value not in vrs:
+            vrs[self.value] = ()
         return '?%s' % self.value
 
 register('Name', Name)
@@ -97,3 +99,5 @@ def clips_instance(ancestor, mod_path):
         ancestor = send_str % (ancestor, mod)
         send_str = '(send %s get-%s)'
     return ancestor
+
+

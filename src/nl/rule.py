@@ -39,17 +39,3 @@ class Rule(Name):
                                           ' '.join(cprems),
                                           ' '.join(ccons))
 
-#     def put_ism(self):
-#         vrs = {}
-#         templs = []
-#         queries = []
-#         cons = []
-#         for p in self.prems:
-#             p.get_isc(vrs, templs, queries)
-#         for c in self.cons:
-#             cons.append(c.put_isc(vrs))
-#         if len(queries) > 1:
-#             return '(do-for-all-instances (%s) (and %s) %s)' % (' '.join(templs), ' '.join(queries), ' '.join(cons))
-#         else:
-#             return '(do-for-all-instances (%s) %s %s)' % (' '.join(templs), ' '.join(queries), ' '.join(cons))
-

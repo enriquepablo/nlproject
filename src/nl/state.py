@@ -17,26 +17,16 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 #import uuid
-from persistent.dict import PersistentDict
-
+import clips
 from log import logger
-from nl.utils import register, subclasses, clips, Name, varpat, class_constraint, clips_instance
+from nl.clps import class_constraint
+from nl.utils import register, subclasses, Name, varpat, clips_instance, get_class, _newvar
 from nl.arith import Number
-from nl.thing import Thing, _newvar
+from nl.thing import Thing
 
 
 # marker object
 _m = []
-
-
-clp = '(defclass Verb (is-a USER))'
-logger.info(clp)
-clips.Build(clp)
-
-class Verb(Name):
-    """
-    """
-    _v_clips_class = clips.FindClass('Verb')
 
 
 class MetaState(type):
@@ -45,15 +35,16 @@ class MetaState(type):
     """
     def __init__(cls, classname, bases, newdict):
         super(MetaState, cls).__init__(classname, bases, newdict)
-        #slots = ['(is-a %s)' % bases[0].__name__]
+        if classname == 'State':
+            return
         slots = ['(slot %s (type %s) (visibility public) (pattern-match reactive))' % (mod,
-            issubclass(modclass, Number) and '?VARIABLE' or 'INSTANCE')
+            issubclass(get_class(modclass), Number) and \
+                                    '?VARIABLE' or 'INSTANCE')
                   for mod,modclass in cls.mods.items()]
         slots = ' '.join(slots)
         clp = '(defclass %s (is-a %s) %s)' % (classname,
                                               bases[0].__name__,
                                               slots)
-        clp_r = '(defrule (prop(s, p)) => s is-a S)' # XXX follow this? too many rules?
         logger.info(clp)
         clips.Build(clp)
         cls._v_clips_class = clips.FindClass(classname)
@@ -66,13 +57,13 @@ class MetaState(type):
         register(classname, cls)
 
 
-class State(Verb):
+class State(Name):
     """
     """
     __metaclass__ = MetaState
 
     subject = Thing
-    mods = PersistentDict()
+    mods = {}
 
     def __init__(self, *args, **kwargs):
         self.value = args and args[0] or ''
@@ -174,8 +165,9 @@ class State(Verb):
                 else:
                     newvar = self.value
             else:
+                vrs[self.value] = ()
                 newvar = self.value
-        templs.append('(?%s %s)' % (newvar, self.__class__.__name__))
+        templs.append((newvar, self.__class__.__name__))
         for mod,mcls in self.mods.items():
             mod_o = getattr(self, mod, _m)
             if mod_o is not _m and not (varpat.match(mod_o.value) and mod_o.value not in vrs):
@@ -185,41 +177,3 @@ class State(Verb):
 
 
 register('State', State)
-
-#_init_daemon = '(defmessage-handler State init after () (python-call pred_tonl ?self))'
-_set_tal = '(set-sequence-operator-recognition TRUE)'
-
-_set_slots = """(defmessage-handler State set-slots primary ($?slots)
-        (while (> (length$ ?slots) 0) do
-            (bind ?slot (first$ ?slots))
-            (bind ?vslots (rest$ ?slots))
-            (bind ?value (first$ ?vslots))
-            (bind ?slots (rest$ ?vslots))
-            (dynamic-put $?slot $?value))
-        (return (instance-name ?self)))
-"""
-
-_add_pred ="""
-(deffunction add-pred (?class $?slots)
-        (bind ?key (str-cat ?class $?slots))
-        (bind ?pos (str-index "." ?key))
-        (while ?pos do
-            (bind ?key (str-cat (sub-string 1 (- ?pos 1) ?key)
-                                "_"
-                                (sub-string (+ ?pos 1) (str-length ?key) ?key)))
-            (bind ?pos (str-index "." ?key)))
-        (bind ?key (sym-cat ?key))
-        (if (instance-existp ?key) then
-            (return (instance-name ?key))
-         else
-            (make-instance ?key of ?class)
-            (return (send (instance-name ?key) set-slots $?slots))))
-"""
-
-
-clips.Eval(_set_tal)
-clips.Build(_set_slots)
-clips.Build(_add_pred)
-logger.info(_set_tal)
-logger.info(_set_slots)
-logger.info(_add_pred)

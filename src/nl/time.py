@@ -9,11 +9,11 @@ Instant
 
 # if someone wants to do something, and can do it, she does it
 r1 = Rule([
-        Prop(Person('X1'), Wants(to=State('X4')), Time('X2')),
-        Prop(Person('X1'), Can(what=State('X4')), Time('X3')),
+        Fact(Person('X1'), Wants(to=State('X4')), Time('X2')),
+        Fact(Person('X1'), Can(what=State('X4')), Time('X3')),
         During(Time('X2'), Time('X3'))
         ],[
-        Prop(Person('X1'), State('X4'), Time('X2'))])
+        Fact(Person('X1'), State('X4'), Time('X2'))])
 
 def During(inst i, dur d)
     i > d.start and
@@ -28,16 +28,15 @@ El put action no hace un make instance en una conclusión; de modo que al cerrar
 
 '''
 from datetime import datetime
-from log import logger
-
-from nl.utils import register, subclasses, clips, Name, varpat, class_constraint, clips_instance
+import clips
+from nl.clps import class_constraint
+from nl.utils import register, subclasses, Name, varpat, clips_instance, _newvar
 from nl.arith import Number
-from nl.thing import _newvar
 
 _m = []
 
 
-# not thread safe
+# XXX not thread safe
 _now = str(datetime.now().toordinal())
 
 def start_instant():
@@ -74,9 +73,23 @@ class Instant(Time):
         else:
             super(Instant, self).__init__(*args, **kwargs)
 
-register('Instant', Instant)
+#    def get_isc(self, vrs):
+#        """
+#        """
+#        if varpat.match(self.value):
+#            if self.value in vrs and vrs[self.value]:
+#                return clips_instance(*(vrs[self.value]))
+#            return '?%s' % self.value
+#        try:
+#            return str(float(self.value))
+#        except ValueError:
+#            arg1 = self.arg1 != '' and self.arg1._get_number(vrs) or ''
+#            arg2 = self.arg2 != '' and self.arg2._get_number(vrs) or ''
+#            val '(%s %s %s)' % (self.value, arg1, arg2)
+#
+#'(or (and (eq (class %(ci)s) Duration) (<= (send %(ci)s get-start) %(val)s)) ())'
 
-now = Instant('now')
+register('Instant', Instant)
 
 class Duration(Time):
 
@@ -92,8 +105,14 @@ class Duration(Time):
         else:
             self.end = isinstance(end, Instant) and end or \
                                                   Instant(end)
-            if self.end.value == _now:
-                self.end = Instant('-1')
+            if float(self.end.value) == float(_now):
+                self.end = Instant('-1.0')
+
+    def __str__(self):
+        if varpat.match(self.value):
+            return self.put_var({})
+        else:
+            return 'from %s till %s' % (self.start.put({}), self.end.put({}))
 
     @classmethod
     def from_clips(cls, instance):
@@ -116,8 +135,8 @@ class Duration(Time):
         if varpat.match(self.value):
             return self.get_var_constraint(vrs, ancestor, mod_path, ci)
         else:
-            core = '(= (send %s get-start) %s)' % (ci, self.start.get_slot_constraint(vrs))
-            return '&:(and %s (= (send %s get-end) %s))' % (core, ci, self.end.get_slot_constraint(vrs))
+            core = '(= (send %s get-start) %s)' % (ci, self.start.get_constraint(vrs))
+            return '&:(and %s (= (send %s get-end) %s))' % (core, ci, self.end.get_constraint(vrs))
 
 # XXX falta resolver el caso en ambos get constraint de que no haya end.
 
@@ -154,8 +173,9 @@ class Duration(Time):
                 else:
                     newvar = self.value
             else:
+                vrs[self.value] = ()
                 newvar = self.value
-        templs.append('(?%s Duration)' % newvar)
+        templs.append((newvar, 'Duration'))
         start = getattr(self, 'start', _m)
         if start is not _m and not (varpat.match(start.value) and start.value not in vrs):
             queries.append('(= ?%s:start %s)' % (newvar,
@@ -166,17 +186,12 @@ class Duration(Time):
                                            end.get_isc(templs, queries, vrs)))
         return '?%s' % newvar
 
-    def __str__(self):
-        if varpat.match(self.value):
-            return self.put_var({})
-        else:
-            return 'from %s till %s' % (self.start.put({}), self.end.put({}))
-
 register('Duration', Duration)
 
 class Finish(Name):
     def __init__(self, duration):
-        self.duration = duration
+        self.duration = isinstance(duration, Duration) and \
+                                duration or Duration(duration)
 
     def put_action(self, vrs):
         return '(send %s put-end %s)' % (self.duration.put(vrs), _now)
@@ -186,80 +201,87 @@ register('Finish', Finish)
 
 class During(Name):
     '''
+    given an instant and a duration, build a condition for a rule
+    that tests whether the instant is within the duration
     '''
-    def __init__(self, instant, duration):
-        self.instant = instant
-        self.duration = duration
+    def __init__(self, instant, *durations):
+        self.instant = isinstance(instant, Instant) and \
+                                   instant or Instant(instant)
+        self.durations = [isinstance(duration, str) and \
+                                   Duration(duration) or duration
+                                         for duration in durations]
 
     def get_ce(self, vrs):
-        return '(test (and (<= (send %(dur)s get-start) %(ins)s) (or (= (send %(dur)s get-end) -1) (>= (send %(dur)s get-end) %(ins)s))))' % {'dur': self.duration.put(vrs), 'ins': self.instant.put(vrs)}
+        durs = []
+        for duration in self.durations:
+            durs.append('(test (and (<= (send %(dur)s get-start) %(ins)s) (or (= (send %(dur)s get-end) -1) (>= (send %(dur)s get-end) %(ins)s))))' % {'dur': duration.put(vrs), 'ins': self.instant.put(vrs)})
+        return ' '.join(durs)
 
 register('During', During)
 
 
-class Coincide(Name):
+class DurationOpMixin(Name):
     '''
+    Abstract ancestor of classes constructed with a sequence of durations
     '''
-    def __init__(self, dur1, dur2):
-        self.dur1 = isinstance(dur1, Duration) and dur1 or Duration(dur1)
-        self.dur2 = isinstance(dur2, Duration) and dur1 or Duration(dur2)
+    def __init__(self, *args):
+        self.durations = \
+          [isinstance(dur, Duration) and dur or Duration(dur) for dur in args]
+
+
+register('DurationOpMixin', DurationOpMixin)
+
+
+class Coincide(DurationOpMixin):
+    '''
+    given a set of durations, build a condition for a rule
+    that tests whether there is an intersection between them
+    '''
 
     def get_ce(self, vrs):
-        return '(test (or (and (>= (send %(dur1)s get-start) (send %(dur2)s get-start)) (or (<= (send %(dur1)s get-start) (send %(dur2)s get-end)) (= (send %(dur2)s get-end) -1))) (and (>= (send %(dur2)s get-start) (send %(dur1)s get-start)) (or (<= (send %(dur2)s get-start) (send %(dur1)s get-end)) (= (send %(dur2)s get-end) -1)))))' % {'dur1': self.dur1.put(vrs), 'dur2': self.dur2.put(vrs)}
+        return """
+                (test (or (and (> (mincomstart %(durs)s) -1)
+                               (<= (mincomstart %(durs)s) (maxcomend %(durs)s)))
+                          (= (maxcomend %(durs)s) -1))
+                )
+                """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations])}
+
 
 register('Coincide', Coincide)
 
-
-duration_clps = '(defclass Duration (is-a Name) (slot start (type NUMBER) (pattern-match reactive)) (slot end (type NUMBER) (pattern-match reactive)))'
-logger.info(duration_clps)
-clips.Build(duration_clps) # XXX esto no debbería ir aquí, sino en un método de inicialización.
-
-mincomstart_clps = '''
-
-(deffunction mincomstart (?dur1 ?dur2)
-    (return (max (send ?dur1 get-start) (send ?dur2 get-start)))
-)
-'''
-
-clips.Build(mincomstart_clps)
-logger.info(mincomstart_clps)
-
-class MinComStart(Name):
-    def __init__(self, dur1, dur2):
-        self.dur1 = isinstance(dur1, Duration) and dur1 or Duration(dur1)
-        self.dur2 = isinstance(dur2, Duration) and dur1 or Duration(dur2)
+class Intersection(DurationOpMixin):
+    '''
+    given a set of durations,
+    put a duration that is the intersection of them all
+    assume that the intersection exists
+    '''
 
     def put(self, vrs):
-        return '(mincomstart %s %s)' % (self.dur1.put(vrs), self.dur2.put(vrs))
+        return """
+                (make-instance of Duration (start (mincomstart %(durs)s))
+                                           (end (maxcomend %(durs)s)))
+                """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations])}
+
+register('Intersection', Intersection)
+
+class MinComStart(DurationOpMixin):
+    """
+    given a set of durations, find out the minimum common instant
+    """
+
+    def put(self, vrs):
+        instants = [dur.put(vrs) for dur in self.durations]
+        return '(mincomstart %s)' % ' '.join(instants)
 
 register('MinComStart', MinComStart)
 
-maxcomend_clps = '''
-
-(deffunction maxcomend (?dur1 ?dur2)
-    (bind ?e1 (send ?dur1 get-end))
-    (bind ?e2 (send ?dur2 get-end))
-    (if (= ?e1 ?e2) then (return ?e1))
-    (if (= ?e2 -1) then
-        (return ?e1)
-    )
-    (if (= ?e1 -1) then
-        (return ?e2)
-    )
-    (return (min ?e1 ?e2))
-)
-'''
-
-
-logger.info(maxcomend_clps)
-clips.Build(maxcomend_clps)
-
-class MaxComEnd(Name):
-    def __init__(self, dur1, dur2):
-        self.dur1 = isinstance(dur1, Duration) and dur1 or Duration(dur1)
-        self.dur2 = isinstance(dur2, Duration) and dur1 or Duration(dur2)
+class MaxComEnd(DurationOpMixin):
+    """
+    given a set of durations, find out the maximum common instant
+    """
 
     def put(self, vrs):
-        return '(maxcomend %s %s)' % (self.dur1.put(vrs), self.dur2.put(vrs))
+        instants = [dur.put(vrs) for dur in self.durations]
+        return '(maxcomend %s)' % ' '.join(instants)
 
 register('MaxComEnd', MaxComEnd)

@@ -21,7 +21,7 @@
         (default ?NONE)
         (create-accessor read-write)))
 
-(defclass Proposition "nl truth valued expression"
+(defclass Fact "nl truth valued expression"
     (is-a USER)
     (pattern-match reactive)
 

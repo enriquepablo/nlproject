@@ -16,25 +16,23 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
+import clips
 # import logging
-from log import logger
-from nl.utils import clips, register, Name, varpat, subclasses
+from nl.log import logger
+from nl.utils import register, Name, varpat, subclasses
 from nl.arith import Number
-from nl.time import Time, now
+from nl.time import Time, Instant
 from nl.thing import Thing
 from nl.state import State
 
 _m = []
 
-class Proposition(Name):
+class Fact(Name):
     """
     """
-    clp = '(defclass Proposition (is-a Name) (slot truth (type INTEGER) (default 1) (pattern-match reactive)) (slot subject (type INSTANCE) (pattern-match reactive)) (slot predicate (type INSTANCE) (pattern-match reactive)) (slot time (type ?VARIABLE) (pattern-match reactive)))'
-    logger.info(clp)
-    clips.Build(clp)
-    _v_clips_class = clips.FindClass('Proposition')
+    _v_clips_class = clips.FindClass('Fact')
 
-    def __init__(self, subj, pred, time=now, truth=1):
+    def __init__(self, subj, pred, time=Instant('now'), truth=1):
         self.truth = truth
         self.subject = subj
         self.predicate = pred
@@ -55,7 +53,7 @@ class Proposition(Name):
         p = State.from_clips(instance.GetSlot('predicate'))
         t = Time.from_clips(instance.GetSlot('time'))
         truth = instance.GetSlot('truth')
-        return Prop(s, p, t, truth=truth)
+        return Fact(s, p, t, truth=truth)
 
     def negate(self):
         self.truth = not self.truth and 1 or 0
@@ -68,14 +66,13 @@ class Proposition(Name):
         get instance-set method;
         return (instance-set templates, instance-set queries)
         """
-        templs.append('(?%s %s)' % (newvar, self.__class__.__name__))
+        templs.append((newvar, self.__class__.__name__))
         s = self.subject.get_isc(templs, queries, vrs)
         queries.append('(eq ?%s:subject %s)' % (newvar, s))
         p = self.predicate.get_isc(templs, queries, vrs)
         queries.append('(eq ?%s:predicate %s)' % (newvar, p))
         t = self.time.get_isc(templs, queries, vrs)
-        if not varpat.match(t[1:]):
-            queries.append('(eq ?%s:time %s)' % (newvar, t))
+        queries.append('(eq ?%s:time %s)' % (newvar, t))
         queries.append('(eq ?%s:truth %s)' % (newvar,
                                          self.truth))
         return newvar
@@ -84,7 +81,7 @@ class Proposition(Name):
         """
         put proposition in clips as a conditional element of a rule
         """
-        ce = '(logical (object (is-a Proposition) (subject %s) (predicate %s) (time %s) (truth %s)))'
+        ce = '(logical (object (is-a Fact) (subject %s) (predicate %s) (time %s) (truth %s)))'
         return ce % (self.subject.get_slot_constraint(vrs),
                      self.predicate.get_slot_constraint(vrs),
                      self.time.get_slot_constraint(vrs),
@@ -105,39 +102,13 @@ class Proposition(Name):
         queries = []
         self.get_ism(templs, queries, vrs, newvar='prop')
         if len(queries) > 1:
-            q = '(do-for-instance (%s) (and %s) (python-call rmnl (class ?prop) ?prop) (unmake-instance ?prop))' % (' '.join(templs),
-                                                        ' '.join(queries))
+            q = '(do-for-instance (%s) (and %s) (unmake-instance ?prop))' % \
+                     (' '.join(['(?%s %s)' % templ for templ in templs]),
+                                ' '.join(queries))
         else:
-            q = '(do-for-instance (%s) %s (python-call rmnl (class ?prop) ?prop) (unmake-instance ?prop))' % (' '.join(templs),
-                                                queries and queries[0] or 'TRUE')
+            q = '(do-for-instance (%s) %s (unmake-instance ?prop))' % \
+                     (' '.join(['(?%s %s)' % templ for templ in templs]),
+                                queries and queries[0] or 'TRUE')
         return q
 
-register('Proposition', Proposition)
-Prop = Proposition
-
-#_add_prop = '(deffunction add-prop (?s ?p ?t ?r) (if (python-call ptonl ?s ?p ?t ?r) then (make-instance of Proposition (subject ?s) (predicate ?p) (time ?t) (truth ?r)) else (return TRUE)))'
-
-_add_prop = '''
-(deffunction add-prop (?s ?p ?t ?r)
-       (if (and (python-call ptonl ?s ?p ?t ?r)
-                (= (+ (length$ (find-instance ((?prop Proposition) (?dur Duration))
-                          (and (eq ?prop:subject ?s)
-                               (eq ?prop:predicate ?p)
-                               (eq ?prop:time ?dur)
-                               (= ?dur:start (send ?t get-start))
-                               (= ?dur:end (send ?t get-end))
-                               (eq ?prop:truth ?r))))
-                      (length$ (find-instance ((?prop Proposition))
-                          (and (eq ?prop:subject ?s)
-                               (eq ?prop:predicate ?p)
-                               (= ?prop:time ?t)
-                               (eq ?prop:truth ?r)))))
-                 0))
-        then (make-instance of Proposition (subject ?s)
-                                           (predicate ?p)
-                                           (time ?t)
-                                           (truth ?r))
-        else (return TRUE)))'''
-
-logger.info(_add_prop)
-clips.Build(_add_prop)
+register('Fact', Fact)
