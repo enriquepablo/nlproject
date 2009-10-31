@@ -12,3 +12,4 @@ include/*
 log.clp
 *.tar.gz
 .coverage
+*.egg
