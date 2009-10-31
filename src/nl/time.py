@@ -1,32 +1,20 @@
 # -*- coding: utf-8 -*-
-'''
-Instant
-    * en una frase -- un num
-    * en una condición -- num / var / arith / now
-    * en una conclusión -- num / var / arith
-
-
-
-# if someone wants to do something, and can do it, she does it
-r1 = Rule([
-        Fact(Person('X1'), Wants(to=State('X4')), Time('X2')),
-        Fact(Person('X1'), Can(what=State('X4')), Time('X3')),
-        During(Time('X2'), Time('X3'))
-        ],[
-        Fact(Person('X1'), State('X4'), Time('X2'))])
-
-def During(inst i, dur d)
-    i > d.start and
-    (not d.end or i < dend)
-
-hay instante y duration. duration tiene instantes start y end.
-una duration siempre tiene start. si no tiene end, se entiende que es futuro.
-la definición de durante es la de arriba.
-se abre y cierra un instante now durante un cierto periodo de interacción con el sistema.
-existe un time 'now' que entra en clips como el now de la linea superior.
-El put action no hace un make instance en una conclusión; de modo que al cerrar una duración, se cierren en todas sus consecuencias.
-
-'''
+# Copyright (c) 2007-2008 by Enrique Pérez Arnaud <enriquepablo@gmail.com>
+#
+# This file is part of ln.
+#
+# ln is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# ln is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with ln.  If not, see <http://www.gnu.org/licenses/>.
 from datetime import datetime
 import clips
 from nl.clps import class_constraint
@@ -37,19 +25,17 @@ _m = []
 
 
 # XXX not thread safe
-_now = str(datetime.now().toordinal())
+_now = '1'
 
-def start_instant():
+def change_instant(i):
     global _now
-    _now = str(datetime.now().toordinal())
-
-def end_instant():
-    global _now
-    _now = None
+    _now = i and str(float(i)) or \
+            str(float(_now) + 1)
 
 
 class Time(Number):
     """
+    abstract ancestor for Instant & Duration
     """
 
     @classmethod
@@ -66,6 +52,21 @@ class Time(Number):
 register('Time', Time)
 
 class Instant(Time):
+    '''
+    An instant in time.
+    Instantiated with a positive integer or the string 'now'
+
+    >>> i23 = Instant(23)
+    >>> now = Instant('now')
+
+    Can be used as the time attribute in a Fact
+
+    >>> Fact(Thing('X1'), State('X2'), Instant('now'))
+
+    or as start or end attributes in a Duration.
+
+    >>> Duration(start=Instant(1), end=Instant(3))
+    '''
 
     def __init__(self, *args, **kwargs):
         if args and args[0] == 'now':
