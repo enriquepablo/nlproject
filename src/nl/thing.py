@@ -19,7 +19,7 @@
 import clips
 from nl.log import logger
 from nl.clps import class_constraint
-from nl.utils import register, varpat, Name, clips_instance, subclasses, _newvar
+from nl.utils import register, varpat, Name, clips_instance, get_class, _newvar
 
 
 class MetaThing(type):
@@ -54,6 +54,10 @@ class Thing(Name):
 
     @classmethod
     def from_clips(cls, instance):
+        if not isinstance(instance, clips._clips_wrap.Instance):
+            instance = clips.FindInstance(instance)
+        clsname = str(instance.Class.Name)
+        cls = get_class(clsname)
         return cls(str(instance))
 
     def get_ce(self, vrs):
