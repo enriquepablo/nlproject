@@ -87,28 +87,18 @@ def ask(*sentences):
     logger.info('RESP ' + str(resp))
     return resp
 
-def ask_objs(*sentences):
-    clps = get_instances(*sentences)
+def ask_obj(sentence):
+    clps, templs = get_instances(sentence)
     sens = []
     if clps:
         for ins in clps:
             if isinstance(sentence, Thing):
-                sens.append(Thing.from_clips(ins))
+                sens.append(Name.from_clips(ins))
             elif isinstance(sentence, Fact):
                 i = clips.FindInstance(ins)
                 if issubclass(subclasses[str(i.Class.Name)], Fact):
                     sens.append(Fact.from_clips(ins))
     return sens
-
-
-def ask_old(*sentences):
-    sens = ask_objs(*sentences)
-    if not sens:
-        resp = 'no'
-    else:
-        resp = str(sens[0])
-    logger.info(str(len(sens))+'\n\n\n'+resp)
-    return resp
 
 def extend():
     logger.info('----------running---------------------')
