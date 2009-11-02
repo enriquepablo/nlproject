@@ -56,15 +56,15 @@ class cms_test(object):
         # input everything into the db
         nl.kb.tell(john, pete, jane, c1, c2, p1, p2, p3, p4)
         # to the question is jane owner of c1?, the answer is no
-        assert nl.kb.ask(nl.Fact(jane, self.cms.IsOwner(of=c1), self.cms.Duration(start=self.cms.Instant('now')))) == 'no'
+        assert not nl.kb.ask(nl.Fact(jane, self.cms.IsOwner(of=c1), self.cms.Duration(start=self.cms.Instant('now'))))
         # extend the db
         nl.kb.extend()
         # to the question is jane owner of c1?, the answer is yes
-        assert nl.kb.ask(nl.Fact(jane, self.cms.IsOwner(of=c1), self.cms.Duration(start=self.cms.Instant('now')))) == 'yes'
+        assert nl.kb.ask(nl.Fact(jane, self.cms.IsOwner(of=c1), self.cms.Duration(start=self.cms.Instant('now'))))
         # to the question has c1 private state?, the answer is yes
-        assert nl.kb.ask(nl.Fact(c1, self.cms.Has(what=self.cms.private), self.cms.Duration(start=self.cms.Instant('now')))) == 'yes'
+        assert nl.kb.ask(nl.Fact(c1, self.cms.Has(what=self.cms.private), self.cms.Duration(start=self.cms.Instant('now'))))
         # to the question is pete owner of c2?, the answer is no
-        assert nl.kb.ask(nl.Fact(pete, self.cms.IsOwner(of=c2), self.cms.Duration(start=self.cms.Instant('now')))) == 'no'
+        assert not nl.kb.ask(nl.Fact(pete, self.cms.IsOwner(of=c2), self.cms.Duration(start=self.cms.Instant('now'))))
         # jane wants to publish c1
         nl.kb.tell(nl.Fact(jane, self.cms.Wants(to=self.cms.Publish(what=c1)), self.cms.Instant('now')))
         # pete wants to publish c2
@@ -72,23 +72,23 @@ class cms_test(object):
         # extend the db
         nl.kb.extend()
         # to the question is c1 public?, the answer is no
-        assert nl.kb.ask(nl.Fact(c1, self.cms.Has(what=self.cms.public), self.cms.Duration(start=self.cms.Instant('now')))) == 'no'
+        assert not nl.kb.ask(nl.Fact(c1, self.cms.Has(what=self.cms.public), self.cms.Duration(start=self.cms.Instant('now'))))
         # to the question is c2 public?, the answer is no
-        assert nl.kb.ask(nl.Fact(c2, self.cms.Has(what=self.cms.public), self.cms.Duration(start=self.cms.Instant('now')))) == 'no'
+        assert not nl.kb.ask(nl.Fact(c2, self.cms.Has(what=self.cms.public), self.cms.Duration(start=self.cms.Instant('now'))))
         # to the question can jane view c1?, the answer is yes
-        assert nl.kb.ask(nl.Fact(jane, self.cms.Can(what=self.cms.View(what=c1)), self.cms.Duration(start=self.cms.Instant('now')))) == 'yes'
+        assert nl.kb.ask(nl.Fact(jane, self.cms.Can(what=self.cms.View(what=c1)), self.cms.Duration(start=self.cms.Instant('now'))))
         # to the question can pete view c1?, the answer is no
-        assert nl.kb.ask(nl.Fact(pete, self.cms.Can(what=self.cms.View(what=c1)), self.cms.Duration(start=self.cms.Instant('now')))) == 'no'
+        assert not nl.kb.ask(nl.Fact(pete, self.cms.Can(what=self.cms.View(what=c1)), self.cms.Duration(start=self.cms.Instant('now'))))
         # john wants to publish c1
         nl.kb.tell(nl.Fact(john, self.cms.Wants(to=self.cms.Publish(what=c1)), self.cms.Instant('now')))
         # extend the db
         nl.kb.extend()
         # to the question is c1 private?, the answer is no
-        assert nl.kb.ask(nl.Fact(c1, self.cms.Has(what=self.cms.private), nl.Duration(start=nl.Instant('now')))) == 'no'
+        assert not nl.kb.ask(nl.Fact(c1, self.cms.Has(what=self.cms.private), nl.Duration(start=nl.Instant('now'))))
         # to the question is c1 public?, the answer is yes
-        assert nl.kb.ask(nl.Fact(c1, self.cms.Has(what=self.cms.public), nl.Duration(start=nl.Instant('now')))) == 'yes'
+        assert nl.kb.ask(nl.Fact(c1, self.cms.Has(what=self.cms.public), nl.Duration(start=nl.Instant('now'))))
         # to the question can pete view c1?, the answer is yes
-        assert nl.kb.ask(nl.Fact(pete, self.cms.Can(what=self.cms.View(what=c1)), nl.Duration(start=nl.Instant('now')))) == 'yes'
+        assert nl.kb.ask(nl.Fact(pete, self.cms.Can(what=self.cms.View(what=c1)), nl.Duration(start=nl.Instant('now'))))
 
         # what can pete view? -> c1
         assert nl.kb.ask(self.cms.Content('X1'), nl.Fact(pete, self.cms.Can(what=self.cms.View(what='X1')), nl.Duration(start=nl.Instant('now')))) == [{'X1': 'c1'}]
@@ -107,7 +107,7 @@ class cms_test(object):
         assert nl.kb.ask(self.cms.Permission('X2'), nl.Fact(self.cms.manager, self.cms.Has(what=self.cms.Permission('X2')), nl.Duration(start=nl.Instant('X3')))) == [{'X2': 'basic_perm'}, {'X2': 'manage_perm'}, {'X2': 'create_perm'}]
 
         # can admin view c2?
-        assert nl.kb.ask(nl.Fact(self.cms.admin, self.cms.Can(what=self.cms.View(what=c2)), nl.Duration(start=nl.Instant('now')))) == 'yes'
+        assert nl.kb.ask(nl.Fact(self.cms.admin, self.cms.Can(what=self.cms.View(what=c2)), nl.Duration(start=nl.Instant('now'))))
 
 
 class cms3_test(object):
@@ -170,7 +170,7 @@ class cms3_test(object):
         nl.kb.extend()
         assert nl.kb.ask(nl.Fact(self.cms.Person('m3'),
                                  self.cms.Publish(what=self.cms.Content('cpr3')),
-                                 nl.Instant('now'))) == 'yes'
-        assert nl.kb.ask(nl.Fact(self.cms.Document('cpr3'),
-                                 self.cms.Has(what=self.cms.Status('public')),
-                                 nl.Duration(start=nl.Instant('now')))) == 'yes'
+                                 nl.Instant('now')))
+        #assert nl.kb.ask(nl.Fact(self.cms.Document('cpr3'),
+        #                         self.cms.Has(what=self.cms.Status('public')),
+        #                         nl.Duration(start=nl.Instant('now'))))

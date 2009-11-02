@@ -81,9 +81,9 @@ def ask(*sentences):
             if rsp:
                 resp.append(rsp)
         if not resp:
-            resp = 'yes'
+            resp = True
     else:
-        resp = 'no'
+        resp = False
     logger.info('RESP ' + str(resp))
     return resp
 
