@@ -171,6 +171,6 @@ class cms3_test(object):
         assert nl.kb.ask(nl.Fact(self.cms.Person('m3'),
                                  self.cms.Publish(what=self.cms.Content('cpr3')),
                                  nl.Instant('now')))
-        #assert nl.kb.ask(nl.Fact(self.cms.Document('cpr3'),
-        #                         self.cms.Has(what=self.cms.Status('public')),
-        #                         nl.Duration(start=nl.Instant('now'))))
+        assert nl.kb.ask(nl.Fact(self.cms.Document('cpr3'),
+                                 self.cms.Has(what=self.cms.Status('public')),
+                                 nl.Duration(start=nl.Instant('now'))))

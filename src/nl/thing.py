@@ -54,6 +54,8 @@ class Thing(Name):
 
     @classmethod
     def from_clips(cls, instance):
+        if isinstance(instance, clips._clips_wrap.InstanceName):
+            return cls(str(instance))
         if not isinstance(instance, clips._clips_wrap.Instance):
             instance = clips.FindInstance(instance)
         clsname = str(instance.Class.Name)
