@@ -18,20 +18,10 @@
 from datetime import datetime
 import clips
 from nl.clps import class_constraint
-from nl.utils import register, subclasses, Name, varpat, clips_instance, _newvar
+from nl import utils
 from nl.arith import Number
 
 _m = []
-
-
-# XXX not thread safe
-_now = '1'
-
-def change_instant(i):
-    global _now
-    _now = i and str(float(i)) or \
-            str(float(_now) + 1)
-
 
 class Time(Number):
     """
@@ -49,7 +39,7 @@ class Time(Number):
             return Duration.from_clips(instance)
         return Instant(instance)
 
-register('Time', Time)
+utils.register('Time', Time)
 
 class Instant(Time):
     '''
@@ -70,7 +60,7 @@ class Instant(Time):
 
     def __init__(self, *args, **kwargs):
         if args and args[0] == 'now':
-            self.value = _now
+            self.value = utils._now
         else:
             super(Instant, self).__init__(*args, **kwargs)
 
@@ -90,7 +80,7 @@ class Instant(Time):
 #
 #'(or (and (eq (class %(ci)s) Duration) (<= (send %(ci)s get-start) %(val)s)) ())'
 
-register('Instant', Instant)
+utils.register('Instant', Instant)
 
 class Duration(Time):
 
@@ -106,11 +96,11 @@ class Duration(Time):
         else:
             self.end = isinstance(end, Instant) and end or \
                                                   Instant(end)
-            if float(self.end.value) == float(_now):
+            if float(self.end.value) == float(utils._now):
                 self.end = Instant('-1.0')
 
     def __str__(self):
-        if varpat.match(self.value):
+        if utils.varpat.match(self.value):
             return self.put_var({})
         else:
             return 'from %s till %s' % (self.start.put({}), self.end.put({}))
@@ -123,8 +113,10 @@ class Duration(Time):
             instance = clips.FindInstance(instance)
         start = Instant(instance.GetSlot('start'))
         if start.value in ('-1', '-1.0', 'now'):
-            start = Instant(_now)
+            start = Instant(utils._now)
         end = Instant(instance.GetSlot('end'))
+        if end.value == 'now':
+            start = Instant('-1.0')
         return Duration(start=start, end=end)
 
     def get_constraint(self, vrs, ancestor, mod_path):
@@ -132,8 +124,8 @@ class Duration(Time):
         build rule CE constraint for clips
         as a mod in a predicate in a prem in a rule
         '''
-        ci = clips_instance(ancestor, mod_path)
-        if varpat.match(self.value):
+        ci = utils.clips_instance(ancestor, mod_path)
+        if utils.varpat.match(self.value):
             return self.get_var_constraint(vrs, ancestor, mod_path, ci)
         else:
             core = '(= (send %s get-start) %s)' % (ci, self.start.get_constraint(vrs))
@@ -146,31 +138,33 @@ class Duration(Time):
         build rule CE slot constraint for clips
         as time in a prem
         """
-        newvar = _newvar()
-        if varpat.match(self.value):
+        newvar = utils._newvar()
+        if utils.varpat.match(self.value):
             return self.get_var_slot_constraint(vrs, self.value)
         core = '(eq (send %s get-start) %s)' % (newvar, self.start.get_slot_constraint(vrs))
         return '?%(var)s&:(and %(core)s (eq (send %(var)s get-end) %(end)s))' % {'core': core, 'var': newvar, 'end': self.end.get_slot_constraint(vrs)}
 
     def put(self, vrs):
-        if varpat.match(self.value):
+        if utils.varpat.match(self.value):
             return self.put_var(vrs)
         else:
-            if getattr(self, 'pstart', False):
-                return '(make-instance of Duration (start %s) (end %s))' % (self.pstart.put(vrs), self.pend.put(vrs))
-            return '(make-instance of Duration (start %s) (end %s))' % (self.start.get_slot_constraint(vrs), self.end.get_slot_constraint(vrs))
+            return '(make-instance of Duration (start %s) (end %s))' % \
+                (getattr(self, 'pstart', False) and self.pstart.put(vrs) or \
+                                           self.start.get_slot_constraint(vrs),
+                 getattr(self, 'pend', False) and self.pend.put(vrs) or \
+                                           self.end.get_slot_constraint(vrs))
 
     def get_isc(self, templs, queries, vrs):
         """
         get instance-set condition;
         modify (instance-set templates, instance-set queries)
         """
-        newvar = _newvar()
-        if varpat.match(self.value):
+        newvar = utils._newvar()
+        if utils.varpat.match(self.value):
             if self.value in vrs:
                 if vrs[self.value]:
                     queries.append('(eq ?%s %s)' % (newvar,
-                                     clips_instance(*(vrs[self.value]))))
+                                     utils.clips_instance(*(vrs[self.value]))))
                 else:
                     newvar = self.value
             else:
@@ -178,29 +172,33 @@ class Duration(Time):
                 newvar = self.value
         templs.append((newvar, 'Duration'))
         start = getattr(self, 'start', _m)
-        if start is not _m and not (varpat.match(start.value) and start.value not in vrs):
+        if utils.varpat.match(self.value):
+            return '?%s' % newvar
+        if start is not _m and not (utils.varpat.match(start.value) and start.value not in vrs):
             queries.append('(= ?%s:start %s)' % (newvar,
                                            start.get_isc(templs, queries, vrs)))
         end = getattr(self, 'end', _m)
-        if end is not _m and not (varpat.match(end.value) and end.value not in vrs):
+        if end is not _m and not (utils.varpat.match(end.value) and end.value not in vrs):
             queries.append('(= ?%s:end %s)' % (newvar,
                                            end.get_isc(templs, queries, vrs)))
         return '?%s' % newvar
 
-register('Duration', Duration)
+utils.register('Duration', Duration)
 
-class Finish(Name):
-    def __init__(self, duration):
+class Finish(utils.Name):
+    def __init__(self, duration, instant):
         self.duration = isinstance(duration, Duration) and \
                                 duration or Duration(duration)
+        self.instant = isinstance(instant, Instant) and \
+                                instant or Instant(instant)
 
     def put_action(self, vrs):
-        return '(send %s put-end %s)' % (self.duration.put(vrs), _now)
+        return '(modify-instance %s (end %s))' % (self.duration.put(vrs), self.instant.put(vrs))
 
-register('Finish', Finish)
+utils.register('Finish', Finish)
 
 
-class During(Name):
+class During(utils.Name):
     '''
     given an instant and a duration, build a condition for a rule
     that tests whether the instant is within the duration
@@ -218,10 +216,10 @@ class During(Name):
             durs.append('(test (and (<= (send %(dur)s get-start) %(ins)s) (or (= (send %(dur)s get-end) -1) (>= (send %(dur)s get-end) %(ins)s))))' % {'dur': duration.put(vrs), 'ins': self.instant.put(vrs)})
         return ' '.join(durs)
 
-register('During', During)
+utils.register('During', During)
 
 
-class DurationOpMixin(Name):
+class DurationOpMixin(utils.Name):
     '''
     Abstract ancestor of classes constructed with a sequence of durations
     '''
@@ -230,7 +228,7 @@ class DurationOpMixin(Name):
           [isinstance(dur, Duration) and dur or Duration(dur) for dur in args]
 
 
-register('DurationOpMixin', DurationOpMixin)
+utils.register('DurationOpMixin', DurationOpMixin)
 
 
 class Coincide(DurationOpMixin):
@@ -248,7 +246,7 @@ class Coincide(DurationOpMixin):
                 """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations])}
 
 
-register('Coincide', Coincide)
+utils.register('Coincide', Coincide)
 
 class Intersection(DurationOpMixin):
     '''
@@ -263,7 +261,7 @@ class Intersection(DurationOpMixin):
                                            (end (maxcomend %(durs)s)))
                 """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations])}
 
-register('Intersection', Intersection)
+utils.register('Intersection', Intersection)
 
 class MinComStart(DurationOpMixin):
     """
@@ -274,7 +272,7 @@ class MinComStart(DurationOpMixin):
         instants = [dur.put(vrs) for dur in self.durations]
         return '(mincomstart %s)' % ' '.join(instants)
 
-register('MinComStart', MinComStart)
+utils.register('MinComStart', MinComStart)
 
 class MaxComEnd(DurationOpMixin):
     """
@@ -285,4 +283,4 @@ class MaxComEnd(DurationOpMixin):
         instants = [dur.put(vrs) for dur in self.durations]
         return '(maxcomend %s)' % ' '.join(instants)
 
-register('MaxComEnd', MaxComEnd)
+utils.register('MaxComEnd', MaxComEnd)

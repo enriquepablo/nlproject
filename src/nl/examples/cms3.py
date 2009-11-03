@@ -196,8 +196,8 @@ def r_transition(action, workflow, initial, final):
         Fact(Content('C1'), Has(what=workflow), Duration('T2')),
         During('I1', 'T1','T2')
     ],[
-        Finish('T1'),
-        Fact(Content('C1'), Has(what=final), Duration(start=Instant('I1'), end=Instant('now')))]))
+        Fact(Content('C1'), Has(what=final), Duration(start=Instant('I1'), end=MaxComEnd('T1', 'T2'))),
+        Finish('T1', 'I1')]))
 
 def r_workflow_for_content(content_type, workflow, context):
     """
@@ -271,5 +271,5 @@ kb.tell(Rule([
         Fact(Person('P3'), Owns(what=Content('C1')), Duration('T1')),
         During('I1', 'T1')
     ],[
-        Finish('T1'),
-        Fact(Person('P2'), Owns(what=Content('C1')), Duration(start=Instant('I1')))]))
+        Fact(Person('P2'), Owns(what=Content('C1')), Duration(start=Instant('I1'))),
+        Finish('T1', 'I1')]))

@@ -3,9 +3,9 @@
 import clips
 from nl.log import logger
 
-clips.DebugConfig.ExternalTraceback = True
-clips.EngineConfig.ResetGlobals = True
-clips.EngineConfig.IncrementalReset = True
+#clips.DebugConfig.ExternalTraceback = True
+#clips.EngineConfig.ResetGlobals = True
+#clips.EngineConfig.IncrementalReset = True
 
 
 # CLIPS SNIPPETS
@@ -137,6 +137,16 @@ _fact_clp = '(defclass Fact (is-a Name) (slot truth (type INTEGER) (default 1) (
 logger.info(_fact_clp)
 clips.Build(_fact_clp)
 
+#def ptonl(subj, pred, time, truth):
+#    """
+#       (python-call ptonl ?s ?p ?t ?r)
+#    """
+#    key = str(subj) + str(pred) + str(time) + str(truth)
+#    logger.info(key)
+#    return clips.Symbol('TRUE')
+
+#clips.RegisterPythonFunction(ptonl)
+
 _add_prop = '''
 (deffunction add-prop (?s ?p ?t ?r)
        (bind ?count 0)
@@ -146,7 +156,7 @@ _add_prop = '''
                                (or (and (eq (class ?t) Duration)
                                         (= (send (send ?prop get-time) get-start) (send ?t get-start))
                                         (= (send (send ?prop get-time) get-end) (send ?t get-end)))
-                                   (= ?prop:time ?t))
+                                   (eq ?prop:time ?t))
                                (= ?prop:truth ?r))
                (bind ?count (+ ?count 1)))
         (if (= ?count 0)

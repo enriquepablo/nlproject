@@ -25,3 +25,4 @@ from prop import Fact, Fact
 from time import Time, Instant, Duration, Finish, During, Coincide, MinComStart, MaxComEnd, Intersection
 from rule import Rule
 from metanl import Remove, Equals
+from utils import change_now

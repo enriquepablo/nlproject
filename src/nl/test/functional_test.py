@@ -174,3 +174,35 @@ class cms3_test(object):
         assert nl.kb.ask(nl.Fact(self.cms.Document('cpr3'),
                                  self.cms.Has(what=self.cms.Status('public')),
                                  nl.Duration(start=nl.Instant('now'))))
+
+        nl.change_now()
+
+        nl.kb.tell(nl.Fact(self.cms.Person('m3'),
+                           self.cms.Wants(
+                                   to=self.cms.Hide(
+                                             what=self.cms.Content('cpu3'))),
+                           self.cms.Instant('now')))
+
+        nl.kb.extend()
+
+        assert nl.kb.ask(nl.Fact(self.cms.Document('cpu3'),
+                                 self.cms.Has(what=self.cms.Status('private')),
+                                 nl.Duration(start=nl.Instant('now'))))
+
+        nl.change_now()
+
+        nl.kb.tell(nl.Fact(self.cms.Person('m6'),
+                           self.cms.Wants(
+                                   to=self.cms.Publish(
+                                             what=self.cms.Content('cpu3'))),
+                           self.cms.Instant('now')))
+
+        nl.kb.extend()
+
+        assert nl.kb.ask(nl.Fact(self.cms.Person('m6'),
+                                 self.cms.Publish(what=self.cms.Content('cpu3')),
+                                 nl.Instant('now')))
+
+        assert nl.kb.ask(nl.Fact(self.cms.Document('cpu3'),
+                                 self.cms.Has(what=self.cms.Status('public')),
+                                 nl.Duration(start=nl.Instant('now'))))

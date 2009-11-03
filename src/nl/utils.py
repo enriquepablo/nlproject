@@ -101,3 +101,13 @@ def clips_instance(ancestor, mod_path):
     return ancestor
 
 
+# XXX not thread safe
+_now = '1'
+
+def change_now(i=0):
+    global _now
+    _now = i and str(float(i)) or \
+            str(float(_now) + 1)
+
+
+

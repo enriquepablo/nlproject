@@ -207,7 +207,7 @@ r15 = Rule([
         Fact(Content('X2'), Has(what=private), Duration('X5')),
         During(Instant('X3'), Duration('X5'))
         ],[
-        Finish(Duration('X5')),
+        Finish('X5', 'X3'),
         Fact(Content('X2'), Has(what=public), Duration(start=Instant('X3')))])
 
 # manage_perm is needed to publish anything
@@ -227,7 +227,7 @@ r17 = Rule([
         Fact(Content('X2'), Has(what=public), Duration('X5')),
         During(Instant('X3'), Duration('X5'))
         ],[
-        Finish(Duration('X5')),
+        Finish('X5', 'X3'),
         Fact(Content('X2'), Has(what=private), Duration(start=Instant('X3')))])
 
 # if a person is the owner of some content, she can hide it
