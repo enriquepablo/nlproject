@@ -205,4 +205,4 @@ class cms3_test(object):
 
         assert nl.kb.ask(nl.Fact(self.cms.Document('cpu3'),
                                  self.cms.Has(what=self.cms.Status('public')),
-                                 nl.Duration(start=nl.Instant('now'))))
+                                 nl.Instant('now')))

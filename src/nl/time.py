@@ -64,22 +64,19 @@ class Instant(Time):
         else:
             super(Instant, self).__init__(*args, **kwargs)
 
-    def get_isc(self, vrs, templs, queries, parent=None):
+    def get_isc(self, templs, queries, vrs, parent=None):
         """
         """
-        return super(Instant, self).get_isc(templs, queries, vrs)
-#        if varpat.match(self.value):
-#            if self.value in vrs and vrs[self.value]:
-#                return clips_instance(*(vrs[self.value]))
-#            return '?%s' % self.value
-#        try:
-#            return str(float(self.value))
-#        except ValueError:
-#            arg1 = self.arg1 != '' and self.arg1._get_number(vrs) or ''
-#            arg2 = self.arg2 != '' and self.arg2._get_number(vrs) or ''
-#            val '(%s %s %s)' % (self.value, arg1, arg2)
-#
-#'(or (and (eq (class %(ci)s) Duration) (<= (send %(ci)s get-start) %(val)s)) ())'
+        num = self._get_number(vrs)
+        if parent:
+            queries.append( '''
+               (or (and (eq (class ?%(parent)s:time) Duration)
+                        (<= (send ?%(parent)s:time get-start) %(self)s)
+                        (or (= (send ?%(parent)s:time get-end) -1)
+                            (>= (send ?%(parent)s:time get-end) %(self)s)))
+                   (eq ?%(parent)s:time %(self)s))
+            ''' % {'parent': parent, 'self': num} )
+        return num
 
 utils.register('Instant', Instant)
 
