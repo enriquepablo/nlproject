@@ -34,9 +34,28 @@ class Fact(Name):
 
     def __init__(self, subj, pred, time=Instant('now'), truth=1):
         self.truth = truth
-        self.subject = subj
-        self.predicate = pred
-        self.time = time
+        if isinstance(subj, Thing):
+            self.subject = subj
+        elif isinstance(subj, str):
+            if varpat.match(subj):
+                self.subject = Thing(subj)
+            else:
+                from nl import kb
+                self.subject = kb.ask_obj(Thing(subj))[0]
+        else:
+            pass # raise exception
+        if isinstance(pred, State):
+            self.predicate = pred
+        elif isinstance(pred, str) and varpat.match(pred):
+            self.predicate = State(pred)
+        else:
+            pass # raise exception
+        logger.info(str(issubclass(type(time),Time)))
+        if isinstance(time, Time):
+            self.time = time
+        else:
+            self.time = Instant(time)
+
 
     def __str__(self):
         negation = not self.truth and ' not' or ''

@@ -1,17 +1,17 @@
 import nl
 from nl.log import logger
 
-def reset():
+def reset(mod):
     logger.info('\n\n\n---------RESET-----------\n\n\n')
     nl.clps.clips.Reset()
     nl.clps.clips.Clear()
     reload(nl.clps.clips)
     reload(nl.clps)
-    reload(nl.thing)
-    reload(nl.state)
-    reload(nl.prop)
     reload(nl.arith)
     reload(nl.time)
+    reload(nl.state)
+    reload(nl.thing)
+    reload(nl.prop)
     reload(nl.rule)
     reload(nl.kb)
     reload(nl)
@@ -23,7 +23,7 @@ class cms_test(object):
         self.cms = cms2
 
     def teardown(self):
-        reset()
+        reset(self.cms)
         del self.cms
 
 #    def thing_test(self):
@@ -116,7 +116,7 @@ class cms3_test(object):
         self.cms = cms3
 
     def teardown(self):
-        reset()
+        reset(self.cms)
         del self.cms
 
     def _add_context(self, context):
@@ -206,3 +206,6 @@ class cms3_test(object):
         assert nl.kb.ask(nl.Fact(self.cms.Document('cpu3'),
                                  self.cms.Has(what=self.cms.Status('public')),
                                  nl.Instant('now')))
+
+        cpu3 = nl.kb.ask_obj(nl.Thing('cpu3'))
+        nl.log.logger.info(str(cpu3))
