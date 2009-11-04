@@ -71,8 +71,7 @@ class Fact(Name):
         queries.append('(eq ?%s:subject %s)' % (newvar, s))
         p = self.predicate.get_isc(templs, queries, vrs)
         queries.append('(eq ?%s:predicate %s)' % (newvar, p))
-        t = self.time.get_isc(templs, queries, vrs)
-        queries.append('(eq ?%s:time %s)' % (newvar, t))
+        t = self.time.get_isc(templs, queries, vrs, parent=newvar)
         queries.append('(eq ?%s:truth %s)' % (newvar,
                                          self.truth))
         return newvar

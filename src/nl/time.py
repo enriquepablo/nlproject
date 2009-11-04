@@ -64,9 +64,10 @@ class Instant(Time):
         else:
             super(Instant, self).__init__(*args, **kwargs)
 
-#    def get_isc(self, vrs):
-#        """
-#        """
+    def get_isc(self, vrs, templs, queries, parent=None):
+        """
+        """
+        return super(Instant, self).get_isc(templs, queries, vrs)
 #        if varpat.match(self.value):
 #            if self.value in vrs and vrs[self.value]:
 #                return clips_instance(*(vrs[self.value]))
@@ -154,7 +155,7 @@ class Duration(Time):
                  getattr(self, 'pend', False) and self.pend.put(vrs) or \
                                            self.end.get_slot_constraint(vrs))
 
-    def get_isc(self, templs, queries, vrs):
+    def get_isc(self, templs, queries, vrs, parent=None):
         """
         get instance-set condition;
         modify (instance-set templates, instance-set queries)
@@ -170,17 +171,28 @@ class Duration(Time):
             else:
                 vrs[self.value] = ()
                 newvar = self.value
-        templs.append((newvar, 'Duration'))
-        start = getattr(self, 'start', _m)
-        if utils.varpat.match(self.value):
+            templs.append((newvar, 'Duration'))
             return '?%s' % newvar
-        if start is not _m and not (utils.varpat.match(start.value) and start.value not in vrs):
-            queries.append('(= ?%s:start %s)' % (newvar,
-                                           start.get_isc(templs, queries, vrs)))
+        start = getattr(self, 'start', _m)
+        if parent:
+            newvar = '%s:time' % parent
+            core_start = '(send ?%s:time get-start)' % parent
+            core_end = '(send ?%s:time get-end)' % parent
+        else:
+            templs.append((newvar, 'Duration'))
+            core_start = '?%s:start' % newvar
+            core_end = '?%s:end' % newvar
+        if start is not _m and \
+           not (utils.varpat.match(start.value) and \
+           start.value not in vrs):
+            queries.append('(= %s %s)' % (core_start,
+                                  start.get_isc(templs, queries, vrs)))
         end = getattr(self, 'end', _m)
-        if end is not _m and not (utils.varpat.match(end.value) and end.value not in vrs):
-            queries.append('(= ?%s:end %s)' % (newvar,
-                                           end.get_isc(templs, queries, vrs)))
+        if end is not _m and \
+           not (utils.varpat.match(end.value) and \
+           end.value not in vrs):
+            queries.append('(= %s %s)' % (core_end,
+                                  end.get_isc(templs, queries, vrs)))
         return '?%s' % newvar
 
 utils.register('Duration', Duration)
