@@ -16,11 +16,10 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
-# import Gnuplot
 from nl import kb, State, Thing, Number, Arith, Fact, Rule
 
 
-time = '1000'
+time = '100'
 
 # names
 
@@ -156,32 +155,34 @@ for p in (c1, c2, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, r1, r2, r3, r4, r5):
 kb.extend()
 
 
-resp1 = kb.ask_objs(Fact(c1, HasPosition(x='X1', y='X2'), 'X3'))
-resp2 = kb.ask_objs(Fact(c2, HasPosition(x='X1', y='X2'), 'X3'))
+if __name__ == '__main__':
+    import Gnuplot
+    resp1 = kb.ask_obj(Fact(c1, HasPosition(x='X1', y='X2'), 'X3'))
+    resp2 = kb.ask_obj(Fact(c2, HasPosition(x='X1', y='X2'), 'X3'))
 
-#resp1 = kb.ask_objs(Fact(c1, IsForced(newton='X1'), 'X2'))
-#resp2 = kb.ask_objs(Fact(c2, IsForced(newton='X1'), 'X2'))
+    #resp1 = kb.ask_obj(Fact(c1, IsForced(newton='X1'), 'X2'))
+    #resp2 = kb.ask_obj(Fact(c2, IsForced(newton='X1'), 'X2'))
 
 
-# line1 = [(float(p.predicate.x.value), float(p.predicate.y.value)) for p in resp1]
-# line2 = [(float(p.predicate.x.value), float(p.predicate.y.value)) for p in resp2]
-# 
-# 
-# gp = Gnuplot.Gnuplot(persist = 1)
-# 
-# gp('set data style lines')
-# 
-# plot1 = Gnuplot.PlotItems.Data(line1, with="dots lw 2 lc rgb 'red'",
-#       title='c1 con %s kgs, desde (%s, %s) a (%s, %s)' % (p1.predicate.kgs.value,
-#                                                      p3.predicate.x.value,
-#                                                      p3.predicate.y.value,
-#                                                      p5.predicate.x.value,
-#                                                      p5.predicate.y.value))
-# plot2 = Gnuplot.PlotItems.Data(line2, with="points pt 6 lw 1 lc rgb 'blue'",
-#       title='c2 con %s kgs, desde (%s, %s) a (%s, %s)' % (p2.predicate.kgs.value,
-#                                                      p4.predicate.x.value,
-#                                                      p4.predicate.y.value,
-#                                                      p6.predicate.x.value,
-#                                                      p6.predicate.y.value))
-# 
-# gp.plot(plot1, plot2)
+    line1 = [(float(p.predicate.x.value), float(p.predicate.y.value)) for p in resp1]
+    line2 = [(float(p.predicate.x.value), float(p.predicate.y.value)) for p in resp2]
+
+
+    gp = Gnuplot.Gnuplot(persist = 1)
+
+    gp('set data style lines')
+
+    plot1 = Gnuplot.PlotItems.Data(line1, with="dots lw 2 lc rgb 'red'",
+          title='c1 con %s kgs, desde (%s, %s) a (%s, %s)' % (p1.predicate.kgs.value,
+                                                         p3.predicate.x.value,
+                                                         p3.predicate.y.value,
+                                                         p5.predicate.x.value,
+                                                         p5.predicate.y.value))
+    plot2 = Gnuplot.PlotItems.Data(line2, with="points pt 6 lw 1 lc rgb 'blue'",
+          title='c2 con %s kgs, desde (%s, %s) a (%s, %s)' % (p2.predicate.kgs.value,
+                                                         p4.predicate.x.value,
+                                                         p4.predicate.y.value,
+                                                         p6.predicate.x.value,
+                                                         p6.predicate.y.value))
+
+    gp.plot(plot1, plot2)

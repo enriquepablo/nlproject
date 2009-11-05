@@ -59,6 +59,7 @@ class Name(object):
             return cls.from_clips(instance)
 
     def get_var_constraint(self, vrs, ancestor, mod_path, ci):
+        from nl.arith import Number
         constraint = ''
         if self.value in vrs:
             if vrs[self.value]:
@@ -66,9 +67,9 @@ class Name(object):
                 constraint = '&:(eq %s %s)' % (v_ci, ci)
             else:
                 constraint = '&:(eq %s ?%s)' % (ci, self.value)
-        else:
+        elif not isinstance(self, Number):
             constraint = '&:(or (eq (class %(ci)s) %(cls)s) (subclassp (class %(ci)s) %(cls)s))' % {'ci': ci, 'cls': self.__class__.__name__}
-            vrs[self.value] = (ancestor, mod_path)
+        vrs[self.value] = (ancestor, mod_path)
         return constraint
 
     def get_var_slot_constraint(self, vrs, val):

@@ -1,7 +1,7 @@
 import nl
 from nl.log import logger
 
-def reset(mod):
+def reset():
     logger.info('\n\n\n---------RESET-----------\n\n\n')
     nl.clps.clips.Reset()
     nl.clps.clips.Clear()
@@ -23,7 +23,7 @@ class cms_test(object):
         self.cms = cms2
 
     def teardown(self):
-        reset(self.cms)
+        reset()
         del self.cms
 
 #    def thing_test(self):
@@ -116,7 +116,7 @@ class cms3_test(object):
         self.cms = cms3
 
     def teardown(self):
-        reset(self.cms)
+        reset()
         del self.cms
 
     def _add_context(self, context):
@@ -209,3 +209,17 @@ class cms3_test(object):
 
         cpu3 = nl.kb.ask_obj(nl.Thing('cpu3'))
         nl.log.logger.info(str(cpu3))
+
+
+class physics_test(object):
+    def setup(self):
+        from nl.examples import physics22
+        self.p = physics22
+
+    def teardown(self):
+        reset()
+        del self.p
+
+    def first_test(self):
+        fact = nl.kb.ask_obj(nl.Fact(self.p.Body('c1'), self.p.HasPosition(x='X2', y='X3'), 50))
+        assert str(fact[0]) == 'c1 hasposition y 57.641201061 x -65.0657847679 at 50.0'

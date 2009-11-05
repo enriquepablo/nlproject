@@ -23,7 +23,7 @@ from nl.arith import Number
 
 _m = []
 
-class Time(Number):
+class Time(utils.Name):
     """
     abstract ancestor for Instant & Duration
     """
@@ -41,7 +41,7 @@ class Time(Number):
 
 utils.register('Time', Time)
 
-class Instant(Time):
+class Instant(Time, Number):
     '''
     An instant in time.
     Instantiated with a positive integer or the string 'now'
