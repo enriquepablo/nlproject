@@ -223,3 +223,5 @@ class physics_test(object):
     def first_test(self):
         fact = nl.kb.ask_obj(nl.Fact(self.p.Body('c1'), self.p.HasPosition(x='X2', y='X3'), 50))
         assert str(fact[0]) == 'c1 hasposition y 57.641201061 x -65.0657847679 at 50.0'
+        resp = nl.kb.ask_obj(nl.Fact(self.p.c1, self.p.HasPosition(x='X1', y='X2'), 'X3'))
+        assert len(resp) == 100

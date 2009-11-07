@@ -68,7 +68,10 @@ class Instant(Time, Number):
         """
         """
         num = self._get_number(vrs)
-        if parent:
+        if parent and (not utils.varpat.match(num[1:]) or \
+                       vrs.has_key(num[1:])):
+            if vrs.has_key(num[1:]) and vrs[num[1:]]:
+                num = utils.clips_instance(*(vrs[num[1:]]))
             queries.append( '''
                (or (and (eq (class ?%(parent)s:time) Duration)
                         (<= (send ?%(parent)s:time get-start) %(self)s)
