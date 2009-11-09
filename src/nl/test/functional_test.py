@@ -77,6 +77,9 @@ class cms_test(object):
         assert not nl.kb.ask(nl.Fact(c2, self.cms.Has(what=self.cms.public), self.cms.Duration(start=self.cms.Instant('now'))))
         # to the question can jane view c1?, the answer is yes
         assert nl.kb.ask(nl.Fact(jane, self.cms.Can(what=self.cms.View(what=c1)), self.cms.Duration(start=self.cms.Instant('now'))))
+        assert nl.kb.ask(nl.Fact(jane, self.cms.Can(what=self.cms.View('X1')), self.cms.Duration(start=self.cms.Instant('now'))))
+        assert nl.kb.ask(nl.Fact(self.cms.admin, self.cms.Can(what=self.cms.Publish(what='X1')), self.cms.Duration(start=self.cms.Instant('now'))))
+        assert len(nl.kb.ask(nl.Fact(self.cms.admin, self.cms.Can('X1'), self.cms.Duration(start=self.cms.Instant('now'))), nl.Fact(jane, self.cms.Can('X1'), self.cms.Duration(start=self.cms.Instant('now'))))) == 1
         # to the question can pete view c1?, the answer is no
         assert not nl.kb.ask(nl.Fact(pete, self.cms.Can(what=self.cms.View(what=c1)), self.cms.Duration(start=self.cms.Instant('now'))))
         # john wants to publish c1
@@ -103,8 +106,11 @@ class cms_test(object):
         # who can view what?
         assert nl.kb.ask(self.cms.Content('X1'), self.cms.Person('X2'), nl.Fact(self.cms.Person('X2'), self.cms.Can(what=self.cms.View(what='X1')), nl.Duration(start=nl.Instant('now')))) == [{'X2': 'admin', 'X1': 'c1'}, {'X2': 'john', 'X1': 'c1'}, {'X2': 'pete', 'X1': 'c1'}, {'X2': 'jane', 'X1': 'c1'}, {'X2': 'admin', 'X1': 'c2'}, {'X2': 'john', 'X1': 'c2'}]
 
-        # what permissions has admin?
-        assert nl.kb.ask(self.cms.Permission('X2'), nl.Fact(self.cms.manager, self.cms.Has(what=self.cms.Permission('X2')), nl.Duration(start=nl.Instant('X3')))) == [{'X2': 'basic_perm'}, {'X2': 'manage_perm'}, {'X2': 'create_perm'}]
+        # who can hide what?
+        assert nl.kb.ask(self.cms.Content('X1'), self.cms.Person('X2'), nl.Fact(self.cms.Person('X2'), self.cms.Can(what=self.cms.Hide(what='X1')), nl.Duration(start=nl.Instant('now')))) == [{'X2': 'admin', 'X1': 'c1'}, {'X2': 'john', 'X1': 'c1'}, {'X2': 'jane', 'X1': 'c1'}]
+
+        # how many permissions has admin?
+        assert len(nl.kb.ask(self.cms.Permission('X2'), nl.Fact(self.cms.admin, self.cms.Has(what=self.cms.Permission('X2')), nl.Duration(start=nl.Instant('X3'))))) == 3
 
         # can admin view c2?
         assert nl.kb.ask(nl.Fact(self.cms.admin, self.cms.Can(what=self.cms.View(what=c2)), nl.Duration(start=nl.Instant('now'))))

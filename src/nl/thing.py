@@ -124,10 +124,12 @@ class Thing(Name):
         else:
             return '[%s]' % self.value
 
-    def put_action(self, vrs):
+    def put_action(self, vrs=None):
         """
         put name in clips as a make-instance action.
         """
+        if vrs is None:
+            vrs = {}
         val = self.put(vrs)
         return '(reduce-class %s %s)' % (val, self.__class__.__name__)
 

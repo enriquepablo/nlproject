@@ -77,7 +77,9 @@ r1 = Rule([
            Fact(Body('X1'), HasSpeed(x='X5', y='X6'), 'X4'),
            Arith('(< X4 %s)' % time)
            ], [
-           Fact(Body('X1'), HasPosition(x='(+ X2 X5)', y='(+ X3 X6)'), '(+ X4 1)')
+           Fact(Body('X1'), HasPosition(x=Number('+', arg1='X2',
+                                                      arg2='X5'),
+                                        y='(+ X3 X6)'), '(+ X4 1)')
            ])
 
 

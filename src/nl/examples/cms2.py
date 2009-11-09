@@ -17,7 +17,7 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from nl import kb, State, Thing, Fact, Rule, Remove, Equals, Instant, Duration, During, Finish, Coincide, MinComStart, MaxComEnd
+from nl import kb, State, Thing, Fact, Rule, Instant, Duration, During, Finish, Coincide, MinComStart, MaxComEnd
 
 # BASIC STUFF
 
@@ -40,7 +40,7 @@ r1 = Rule([
         Fact(Person('X1'), Can(what=State('X4')), Duration('X3')),
         During(Instant('X2'), Duration('X3'))
         ],[
-        Fact(Person('X1'), State('X4'), Instant('X2'))])
+        Fact(Person('X1'), 'X4', Instant('X2'))])
 
 # Has is a verb that takes a person as a subject and a thing as a modificator
 class Has(State):
@@ -212,9 +212,9 @@ r15 = Rule([
 
 # manage_perm is needed to publish anything
 r16 = Rule([
-        Content('X1')
+        Fact(Content('X1'), Has(what=private), Duration('X2'))
         ],[
-        Fact(manage_perm, IsNeeded(for_action=Publish(what=Content('X1'))), Duration(start=Instant('now')))])
+        Fact(manage_perm, IsNeeded(for_action=Publish(what=Content('X1'))), Duration('X2'))])
 
 # Hide is a verb that takes a person as subject and a content as object
 class Hide(State):
@@ -236,9 +236,15 @@ r18 = Rule([
         ],[
         Fact(Person('X1'), Can(what=Hide(what=Content('X2'))), Duration('X3'))])
 
+# manage_perm is needed to hide anything
+r19 = Rule([
+        Fact(Content('X1'), Has(what=public), Duration('X2'))
+        ],[
+        Fact(manage_perm, IsNeeded(for_action=Hide(what=Content('X1'))), Duration('X2'))])
+
 
 # enter everything into the database
 kb.tell(admin, member, manager, basic_perm, manage_perm, create_perm, public, private,
-       p1, p2, r10, r1, r2, r3, r4, r5, r6, r7, r9, r12, r13, r14, r15, r16, r17, r18)
+       p1, p2, r10, r1, r2, r3, r4, r5, r6, r7, r9, r12, r13, r14, r15, r16, r17, r18, r19)
 
 

@@ -106,27 +106,15 @@ class Fact(Name):
                      self.truth)
 
 
-    def put_action(self, vrs):
+    def put_action(self, vrs=None):
         """
         put proposition in clips as an action that makes the proposition
         """
+        if vrs is None:
+            vrs = {}
         s = self.subject.put(vrs)
         p = self.predicate.put(vrs)
         t = self.time.put(vrs)
         return '(add-prop %s %s %s %s)' % (s, p, t, self.truth)
-
-    def remove_action(self, vrs):
-        templs = []
-        queries = []
-        self.get_ism(templs, queries, vrs, newvar='prop')
-        if len(queries) > 1:
-            q = '(do-for-instance (%s) (and %s) (unmake-instance ?prop))' % \
-                     (' '.join(['(?%s %s)' % templ for templ in templs]),
-                                ' '.join(queries))
-        else:
-            q = '(do-for-instance (%s) %s (unmake-instance ?prop))' % \
-                     (' '.join(['(?%s %s)' % templ for templ in templs]),
-                                queries and queries[0] or 'TRUE')
-        return q
 
 register('Fact', Fact)

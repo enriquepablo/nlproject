@@ -27,10 +27,11 @@ def parens(expr):
     """
     >>> from nl.arith import parens
     >>> parens('uno')
-    ['uno']
+    'uno'
     >>> parens('(uno (dos tres) cuatro)')
     ['uno', '(dos tres)', 'cuatro']
     >>> parens('(uno (dos tres) (ho ho (he (ha ha))) cuatro)')
+    ['uno', '(dos tres)', '(ho ho (he (ha ha)))', 'cuatro']
     """
     if expr[0] != '(':
         return expr
@@ -71,6 +72,10 @@ class Number(Name):
                 self.arg2 = Number(args[2])
             else:
                 self.value = value
+                if self.arg1 != '':
+                    self.arg1 = isinstance(arg1, Number) and arg1 or Number(arg1)
+                if self.arg2 != '':
+                    self.arg2 = isinstance(arg2, Number) and arg2 or Number(arg2)
 
     @classmethod
     def from_clips(cls, instance):
@@ -136,15 +141,5 @@ class Arith(Number):
         arg1 = self.arg1.put(vrs)
         arg2 = self.arg2.put(vrs)
         return '(test (%s %s %s))' % (self.value, arg1, arg2)
-
-    def get_isc(self, templs, queries, vrs):
-        arg1 =  self.arg1.put(vrs)
-        arg2 =  self.arg2.put(vrs)
-        queries.append('(%s %s %s)' % (self.value, arg1, arg2))
-
-    def __str__(self):
-        queries = []
-        self.get_isc([], queries)
-        return queries.pop()
 
 register('Arith', Arith)

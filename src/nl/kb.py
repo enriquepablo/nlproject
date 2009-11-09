@@ -21,7 +21,6 @@ import itertools
 #import re
 import clips
 
-from nl.exceptions import Paradox
 from nl.log import here, logger
 from nl.utils import subclasses, Name, varpat
 from nl.thing import Thing
@@ -33,7 +32,7 @@ from nl.rule import Rule
 
 def tell(*args):
     for sentence in args:
-        s = sentence.put_action({})
+        s = sentence.put_action()
         if isinstance(sentence, Rule):
             logger.info(s)
             clips.Build(s)
@@ -45,8 +44,9 @@ def get_instancesn(*sentences):
     templs = []
     queries = []
     vrs = {}
-    for sentence in sentences:
-        sentence.get_ism(templs, queries, vrs)
+    for n, sentence in enumerate(sentences):
+        sentence.get_ism(templs, queries, vrs, newvar='q%d' % n)
+    templs = list(set(templs))
     if len(queries) > 1:
         q = '(find-all-instances (%s) (and %s))' % \
             (' '.join(['(?%s %s)' % templ for templ in templs]),

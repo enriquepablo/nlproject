@@ -51,11 +51,12 @@ class Instant(Time, Number):
 
     Can be used as the time attribute in a Fact
 
-    >>> Fact(Thing('X1'), State('X2'), Instant('now'))
+    >>> from nl import Fact, Thing, State
+    >>> f = Fact(Thing('X1'), State('X2'), Instant('now'))
 
     or as start or end attributes in a Duration.
 
-    >>> Duration(start=Instant(1), end=Instant(3))
+    >>> d = Duration(start=Instant(1), end=Instant(3))
     '''
 
     def __init__(self, *args, **kwargs):
