@@ -133,18 +133,5 @@ class Thing(Name):
         val = self.put(vrs)
         return '(reduce-class %s %s)' % (val, self.__class__.__name__)
 
-    def remove_action(self, vrs=None):
-        templs = []
-        queries = []
-        self.get_ism(templs, queries, newvar='sen')
-        if len(queries) > 1:
-            q = '(do-for-all-instances (%s) (and %s) (send ?sen delete))' % \
-                       (' '.join(['(?%s %s)' % templ for templ in templs]),
-                                                        ' '.join(queries))
-        else:
-            q = '(do-for-all-instances (%s) %s (send ?sen delete))' % \
-                  (' '.join(['(?%s %s)' % templ for templ in templs]),
-                                                queries and queries[0] or 'TRUE')
-        return q
 
 register('Thing', Thing)

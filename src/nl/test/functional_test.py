@@ -26,15 +26,7 @@ class cms_test(object):
         reset()
         del self.cms
 
-#    def thing_test(self):
-#        pooh = self.cms.Person('pooh')
-#        assert repr(pooh) == 'pooh is a Person'
-#        assert str(pooh) == 'pooh'
-
-
     def third_test(self):
-        #from nl.examples import cms2
-        #self.cms = cms2
         # john is a person
         john = self.cms.Person('john')
         # pete is a person
@@ -114,6 +106,16 @@ class cms_test(object):
 
         # can admin view c2?
         assert nl.kb.ask(nl.Fact(self.cms.admin, self.cms.Can(what=self.cms.View(what=c2)), nl.Duration(start=nl.Instant('now'))))
+
+        assert nl.kb.ask(nl.Duration('X1'),
+                             nl.Fact(c2,
+                                 self.cms.Has(what=self.cms.private),
+                                 nl.Duration('X1')))
+
+        import os
+        from nl.log import log_dir, log_file
+        os.remove(log_file)
+        os.rmdir(log_dir)
 
 
 class cms3_test(object):

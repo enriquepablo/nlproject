@@ -35,9 +35,7 @@ class Time(utils.Name):
                 return Instant(str(float(instance)))
             except ValueError:
                 instance = clips.FindInstance(instance)
-        if str(instance.Class.Name) == 'Duration':
-            return Duration.from_clips(instance)
-        return Instant(instance)
+        return Duration.from_clips(instance)
 
 utils.register('Time', Time)
 
@@ -195,6 +193,18 @@ class Duration(Time):
             queries.append('(= %s %s)' % (core_end,
                                   end.get_isc(templs, queries, vrs)))
         return '?%s' % newvar
+
+    def get_ism(self,  templs, queries, vrs, newvar='time'):
+        """
+        get instance-set method;
+        return (instance-set templates, instance-set queries)
+        """
+        if utils.varpat.match(self.value):
+            templs.append((self.value, self.__class__.__name__))
+            vrs[self.value] = ()
+        else:
+            templs.append((newvar, self.__class__.__name__))
+            queries.append('(eq ?%s %s)' % (newvar, self.put(vrs)))
 
 utils.register('Duration', Duration)
 
