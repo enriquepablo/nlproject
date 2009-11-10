@@ -19,7 +19,7 @@
 from nl import kb, State, Thing, Number, Arith, Fact, Rule
 
 
-time = '100'
+time = '1000'
 
 # names
 
@@ -157,7 +157,7 @@ for p in (c1, c2, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, r1, r2, r3, r4, r5):
 kb.extend()
 
 
-if __name__ == '__main__':
+def plotPh22():
     import Gnuplot
     resp1 = kb.ask_obj(Fact(c1, HasPosition(x='X1', y='X2'), 'X3'))
     resp2 = kb.ask_obj(Fact(c2, HasPosition(x='X1', y='X2'), 'X3'))
@@ -188,3 +188,7 @@ if __name__ == '__main__':
                                                          p6.predicate.y.value))
 
     gp.plot(plot1, plot2)
+
+
+if __name__ == '__main__':
+    plotPh22()
