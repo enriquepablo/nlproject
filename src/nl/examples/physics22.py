@@ -19,7 +19,7 @@
 from nl import kb, State, Thing, Number, Arith, Fact, Rule
 
 
-time = '1000'
+time = '100'
 
 # names
 
