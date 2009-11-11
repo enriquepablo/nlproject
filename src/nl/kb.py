@@ -22,7 +22,7 @@ import itertools
 import clips
 
 from nl.log import here, logger
-from nl.utils import subclasses, Name, varpat
+from nl.utils import subclasses, Namable, varpat
 from nl.thing import Thing
 from nl.state import State
 from nl.time import Time
@@ -70,7 +70,7 @@ def ask(*sentences):
     clps, templs = get_instances(*sentences)
     resp = []
     if clps:
-        names = [Name.from_clips(ins) for ins in clps]
+        names = [Namable.from_clips(ins) for ins in clps]
         while names:
             first = names[:len(templs)]
             names = names[len(templs):]
@@ -93,7 +93,7 @@ def ask_obj(sentence):
     if clps:
         for ins in clps:
             if isinstance(sentence, Thing):
-                sens.append(Name.from_clips(ins))
+                sens.append(Namable.from_clips(ins))
             elif isinstance(sentence, Fact):
                 i = clips.FindInstance(ins)
                 if issubclass(subclasses[str(i.Class.Name)], Fact):

@@ -23,7 +23,7 @@ from nl.arith import Number
 
 _m = []
 
-class Time(utils.Name):
+class Time(utils.Namable):
     """
     abstract ancestor for Instant & Duration
     """
@@ -208,7 +208,7 @@ class Duration(Time):
 
 utils.register('Duration', Duration)
 
-class Finish(utils.Name):
+class Finish(utils.Namable):
     def __init__(self, duration, instant):
         self.duration = isinstance(duration, Duration) and \
                                 duration or Duration(duration)
@@ -221,7 +221,7 @@ class Finish(utils.Name):
 utils.register('Finish', Finish)
 
 
-class During(utils.Name):
+class During(utils.Namable):
     '''
     given an instant and a duration, build a condition for a rule
     that tests whether the instant is within the duration
@@ -242,7 +242,7 @@ class During(utils.Name):
 utils.register('During', During)
 
 
-class DurationOpMixin(utils.Name):
+class DurationOpMixin(utils.Namable):
     '''
     Abstract ancestor of classes constructed with a sequence of durations
     '''

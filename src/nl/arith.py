@@ -17,7 +17,7 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 # import logging
-from nl.utils import register, varpat, Name, clips_instance
+from nl.utils import register, varpat, Namable, clips_instance
 
 # marker object
 _m = []
@@ -55,7 +55,7 @@ def parens(expr):
     terms.append(term)
     return terms
 
-class Number(Name):
+class Number(Namable):
     """
 
     """

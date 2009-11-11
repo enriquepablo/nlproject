@@ -17,7 +17,7 @@ class_constraint = '?%(val)s&:(or (eq (class ?%(val)s) %(cls)s) (subclassp (clas
 # CLIPS DEFINITIONS
 ###################
 
-_name_def = '(defclass Name (is-a USER))'
+_name_def = '(defclass Namable (is-a USER))'
 logger.info(_name_def)
 clips.Build(_name_def)
 
@@ -32,7 +32,7 @@ logger.info(_reduce_class)
 clips.Build(_reduce_class)
 
 
-_duration_clps = '(defclass Duration (is-a Name) (slot start (type NUMBER) (pattern-match reactive)) (slot end (type NUMBER) (pattern-match reactive)))'
+_duration_clps = '(defclass Duration (is-a Namable) (slot start (type NUMBER) (pattern-match reactive)) (slot end (type NUMBER) (pattern-match reactive)))'
 logger.info(_duration_clps)
 clips.Build(_duration_clps)
 
@@ -133,7 +133,7 @@ _add_pred ="""
 logger.info(_add_pred)
 clips.Build(_add_pred)
 
-_fact_clp = '(defclass Fact (is-a Name) (slot truth (type INTEGER) (default 1) (pattern-match reactive)) (slot subject (type INSTANCE) (pattern-match reactive)) (slot predicate (type INSTANCE) (pattern-match reactive)) (slot time (type ?VARIABLE) (pattern-match reactive)))'
+_fact_clp = '(defclass Fact (is-a Namable) (slot truth (type INTEGER) (default 1) (pattern-match reactive)) (slot subject (type INSTANCE) (pattern-match reactive)) (slot predicate (type INSTANCE) (pattern-match reactive)) (slot time (type ?VARIABLE) (pattern-match reactive)))'
 logger.info(_fact_clp)
 clips.Build(_fact_clp)
 

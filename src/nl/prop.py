@@ -19,7 +19,7 @@
 import clips
 # import logging
 from nl.log import logger
-from nl.utils import register, Name, varpat, subclasses
+from nl.utils import register, Namable, varpat, subclasses
 from nl.arith import Number
 from nl.time import Time, Instant
 from nl.thing import Thing
@@ -27,7 +27,7 @@ from nl.state import State
 
 _m = []
 
-class Fact(Name):
+class Fact(Namable):
     """
     """
     _v_clips_class = clips.FindClass('Fact')
@@ -68,7 +68,7 @@ class Fact(Name):
     def from_clips(cls, instance):
         if not isinstance(instance, clips._clips_wrap.Instance):
             instance = clips.FindInstance(instance)
-        s = Name.from_clips(instance.GetSlot('subject'))
+        s = Namable.from_clips(instance.GetSlot('subject'))
         p = State.from_clips(instance.GetSlot('predicate'))
         t = Time.from_clips(instance.GetSlot('time'))
         truth = instance.GetSlot('truth')

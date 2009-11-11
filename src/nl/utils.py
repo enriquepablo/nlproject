@@ -42,10 +42,10 @@ def get_class(cls):
     return isinstance(cls, str) and subclasses[cls] or cls
 
 
-class Name(object):
+class Namable(object):
     """
     """
-    _v_clips_class = clips.FindClass('Name')
+    _v_clips_class = clips.FindClass('Namable')
 
     @classmethod
     def from_clips(cls, instance):
@@ -53,7 +53,7 @@ class Name(object):
             instance = clips.FindInstance(instance)
         clsname = str(instance.Class.Name)
         cls = subclasses[clsname]
-        if clsname == 'Name':
+        if clsname == 'Namable':
             return cls(str(instance))
         else:
             return cls.from_clips(instance)
@@ -89,7 +89,7 @@ class Name(object):
             return clips_instance(*(vrs[self.value]))
         return '?%s' % self.value
 
-register('Name', Name)
+register('Namable', Namable)
 
 
 def clips_instance(ancestor, mod_path):

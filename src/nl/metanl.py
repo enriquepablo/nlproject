@@ -17,6 +17,6 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 from nl.utils import register
-from nl.utils import Name
+from nl.utils import Namable
 
 

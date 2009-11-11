@@ -19,27 +19,27 @@
 import clips
 from nl.log import logger
 from nl.clps import class_constraint
-from nl.utils import register, varpat, Name, clips_instance, get_class, _newvar
+from nl.utils import register, varpat, Namable, clips_instance, get_class, _newvar
 
 
-class MetaThing(type):
+class Noun(type):
     """
-    When Name is extended, this adds 1 defclass to clips
-    creating a subclass of Name.
+    When Namable is extended, this adds 1 defclass to clips
+    creating a subclass of Namable.
     And registers the class in subclasses
     """
     def __init__(cls, classname, bases, newdict):
-        super(MetaThing, cls).__init__(classname, bases, newdict)
+        super(Noun, cls).__init__(classname, bases, newdict)
         clp = '(defclass %s (is-a %s))' % (classname, bases[0].__name__)
         logger.info(clp)
         clips.Build(clp)
         cls._v_clips_class = clips.FindClass(classname)
         register(classname, cls)
 
-class Thing(Name):
+class Thing(Namable):
     """
     """
-    __metaclass__ = MetaThing
+    __metaclass__ = Noun
 
     def __init__(self, value):
         if value.startswith('['):

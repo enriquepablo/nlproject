@@ -20,7 +20,7 @@
 import clips
 from log import logger
 from nl.clps import class_constraint
-from nl.utils import register, subclasses, Name, varpat, clips_instance, get_class, _newvar
+from nl.utils import register, subclasses, Namable, varpat, clips_instance, get_class, _newvar
 from nl.arith import Number
 from nl.thing import Thing
 
@@ -29,12 +29,12 @@ from nl.thing import Thing
 _m = []
 
 
-class MetaState(type):
+class Verb(type):
     """
     When State is extended, this registers the class in _subclasses
     """
     def __init__(cls, classname, bases, newdict):
-        super(MetaState, cls).__init__(classname, bases, newdict)
+        super(Verb, cls).__init__(classname, bases, newdict)
         if classname == 'State':
             return
         slots = ['(slot %s (type %s) (visibility public) (pattern-match reactive))' % (mod,
@@ -57,10 +57,10 @@ class MetaState(type):
         register(classname, cls)
 
 
-class State(Name):
+class State(Namable):
     """
     """
-    __metaclass__ = MetaState
+    __metaclass__ = Verb
 
     subject = Thing
     mods = {}

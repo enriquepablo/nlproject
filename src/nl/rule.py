@@ -17,9 +17,9 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 import uuid
-from nl.utils import Name
+from nl.utils import Namable
 
-class Rule(Name):
+class Rule(Namable):
     """
     """
     def __init__(self, prems, cons):
