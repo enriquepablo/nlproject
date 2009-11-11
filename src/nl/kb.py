@@ -16,16 +16,12 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import itertools
-#import re
 import clips
 
-from nl.log import here, logger
-from nl.utils import subclasses, Namable, varpat
+from nl.log import logger
+from nl import utils
+from nl.namable import Namable
 from nl.thing import Thing
-from nl.state import State
-from nl.time import Time
 from nl.prop import Fact
 from nl.rule import Rule
 
@@ -33,11 +29,10 @@ from nl.rule import Rule
 def tell(*args):
     for sentence in args:
         s = sentence.put_action()
+        logger.info(s)
         if isinstance(sentence, Rule):
-            logger.info(s)
             clips.Build(s)
         else:
-            logger.info(s)
             clips.Eval(s)
 
 def get_instancesn(*sentences):
@@ -59,7 +54,7 @@ def get_instancesn(*sentences):
 
 def get_instances(*sentences):
     q, templs = get_instancesn(*sentences)
-    logger.info('query: %s\ntempls: %s' % (q, str(templs)))
+    logger.info(q)
     return clips.Eval(q), templs
 
 def retract(sentence):
@@ -76,7 +71,7 @@ def ask(*sentences):
             names = names[len(templs):]
             rsp = {}
             for templ in templs:
-                if varpat.match(templ[0]) and not templ[0].startswith('Y'):
+                if utils.varpat.match(templ[0]) and not templ[0].startswith('Y'):
                     rsp[templ[0]] = str(first[templs.index(templ)])
             if rsp:
                 resp.append(rsp)
@@ -84,7 +79,6 @@ def ask(*sentences):
             resp = True
     else:
         resp = False
-    logger.info('RESP ' + str(resp))
     return resp
 
 def ask_obj(sentence):
@@ -96,13 +90,11 @@ def ask_obj(sentence):
                 sens.append(Namable.from_clips(ins))
             elif isinstance(sentence, Fact):
                 i = clips.FindInstance(ins)
-                if issubclass(subclasses[str(i.Class.Name)], Fact):
+                if issubclass(utils.get_class(str(i.Class.Name)), Fact):
                     sens.append(Fact.from_clips(ins))
     return sens
 
 def extend():
-    logger.info('----------running---------------------')
     acts = clips.Run()
-    logger.info('----------runned: %d---------------------' % acts)
     return acts
 

@@ -18,23 +18,9 @@
 
 import clips
 from nl.log import logger
-from nl.clps import class_constraint
-from nl.utils import register, varpat, Namable, clips_instance, get_class, _newvar
-
-
-class Noun(type):
-    """
-    When Namable is extended, this adds 1 defclass to clips
-    creating a subclass of Namable.
-    And registers the class in subclasses
-    """
-    def __init__(cls, classname, bases, newdict):
-        super(Noun, cls).__init__(classname, bases, newdict)
-        clp = '(defclass %s (is-a %s))' % (classname, bases[0].__name__)
-        logger.info(clp)
-        clips.Build(clp)
-        cls._v_clips_class = clips.FindClass(classname)
-        register(classname, cls)
+from nl import utils
+from nl.metanl import Noun
+from nl.namable import Namable
 
 class Thing(Namable):
     """
@@ -59,14 +45,14 @@ class Thing(Namable):
         if not isinstance(instance, clips._clips_wrap.Instance):
             instance = clips.FindInstance(instance)
         clsname = str(instance.Class.Name)
-        cls = get_class(clsname)
+        cls = utils.get_class(clsname)
         return cls(str(instance))
 
     def get_ce(self, vrs):
         """
         build CE for clips
         """
-        if varpat.match(self.value):
+        if utils.varpat.match(self.value):
             vrs[self.value] = ()
             ce = '(logical (object (is-a %s) (name ?%s)))'
             return ce % (self.__class__.__name__, self.value)
@@ -77,13 +63,13 @@ class Thing(Namable):
         build rule CE constraint for clips
         for a slot constraint for a pred in a prop in a rule
         """
-        if varpat.match(self.value):
+        if utils.varpat.match(self.value):
             return self.get_var_slot_constraint(vrs, self.value)
         return '[%s]' % self.value
 
     def get_constraint(self, vrs, ancestor, mod_path):
-        ci = clips_instance(ancestor, mod_path)
-        if varpat.match(self.value):
+        ci = utils.clips_instance(ancestor, mod_path)
+        if utils.varpat.match(self.value):
             constraint = self.get_var_constraint(vrs, ancestor, mod_path, ci)
         else:
             constraint = '&:(eq %s [%s])' % (ci, self.value)
@@ -94,12 +80,12 @@ class Thing(Namable):
         get instance-set condition;
         return (instance-set templates, instance-set queries)
         """
-        if varpat.match(self.value):
+        if utils.varpat.match(self.value):
             if self.value in vrs and vrs[self.value]:
-                newvar = _newvar()
+                newvar = utils._newvar()
                 templs.append((newvar, self.__class__.__name__))
                 queries.append('(eq ?%s %s)' % (newvar,
-                                     clips_instance(*(vrs[self.value]))))
+                                     utils.clips_instance(*(vrs[self.value]))))
                 return '?%s' % newvar
             vrs[self.value] = ()
             return '?%s' % self.value
@@ -111,7 +97,7 @@ class Thing(Namable):
         get instance-set method;
         return (instance-set templates, instance-set queries)
         """
-        if varpat.match(self.value):
+        if utils.varpat.match(self.value):
             templs.append((self.value, self.__class__.__name__))
             vrs[self.value] = ()
         else:
@@ -119,7 +105,7 @@ class Thing(Namable):
             queries.append('(eq ?%s [%s])' % (newvar, self.value))
 
     def put(self, vrs):
-        if varpat.match(self.value):
+        if utils.varpat.match(self.value):
             return self.put_var(vrs)
         else:
             return '[%s]' % self.value
@@ -134,4 +120,4 @@ class Thing(Namable):
         return '(reduce-class %s %s)' % (val, self.__class__.__name__)
 
 
-register('Thing', Thing)
+utils.register('Thing', Thing)

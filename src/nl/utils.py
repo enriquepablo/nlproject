@@ -19,7 +19,6 @@
 
 import re
 
-import clips
 from nl.log import logger
 from nl.clps import class_constraint
 
@@ -40,56 +39,6 @@ def register(clsname, cls):
 
 def get_class(cls):
     return isinstance(cls, str) and subclasses[cls] or cls
-
-
-class Namable(object):
-    """
-    """
-    _v_clips_class = clips.FindClass('Namable')
-
-    @classmethod
-    def from_clips(cls, instance):
-        if not isinstance(instance, clips._clips_wrap.Instance):
-            instance = clips.FindInstance(instance)
-        clsname = str(instance.Class.Name)
-        cls = subclasses[clsname]
-        if clsname == 'Namable':
-            return cls(str(instance))
-        else:
-            return cls.from_clips(instance)
-
-    def get_var_constraint(self, vrs, ancestor, mod_path, ci):
-        from nl.arith import Number
-        constraint = ''
-        if self.value in vrs:
-            if vrs[self.value]:
-                v_ci = clips_instance(*(vrs[self.value]))
-                constraint = '&:(eq %s %s)' % (v_ci, ci)
-            else:
-                constraint = '&:(eq %s ?%s)' % (ci, self.value)
-        elif not isinstance(self, Number):
-            constraint = '&:(or (eq (class %(ci)s) %(cls)s) (subclassp (class %(ci)s) %(cls)s))' % {'ci': ci, 'cls': self.__class__.__name__}
-        vrs[self.value] = (ancestor, mod_path)
-        return constraint
-
-    def get_var_slot_constraint(self, vrs, val):
-        if self.value in vrs:
-            if vrs[self.value]:
-                return '?%(val)s&:(eq ?%(val)s %(var)s)' % {'val': val,
-                                       'var': clips_instance(*(vrs[self.value]))}
-            else:
-                return '?%s' % self.value
-        else:
-            vrs[self.value]= ()
-            return class_constraint % {'val': self.value,
-                                           'cls': self.__class__.__name__}
-
-    def put_var(self, vrs):
-        if self.value in vrs and vrs[self.value]:
-            return clips_instance(*(vrs[self.value]))
-        return '?%s' % self.value
-
-register('Namable', Namable)
 
 
 def clips_instance(ancestor, mod_path):

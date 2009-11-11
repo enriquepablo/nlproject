@@ -17,10 +17,9 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 import clips
-# import logging
 from nl.log import logger
-from nl.utils import register, Namable, varpat, subclasses
-from nl.arith import Number
+from nl import utils
+from namable import Namable
 from nl.time import Time, Instant
 from nl.thing import Thing
 from nl.state import State
@@ -37,7 +36,7 @@ class Fact(Namable):
         if isinstance(subj, Thing):
             self.subject = subj
         elif isinstance(subj, str):
-            if varpat.match(subj):
+            if utils.varpat.match(subj):
                 self.subject = Thing(subj)
             else:
                 from nl import kb
@@ -46,11 +45,10 @@ class Fact(Namable):
             pass # raise exception
         if isinstance(pred, State):
             self.predicate = pred
-        elif isinstance(pred, str) and varpat.match(pred):
+        elif isinstance(pred, str) and utils.varpat.match(pred):
             self.predicate = State(pred)
         else:
             pass # raise exception
-        logger.info(str(issubclass(type(time),Time)))
         if isinstance(time, Time):
             self.time = time
         else:
@@ -117,4 +115,4 @@ class Fact(Namable):
         t = self.time.put(vrs)
         return '(add-prop %s %s %s %s)' % (s, p, t, self.truth)
 
-register('Fact', Fact)
+utils.register('Fact', Fact)

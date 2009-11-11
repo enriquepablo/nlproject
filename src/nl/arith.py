@@ -16,8 +16,9 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
-# import logging
-from nl.utils import register, varpat, Namable, clips_instance
+from nl.log import logger
+from nl.namable import Namable
+from nl import utils
 
 # marker object
 _m = []
@@ -84,7 +85,7 @@ class Number(Namable):
     def _get_number(self, vrs):
         """
         """
-        if varpat.match(self.value):
+        if utils.varpat.match(self.value):
             return self.put_var(vrs)
         try:
             return str(float(self.value))
@@ -97,8 +98,8 @@ class Number(Namable):
         return self._get_number(vrs)
 
     def get_constraint(self, vrs, ancestor, mod_path):
-        ci = clips_instance(ancestor, mod_path)
-        if varpat.match(self.value):
+        ci = utils.clips_instance(ancestor, mod_path)
+        if utils.varpat.match(self.value):
             constraint = self.get_var_constraint(vrs, ancestor, mod_path, ci)
         else:
             constraint = '&:(eq %s %s)' % (ci, self.get_slot_constraint(vrs))
@@ -117,7 +118,7 @@ class Number(Namable):
     def __str__(self):
         return self._get_number({})
 
-register('Number', Number)
+utils.register('Number', Number)
 
 
 class Arith(Number):
@@ -142,4 +143,4 @@ class Arith(Number):
         arg2 = self.arg2.put(vrs)
         return '(test (%s %s %s))' % (self.value, arg1, arg2)
 
-register('Arith', Arith)
+utils.register('Arith', Arith)

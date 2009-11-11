@@ -15,15 +15,15 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
-from datetime import datetime
 import clips
-from nl.clps import class_constraint
+from nl.log import logger
 from nl import utils
+from nl.namable import Namable
 from nl.arith import Number
 
 _m = []
 
-class Time(utils.Namable):
+class Time(Namable):
     """
     abstract ancestor for Instant & Duration
     """
@@ -208,7 +208,7 @@ class Duration(Time):
 
 utils.register('Duration', Duration)
 
-class Finish(utils.Namable):
+class Finish(Namable):
     def __init__(self, duration, instant):
         self.duration = isinstance(duration, Duration) and \
                                 duration or Duration(duration)
@@ -221,7 +221,7 @@ class Finish(utils.Namable):
 utils.register('Finish', Finish)
 
 
-class During(utils.Namable):
+class During(Namable):
     '''
     given an instant and a duration, build a condition for a rule
     that tests whether the instant is within the duration
@@ -242,7 +242,7 @@ class During(utils.Namable):
 utils.register('During', During)
 
 
-class DurationOpMixin(utils.Namable):
+class DurationOpMixin(Namable):
     '''
     Abstract ancestor of classes constructed with a sequence of durations
     '''
