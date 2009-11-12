@@ -19,7 +19,7 @@
 import clips
 from nl.log import logger
 from nl import utils
-from namable import Namable
+from nl.metanl import Namable
 from nl.time import Time, Instant
 from nl.thing import Thing
 from nl.state import State
@@ -115,4 +115,3 @@ class Fact(Namable):
         t = self.time.put(vrs)
         return '(add-prop %s %s %s %s)' % (s, p, t, self.truth)
 
-utils.register('Fact', Fact)

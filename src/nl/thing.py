@@ -19,8 +19,7 @@
 import clips
 from nl.log import logger
 from nl import utils
-from nl.metanl import Noun
-from nl.namable import Namable
+from nl.metanl import Noun, Namable
 
 class Thing(Namable):
     """
@@ -118,6 +117,3 @@ class Thing(Namable):
             vrs = {}
         val = self.put(vrs)
         return '(reduce-class %s %s)' % (val, self.__class__.__name__)
-
-
-utils.register('Thing', Thing)

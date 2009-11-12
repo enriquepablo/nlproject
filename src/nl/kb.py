@@ -20,7 +20,7 @@ import clips
 
 from nl.log import logger
 from nl import utils
-from nl.namable import Namable
+from nl.metanl import Namable
 from nl.thing import Thing
 from nl.prop import Fact
 from nl.rule import Rule

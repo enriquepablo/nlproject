@@ -15,11 +15,11 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
+
 import clips
 from nl.log import logger
 from nl import utils
-from nl.namable import Namable
-from nl.arith import Number
+from nl.metanl import Namable, Number
 
 _m = []
 
@@ -37,7 +37,6 @@ class Time(Namable):
                 instance = clips.FindInstance(instance)
         return Duration.from_clips(instance)
 
-utils.register('Time', Time)
 
 class Instant(Time, Number):
     '''
@@ -80,7 +79,6 @@ class Instant(Time, Number):
             ''' % {'parent': parent, 'self': num} )
         return num
 
-utils.register('Instant', Instant)
 
 class Duration(Time):
 
@@ -206,7 +204,6 @@ class Duration(Time):
             templs.append((newvar, self.__class__.__name__))
             queries.append('(eq ?%s %s)' % (newvar, self.put(vrs)))
 
-utils.register('Duration', Duration)
 
 class Finish(Namable):
     def __init__(self, duration, instant):
@@ -217,8 +214,6 @@ class Finish(Namable):
 
     def put_action(self, vrs):
         return '(modify-instance %s (end %s))' % (self.duration.put(vrs), self.instant.put(vrs))
-
-utils.register('Finish', Finish)
 
 
 class During(Namable):
@@ -239,8 +234,6 @@ class During(Namable):
             durs.append('(test (and (<= (send %(dur)s get-start) %(ins)s) (or (= (send %(dur)s get-end) -1) (>= (send %(dur)s get-end) %(ins)s))))' % {'dur': duration.put(vrs), 'ins': self.instant.put(vrs)})
         return ' '.join(durs)
 
-utils.register('During', During)
-
 
 class DurationOpMixin(Namable):
     '''
@@ -249,9 +242,6 @@ class DurationOpMixin(Namable):
     def __init__(self, *args):
         self.durations = \
           [isinstance(dur, Duration) and dur or Duration(dur) for dur in args]
-
-
-utils.register('DurationOpMixin', DurationOpMixin)
 
 
 class Coincide(DurationOpMixin):
@@ -269,7 +259,6 @@ class Coincide(DurationOpMixin):
                 """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations])}
 
 
-utils.register('Coincide', Coincide)
 
 class Intersection(DurationOpMixin):
     '''
@@ -284,7 +273,6 @@ class Intersection(DurationOpMixin):
                                            (end (maxcomend %(durs)s)))
                 """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations])}
 
-utils.register('Intersection', Intersection)
 
 class MinComStart(DurationOpMixin):
     """
@@ -295,7 +283,6 @@ class MinComStart(DurationOpMixin):
         instants = [dur.put(vrs) for dur in self.durations]
         return '(mincomstart %s)' % ' '.join(instants)
 
-utils.register('MinComStart', MinComStart)
 
 class MaxComEnd(DurationOpMixin):
     """
@@ -306,4 +293,3 @@ class MaxComEnd(DurationOpMixin):
         instants = [dur.put(vrs) for dur in self.durations]
         return '(maxcomend %s)' % ' '.join(instants)
 
-utils.register('MaxComEnd', MaxComEnd)

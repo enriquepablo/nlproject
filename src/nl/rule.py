@@ -18,7 +18,7 @@
 
 from nl.log import logger
 import uuid
-from nl.namable import Namable
+from nl.metanl import Namable
 
 class Rule(Namable):
     """

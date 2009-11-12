@@ -21,8 +21,7 @@ import clips
 from log import logger
 from nl.clps import class_constraint
 from nl import utils
-from nl.metanl import Verb
-from nl.namable import Namable
+from nl.metanl import Verb, Namable
 from nl.thing import Thing
 
 
@@ -148,5 +147,3 @@ class State(Namable):
                                                mod_o.get_isc(templs, queries, vrs)))
         return '?%s' % newvar
 
-
-utils.register('State', State)

@@ -20,11 +20,11 @@
 import re
 
 from nl.log import logger
-from nl.clps import class_constraint
 
 # vars are always XNUM
 varpat = re.compile(r'^[A-Z]\w*\d+$')
 
+# XXX not thread safe
 _vn = 0
 
 def _newvar():
@@ -49,7 +49,6 @@ def clips_instance(ancestor, mod_path):
     return ancestor
 
 
-# XXX not thread safe
 _now = '1'
 
 def change_now(i=0):
@@ -57,5 +56,35 @@ def change_now(i=0):
     _now = i and str(float(i)) or \
             str(float(_now) + 1)
 
-
+def parens(expr):
+    """
+    >>> from nl.arith import parens
+    >>> parens('uno')
+    'uno'
+    >>> parens('(uno (dos tres) cuatro)')
+    ['uno', '(dos tres)', 'cuatro']
+    >>> parens('(uno (dos tres) (ho ho (he (ha ha))) cuatro)')
+    ['uno', '(dos tres)', '(ho ho (he (ha ha)))', 'cuatro']
+    """
+    if expr[0] != '(':
+        return expr
+    depth = 0
+    term = ''
+    terms = []
+    for c in expr:
+        if depth == 1 and c == ' ':
+            terms.append(term)
+            term = ''
+        elif c == '(':
+            depth += 1
+            if depth > 1:
+                term += c
+        elif c == ')':
+            depth -= 1
+            if depth > 0:
+                term += c
+        else:
+            term += c
+    terms.append(term)
+    return terms
 
