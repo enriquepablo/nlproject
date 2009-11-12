@@ -226,6 +226,40 @@ def r_workflow_for_content(content_type, workflow, context):
     ],[
         Fact(content_type('C1'), Has(what=workflow), Duration('T1'))]))
 
+
+
+class AssignedTo(State):
+    """
+    an abstract action over a content
+    """
+    subject = Workflow
+    mods = {'type': Noun,
+            'where': Context}
+
+def r_transition2(action, workflow, initial, final):
+    """
+    If a person performs a workflow action on a content object,
+    and that object has the intitial status up till that moment,
+    and that workflow is assigned to the type of the object in the context in which it is,
+    from now on it has status final
+    """
+    kb.tell( Rule([
+        Fact(Person('P1'), action(what=Noun('N1', Content)('C1')), Instant('I1')),
+        # &:(and (or (eq (class (send ?Y10 get-what)) ?CLS1) (subclassp (class (send ?Y10 get-what)) ?CLS1)) (subclassp ?CLS1 Content))
+        Fact(Noun('N1', Content)('C1'), Located(where=context), Duration('T1'))
+        # (subject ?Y11:&(and (eq ?Y11 (send ?Y10 get-what))))
+        Fact(workflow, AssignedTo(type=Noun('N1', Content), where=Contet('')), Duration('T2')),
+        # (or (eq (class (send ?Y12 get-type)) ?CLS1) (subclassp (class (send ?Y12 get-type)) ?CLS1))
+        Fact(Noun('N1', Content)('C1'), Has(what=initial), Duration('T1')),
+        # (subject ?Y11:&(and (eq ?Y11 (send ?Y10 get-what))))
+        # 
+        During('I1', 'T1','T2')
+    ],[
+        Fact(Noun('N1', Content)('C1'), Has(what=final), Duration(start=Instant('I1'), end=MaxComEnd('T1', 'T2'))),
+        # (send ?Y10 get-what)
+        Finish('T1', 'I1')]))
+
+
 class Document(Content):
     """
     a document
