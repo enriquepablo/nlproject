@@ -29,8 +29,6 @@ _m = []
 class Fact(Namable):
     """
     """
-    _v_clips_class = clips.FindClass('Fact')
-
     def __init__(self, subj, pred, time=Instant('now'), truth=1):
         self.truth = truth
         if isinstance(subj, Thing):
