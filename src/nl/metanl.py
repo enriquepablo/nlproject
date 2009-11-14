@@ -31,12 +31,152 @@ class Word(type):
     creating a subclass of Namable.
     And registers the class in subclasses
     """
+    def __new__(cls, classname, bases, newdict=None):
+
+        if utils.varpat.match(classname):
+            return ClassVar(classname, bases)
+        return super(Word, cls).__new__(cls, classname, bases, newdict)
+
     def __init__(cls, classname, bases, newdict, clp=''):
         super(Word, cls).__init__(classname, bases, newdict)
         if clp:
             logger.info(clp)
             clips.Build(clp)
         utils.register(classname, cls)
+
+    def clsput(self, vrs, ancestor=None, mod_path=None):
+        return self.__name__
+
+    def get_isc_cls(self, templs, queries, vrs):
+        """
+        get instance-set condition;
+        return (instance-set templates, instance-set queries)
+        """
+        return self.__name__
+
+    @classmethod
+    def from_clips_cls(cls, instance):
+        if not isinstance(instance, clips._clips_wrap.Class):
+            instance = clips.FindClass(instance)
+        clsname = str(instance.Name)
+        return utils.get_class(clsname)
+
+utils.register('Word', Word)
+
+class ClassVar(object):
+    '''
+    falta registrar noun y verb
+    y dar los métodos __init__, get_slot_constraint,
+    y un __call__ que construya un objeto de la clase apropiada.
+    y claro, hace falta que las clases (es decir, noun y verb)
+    tengan los métodos get_slot_constraint etc.
+    '''
+    def __init__(self, var, cls):
+        self.value = var
+        self.cls = cls
+
+    def __call__(self, var):
+        return ClassVarVar(self.value, self.cls, var)
+
+    def get_constraint(self, vrs, ancestor, mod_path):
+        ci = utils.clips_instance(ancestor, mod_path)
+        constraint = []
+        if self.value in vrs:
+            return self.cls(self.value).get_constraint(vrs, ancestor, mod_path)
+        else:
+            vrs[self.value] = (ancestor, mod_path)
+            return '''&:(and
+                          (eq %(ci)s ?%(cvar)s)
+                          (subclassp %(cvar)s %(cls)s))''' % {
+                                    'ci': ci,
+                                    'cvar': self.value,
+                                    'cls': self.cls.__name__}
+
+    def get_isc(self, templs, queries, vrs):
+        """
+        get instance-set condition;
+        return (instance-set templates, instance-set queries)
+        """
+        if self.value in vrs and vrs[self.value]:
+            newvar = utils._newvar()
+            queries.append('(eq ?%s %s)' % (newvar,
+                                 utils.clips_instance(*(vrs[self.value]))))
+            return '?%s' % newvar
+        vrs[self.value] = ()
+        return '?%s' % self.value
+
+    def get_slot_constraint(self, vrs):
+        """
+        build rule CE constraint for clips
+        for a slot constraint for a pred in a prop in a rule
+        """
+        if self.value in vrs:
+            return self.cls(self.value).get_var_slot_constraint(vrs, self.value)
+        else:
+            vrs[self.value] = ()
+            return '%(cvar)s&:(subclassp %(cvar)s %(cls)s)' % {
+                                    'cvar': self.value,
+                                    'cls': self.cls.__name__}
+
+    def put(self, vrs):
+        return self.cls(self.value).put(vrs)
+
+
+class ClassVarVar(object):
+    '''
+    '''
+    def __init__(self, clsvar, cls, var):
+        self.value = var
+        self.clsvar = clsvar
+        self.cls = cls
+
+    def get_constraint(self, vrs, ancestor, mod_path):
+        ci = utils.clips_instance(ancestor, mod_path)
+        constraint = []
+        if self.value in vrs:
+            return self.cls(self.value).get_constraint(vrs, ancestor, mod_path)
+        else:
+            vrs[self.value] = (ancestor, mod_path)
+            return '''&:(and
+                          (eq (class %(ci)s) ?%(cvar)s)
+                          (subclassp %(cvar)s %(cls)s))''' % {
+                                    'ci': ci,
+                                    'cvar': self.clsvar,
+                                    'cls': self.cls.__name__}
+
+    def get_slot_constraint(self, vrs):
+        """
+        build rule CE constraint for clips
+        for a slot constraint for a pred in a prop in a rule
+        """
+        if self.value in vrs:
+            return self.cls(self.value).get_var_slot_constraint(vrs, self.value)
+        else:
+            vrs[self.value] = ()
+            return '''%(var)s&:(and
+                                 (eq (class (send %(var)s) %(cvar)s)
+                                 (subclassp %(cvar)s %(cls)s)))''' % {
+                                    'var': self.value,
+                                    'cvar': self.clsvar,
+                                    'cls': self.cls.__name__}
+
+    def put(self, vrs):
+        return self.cls(self.value).put(vrs)
+
+    def get_isc(self, templs, queries, vrs):
+        """
+        get instance-set condition;
+        return (instance-set templates, instance-set queries)
+        """
+        if self.value in vrs and vrs[self.value]:
+            newvar = utils._newvar()
+            templs.append((newvar, self.clsvar))
+            queries.append('(eq ?%s %s)' % (newvar,
+                                 utils.clips_instance(*(vrs[self.value]))))
+            return '?%s' % newvar
+        vrs[self.value] = ()
+        return '?%s' % self.value
+
 
 class Noun(Word):
     """

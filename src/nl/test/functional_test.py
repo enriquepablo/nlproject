@@ -112,10 +112,10 @@ class cms_test(object):
                                  self.cms.Has(what=self.cms.private),
                                  nl.Duration('X1')))
 
-        import os
-        from nl.log import log_dir, log_file
-        os.remove(log_file)
-        os.rmdir(log_dir)
+        #import os
+        #from nl.log import log_dir, log_file
+        #os.remove(log_file)
+        #os.rmdir(log_dir)
 
 
 class cms3_test(object):

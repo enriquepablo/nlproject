@@ -15,11 +15,17 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
-
+'''
+we can use classes:
+    as cls (and as var within rules)
+        in rules (prems and cons) and atomic facts
+                as subject in fact
+                as object in a predicate in fact
+'''
 import clips
 from nl.log import logger
 from nl import utils
-from nl.metanl import Namable
+from nl.metanl import Namable, Word
 from nl.time import Time, Instant
 from nl.thing import Thing
 from nl.state import State
@@ -31,22 +37,18 @@ class Fact(Namable):
     """
     def __init__(self, subj, pred, time=Instant('now'), truth=1):
         self.truth = truth
-        if isinstance(subj, Thing):
-            self.subject = subj
-        elif isinstance(subj, str):
+        if isinstance(subj, str):
             if utils.varpat.match(subj):
                 self.subject = Thing(subj)
             else:
                 from nl import kb
                 self.subject = kb.ask_obj(Thing(subj))[0]
         else:
-            pass # raise exception
-        if isinstance(pred, State):
-            self.predicate = pred
-        elif isinstance(pred, str) and utils.varpat.match(pred):
+            self.subject = subj
+        if isinstance(pred, str):
             self.predicate = State(pred)
         else:
-            pass # raise exception
+            self.predicate = pred
         if isinstance(time, Time):
             self.time = time
         else:
@@ -64,7 +66,11 @@ class Fact(Namable):
     def from_clips(cls, instance):
         if not isinstance(instance, clips._clips_wrap.Instance):
             instance = clips.FindInstance(instance)
-        s = Namable.from_clips(instance.GetSlot('subject'))
+        s = instance.GetSlot('subject')
+        if isinstance(instance, clips._clips_wrap.Class):
+            s = Word.from_clips_cls(s)
+        else:
+            s = Namable.from_clips(s)
         p = State.from_clips(instance.GetSlot('predicate'))
         t = Time.from_clips(instance.GetSlot('time'))
         truth = instance.GetSlot('truth')
@@ -82,7 +88,8 @@ class Fact(Namable):
         return (instance-set templates, instance-set queries)
         """
         templs.append((newvar, self.__class__.__name__))
-        s = self.subject.get_isc(templs, queries, vrs)
+        isc_meth = getattr(self.subject, 'get_isc_cls', self.subject.get_isc)
+        s = isc_meth(templs, queries, vrs)
         queries.append('(eq ?%s:subject %s)' % (newvar, s))
         p = self.predicate.get_isc(templs, queries, vrs)
         queries.append('(eq ?%s:predicate %s)' % (newvar, p))
@@ -96,8 +103,11 @@ class Fact(Namable):
         put proposition in clips as a conditional element of a rule
         """
         ce = '(logical (object (is-a Fact) (subject %s) (predicate %s) (time %s) (truth %s)))'
-        return ce % (self.subject.get_slot_constraint(vrs),
-                     self.predicate.get_slot_constraint(vrs),
+        constraint_meth = getattr(self.subject, 'clsput', self.subject.get_slot_constraint)
+        s = constraint_meth(vrs),
+        constraint_meth = getattr(self.predicate, 'clsput', self.predicate.get_slot_constraint)
+        p = constraint_meth(vrs),
+        return ce % (s, p,
                      self.time.get_slot_constraint(vrs),
                      self.truth)
 
@@ -108,8 +118,10 @@ class Fact(Namable):
         """
         if vrs is None:
             vrs = {}
-        s = self.subject.put(vrs)
-        p = self.predicate.put(vrs)
+        put_meth = getattr(self.subject, 'clsput', self.subject.put)
+        s = put_meth(vrs)
+        put_meth = getattr(self.predicate, 'clsput', self.predicate.put)
+        p = put_meth(vrs)
         t = self.time.put(vrs)
         return '(add-prop %s %s %s %s)' % (s, p, t, self.truth)
 

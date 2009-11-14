@@ -67,7 +67,9 @@ class State(Namable):
         for mod,mcls in cls.mods.items():
             cmod = instance.GetSlot(mod)
             if cmod is not None:
-                kwargs[mod] = utils.get_class(mcls).from_clips(cmod)
+                mcls = utils.get_class(mcls)
+                meth = getattr(mcls, 'from_clips_cls', mcls.from_clips)
+                kwargs[mod] = meth(cmod)
         return cls(**kwargs)
 
     def get_slot_constraint(self, vrs):
@@ -77,13 +79,15 @@ class State(Namable):
         """
         newvar = utils._newvar()
         if utils.varpat.match(self.value):
-            return self.get_var_slot_constraint(vrs, newvar)
+            return self.get_var_slot_constraint(vrs, newvar) # XXX could be self.value
         constraint = [class_constraint % {'val': newvar,
                                          'cls': self.__class__.__name__}]
         for mod,cls in self.mods.items():
             mod_o =  getattr(self, mod, _m)
             if mod_o is not _m:
-                constraint.append(mod_o.get_constraint(vrs, newvar, (mod,)))
+                constraint_meth = getattr(mod_o, 'clsput',
+                                          mod_o.get_constraint)
+                constraint.append(constraint_meth(vrs, newvar, (mod,)))
         return ''.join(constraint)
 
     def get_constraint(self, vrs, ancestor, mod_path):
@@ -103,9 +107,11 @@ class State(Namable):
             for mod,cls in self.mods.items():
                 mod_o =  getattr(self, mod, _m)
                 if mod_o is not _m:
-                    constraint.append(mod_o.get_constraint(vrs,
-                                                       ancestor,
-                                                       mod_path + (mod,)))
+                    constraint_meth = getattr(mod_o, 'clsput',
+                                              mod_o.get_constraint)
+                    constraint.append(constraint_meth(vrs,
+                                                   ancestor,
+                                                 mod_path + (mod,)))
         return ''.join(constraint)
 
     def put(self, vrs, name=None):
@@ -118,7 +124,8 @@ class State(Namable):
         for mod in self.mods:
             mod_o = getattr(self, mod, _m)
             if mod_o is not _m:
-                slots += [mod, mod_o.put(vrs)]
+                put_meth = getattr(mod_o, 'clsput', mod_o.put)
+                slots += [mod, put_meth(vrs)]
         slots = ' '.join(slots)
         return '(add-pred %s %s)' % (self.__class__.__name__, slots)
 
@@ -143,7 +150,8 @@ class State(Namable):
         for mod,mcls in self.mods.items():
             mod_o = getattr(self, mod, _m)
             if mod_o is not _m and not (utils.varpat.match(mod_o.value) and mod_o.value not in vrs):
+                isc_meth = getattr(mod_o, 'get_isc_cls', mod_o.get_isc)
                 queries.append('(eq ?%s:%s %s)' % (newvar, mod,
-                                               mod_o.get_isc(templs, queries, vrs)))
+                                             isc_meth(templs, queries, vrs)))
         return '?%s' % newvar
 
