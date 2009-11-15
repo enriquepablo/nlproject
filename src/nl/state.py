@@ -68,8 +68,7 @@ class State(Namable):
             cmod = instance.GetSlot(mod)
             if cmod is not None:
                 mcls = utils.get_class(mcls)
-                meth = getattr(mcls, 'from_clips_cls', mcls.from_clips)
-                kwargs[mod] = meth(cmod)
+                kwargs[mod] = mcls.from_clips(cmod)
         return cls(**kwargs)
 
     def get_slot_constraint(self, vrs):
@@ -85,7 +84,7 @@ class State(Namable):
         for mod,cls in self.mods.items():
             mod_o =  getattr(self, mod, _m)
             if mod_o is not _m:
-                constraint_meth = getattr(mod_o, 'clsput',
+                constraint_meth = getattr(mod_o, 'get_constraint_cls',
                                           mod_o.get_constraint)
                 constraint.append(constraint_meth(vrs, newvar, (mod,)))
         return ''.join(constraint)

@@ -68,7 +68,7 @@ class Fact(Namable):
             instance = clips.FindInstance(instance)
         s = instance.GetSlot('subject')
         if isinstance(instance, clips._clips_wrap.Class):
-            s = Word.from_clips_cls(s)
+            s = Word.from_clips(s)
         else:
             s = Namable.from_clips(s)
         p = State.from_clips(instance.GetSlot('predicate'))
@@ -104,9 +104,9 @@ class Fact(Namable):
         """
         ce = '(logical (object (is-a Fact) (subject %s) (predicate %s) (time %s) (truth %s)))'
         constraint_meth = getattr(self.subject, 'clsput', self.subject.get_slot_constraint)
-        s = constraint_meth(vrs),
+        s = constraint_meth(vrs)
         constraint_meth = getattr(self.predicate, 'clsput', self.predicate.get_slot_constraint)
-        p = constraint_meth(vrs),
+        p = constraint_meth(vrs)
         return ce % (s, p,
                      self.time.get_slot_constraint(vrs),
                      self.truth)

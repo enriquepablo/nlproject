@@ -47,6 +47,10 @@ class Word(type):
     def clsput(self, vrs, ancestor=None, mod_path=None):
         return self.__name__
 
+    def get_constraint_cls(self, vrs, ancestor=None, mod_path=None):
+        ci = utils.clips_instance(ancestor, mod_path)
+        return '&:(eq %s %s)' % (self.__name__, ci)
+
     def get_isc_cls(self, templs, queries, vrs):
         """
         get instance-set condition;
@@ -55,7 +59,7 @@ class Word(type):
         return self.__name__
 
     @classmethod
-    def from_clips_cls(cls, instance):
+    def from_clips(cls, instance):
         if not isinstance(instance, clips._clips_wrap.Class):
             instance = clips.FindClass(instance)
         clsname = str(instance.Name)
@@ -189,6 +193,8 @@ class Noun(Word):
         clp = '(defclass %s (is-a %s))' % (classname, bases[0].__name__)
         super(Noun, cls).__init__(classname, bases, newdict, clp=clp)
 
+utils.register('Noun', Noun)
+
 
 
 class Verb(Word):
@@ -215,6 +221,9 @@ class Verb(Word):
             if getattr(kls, 'mods', _m):
                 cls.mods.update(kls.mods)
         super(Verb, cls).__init__(classname, bases, newdict, clp=clp)
+
+utils.register('Verb', Verb)
+
 
 
 class Namable(object):

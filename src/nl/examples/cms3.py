@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
-from nl import (Thing, State, Fact, Rule, Duration, Instant, During, Coincide,
+from nl import (Noun, Thing, State, Fact, Rule, Duration, Instant, During, Coincide,
                 Intersection, Finish, MinComStart, MaxComEnd, kb)
 
 class Person(Thing):
@@ -202,29 +202,26 @@ r_permission(Edit, private, manage_perm)
 
 r_permission(Publish, private, manage_perm)
 
-def r_transition(action, workflow, initial, final):
-    """
-    If a person performs a workflow action on a content object,
-    and that object has the intitial status up till that moment,
-    from now on it has status final
-    """
-    kb.tell( Rule([
-        Fact(Person('P1'), action(what=Content('C1')), Instant('I1')),
-        Fact(Content('C1'), Has(what=initial), Duration('T1')),
-        Fact(Content('C1'), Has(what=workflow), Duration('T2')),
-        During('I1', 'T1','T2')
-    ],[
-        Fact(Content('C1'), Has(what=final), Duration(start=Instant('I1'), end=MaxComEnd('T1', 'T2'))),
-        Finish('T1', 'I1')]))
-
+#def r_transition(action, workflow, initial, final):
+#    """
+#    If a person performs a workflow action on a content object,
+#    and that object has the intitial status up till that moment,
+#    from now on it has status final
+#    """
+#    kb.tell( Rule([
+#        Fact(Person('P1'), action(what=Content('C1')), Instant('I1')),
+#        Fact(Content('C1'), Has(what=initial), Duration('T1')),
+#        Fact(Content('C1'), Has(what=workflow), Duration('T2')),
+#        During('I1', 'T1','T2')
+#    ],[
+#        Fact(Content('C1'), Has(what=final), Duration(start=Instant('I1'), end=MaxComEnd('T1', 'T2'))),
+#        Finish('T1', 'I1')]))
+#
 def r_workflow_for_content(content_type, workflow, context):
     """
     assign workflow to content_type
     """
-    kb.tell( Rule([
-        Fact(content_type('C1'), Located(where=context), Duration('T1'))
-    ],[
-        Fact(content_type('C1'), Has(what=workflow), Duration('T1'))]))
+    kb.tell( Fact(workflow, AssignedTo(noun=content_type, where=context), Duration(start=Instant('now'))))
 
 
 
@@ -233,7 +230,7 @@ class AssignedTo(State):
     an abstract action over a content
     """
     subject = Workflow
-    mods = {'type': Noun,
+    mods = {'noun': Noun,
             'where': Context}
 
 def r_transition(action, workflow, content_type, initial, final):
@@ -244,14 +241,14 @@ def r_transition(action, workflow, content_type, initial, final):
     from now on it has status final
     """
     kb.tell( Rule([
-        Fact(Person('P1'), action(what=Noun('N1', content_type)('C1')), Instant('I1')),
-        Fact(Noun('N1', content_type)('C1'), Located(where=context), Duration('T1'))
-        Fact(workflow, AssignedTo(type=Noun('N1', content_type), where=Context('')), Duration('T2')),
-        Fact(Noun('N1', content_type)('C1'), Has(what=initial), Duration('T1')),
-        During('I1', 'T1','T2')
+        Fact(Person('P1'), action(what=content_type('C1')), Instant('I1')),
+        Fact(content_type('C1'), Located(where=Context('X1')), Duration('T1')),
+        Fact(workflow, AssignedTo(noun=content_type, where=Context('X1')), Duration('T2')),
+        Fact(content_type('C1'), Has(what=initial), Duration('T3')),
+        During('I1', 'T1','T2', 'T3')
     ],[
-        Fact(Noun('N1', content_type)('C1'), Has(what=final), Duration(start=Instant('I1'), end=MaxComEnd('T1', 'T2'))),
-        Finish('T1', 'I1')]))
+        Fact(content_type('C1'), Has(what=final), Duration(start=Instant('I1'), end=MaxComEnd('T1', 'T2'))),
+        Finish('T3', 'I1')]))
 
 
 class Document(Content):
@@ -264,9 +261,9 @@ kb.tell(doc_workflow)
 
 r_workflow_for_content(Document, doc_workflow, basic_context)
 
-r_transition(Publish, doc_workflow, private, public)
+r_transition(Publish, doc_workflow, Document, private, public)
 
-r_transition(Hide, doc_workflow, public, private)
+r_transition(Hide, doc_workflow, Document, public, private)
 
 class Owns(State):
     """
