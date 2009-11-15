@@ -173,12 +173,11 @@ class ClassVarVar(object):
         return (instance-set templates, instance-set queries)
         """
         if self.value in vrs and vrs[self.value]:
-            newvar = utils._newvar()
-            templs.append((newvar, self.clsvar))
-            queries.append('(eq ?%s %s)' % (newvar,
+            templs.append((self.value, self.clsvar))
+            queries.append('(eq ?%s %s)' % (self.value,
                                  utils.clips_instance(*(vrs[self.value]))))
-            return '?%s' % newvar
-        vrs[self.value] = ()
+        else:
+            vrs[self.value] = ()
         return '?%s' % self.value
 
 
