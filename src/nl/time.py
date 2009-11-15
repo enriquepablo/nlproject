@@ -157,28 +157,23 @@ class Duration(Time):
         get instance-set condition;
         modify (instance-set templates, instance-set queries)
         """
-        newvar = utils._newvar()
         if utils.varpat.match(self.value):
             if self.value in vrs:
                 if vrs[self.value]:
-                    queries.append('(eq ?%s %s)' % (newvar,
+                    queries.append('(eq ?%s %s)' % (self.value,
                                      utils.clips_instance(*(vrs[self.value]))))
-                else:
-                    newvar = self.value
             else:
                 vrs[self.value] = ()
-                newvar = self.value
-            templs.append((newvar, 'Duration'))
-            return '?%s' % newvar
+            templs.append((self.value, 'Duration'))
+            return '?%s' % self.value
         start = getattr(self, 'start', _m)
         if parent:
-            newvar = '%s:time' % parent
             core_start = '(send ?%s:time get-start)' % parent
             core_end = '(send ?%s:time get-end)' % parent
         else:
-            templs.append((newvar, 'Duration'))
-            core_start = '?%s:start' % newvar
-            core_end = '?%s:end' % newvar
+            templs.append((self.value, 'Duration'))
+            core_start = '?%s:start' % self.value
+            core_end = '?%s:end' % self.value
         if start is not _m and \
            not (utils.varpat.match(start.value) and \
            start.value not in vrs):
@@ -190,7 +185,7 @@ class Duration(Time):
            end.value not in vrs):
             queries.append('(= %s %s)' % (core_end,
                                   end.get_isc(templs, queries, vrs)))
-        return '?%s' % newvar
+        return '?%s' % self.value
 
     def get_ism(self,  templs, queries, vrs, newvar='time'):
         """
