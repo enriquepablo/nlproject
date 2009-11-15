@@ -102,11 +102,11 @@ class ClassVar(object):
         return (instance-set templates, instance-set queries)
         """
         if self.value in vrs and vrs[self.value]:
-            newvar = utils._newvar()
-            queries.append('(eq ?%s %s)' % (newvar,
+            newvar = self.value
+            queries.append('(eq ?%s %s)' % (self.value,
                                  utils.clips_instance(*(vrs[self.value]))))
-            return '?%s' % newvar
-        vrs[self.value] = ()
+        else:
+            vrs[self.value] = ()
         return '?%s' % self.value
 
     def get_slot_constraint(self, vrs):
