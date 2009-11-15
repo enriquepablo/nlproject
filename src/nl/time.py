@@ -161,8 +161,7 @@ class Duration(Time):
                 if vrs[self.value]:
                     queries.append('(eq ?%s %s)' % (self.value,
                                      utils.clips_instance(*(vrs[self.value]))))
-            else:
-                vrs[self.value] = ()
+            vrs[self.value] = ()
             templs.append((self.value, 'Duration'))
             return '?%s' % self.value
         start = getattr(self, 'start', _m)

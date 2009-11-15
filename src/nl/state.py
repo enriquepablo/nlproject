@@ -136,15 +136,12 @@ class State(Namable):
         """
         newvar = utils._newvar()
         if self.value:
-            if self.value in vrs:
-                if vrs[self.value]:
-                    queries.append('(eq ?%s %s)' % (newvar,
-                                     utils.clips_instance(*(vrs[self.value]))))
-                else:
-                    newvar = self.value
+            if self.value in vrs and vrs[self.value]:
+                queries.append('(eq ?%s %s)' % (newvar,
+                                 utils.clips_instance(*(vrs[self.value]))))
             else:
-                vrs[self.value] = ()
                 newvar = self.value
+            vrs[self.value] = ()
         templs.append((newvar, self.__class__.__name__))
         for mod,mcls in self.mods.items():
             mod_o = getattr(self, mod, _m)

@@ -105,8 +105,7 @@ class ClassVar(object):
             newvar = self.value
             queries.append('(eq ?%s %s)' % (self.value,
                                  utils.clips_instance(*(vrs[self.value]))))
-        else:
-            vrs[self.value] = ()
+        vrs[self.value] = ()
         return '?%s' % self.value
 
     def get_slot_constraint(self, vrs):
@@ -176,8 +175,7 @@ class ClassVarVar(object):
             templs.append((self.value, self.clsvar))
             queries.append('(eq ?%s %s)' % (self.value,
                                  utils.clips_instance(*(vrs[self.value]))))
-        else:
-            vrs[self.value] = ()
+        vrs[self.value] = ()
         return '?%s' % self.value
 
 
