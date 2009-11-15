@@ -136,7 +136,7 @@ class Duration(Time):
         build rule CE slot constraint for clips
         as time in a prem
         """
-        newvar = utils._newvar()
+        newvar = self.value
         if utils.varpat.match(self.value):
             return self.get_var_slot_constraint(vrs, self.value)
         core = '(eq (send %s get-start) %s)' % (newvar, self.start.get_slot_constraint(vrs))
