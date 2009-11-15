@@ -81,12 +81,12 @@ class Thing(Namable):
         """
         if utils.varpat.match(self.value):
             if self.value in vrs and vrs[self.value]:
-                newvar = utils._newvar()
-                templs.append((newvar, self.__class__.__name__))
-                queries.append('(eq ?%s %s)' % (newvar,
+                newvar = self.value
+                templs.append((self.value, self.__class__.__name__))
+                queries.append('(eq ?%s %s)' % (self.value,
                                      utils.clips_instance(*(vrs[self.value]))))
-                return '?%s' % newvar
-            vrs[self.value] = ()
+            else:
+                vrs[self.value] = ()
             return '?%s' % self.value
         else:
             return '[%s]' % self.value
