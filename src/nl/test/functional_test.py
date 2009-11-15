@@ -233,3 +233,27 @@ class physics_test(object):
         assert str(fact[0]) == 'c1 hasposition y 57.641201061 x -65.0657847679 at 50.0'
         resp = nl.kb.ask_obj(nl.Fact(self.p.c1, self.p.HasPosition(x='X1', y='X2'), 'X3'))
         assert len(resp) == 100
+
+
+class noun_test(object):
+    def setup(self):
+        from nl.examples import nouns
+        self.n = nouns
+
+    def teardown(self):
+        reset()
+        del self.n
+
+    def first_test(self):
+        john = self.n.Person('john')
+        nl.kb.tell(john)
+        nl.kb.tell(nl.Fact(john, self.n.Wants(what=self.n.Eats)))
+        nl.kb.extend()
+        assert nl.kb.ask(nl.Fact(john, self.n.Tries(what=self.n.Eats)))
+        assert nl.kb.ask(nl.Fact(john, self.n.Tries(what=nl.Verb('V1', self.n.Eats))))
+        assert nl.kb.ask(nl.Fact(john, self.n.Wants(what=nl.Verb('V1', self.n.Eats))), nl.Fact(john, self.n.Tries(what=nl.Verb('V1', self.n.Eats))))
+        nl.kb.tell(nl.Fact(john, self.n.Wanting(what=self.n.Eating(what=self.n.b1))))
+        nl.kb.extend()
+        assert nl.kb.ask(nl.Fact(john, self.n.Eating(what=self.n.b1)))
+        assert nl.kb.ask(nl.Fact(john, self.n.Feels(what=self.n.Eating(what=self.n.b1))))
+        assert nl.kb.ask(nl.Fact(john, self.n.Smelling(what=self.n.b1)))

@@ -35,6 +35,7 @@ class Word(type):
 
         if utils.varpat.match(classname):
             return ClassVar(classname, bases)
+        cls.value = ''
         return super(Word, cls).__new__(cls, classname, bases, newdict)
 
     def __init__(cls, classname, bases, newdict, clp=''):
@@ -84,16 +85,13 @@ class ClassVar(object):
 
     def get_constraint(self, vrs, ancestor, mod_path):
         ci = utils.clips_instance(ancestor, mod_path)
-        constraint = []
         if self.value in vrs:
             return self.cls(self.value).get_constraint(vrs, ancestor, mod_path)
         else:
             vrs[self.value] = (ancestor, mod_path)
-            return '''&:(and
-                          (eq %(ci)s ?%(cvar)s)
-                          (subclassp %(cvar)s %(cls)s))''' % {
+            return '''&:(or (eq %(ci)s %(cls)s)
+                            (subclassp %(ci)s %(cls)s))''' % {
                                     'ci': ci,
-                                    'cvar': self.value,
                                     'cls': self.cls.__name__}
 
     def get_isc(self, templs, queries, vrs):
@@ -102,9 +100,14 @@ class ClassVar(object):
         return (instance-set templates, instance-set queries)
         """
         if self.value in vrs and vrs[self.value]:
-            newvar = self.value
             queries.append('(eq ?%s %s)' % (self.value,
                                  utils.clips_instance(*(vrs[self.value]))))
+        else:
+            queries.append('''(or
+                                 (eq %(val)s %(cls)s)
+                                 (subclassp %(val)s %(cls)s))''' % {
+                                           'val': self.value,
+                                           'cls': self.cls.__name__})
         vrs[self.value] = ()
         return '?%s' % self.value
 
@@ -117,7 +120,8 @@ class ClassVar(object):
             return self.cls(self.value).get_var_slot_constraint(vrs, self.value)
         else:
             vrs[self.value] = ()
-            return '%(cvar)s&:(subclassp %(cvar)s %(cls)s)' % {
+            return '''%(cvar)s&:(or (eq %(cvar)s %(cls)s)
+                                  subclassp %(cvar)s %(cls)s)''' % {
                                     'cvar': self.value,
                                     'cls': self.cls.__name__}
 
@@ -140,11 +144,10 @@ class ClassVarVar(object):
             return self.cls(self.value).get_constraint(vrs, ancestor, mod_path)
         else:
             vrs[self.value] = (ancestor, mod_path)
-            return '''&:(and
-                          (eq (class %(ci)s) ?%(cvar)s)
-                          (subclassp %(cvar)s %(cls)s))''' % {
+            return '''&:(or
+                          (eq (class %(ci)s) %(cls)s)
+                          (subclassp (class %(ci)s) %(cls)s))''' % {
                                     'ci': ci,
-                                    'cvar': self.clsvar,
                                     'cls': self.cls.__name__}
 
     def get_slot_constraint(self, vrs):
@@ -156,11 +159,10 @@ class ClassVarVar(object):
             return self.cls(self.value).get_var_slot_constraint(vrs, self.value)
         else:
             vrs[self.value] = ()
-            return '''%(var)s&:(and
-                                 (eq (class (send %(var)s) %(cvar)s)
-                                 (subclassp %(cvar)s %(cls)s)))''' % {
+            return '''?%(var)s&:(or
+                                 (eq (class ?%(var)s) %(cls)s)
+                                 (subclassp (class ?%(var)s) %(cls)s))''' % {
                                     'var': self.value,
-                                    'cvar': self.clsvar,
                                     'cls': self.cls.__name__}
 
     def put(self, vrs):

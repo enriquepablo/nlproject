@@ -41,10 +41,12 @@ class State(Namable):
         self.value = args and args[0] or ''
         for mod,cls in self.mods.items():
             if kwargs.get(mod, _m) is not _m:
-                if isinstance(kwargs[mod], utils.get_class(cls)):
-                    setattr(self, mod, kwargs[mod])
-                else:
+                if isinstance(kwargs[mod], basestring) or \
+                   isinstance(kwargs[mod], int) or \
+                   isinstance(kwargs[mod], float):
                     setattr(self, mod, utils.get_class(cls)(kwargs[mod]))
+                else:
+                    setattr(self, mod, kwargs[mod])
             #else:
             #    raise NlError("wrong modifier for verb")
 

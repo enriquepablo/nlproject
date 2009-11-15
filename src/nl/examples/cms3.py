@@ -239,15 +239,18 @@ def r_transition(action, workflow, content_type, initial, final):
     and that object has the intitial status up till that moment,
     and that workflow is assigned to the type of the object in the context in which it is,
     from now on it has status final
+
+    Note: The usage of Noun here is merely for testing purposes,
+    the rule would be simpler substituting Noun('N1', content_type) for content_type
     """
     kb.tell( Rule([
-        Fact(Person('P1'), action(what=content_type('C1')), Instant('I1')),
-        Fact(content_type('C1'), Located(where=Context('X1')), Duration('T1')),
-        Fact(workflow, AssignedTo(noun=content_type, where=Context('X1')), Duration('T2')),
-        Fact(content_type('C1'), Has(what=initial), Duration('T3')),
+        Fact(workflow, AssignedTo(noun=Noun('N1', content_type), where=Context('X1')), Duration('T2')),
+        Fact(Noun('N1', content_type)('C1'), Located(where=Context('X1')), Duration('T1')),
+        Fact(Person('P1'), action(what=Noun('N1', content_type)('C1')), Instant('I1')),
+        Fact(Noun('N1', content_type)('C1'), Has(what=initial), Duration('T3')),
         During('I1', 'T1','T2', 'T3')
     ],[
-        Fact(content_type('C1'), Has(what=final), Duration(start=Instant('I1'), end=MaxComEnd('T1', 'T2'))),
+        Fact(Noun('N1', content_type)('C1'), Has(what=final), Duration(start=Instant('I1'), end=MaxComEnd('T1', 'T2'))),
         Finish('T3', 'I1')]))
 
 
