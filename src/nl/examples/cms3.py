@@ -16,7 +16,9 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
-from nl import (Noun, Thing, State, Fact, Rule, Duration, Instant, During, Coincide,
+from nl.log import logger
+from nl import (Noun, Verb, Number, Thing, State, Fact, Rule,
+                     Duration, Instant, During, Coincide,
                 Intersection, Finish, MinComStart, MaxComEnd, kb)
 
 class Person(Thing):
@@ -303,19 +305,43 @@ class Give(State):
 
 # if someone wants to give some content to someone else, and owns the content,
 # then he gives it to her
+# and the other owns it from then on
 kb.tell(Rule([
         Fact(Person('P1'), Wants(to=Give(what=Content('C1'), whom=Person('P2'))), Instant('I1')),
         Fact(Person('P1'), Owns(what=Content('C1')), Duration('T1')),
         During('I1', 'T1')
     ],[
-        Fact(Person('P1'), Give(what=Content('C1'), whom=Person('P2')), Instant('I1'))]))
-
-# If someone gives some content to someone else, and owns it,
-# then the other owns it from then on
-kb.tell(Rule([
         Fact(Person('P1'), Give(what=Content('C1'), whom=Person('P2')), Instant('I1')),
-        Fact(Person('P3'), Owns(what=Content('C1')), Duration('T1')),
-        During('I1', 'T1')
-    ],[
         Fact(Person('P2'), Owns(what=Content('C1')), Duration(start=Instant('I1'))),
         Finish('T1', 'I1')]))
+
+
+# ACTION STEPS
+
+class ActionStep(Thing): pass
+
+class Contains(State):
+    subject = Verb
+    mods = {'what': Thing,
+            'pos': Number}
+
+# try:
+kb.tell(Rule([
+    Fact(Person('P1'), Verb('V1', Action)('A1'), Instant('I1')),
+    Fact(Verb('V1', Action), Contains(what=ActionStep('S1')), Duration('T1')),
+    During('I1', 'T1')
+],[
+    Fact(Person('P1'), Has(what=ActionStep('S1')), Instant('I1')),
+]))
+# except:
+#     import clips
+#    logger.info(clips.ErrorStream.Read())
+
+
+kb.tell(Rule([
+    Fact(Person('P1'), Has(what=ActionStep('S1')), Instant('I1')),
+    Fact(ActionStep('S1'), Has(what=ActionStep('S2')), Duration('T1')),
+    During('I1', 'T1')
+],[
+    Fact(Person('P1'), Has(what=ActionStep('S2')), Instant('I1')),
+]))

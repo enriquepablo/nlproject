@@ -41,11 +41,17 @@ def get_class(cls):
     return isinstance(cls, str) and subclasses[cls] or cls
 
 
-def clips_instance(ancestor, mod_path):
+def clips_instance(ancestor, mod_path, meths=None):
     send_str = '(send ?%s get-%s)'
+    meth_str = '(%s ?%s)'
     for mod in mod_path:
         ancestor = send_str % (ancestor, mod)
         send_str = '(send %s get-%s)'
+        meth_str = '(%s %s)'
+    if meths:
+        for meth in meths:
+            ancestor = meth_str % (meth, ancestor)
+            meth_str = '(%s %s)'
     return ancestor
 
 

@@ -149,7 +149,7 @@ _add_pred ="""
 logger.info(_add_pred)
 clips.Build(_add_pred)
 
-_fact_clp = '(defclass Fact (is-a Namable) (slot truth (type INTEGER) (default 1) (pattern-match reactive)) (slot subject (type INSTANCE) (pattern-match reactive)) (slot predicate (type INSTANCE) (pattern-match reactive)) (slot time (type ?VARIABLE) (pattern-match reactive)))'
+_fact_clp = '(defclass Fact (is-a Namable) (slot truth (type INTEGER) (default 1) (pattern-match reactive)) (slot subject (type ?VARIABLE) (pattern-match reactive)) (slot predicate (type INSTANCE) (pattern-match reactive)) (slot time (type ?VARIABLE) (pattern-match reactive)))'
 logger.info(_fact_clp)
 clips.Build(_fact_clp)
 

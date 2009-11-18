@@ -215,8 +215,40 @@ class cms3_test(object):
                                  self.cms.Has(what=self.cms.Status('public')),
                                  nl.Instant('now')))
 
-        cpu3 = nl.kb.ask_obj(nl.Thing('cpu3'))
-        nl.log.logger.info(str(cpu3))
+        main_view = self.cms.ActionStep('main_view')
+        main_edit = self.cms.ActionStep('main_edit')
+        button_edit = self.cms.ActionStep('button_edit')
+        nl.kb.tell(main_view, button_edit)
+
+        nl.kb.tell(nl.Fact(self.cms.Edit,
+                           self.cms.Contains(
+                                   what=main_edit),
+                           self.cms.Duration(start='now')))
+
+        nl.kb.tell(nl.Fact(self.cms.View,
+                           self.cms.Contains(
+                                   what=main_view),
+                           self.cms.Duration(start='now')))
+
+        nl.kb.tell(nl.Fact(main_view,
+                           self.cms.Has(
+                                   what=button_edit),
+                           self.cms.Duration(start='now')))
+
+        nl.kb.tell(nl.Fact(self.cms.Person('m6'),
+                           self.cms.Wants(to=self.cms.View(
+                                             what=self.cms.Content('cpu3'))),
+                           self.cms.Instant('now')))
+
+        nl.kb.extend()
+
+        assert nl.kb.ask(nl.Fact(self.cms.Person('m6'),
+                           self.cms.Has(what=button_edit),
+                           self.cms.Instant('now')))
+
+        assert not nl.kb.ask(nl.Fact(self.cms.Person('m6'),
+                           self.cms.Has(what=main_edit),
+                           self.cms.Instant('now')))
 
 
 class physics_test(object):
