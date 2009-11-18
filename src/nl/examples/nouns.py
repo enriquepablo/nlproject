@@ -98,10 +98,10 @@ kb.tell(Rule([
 ]))
 
 kb.tell(Rule([
-    Fact(Person('X1'), Wanting(what=Verb('V1', Eating)('E1'))),
+    Fact(Person('X1'), Wanting(what=Verb('V1', Eating)(what=Food('F1')))),
     Fact(Person('X1'), Verb('V1', Eating)('E1'))
 ],[
-    Fact(Person('X1'), Feels(what=Verb('V1', Eating)('E1'))),
+    Fact(Person('X1'), Feels(what=Verb('V1', Eating)(what=Food('F1')))),
 ]))
 
 kb.tell(Rule([
