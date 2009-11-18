@@ -80,8 +80,8 @@ class ClassVar(object):
         self.value = var
         self.cls = cls
 
-    def __call__(self, var):
-        return ClassVarVar(self.value, self.cls, var)
+    def __call__(self, var='', **kwargs):
+        return ClassVarVar(self.value, self.cls, var, **kwargs)
 
     def get_constraint(self, vrs, ancestor, mod_path):
         ci = utils.clips_instance(ancestor, mod_path)
@@ -132,10 +132,11 @@ class ClassVar(object):
 class ClassVarVar(object):
     '''
     '''
-    def __init__(self, clsvar, cls, var):
+    def __init__(self, clsvar, cls, var, **kwargs):
         self.value = var
         self.clsvar = clsvar
         self.cls = cls
+        self.kwargs = kwargs
 
     def get_constraint(self, vrs, ancestor, mod_path):
         ci = utils.clips_instance(ancestor, mod_path)
