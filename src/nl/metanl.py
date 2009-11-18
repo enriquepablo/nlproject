@@ -136,13 +136,13 @@ class ClassVarVar(object):
         self.value = var
         self.clsvar = clsvar
         self.cls = cls
-        self.kwargs = kwargs
+        self.ob = cls(var, **kwargs)
 
     def get_constraint(self, vrs, ancestor, mod_path):
         ci = utils.clips_instance(ancestor, mod_path)
         constraint = []
-        if self.value in vrs:
-            return self.cls(self.value).get_constraint(vrs, ancestor, mod_path)
+        if not self.value or self.value in vrs:
+            return self.ob.get_constraint(vrs, ancestor, mod_path)
         else:
             vrs[self.value] = (ancestor, mod_path)
             vrs[self.clsvar] = (ancestor, mod_path, ['class'])
@@ -157,8 +157,8 @@ class ClassVarVar(object):
         build rule CE constraint for clips
         for a slot constraint for a pred in a prop in a rule
         """
-        if self.value in vrs:
-            return self.cls(self.value).get_var_slot_constraint(vrs, self.value)
+        if not self.value or self.value in vrs:
+            return self.ob.get_var_slot_constraint(vrs, self.value)
         else:
             vrs[self.value] = ()
             vrs[self.clsvar] = (self.value, [], ['class'])
@@ -169,7 +169,7 @@ class ClassVarVar(object):
                                     'cls': self.cls.__name__}
 
     def put(self, vrs):
-        return self.cls(self.value).put(vrs)
+        return self.ob.put(vrs)
 
     def get_isc(self, templs, queries, vrs):
         """
@@ -180,6 +180,9 @@ class ClassVarVar(object):
             templs.append((self.value, self.clsvar))
             queries.append('(eq ?%s %s)' % (self.value,
                                  utils.clips_instance(*(vrs[self.value]))))
+        try:
+            self.ob.get_mod_isc(self.value, templs, queries, vrs)
+        except AttributeError: pass
         vrs[self.value] = ()
         return '?%s' % self.value
 

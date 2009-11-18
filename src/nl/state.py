@@ -145,11 +145,14 @@ class State(Namable):
                 newvar = self.value
             vrs[self.value] = ()
         templs.append((newvar, self.__class__.__name__))
+        self.get_mod_isc(newvar, templs, queries, vrs)
+        return '?%s' % newvar
+
+    def get_mod_isc(self, newvar, templs, queries, vrs):
         for mod,mcls in self.mods.items():
             mod_o = getattr(self, mod, _m)
             if mod_o is not _m and not (utils.varpat.match(mod_o.value) and mod_o.value not in vrs):
                 isc_meth = getattr(mod_o, 'get_isc_cls', mod_o.get_isc)
                 queries.append('(eq ?%s:%s %s)' % (newvar, mod,
                                              isc_meth(templs, queries, vrs)))
-        return '?%s' % newvar
 
