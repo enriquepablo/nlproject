@@ -31,7 +31,7 @@ class Word(type):
     creating a subclass of Namable.
     And registers the class in subclasses
     """
-    def __new__(cls, classname, bases, newdict=None):
+    def __new__(cls, classname, bases=None, newdict=None):
 
         if utils.varpat.match(classname):
             return ClassVar(classname, bases)
@@ -76,9 +76,9 @@ class ClassVar(object):
     y claro, hace falta que las clases (es decir, noun y verb)
     tengan los métodos get_slot_constraint etc.
     '''
-    def __init__(self, var, cls):
+    def __init__(self, var, cls=None):
         self.value = var
-        self.cls = cls
+        self.cls = cls and cls or utils.get_class('State')
 
     def __call__(self, var='', **kwargs):
         return ClassVarVar(self.value, self.cls, var, **kwargs)
@@ -126,6 +126,7 @@ class ClassVar(object):
         return '?%s' % self.value
 
     def put(self, vrs):
+        # a hack
         return self.cls(self.value).put(vrs)
 
 
@@ -185,6 +186,24 @@ class ClassVarVar(object):
         except AttributeError: pass
         vrs[self.value] = ()
         return '?%s' % self.value
+
+
+class Subword(object):
+    '''
+    '''
+    def __init__(self, sub, sup):
+        self.sub = sub
+        self.sup = sup
+
+    def get_ce(self, vrs):
+        '''
+        '''
+        sub = getattr(self.sub, 'clsput', self.sub.put)(vrs)
+        sup = getattr(self.sup, 'clsput', self.sup.put)(vrs)
+        return ''' (test (or (eq %(sub)s %(sup)s)
+                             (subclassp %(sub)s %(sup)s)))
+               ''' % {'sub': sub,
+                      'sup': sup}
 
 
 class Noun(Word):

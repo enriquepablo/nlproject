@@ -18,7 +18,7 @@
 
 from nl.log import logger
 from nl import (Noun, Verb, Number, Thing, State, Fact, Rule,
-                     Duration, Instant, During, Coincide,
+                Subword, Duration, Instant, During, Coincide,
                 Intersection, Finish, MinComStart, MaxComEnd, kb)
 
 class Person(Thing):
@@ -327,9 +327,10 @@ class Contains(State):
 
 # try:
 kb.tell(Rule([
-    Fact(Person('P1'), Verb('V1', Action)('A1'), Instant('I1')),
-    Fact(Verb('V1', Action), Contains(what=ActionStep('S1')), Duration('T1')),
-    During('I1', 'T1')
+    Fact(Person('P1'), Verb('V1')('A1'), Instant('I1')),
+    Fact(Verb('V1'), Contains(what=ActionStep('S1')), Duration('T1')),
+    Subword(Verb('V1'), Action),
+    During('I1', 'T1'),
 ],[
     Fact(Person('P1'), Has(what=ActionStep('S1')), Instant('I1')),
 ]))

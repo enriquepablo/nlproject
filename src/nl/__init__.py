@@ -18,7 +18,7 @@
 
 
 import kb
-from metanl import Number, Arith, Noun, Word, Verb
+from metanl import Number, Arith, Noun, Word, Verb, Subword
 from thing import Thing
 from state import State
 from prop import Fact
