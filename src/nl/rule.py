@@ -18,7 +18,7 @@
 
 from nl.log import logger
 import uuid
-from nl.metanl import Namable
+from nl.metanl import Namable, Subword
 
 class Rule(Namable):
     """
@@ -27,6 +27,16 @@ class Rule(Namable):
         self.name = uuid.uuid4().get_hex()
         self.prems = prems
         self.cons = cons
+        sane = False
+        for x in xrange(len(self.prems)):
+            if sane:
+                break
+            if isinstance(self.prems[0], Subword):
+                self.prems = self.prems[1:] + [self.prems[0]]
+            else:
+                sane = True
+        if not sane:
+            raise SyntaxError('cannot have only subwords as prems')
 
     def put_action(self, vrs=None):
         """

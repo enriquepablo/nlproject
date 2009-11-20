@@ -171,7 +171,7 @@ class Hide(WfAction):
 
 class Workflow(Thing):
     """
-    a content type can have a workflow
+    a content type can have a workflow in a context
     """
 
 def r_permission(action, status, perm):
@@ -221,7 +221,7 @@ r_permission(Publish, private, manage_perm)
 #
 def r_workflow_for_content(content_type, workflow, context):
     """
-    assign workflow to content_type
+    assign workflow to content_type in context
     """
     kb.tell( Fact(workflow, AssignedTo(noun=content_type, where=context), Duration(start=Instant('now'))))
 
@@ -305,7 +305,7 @@ class Give(State):
 
 # if someone wants to give some content to someone else, and owns the content,
 # then he gives it to her
-# and the other owns it from then on
+# and she owns it from then on
 kb.tell(Rule([
         Fact(Person('P1'), Wants(to=Give(what=Content('C1'), whom=Person('P2'))), Instant('I1')),
         Fact(Person('P1'), Owns(what=Content('C1')), Duration('T1')),
@@ -327,10 +327,10 @@ class Contains(State):
 
 # try:
 kb.tell(Rule([
+    Subword(Verb('V1'), Action),
     Fact(Person('P1'), Verb('V1')('A1'), Instant('I1')),
     Fact(Verb('V1'), Contains(what=ActionStep('S1')), Duration('T1')),
-    Subword(Verb('V1'), Action),
-    During('I1', 'T1'),
+    During('I1', 'T1')
 ],[
     Fact(Person('P1'), Has(what=ActionStep('S1')), Instant('I1')),
 ]))
@@ -340,9 +340,9 @@ kb.tell(Rule([
 
 
 kb.tell(Rule([
-    Fact(Person('P1'), Has(what=ActionStep('S1')), Instant('I1')),
+    Fact(Thing('P1'), Has(what=ActionStep('S1')), Instant('I1')),
     Fact(ActionStep('S1'), Has(what=ActionStep('S2')), Duration('T1')),
     During('I1', 'T1')
 ],[
-    Fact(Person('P1'), Has(what=ActionStep('S2')), Instant('I1')),
+    Fact(Thing('P1'), Has(what=ActionStep('S2')), Instant('I1')),
 ]))
