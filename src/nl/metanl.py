@@ -100,14 +100,19 @@ utils.register('Word', Word)
 class ClassVar(object):
     '''
     Used in rules, in the head or tail,
-    as subject or 
+    as subject or mod in a predicate,
+    when Word is called with a string
+    that matches varpat.
+
     '''
     def __init__(self, var, cls=None):
         self.value = var
         self.cls = cls and cls or utils.get_class('Namable')
 
     def __call__(self, var='', **kwargs):
-        return ClassVarVar(self.value, self.cls, var, **kwargs)
+        if utils.varpat.match(self.value):
+            return ClassVarVar(self.value, self.cls, var, **kwargs)
+        return self.cls(self.value)
 
     def get_constraint(self, vrs, ancestor, mod_path):
         ci = utils.clips_instance(ancestor, mod_path)
