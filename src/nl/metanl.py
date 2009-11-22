@@ -27,14 +27,22 @@ _m = []
 
 class Word(type):
     """
-    When Namable is extended, this adds 1 defclass to clips
+    When Namable is extended,
+    __init__ adds 1 defclass to clips
     creating a subclass of Namable.
     And registers the class in subclasses
+    If utils.varpat matches the classname,
+    however, __new__ builds a ClassVar intance
+    and returns it, thus bypassing __init__.
     """
     def __new__(cls, classname, bases=None, newdict=None):
 
         if utils.varpat.match(classname):
-            return ClassVar(classname, bases)
+            if bases:
+                return ClassVar(classname, bases)
+            elif getattr(cls, 'cls', False):
+                return ClassVar(classname, cls.cls)
+            return ClassVar(classname, utils.get_class('Namable'))
         cls.value = ''
         return super(Word, cls).__new__(cls, classname, bases, newdict)
 
@@ -46,21 +54,42 @@ class Word(type):
         utils.register(classname, cls)
 
     def clsput(self, vrs, ancestor=None, mod_path=None):
+        '''
+        return clips snippet to be used
+        when the class is the subject in a fact
+        or a mod in a predicate
+        and the sentence is being asserted
+        or is in the head of a rule.
+        Also when the class is used as subject
+        of a fact in the tail of a rule.
+        '''
         return self.__name__
 
     def get_constraint_cls(self, vrs, ancestor=None, mod_path=None):
+        '''
+        return clips snippet to be used
+        when the class is a mod in a predicate
+        and the sentence is in the tail of a rule.
+        '''
         ci = utils.clips_instance(ancestor, mod_path)
         return '&:(eq %s %s)' % (self.__name__, ci)
 
     def get_isc_cls(self, templs, queries, vrs):
         """
-        get instance-set condition;
+        build clips snippet
+        to be used when the class is the subject in a fact
+        or a mod in a predicate
+        and the sentence is in a query.
         return (instance-set templates, instance-set queries)
         """
         return self.__name__
 
     @classmethod
     def from_clips(cls, instance):
+        '''
+        build nl instance starting from a clips instance
+        or instance name
+        '''
         if not isinstance(instance, clips._clips_wrap.Class):
             instance = clips.FindClass(instance)
         clsname = str(instance.Name)
@@ -70,15 +99,12 @@ utils.register('Word', Word)
 
 class ClassVar(object):
     '''
-    falta registrar noun y verb
-    y dar los métodos __init__, get_slot_constraint,
-    y un __call__ que construya un objeto de la clase apropiada.
-    y claro, hace falta que las clases (es decir, noun y verb)
-    tengan los métodos get_slot_constraint etc.
+    Used in rules, in the head or tail,
+    as subject or 
     '''
     def __init__(self, var, cls=None):
         self.value = var
-        self.cls = cls and cls or utils.get_class('State')
+        self.cls = cls and cls or utils.get_class('Namable')
 
     def __call__(self, var='', **kwargs):
         return ClassVarVar(self.value, self.cls, var, **kwargs)
@@ -210,8 +236,16 @@ class Noun(Word):
     """
     When Namable is extended, this adds 1 defclass to clips
     creating a subclass of Namable.
-    And registers the class in subclasses
+    And registers the class in utils.subclasses.
+    If utils.varpat matches classname,
+    it sets cls to Thing so that Word.__new__
+    can return the right ClassVar.
     """
+    def __new__(cls, classname, bases=None, newdict=None):
+        if utils.varpat.match(classname) and not bases:
+            cls.cls = utils.get_class('Thing')
+        return Word.__new__(cls, classname, bases, newdict)
+
     def __init__(cls, classname, bases, newdict):
         superclassname = bases[0].__name__
         clp = '(defclass %s (is-a %s))' % (classname, bases[0].__name__)
@@ -225,6 +259,11 @@ class Verb(Word):
     """
     When State is extended, this registers the class in _subclasses
     """
+    def __new__(cls, classname, bases=None, newdict=None):
+        if utils.varpat.match(classname) and not bases:
+            cls.cls = utils.get_class('State')
+        return Word.__new__(cls, classname, bases, newdict)
+
     def __init__(cls, classname, bases, newdict):
         if classname == 'State':
             # due to the ordering of things in clps.py
