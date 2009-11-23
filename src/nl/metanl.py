@@ -103,7 +103,14 @@ class ClassVar(object):
     as subject or mod in a predicate,
     when Word is called with a string
     that matches varpat.
+    Intances can be called, and give back
+    an instance of ClassVarVar,
+    that can handle clips for
+    the case in which we have both
+    the class and the name or mods
+    as variables.
 
+    This is not to be part of the public api
     '''
     def __init__(self, var, cls=None):
         self.value = var
@@ -115,6 +122,11 @@ class ClassVar(object):
         return self.cls(self.value)
 
     def get_constraint(self, vrs, ancestor, mod_path):
+        '''
+        return clips snippet to be used
+        when the class var is a mod in a predicate
+        and the sentence is in the tail of a rule.
+        '''
         ci = utils.clips_instance(ancestor, mod_path)
         if self.value in vrs:
             return self.cls(self.value).get_constraint(vrs, ancestor, mod_path)
@@ -127,8 +139,9 @@ class ClassVar(object):
 
     def get_slot_constraint(self, vrs):
         """
-        build rule CE constraint for clips
-        for a slot constraint for a pred in a prop in a rule
+        return clips snippet to be used
+        when the class var is predicate or subject
+        and the sentence is in the tail of a rule.
         """
         if self.value in vrs:
             return self.cls(self.value).get_var_slot_constraint(vrs, self.value)
@@ -141,7 +154,10 @@ class ClassVar(object):
 
     def get_isc(self, templs, queries, vrs):
         """
-        get instance-set condition;
+        build clips snippet
+        to be used when the class var is the subject in a fact
+        or a mod in a predicate
+        and the sentence is in a query.
         return (instance-set templates, instance-set queries)
         """
         if self.value in vrs and vrs[self.value]:
@@ -163,6 +179,14 @@ class ClassVar(object):
 
 class ClassVarVar(object):
     '''
+    Intances of ClasVar can be called, and give back
+    an instance of ClassVarVar,
+    that can handle clips for
+    the case in which we have both
+    the class and the name or mods
+    as variables.
+
+    This is not to be part of the public api
     '''
     def __init__(self, clsvar, cls, var, **kwargs):
         self.value = var
@@ -171,6 +195,11 @@ class ClassVarVar(object):
         self.ob = cls(var, **kwargs)
 
     def get_constraint(self, vrs, ancestor, mod_path):
+        '''
+        return clips snippet to be used
+        when the variable is a mod in a predicate
+        and the sentence is in the tail of a rule.
+        '''
         ci = utils.clips_instance(ancestor, mod_path)
         constraint = []
         if not self.value or self.value in vrs:
@@ -186,8 +215,9 @@ class ClassVarVar(object):
 
     def get_slot_constraint(self, vrs):
         """
-        build rule CE constraint for clips
-        for a slot constraint for a pred in a prop in a rule
+        return clips snippet to be used
+        when the variable is predicate or subject
+        and the sentence is in the tail of a rule.
         """
         if not self.value or self.value in vrs:
             return self.ob.get_var_slot_constraint(vrs, self.value)
@@ -242,6 +272,7 @@ class Noun(Word):
     When Namable is extended, this adds 1 defclass to clips
     creating a subclass of Namable.
     And registers the class in utils.subclasses.
+
     If utils.varpat matches classname,
     it sets cls to Thing so that Word.__new__
     can return the right ClassVar.
