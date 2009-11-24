@@ -27,6 +27,10 @@ from nl.rule import Rule
 
 
 def tell(*args):
+    '''
+    Take any number of sentences and rules and
+    add them to clips.
+    '''
     for sentence in args:
         s = sentence.put_action()
         logger.info(s)
@@ -62,6 +66,19 @@ def retract(sentence):
         clips.FindInstance(ins).Remove()
 
 def ask(*sentences):
+    '''
+    Retrieve objects from clips.
+    sentences is a list of facts or things,
+    and they can contain variables,
+    whose scope is the set of sentences asked.
+    return a list of dicts with the names of the variables
+    used in the sentences asked as keys
+    and the matched objects as values.
+    If there are no variables in the
+    question, but the asked sentences match,
+    return True.
+    if there is no match, return False
+    '''
     clps, templs = get_instances(*sentences)
     resp = []
     if clps:
@@ -82,6 +99,11 @@ def ask(*sentences):
     return resp
 
 def ask_obj(sentence):
+    '''
+    retrieve sentences in clips
+    matching the given sentence.
+    Can use variables.
+    '''
     clps, templs = get_instances(sentence)
     sens = []
     if clps:
@@ -95,6 +117,13 @@ def ask_obj(sentence):
     return sens
 
 def extend():
+    '''
+    Run the CLIPS machine;
+    build or extend the rete network.
+    To be used whenever new sentences
+    or rules are added to clips,
+    and we want to query the system.
+    '''
     acts = clips.Run()
     return acts
 
