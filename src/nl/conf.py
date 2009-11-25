@@ -16,27 +16,16 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
-# this snippet comes from
-# http://www.mechanicalcat.net/richard/log/Python/Simple_usage_of_Python_s_logging_module
+debug_level = 'ERROR'
 
-import os
-import logging
-from nl import conf
+with_callback = False
 
-logger = logging.getLogger('nl')
-here = os.path.join(os.path.dirname(__file__))
-log_dir = os.path.join(here, 'clips')
-log_file = os.path.join(log_dir, 'log.clp')
-if not os.path.isfile(log_file):
-    if not os.path.isdir(log_dir):
-        os.mkdir(log_dir)
-    f = open(log_file, 'w')
-    f.write('log file for nl\n\n')
-    f.close()
-hdlr = logging.FileHandler(log_file)
-formatter = logging.Formatter('%(message)s')
-# formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-hdlr.setFormatter(formatter)
-logger.addHandler(hdlr)
-logger.setLevel(getattr(logging, conf.debug_level))
+####################
+### CLIPS CONFIG ###
+####################
 
+import clips
+
+clips.DebugConfig.ExternalTraceback = False
+#clips.EngineConfig.ResetGlobals = True
+clips.EngineConfig.IncrementalReset = True

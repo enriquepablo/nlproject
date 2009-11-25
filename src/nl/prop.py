@@ -131,3 +131,19 @@ class Fact(Namable):
         t = self.time.put(vrs)
         return '(add-prop %s %s %s %s)' % (s, p, t, self.truth)
 
+
+
+def factback(csubj, cpred, ctime, ctruth):
+    """
+    """
+    try:
+        subj = Namable.from_clips(csubj)
+    except clips.ClipsError:
+        subj = Word.from_clips(csubj)
+    pred = Namable.from_clips(cpred)
+    time = Time.from_clips(ctime)
+    truth = int(str(ctruth))
+    fact = Fact(subj, pred, time, truth=truth)
+    pred.in_fact(fact)
+
+clips.RegisterPythonFunction(factback)

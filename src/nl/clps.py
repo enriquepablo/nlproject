@@ -18,10 +18,7 @@
 
 import clips
 from nl.log import logger
-
-#clips.DebugConfig.ExternalTraceback = True
-#clips.EngineConfig.ResetGlobals = True
-clips.EngineConfig.IncrementalReset = True
+from nl import conf
 
 
 # CLIPS SNIPPETS
@@ -163,6 +160,11 @@ clips.Build(_fact_clp)
 
 #clips.RegisterPythonFunction(ptonl)
 
+if conf.with_callback:
+    callback = '(python-call factback ?s ?p ?t ?r)'
+else:
+    callback = ''
+
 _add_prop = '''
 (deffunction add-prop (?s ?p ?t ?r)
        (bind ?count 0)
@@ -180,7 +182,8 @@ _add_prop = '''
                                            (predicate ?p)
                                            (time ?t)
                                            (truth ?r))
-        else (return TRUE)))'''
+             %s
+        else (return TRUE)))''' % callback
 
 logger.info(_add_prop)
 clips.Build(_add_prop)

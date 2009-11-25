@@ -80,7 +80,7 @@ class State(Namable):
         kwargs = {}
         for mod,mcls in cls.mods.items():
             cmod = instance.GetSlot(mod)
-            if cmod is not None:
+            if cmod:
                 mcls = utils.get_class(mcls)
                 kwargs[mod] = mcls.from_clips(cmod)
         return cls(**kwargs)
@@ -168,3 +168,13 @@ class State(Namable):
                 queries.append('(eq ?%s:%s %s)' % (newvar, mod,
                                              isc_meth(templs, queries, vrs)))
 
+    def in_fact(self, fact):
+        '''
+        To be overriden by subclasses.
+        hook called from clips when a fact that has a predicate
+        of this class is added to clips.
+
+        TODO: implement as an after message-handler for creation of
+        instances of State, so that not all facts make the call.
+        '''
+        logger.info('FROM STATE! %s' % str(fact))
