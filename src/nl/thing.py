@@ -23,6 +23,18 @@ from nl.metanl import Noun, Namable
 
 class Thing(Namable):
     """
+    The most general noun, the ancestor of all nouns.
+    Is instantiated with a string,
+    that can be a variable if within a rule,
+    or any other string that is a valid python name,
+    that will act as a proper name.
+
+    The instances can be used as first argument to Fact,
+    and also as named arguments in the construction of
+    State instances.
+
+    The class, and its subclasses, can be used as first argument
+    to Fact, and as named arguments in State instances.
     """
     __metaclass__ = Noun
 

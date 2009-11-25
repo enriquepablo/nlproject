@@ -81,6 +81,13 @@ class Instant(Time, Number):
 
 
 class Duration(Time):
+    '''
+    A duration in time.
+    Istantiated either with a string containing a variable name,
+    or with two named args, start and end, that can either be
+    instances of Instant or strings to be converted in such.
+    Can be used as time argument for instances of Fact.
+    '''
 
     def __init__(self, var='', start=-1, end=-1):
         self.value = var
@@ -199,6 +206,11 @@ class Duration(Time):
 
 
 class Finish(Namable):
+    '''
+    Instantiated with an Instance of duration as only arg.
+
+    to be used as a consecuence in a rule
+    '''
     def __init__(self, duration, instant):
         self.duration = isinstance(duration, Duration) and \
                                 duration or Duration(duration)
@@ -211,8 +223,10 @@ class Finish(Namable):
 
 class During(Namable):
     '''
-    given an instant and a duration, build a condition for a rule
-    that tests whether the instant is within the duration
+    given an instant and a list ofdurations,
+    build a condition for a rule
+    that tests whether the instant
+    is within the all durations.
     '''
     def __init__(self, instant, *durations):
         self.instant = isinstance(instant, Instant) and \
@@ -257,7 +271,9 @@ class Intersection(DurationOpMixin):
     '''
     given a set of durations,
     put a duration that is the intersection of them all
-    assume that the intersection exists
+    assume that the intersection exists.
+
+    To be used wherever a Duration would.
     '''
 
     def put(self, vrs):
@@ -270,6 +286,8 @@ class Intersection(DurationOpMixin):
 class MinComStart(DurationOpMixin):
     """
     given a set of durations, find out the minimum common instant
+
+    To be used wherever an instant would
     """
 
     def put(self, vrs):
@@ -280,6 +298,8 @@ class MinComStart(DurationOpMixin):
 class MaxComEnd(DurationOpMixin):
     """
     given a set of durations, find out the maximum common instant
+
+    To be used wherever an instant would
     """
 
     def put(self, vrs):

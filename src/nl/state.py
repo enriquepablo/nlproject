@@ -31,6 +31,18 @@ _m = []
 
 class State(Namable):
     """
+    The most general verb, the ancestor of all verbs.
+    Can be instantiated, either with a string with a variable,
+    or with a series of named arguments, corresponding
+    to the items in the mods dict with which the class
+    was declared.
+
+    The instances can be used as the second argument to Fact,
+    and also as named arguments in the construction of other
+    State instances.
+
+    The class, and its subclasses, can be used as first argument
+    to Fact, and as named arguments in State instances.
     """
     __metaclass__ = Verb
 

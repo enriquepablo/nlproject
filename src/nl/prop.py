@@ -34,6 +34,12 @@ _m = []
 
 class Fact(Namable):
     """
+    A fact is built with a subj and a pred positional arguments.
+    subj is either an object of Thing or any of its subclasses,
+    or a class chosen among Thing, State, or any subclass of them.
+    It can also take a named argument, often given as a 3rd
+    positional arg, that has to be of type Time,
+    and a named arg 'truth', that is either 0 or 1.
     """
     def __init__(self, subj, pred, time=Instant('now'), truth=1):
         self.truth = truth

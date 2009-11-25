@@ -30,10 +30,12 @@ class Word(type):
     When Namable is extended,
     __init__ adds 1 defclass to clips
     creating a subclass of Namable.
-    And registers the class in subclasses
+    And registers the class in utils.subclasses.
     If utils.varpat matches the classname,
     however, __new__ builds a ClassVar intance
     and returns it, thus bypassing __init__.
+    In that case, bases can be a subclass of
+    State or Thing.
     """
     def __new__(cls, classname, bases=None, newdict=None):
 
@@ -251,6 +253,9 @@ class ClassVarVar(object):
 
 class Subword(object):
     '''
+    Instantiated with two subclasses of Namable,
+    Or of ClassVar created with Word(var),
+    it can be used as a premise in a rule.
     '''
     def __init__(self, sub, sup):
         self.sub = sub
@@ -269,13 +274,14 @@ class Subword(object):
 
 class Noun(Word):
     """
-    When Namable is extended, this adds 1 defclass to clips
+    When Thing is extended, this adds 1 defclass to clips
     creating a subclass of Namable.
     And registers the class in utils.subclasses.
 
     If utils.varpat matches classname,
     it sets cls to Thing so that Word.__new__
-    can return the right ClassVar.
+    can return the right ClassVar,
+    unless bases is a Thing subclass.
     """
     def __new__(cls, classname, bases=None, newdict=None):
         if utils.varpat.match(classname) and not bases:
@@ -293,7 +299,18 @@ utils.register('Noun', Noun)
 
 class Verb(Word):
     """
-    When State is extended, this registers the class in _subclasses
+    When State is extended, this adds 1 defclass to clips
+    creating a subclass of Namable.
+    And registers the class in utils.subclasses.
+
+    The new class mods dictionary is also
+    initialized with the given mods
+    and the mods of all its bases.
+
+    If utils.varpat matches classname,
+    it sets cls to State so that Word.__new__
+    can return the right ClassVar,
+    unless bases is a State subclass.
     """
     def __new__(cls, classname, bases=None, newdict=None):
         if utils.varpat.match(classname) and not bases:
@@ -327,6 +344,8 @@ utils.register('Verb', Verb)
 
 class Namable(object):
     """
+    abstract class ancestor of all excluding
+    the metawords.
     """
     __metaclass__ = Word
 
@@ -374,7 +393,21 @@ class Namable(object):
 
 class Number(Namable):
     """
+    A number or an arithmetic operation.
+    As value it can take a number, a str(number),
+    a string containing a single arithmetic operator,
+    within ['+', '-', '*', '/', '**']
+    or a string with an arithmetic operation
+    of the form '(<op> <arg1> <arg2>)'
+    where op is one of the operators
+    and arg can be a number or another operation.
+    If the value is an operator,
+    the args are either instances of Number,
+    or strings to be converted in such instances.
 
+    Within rules, variables can take the place of
+    value, any of the args, or in the value in the position
+    of numbers when it is a string representing an operation.
     """
     def __init__(self, value, arg1='', arg2=''):
         self.arg1 = arg1
@@ -438,7 +471,16 @@ class Number(Namable):
 
 class Arith(Number):
     """
-    Arithmetic predicate
+    Arithmetic predicate.
+    It has the same basic form as number
+    except that value can only be, either
+    a string with an arithmetic predicate symbol
+    from ['=', '<=', '>=', '!=', '<', '>'],
+    or a string with a predication of the same form
+    as the strings for number, but with the outermost
+    operator substituted for a predicate.
+
+    Instances can only be used as premises in rules.
     """
     def __init__(self, value, arg1='', arg2=''):
         if value[0] == '(':

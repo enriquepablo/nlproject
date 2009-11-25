@@ -22,6 +22,13 @@ from nl.metanl import Namable, Subword
 
 class Rule(Namable):
     """
+    A rule is instantiated with a list of premises or antecedents, or tail,
+    and a list of consecuences, or consequents, or head.
+    Both lists can contain objects of type Thing or of type Fact.
+    Additionally, in the list of premises there can be objects of type
+    During, Coincide, Arith and Subword.
+    In the list of consecuences there can be objects of type
+    Finish.
     """
     def __init__(self, prems, cons):
         self.name = uuid.uuid4().get_hex()
