@@ -17,10 +17,10 @@ setup(
                    "Topic :: Software Development :: Libraries :: Python Modules"
                   ],
     zip_safe = False,
-    install_requires = ['setuptools', 'pyclips'],
     dependency_links = [
-        'http://downloads.sourceforge.net/sourceforge/pyclips/pyclips-1.0.7.348_clips_6.24-py2.5-linux-i686.egg',
+        'http://sourceforge.net/project/showfiles.php?group_id=114052',
     ],
+    install_requires = ['setuptools', 'pyclips'],
     entry_points = {
         'console_scripts':
             [ 'plot_ph22 = nl.examples.physics22:plotPh22', ],
