@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "nl",
-    version = "0.91",
+    version = "0.92",
     url = 'http://bitbucket.org/enriquepablo/nl/wiki/Home',
     license = 'GPL',
     description = "A python library that provides a production system with an API modelled on the natural language",
@@ -23,7 +23,7 @@ setup(
         'http://bitbucket.org/enriquepablo/nl/downloads/',
         'http://bitbucket.org/enriquepablo/nl/downloads/pyclips-1.0.7.348_clips_6.24-py2.5-linux-i686.egg',
     ],
-    install_requires = ['setuptools', 'pyclips'],
+    install_requires = ['setuptools>=0.6c11', 'pyclips'],
     entry_points = {
         'console_scripts':
             [ 'plot_ph22 = nl.examples.physics22:plotPh22', ],
