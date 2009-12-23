@@ -18,3 +18,7 @@ $ bin/test
 $ bin/ipython
 
 Of course, you can always just grab the nl package from the repository and put it somewhere in your python path, and solve its dependencies by yourself.
+
+= POSSIBLE PROBLEMS
+
+For some reason, sometimes the pyclips library doesn't get installed properly through setuptools. Then the only option is to download pyclips from http://sourceforge.net/projects/pyclips/files/ and install it according to its own instructions.
