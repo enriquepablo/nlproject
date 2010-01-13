@@ -35,7 +35,7 @@ class Word(type):
     however, __new__ builds a ClassVar intance
     and returns it, thus bypassing __init__.
     In that case, bases can be a subclass of
-    State or Thing.
+    Exists or Thing.
     """
     def __new__(cls, classname, bases=None, newdict=None):
 
@@ -299,7 +299,7 @@ utils.register('Noun', Noun)
 
 class Verb(Word):
     """
-    When State is extended, this adds 1 defclass to clips
+    When Exists is extended, this adds 1 defclass to clips
     creating a subclass of Namable.
     And registers the class in utils.subclasses.
 
@@ -308,17 +308,17 @@ class Verb(Word):
     and the mods of all its bases.
 
     If utils.varpat matches classname,
-    it sets cls to State so that Word.__new__
+    it sets cls to Exists so that Word.__new__
     can return the right ClassVar,
-    unless bases is a State subclass.
+    unless bases is a Exists subclass.
     """
     def __new__(cls, classname, bases=None, newdict=None):
         if utils.varpat.match(classname) and not bases:
-            cls.cls = utils.get_class('State')
+            cls.cls = utils.get_class('Exists')
         return Word.__new__(cls, classname, bases, newdict)
 
     def __init__(cls, classname, bases, newdict):
-        if classname == 'State':
+        if classname == 'Exists':
             # due to the ordering of things in clps.py
             utils.register(classname, cls)
             return

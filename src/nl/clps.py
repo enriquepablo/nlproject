@@ -107,7 +107,7 @@ _mincomstart_clp = '''
 logger.info(_mincomstart_clp)
 clips.Build(_mincomstart_clp)
 
-clp = '(defclass State (is-a USER))'
+clp = '(defclass Exists (is-a USER))'
 logger.info(clp)
 clips.Build(clp)
 
@@ -115,7 +115,7 @@ _set_tal = '(set-sequence-operator-recognition TRUE)'
 logger.info(_set_tal)
 clips.Eval(_set_tal)
 
-_set_slots = """(defmessage-handler State set-slots primary ($?slots)
+_set_slots = """(defmessage-handler Exists set-slots primary ($?slots)
         (while (> (length$ ?slots) 0) do
             (bind ?slot (first$ ?slots))
             (bind ?vslots (rest$ ?slots))

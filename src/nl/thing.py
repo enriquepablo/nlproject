@@ -31,10 +31,10 @@ class Thing(Namable):
 
     The instances can be used as first argument to Fact,
     and also as named arguments in the construction of
-    State instances.
+    Exists instances.
 
     The class, and its subclasses, can be used as first argument
-    to Fact, and as named arguments in State instances.
+    to Fact, and as named arguments in Exists instances.
     """
     __metaclass__ = Noun
 

@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
-from nl import (kb, Noun, Verb, Thing, State, Fact, Rule)
+from nl import (kb, Noun, Verb, Thing, Exists, Fact, Rule)
 
 
 class Person(Thing):
@@ -36,38 +36,38 @@ b6 = Food('banana6')
 
 kb.tell(b1, b2, b3, b4, b5, b6)
 
-class Tries(State):
+class Tries(Exists):
     subject = Person
     mods = {'what': Verb}
 
-class Feels(State):
+class Feels(Exists):
     subject = Person
-    mods = {'what': State}
+    mods = {'what': Exists}
 
-class Wants(State):
+class Wants(Exists):
     subject = Person
     mods = {'what': Verb}
 
-class Wanting(State):
+class Wanting(Exists):
     subject = Person
-    mods = {'what': State}
+    mods = {'what': Exists}
 
-class IsCool(State):
+class IsCool(Exists):
     subject = Person
 
-class Eats(State):
+class Eats(Exists):
     subject = Person
     mods = {'what': Noun}
 
-class Eating(State):
+class Eating(Exists):
     subject = Person
     mods = {'what': Food}
 
-class Drinking(State):
+class Drinking(Exists):
     subject = Person
     mods = {'what': Food}
 
-class Smelling(State):
+class Smelling(Exists):
     subject = Person
     mods = {'what': Food}
 

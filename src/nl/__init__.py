@@ -20,7 +20,7 @@
 import kb
 from metanl import Number, Arith, Noun, Word, Verb, Subword
 from thing import Thing
-from state import State
+from state import Exists
 from prop import Fact
 from time import Time, Instant, Duration, Finish, During, Coincide, MinComStart, MaxComEnd, Intersection
 from rule import Rule

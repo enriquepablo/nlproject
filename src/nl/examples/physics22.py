@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
-from nl import kb, State, Thing, Number, Arith, Fact, Rule
+from nl import kb, Exists, Thing, Number, Arith, Fact, Rule
 
 
 time = '100'
@@ -28,41 +28,41 @@ class Body(Thing): pass
 
 # verbs
 
-class HasMass(State):
+class HasMass(Exists):
     subject = Thing
     mods = {'kgs': Number}
 
 
 
-class HasPosition(State):
+class HasPosition(Exists):
     subject = Thing
     mods = {'x': Number,
             'y': Number}
 
 
 
-class EstaADistancia(State):
+class EstaADistancia(Exists):
     subject = Thing
     mods = {'mts': Number,
             'otro': Body}
 
 
 
-class HasSpeed(State):
+class HasSpeed(Exists):
     subject = Thing
     mods = {'x': Number,
             'y': Number}
 
 
 
-class HasAcceleration(State):
+class HasAcceleration(Exists):
     subject = Thing
     mods = {'x': Number,
             'y': Number}
 
 
 
-class IsForced(State):
+class IsForced(Exists):
     subject = Thing
     mods = {'x': Number,
             'y': Number}

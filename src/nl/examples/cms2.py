@@ -17,7 +17,7 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from nl import kb, State, Thing, Fact, Rule, Instant, Duration, During, Finish, Coincide, MinComStart, MaxComEnd
+from nl import kb, Exists, Thing, Fact, Rule, Instant, Duration, During, Finish, Coincide, MinComStart, MaxComEnd
 
 # BASIC STUFF
 
@@ -25,43 +25,43 @@ from nl import kb, State, Thing, Fact, Rule, Instant, Duration, During, Finish, 
 class Person(Thing): pass
 
 # Can is a verb that takes a thing as a subject and a state as a modificator
-class Can(State):
+class Can(Exists):
     subject = Thing
-    mods = {'what': State}
+    mods = {'what': Exists}
 
 # Wants is a verb that takes a person as a subject and a state as a modificator
-class Wants(State):
+class Wants(Exists):
     subject = Person
-    mods = {'to': State}
+    mods = {'to': Exists}
 
 # if someone wants to do something, and can do it, she does it
 r1 = Rule([
-        Fact(Person('X1'), Wants(to=State('X4')), Instant('X2')), # XXX only State can be a var
-        Fact(Person('X1'), Can(what=State('X4')), Duration('X3')),
+        Fact(Person('X1'), Wants(to=Exists('X4')), Instant('X2')), # XXX only Exists can be a var
+        Fact(Person('X1'), Can(what=Exists('X4')), Duration('X3')),
         During(Instant('X2'), Duration('X3'))
         ],[
         Fact(Person('X1'), 'X4', Instant('X2'))])
 
 # Has is a verb that takes a person as a subject and a thing as a modificator
-class Has(State):
+class Has(Exists):
     subject = Person
     mods = {'what': Thing}
 
 # IsNeeded is a verb that takes a Thing as a subject and a state as a modificator
-class IsNeeded(State):
+class IsNeeded(Exists):
     subject = Thing
-    mods = {'for_action': State}
+    mods = {'for_action': Exists}
 
 # If something is needed for some state, and something else has it, that something else can be in that state
 r2 = Rule([
-        Fact(Thing('X2'), IsNeeded(for_action=State('X4')), Duration('X3')),
+        Fact(Thing('X2'), IsNeeded(for_action=Exists('X4')), Duration('X3')),
         Fact(Thing('X1'), Has(what=Thing('X2')), Duration('X5')),
         Coincide(Duration('X3'), Duration('X5'))
         ],[
-        Fact(Thing('X1'), Can(what=State('X4')), Duration(start=MinComStart('X3', 'X5'), end=MaxComEnd('X3', 'X5')))])
+        Fact(Thing('X1'), Can(what=Exists('X4')), Duration(start=MinComStart('X3', 'X5'), end=MaxComEnd('X3', 'X5')))])
 
 # IsIn is a verb that takes a Thing as a subject and a Thing as a modificator
-class IsIn(State):
+class IsIn(Exists):
     subject = Thing
     mods = {'what': Thing}
 
@@ -135,12 +135,12 @@ p2 = Fact(member, Has(what=basic_perm), Duration(start=Instant('now')))
 class Content(Thing): pass
 
 # Create is a verb that takes a Person as subject and a thing as modificator
-class Create(State):
+class Create(Exists):
     subject = Person
     mods = {'what': Thing}
 
 # IsOwner is a verb that takes a person as subject and a content as modificator
-class IsOwner(State):
+class IsOwner(Exists):
     subject = Person
     mods = {'of': Content}
 
@@ -172,7 +172,7 @@ r7 = Rule([
         Fact(Content('X2'), Has(what=private), Duration(start=Instant('X3')))])
 
 # View is a verb that takes a person as subject and a thing as modificator.
-class View(State):
+class View(Exists):
     subject = Person
     mods = {'what': Thing}
 
@@ -197,7 +197,7 @@ r14 = Rule([
         Fact(Person('X2'), Can(what=View(what=Content('X1'))), Duration(start=MinComStart('X3', 'X4'), end=MaxComEnd('X3', 'X4')))])
 
 # Publish is a verb that takes a person as subject and some content as modificator
-class Publish(State):
+class Publish(Exists):
     subject = Person
     mods = {'what': Content,}
 
@@ -217,7 +217,7 @@ r16 = Rule([
         Fact(manage_perm, IsNeeded(for_action=Publish(what=Content('X1'))), Duration('X2'))])
 
 # Hide is a verb that takes a person as subject and a content as object
-class Hide(State):
+class Hide(Exists):
     subject = Person
     mods = {'what': Content,}
 

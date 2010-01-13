@@ -48,8 +48,8 @@ class Instant(Time, Number):
 
     Can be used as the time attribute in a Fact
 
-    >>> from nl import Fact, Thing, State
-    >>> f = Fact(Thing('X1'), State('X2'), Instant('now'))
+    >>> from nl import Fact, Thing, Exists
+    >>> f = Fact(Thing('X1'), Exists('X2'), Instant('now'))
 
     or as start or end attributes in a Duration.
 

@@ -29,7 +29,7 @@ from nl.thing import Thing
 _m = []
 
 
-class State(Namable):
+class Exists(Namable):
     """
     The most general verb, the ancestor of all verbs.
     Can be instantiated, either with a string with a variable,
@@ -39,10 +39,10 @@ class State(Namable):
 
     The instances can be used as the second argument to Fact,
     and also as named arguments in the construction of other
-    State instances.
+    Exists instances.
 
     The class, and its subclasses, can be used as first argument
-    to Fact, and as named arguments in State instances.
+    to Fact, and as named arguments in Exists instances.
     """
     __metaclass__ = Verb
 
@@ -175,6 +175,6 @@ class State(Namable):
         of this class is added to clips.
 
         TODO: implement as an after message-handler for creation of
-        instances of State, so that not all facts make the call.
+        instances of Exists, so that not all facts make the call.
         '''
         logger.info('FROM STATE! %s' % str(fact))

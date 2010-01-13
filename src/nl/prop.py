@@ -28,7 +28,7 @@ from nl import utils
 from nl.metanl import Namable, Word
 from nl.time import Time, Instant
 from nl.thing import Thing
-from nl.state import State
+from nl.state import Exists
 
 _m = []
 
@@ -36,7 +36,7 @@ class Fact(Namable):
     """
     A fact is built with a subj and a pred positional arguments.
     subj is either an object of Thing or any of its subclasses,
-    or a class chosen among Thing, State, or any subclass of them.
+    or a class chosen among Thing, Exists, or any subclass of them.
     It can also take a named argument, often given as a 3rd
     positional arg, that has to be of type Time,
     and a named arg 'truth', that is either 0 or 1.
@@ -52,7 +52,7 @@ class Fact(Namable):
         else:
             self.subject = subj
         if isinstance(pred, str):
-            self.predicate = State(pred)
+            self.predicate = Exists(pred)
         else:
             self.predicate = pred
         if isinstance(time, Time):
@@ -77,7 +77,7 @@ class Fact(Namable):
             s = Word.from_clips(s)
         else:
             s = Namable.from_clips(s)
-        p = State.from_clips(instance.GetSlot('predicate'))
+        p = Exists.from_clips(instance.GetSlot('predicate'))
         t = Time.from_clips(instance.GetSlot('time'))
         truth = instance.GetSlot('truth')
         return Fact(s, p, t, truth=truth)

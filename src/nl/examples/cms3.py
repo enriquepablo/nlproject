@@ -17,7 +17,7 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
 from nl.log import logger
-from nl import (Noun, Verb, Number, Thing, State, Fact, Rule,
+from nl import (Noun, Verb, Number, Thing, Exists, Fact, Rule,
                 Subword, Duration, Instant, During, Coincide,
                 Intersection, Finish, MinComStart, MaxComEnd, kb)
 
@@ -32,21 +32,21 @@ kb.tell(admin)
 anonymous = Person('anonymous')
 kb.tell(anonymous)
 
-class Wants(State):
+class Wants(Exists):
     """
     the verb Wants has a person proper name as subject
     and can take as 'to' modifier a verb prhase
     """
     subject = Person
-    mods = {'to': State}
+    mods = {'to': Exists}
 
-class Can(State):
+class Can(Exists):
     """
     the verb Can has a person proper name as subject
     and can take as 'what' modifier a verb prhase
     """
     subject = Person
-    mods = {'what': State}
+    mods = {'what': Exists}
 
 class Role(Thing):
     """
@@ -71,7 +71,7 @@ class Context(Thing):
 basic_context = Context('basic_context')
 kb.tell(basic_context)
 
-class Has(State):
+class Has(Exists):
     """
     a thing can have other things in a certain context
     """
@@ -119,7 +119,7 @@ class Content(Thing):
     a content object
     """
 
-class Located(State):
+class Located(Exists):
     """
     a thing can be located in some context
     """
@@ -137,7 +137,7 @@ kb.tell(public)
 private = Status('private')
 kb.tell(private)
 
-class Action(State):
+class Action(Exists):
     """
     an abstract action over a content
     """
@@ -227,7 +227,7 @@ def r_workflow_for_content(content_type, workflow, context):
 
 
 
-class AssignedTo(State):
+class AssignedTo(Exists):
     """
     an abstract action over a content
     """
@@ -270,7 +270,7 @@ r_transition(Publish, doc_workflow, Document, private, public)
 
 r_transition(Hide, doc_workflow, Document, public, private)
 
-class Owns(State):
+class Owns(Exists):
     """
     a person can own some content
     """
@@ -295,7 +295,7 @@ r_owner_can_action(Edit)
 r_owner_can_action(Hide)
 
 
-class Give(State):
+class Give(Exists):
     """
     a person can give some content to someone else
     """
@@ -320,7 +320,7 @@ kb.tell(Rule([
 
 class ActionStep(Thing): pass
 
-class Contains(State):
+class Contains(Exists):
     subject = Verb
     mods = {'what': Thing,
             'pos': Number}
