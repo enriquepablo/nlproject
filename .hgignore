@@ -9,6 +9,8 @@ lib/*
 .installed.cfg
 develop-eggs/*
 include/*
+downloads/*
+parts/*
 log.clp
 *.tar.gz
 .coverage
