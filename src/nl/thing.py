@@ -92,12 +92,13 @@ class Thing(Namable):
         return (instance-set templates, instance-set queries)
         """
         if utils.varpat.match(self.value):
-            if self.value in vrs and vrs[self.value]:
-                newvar = self.value
-                templs.append((self.value, self.__class__.__name__))
-                queries.append('(eq ?%s %s)' % (self.value,
+            if self.value in vrs:
+                if vrs[self.value]:
+                    queries.append('(eq ?%s %s)' % (self.value,
                                      utils.clips_instance(*(vrs[self.value]))))
-            vrs[self.value] = ()
+            else:
+                templs.append((self.value, self.__class__.__name__))
+                vrs[self.value] = ()
             return '?%s' % self.value
         else:
             return '[%s]' % self.value
