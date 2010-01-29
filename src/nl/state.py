@@ -80,7 +80,7 @@ class Exists(Namable):
         kwargs = {}
         for mod,mcls in cls.mods.items():
             cmod = instance.GetSlot(mod)
-            if cmod:
+            if cmod and str(cmod) != 'nil':
                 mcls = utils.get_class(mcls)
                 kwargs[mod] = mcls.from_clips(cmod)
         return cls(**kwargs)
