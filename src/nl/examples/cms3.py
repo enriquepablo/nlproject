@@ -46,6 +46,7 @@ class Can(Exists):
     and can take as 'what' modifier a verb prhase
     """
     subject = Person
+    instantaneous = False
     mods = {'what': Exists}
 
 class Role(Thing):
@@ -76,6 +77,7 @@ class Has(Exists):
     a thing can have other things in a certain context
     """
     subject = Thing
+    instantaneous = False
     mods = {'what': Thing,
             'where': Context}
 
@@ -124,6 +126,7 @@ class Located(Exists):
     a thing can be located in some context
     """
     subject = Thing
+    instantaneous = False
     mods = {'where': Context}
 
 class Status(Thing):
@@ -232,6 +235,7 @@ class AssignedTo(Exists):
     an abstract action over a content
     """
     subject = Workflow
+    instantaneous = False
     mods = {'noun': Noun,
             'where': Context}
 
@@ -275,6 +279,7 @@ class Owns(Exists):
     a person can own some content
     """
     subject = Person
+    instantaneous = False
     mods = {'what': Content}
 
 def r_owner_can_action(action):
@@ -322,6 +327,7 @@ class ActionStep(Thing): pass
 
 class Contains(Exists):
     subject = Verb
+    instantaneous = False
     mods = {'what': Thing,
             'pos': Number}
 
@@ -346,3 +352,4 @@ kb.tell(Rule([
 ],[
     Fact(Thing('P1'), Has(what=ActionStep('S2')), Instant('I1')),
 ]))
+

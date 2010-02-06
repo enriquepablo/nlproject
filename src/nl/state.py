@@ -47,6 +47,7 @@ class Exists(Namable):
     __metaclass__ = Verb
 
     subject = Thing
+    instantaneous = True
     mods = {}
 
     def __init__(self, *args, **kwargs):

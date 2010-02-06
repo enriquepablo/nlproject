@@ -38,7 +38,7 @@ def register(clsname, cls):
     subclasses[clsname] = cls
 
 def get_class(cls):
-    return isinstance(cls, str) and subclasses[cls] or cls
+    return isinstance(cls, basestring) and subclasses[cls] or cls
 
 
 def clips_instance(ancestor, mod_path, meths=None):
@@ -94,3 +94,6 @@ def parens(expr):
     terms.append(term)
     return terms
 
+def get_subclasses(cls):
+    return [subclass[0] for subclass in subclasses.items() \
+            if issubclass(subclass[1], cls)]
