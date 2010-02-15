@@ -49,63 +49,37 @@ _duration_clps = '(defclass Duration (is-a Namable) (slot start (type NUMBER) (p
 logger.info(_duration_clps)
 clips.Build(_duration_clps)
 
-_extract_clp = '''
-(deffunction extract-now ($?instants)
-    (if (= (length$ ?instants) 0) then
-        (return -1)
-    else
-        (bind ?count 0)
-        (bind ?not-now (create$))
-        (while (> (length$ ?instants) 0) do
-            (bind ?instant (nth$ 1 ?instants))
-            (bind ?instants (rest$ ?instants))
-            (if (= ?instant -1)
-            then (bind ?count (+ ?count 1))
-            else (bind ?not-now (insert$ ?not-now 1 ?instant)))
-            )
-        (return (insert$ ?not-now 1 ?count))
+_minend_clp = '''
+(deffunction min-end ($?durations)
+    (bind ?end (send (nth$ 1 ?durations) get-end))
+    (bind ?now (python-call ptime))
+    (if (= ?end -1) then (bind ?end ?now))
+    (progn$ (?dur (rest$ ?durations))
+        (bind ?this-end (send ?dur get-end))
+        (if (= ?this-end -1) then (bind ?this-end ?now))
+        (if (< ?this-end ?end)
+            then (bind ?end ?this-end))
     )
+    (if (= ?end ?now) then (bind ?end -1))
+    (return ?end)
 )
 '''
-logger.info(_extract_clp)
-clips.Build(_extract_clp)
+logger.info(_minend_clp)
+clips.Build(_minend_clp)
 
-_maxcomend_clp = '''
-(deffunction maxcomend ($?durations)
-    (bind ?ends (create$))
-    (while (> (length$ ?durations) 0)
-        (bind ?ends (insert$ ?ends 1 (send (nth$ 1 ?durations) get-end)))
-        (bind ?durations (rest$ ?durations))
-        )
-    (bind ?ret (extract-now ?ends))
-    (bind ?pasts (rest$ ?ret))
-    (if (> (length$ ?pasts) 0)
-    then (return (min (expand$ ?pasts)))
-    else (return -1)
+_maxstart_clp = '''
+(deffunction max-start ($?durations)
+    (bind ?start (send (nth$ 1 ?durations) get-start))
+    (progn$ (?dur (rest$ ?durations))
+        (bind ?this-start (send ?dur get-start))
+        (if (> ?this-start ?start)
+            then (bind ?start ?this-start))
     )
+    (return ?start)
 )
 '''
-logger.info(_maxcomend_clp)
-clips.Build(_maxcomend_clp)
-
-_mincomstart_clp = '''
-(deffunction mincomstart ($?durations)
-    (bind ?starts (create$))
-    (while (> (length$ ?durations) 0)
-        (bind ?starts (insert$ ?starts 1 (send (nth$ 1 ?durations) get-start)))
-        (bind ?durations (rest$ ?durations))
-        )
-    (bind ?ret (extract-now ?starts))
-    (bind ?nows (nth$ 1 ?ret))
-    (if (> ?nows 0)
-    then (return -1)
-    else (bind ?ret (rest$ ?ret))
-         (return (max (expand$ ?ret)))
-    )
-)
-'''
-logger.info(_mincomstart_clp)
-clips.Build(_mincomstart_clp)
+logger.info(_maxstart_clp)
+clips.Build(_maxstart_clp)
 
 clp = '(defclass Exists (is-a USER))'
 logger.info(clp)
@@ -187,3 +161,15 @@ _add_prop = '''
 
 logger.info(_add_prop)
 clips.Build(_add_prop)
+
+_resolvetime = '''
+(deffunction resolvetime (?t)
+    (if (eq ?t -1)
+        then (return (python-call ptime))
+        else (return ?t)
+    )
+)
+'''
+
+logger.info(_resolvetime)
+clips.Build(_resolvetime)

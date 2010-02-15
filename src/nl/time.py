@@ -259,11 +259,14 @@ class Coincide(DurationOpMixin):
 
     def get_ce(self, vrs):
         return """
-                (test (or (and (> (mincomstart %(durs)s) -1)
-                               (<= (mincomstart %(durs)s) (maxcomend %(durs)s)))
-                          (= (maxcomend %(durs)s) -1))
-                )
-                """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations])}
+(test
+  (or
+    (<= (max-start %(durs)s) (min-end %(durs)s))
+    (and
+      (<= (max-start %(durs)s) (python-call ptime))
+      (= (min-end %(durs)s) -1)))
+)
+        """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations])}
 
 
 
@@ -278,8 +281,8 @@ class Intersection(DurationOpMixin):
 
     def put(self, vrs):
         return """
-                (make-instance of Duration (start (mincomstart %(durs)s))
-                                           (end (maxcomend %(durs)s)))
+(make-instance of Duration (start (max-start %(durs)s))
+                           (end (min-end %(durs)s)))
                 """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations])}
 
 
@@ -287,22 +290,72 @@ class MinComStart(DurationOpMixin):
     """
     given a set of durations, find out the minimum common instant
 
-    To be used wherever an instant would
+    To be used wherever an instant would, except as the end of a duration
     """
 
     def put(self, vrs):
         instants = [dur.put(vrs) for dur in self.durations]
-        return '(mincomstart %s)' % ' '.join(instants)
+        return '(max-start %s)' % ' '.join(instants)
 
 
 class MaxComEnd(DurationOpMixin):
     """
     given a set of durations, find out the maximum common instant
 
-    To be used wherever an instant would
+    To be used as the end of another duration
     """
 
     def put(self, vrs):
         instants = [dur.put(vrs) for dur in self.durations]
-        return '(maxcomend %s)' % ' '.join(instants)
+        return '(min-end %s)' % ' '.join(instants)
 
+
+class InstantOpMixin(Namable):
+    '''
+    Abstract ancestor of classes constructed with an instant
+    '''
+    def __init__(self, instant):
+        self.instant = instant
+
+
+class Past(InstantOpMixin):
+    """
+    init'd with an instant, returns true if
+    the instant is in the past
+    """
+    def get_ce(vrs):
+        i = self.instant.put(vrs)
+        return '''(test (and (neq %s -1)
+                             (< %s (python-call ptime))))''' % (i, i)
+
+class Present(InstantOpMixin):
+    """
+    init'd with an instant, returns true if
+    the instant is the present
+    """
+    def get_ce(vrs):
+        i = self.instant.put(vrs)
+        return '''(test (or (eq %s -1)
+                            (eq %s (python-call ptime))))''' % (i, i)
+
+class Future(InstantOpMixin):
+    """
+    init'd with an instant, returns true if
+    the instant is in the future
+    """
+    def get_ce(vrs):
+        i = self.instant.put(vrs)
+        return '''(test (> %s (python-call ptime)))''' % (i, i)
+
+
+from nl.utils import _now
+import time
+def now():
+    global _now
+    _now = int(time.time())
+    return _now
+
+def ptime():
+    return clips.Float(float(_now))
+
+clips.RegisterPythonFunction(ptime)

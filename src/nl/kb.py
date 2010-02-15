@@ -35,7 +35,11 @@ def tell(*args):
         s = sentence.put_action()
         logger.info(s)
         if isinstance(sentence, Rule):
-            clips.Build(s)
+            try:
+                clips.Build(s)
+            except:
+                logger.error(clips.ErrorStream.Read())
+                raise
         else:
             clips.Eval(s)
 

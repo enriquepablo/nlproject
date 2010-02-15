@@ -26,6 +26,6 @@ with_callback = False
 
 import clips
 
-clips.DebugConfig.ExternalTraceback = False
+clips.DebugConfig.ExternalTraceback = True
 #clips.EngineConfig.ResetGlobals = True
 clips.EngineConfig.IncrementalReset = True
