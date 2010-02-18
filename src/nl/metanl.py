@@ -391,6 +391,9 @@ class Namable(object):
         return '?%s' % self.value
 
 
+class ArithSafeTime(Namable):
+    pass
+
 class Number(Namable):
     """
     A number or an arithmetic operation.
