@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "nl",
-    version = "0.96",
+    version = "0.97",
     url = 'http://bitbucket.org/enriquepablo/nl/wiki/Home',
     license = 'GPL',
     description = "A python library that provides a production system with an API modelled on the natural language",
