@@ -355,6 +355,8 @@ def now():
     _now = int(time.time())
     return _now
 
+now()
+
 def ptime():
     return clips.Float(float(_now))
 
