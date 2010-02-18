@@ -8,7 +8,7 @@ def reset():
     reload(nl.clps.clips)
     reload(nl.clps)
     reload(nl.metanl)
-    reload(nl.time)
+    reload(nl.nltime)
     reload(nl.thing)
     reload(nl.state)
     reload(nl.prop)

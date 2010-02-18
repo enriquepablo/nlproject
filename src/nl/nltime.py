@@ -349,10 +349,11 @@ class Future(InstantOpMixin):
 
 
 from nl.utils import _now
-import time
+import time as t
 def now():
+    import pdb;pdb.set_trace()
     global _now
-    _now = int(time.time())
+    _now = int(t.time())
     return _now
 
 now()

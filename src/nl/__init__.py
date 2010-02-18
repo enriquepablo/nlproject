@@ -22,6 +22,6 @@ from metanl import Number, Arith, Noun, Word, Verb, Subword
 from thing import Thing
 from state import Exists
 from prop import Fact
-from time import Time, Instant, Duration, Finish, During, Coincide, MinComStart, MaxComEnd, Intersection, now
+from nltime import Time, Instant, Duration, Finish, During, Coincide, MinComStart, MaxComEnd, Intersection, now
 from rule import Rule
 from utils import change_now

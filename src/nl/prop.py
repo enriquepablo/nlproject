@@ -26,7 +26,7 @@ import clips
 from nl.log import logger
 from nl import utils
 from nl.metanl import Namable, Word
-from nl.time import Time, Instant
+from nl.nltime import Time, Instant
 from nl.thing import Thing
 from nl.state import Exists
 
@@ -41,7 +41,7 @@ class Fact(Namable):
     positional arg, that has to be of type Time,
     and a named arg 'truth', that is either 0 or 1.
     """
-    def __init__(self, subj, pred, time=Instant('now'), truth=1):
+    def __init__(self, subj, pred, t=Instant('now'), truth=1):
         self.truth = truth
         if isinstance(subj, str):
             if utils.varpat.match(subj):
@@ -55,10 +55,10 @@ class Fact(Namable):
             self.predicate = Exists(pred)
         else:
             self.predicate = pred
-        if isinstance(time, Time):
-            self.time = time
+        if isinstance(t, Time):
+            self.time = t
         else:
-            self.time = Instant(time)
+            self.time = Instant(t)
 
 
     def __str__(self):
@@ -141,9 +141,9 @@ def factback(csubj, cpred, ctime, ctruth):
     except clips.ClipsError:
         subj = Word.from_clips(csubj)
     pred = Namable.from_clips(cpred)
-    time = Time.from_clips(ctime)
+    t = Time.from_clips(ctime)
     truth = int(str(ctruth))
-    fact = Fact(subj, pred, time, truth=truth)
+    fact = Fact(subj, pred, t, truth=truth)
     pred.in_fact(fact)
 
 clips.RegisterPythonFunction(factback)
