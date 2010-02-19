@@ -437,7 +437,7 @@ class Number(Namable):
     def _get_number(self, vrs):
         """
         """
-        if utils.varpat.match(self.value):
+        if utils.varpat.match(str(self.value)):
             return self.put_var(vrs)
         try:
             return str(float(self.value))

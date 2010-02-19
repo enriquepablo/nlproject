@@ -180,13 +180,13 @@ class Duration(Time):
             core_start = '?%s:start' % self.value
             core_end = '?%s:end' % self.value
         if start is not _m and \
-           not (utils.varpat.match(start.value) and \
+           not (utils.varpat.match(str(start.value)) and \
            start.value not in vrs):
             queries.append('(= %s %s)' % (core_start,
                                   start.get_isc(templs, queries, vrs)))
         end = getattr(self, 'end', _m)
         if end is not _m and \
-           not (utils.varpat.match(end.value) and \
+           not (utils.varpat.match(str(end.value)) and \
            end.value not in vrs):
             queries.append('(= %s %s)' % (core_end,
                                   end.get_isc(templs, queries, vrs)))
@@ -348,16 +348,14 @@ class Future(InstantOpMixin):
         return '''(test (> %s (python-call ptime)))''' % (i, i)
 
 
-from nl.utils import _now
 import time as t
 def now():
-    global _now
-    _now = int(t.time())
-    return _now
+    utils._now = int(t.time())
+    return utils._now
 
 now()
 
 def ptime():
-    return clips.Float(float(_now))
+    return clips.Float(float(utils._now))
 
 clips.RegisterPythonFunction(ptime)
