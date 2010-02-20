@@ -13,7 +13,7 @@ def reset():
     reload(nl.state)
     reload(nl.prop)
     reload(nl.rule)
-    reload(nl.kb)
+    nl.kb = nl.KB()
     reload(nl)
 
 
