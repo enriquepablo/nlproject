@@ -413,8 +413,8 @@ class Number(Namable):
     of numbers when it is a string representing an operation.
     """
     def __init__(self, value, arg1='', arg2=''):
-        self.arg1 = arg1
-        self.arg2 = arg2
+        self.arg1 = str(arg1)
+        self.arg2 = str(arg2)
         try:
             self.value = str(float(value))
         except ValueError:
