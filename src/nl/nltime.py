@@ -101,7 +101,8 @@ class Duration(Time):
         else:
             self.end = isinstance(end, Instant) and end or \
                                                   Instant(end)
-            if float(self.end.value) == float(utils._now):
+            if not utils.varpat.match(self.end.value) and \
+                   float(self.end.value) == float(utils._now):
                 self.end = Instant('-1.0')
 
     def __str__(self):
