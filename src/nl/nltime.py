@@ -350,8 +350,8 @@ class Future(InstantOpMixin):
 
 
 import time as t
-def now():
-    utils._now = int(t.time())
+def now(new=0):
+    utils._now = new or int(t.time())
     return utils._now
 
 now()
