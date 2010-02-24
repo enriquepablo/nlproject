@@ -244,7 +244,7 @@ class During(Namable):
    (or
      (>= (min-end %(durs)s) %(ins)s)
      (and (= (min-end %(durs)s) -1)
-          (>= (python-call ptime) %(ins)s)))))
+          (>= ?*now* %(ins)s)))))
        """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations]),
               'ins': self.instant.put(vrs)}
 
@@ -270,7 +270,7 @@ class Coincide(DurationOpMixin):
   (or
     (<= (max-start %(durs)s) (min-end %(durs)s))
     (and
-      (<= (max-start %(durs)s) (python-call ptime))
+      (<= (max-start %(durs)s) ?*now*)
       (= (min-end %(durs)s) -1)))
 )
         """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations])}
@@ -333,7 +333,7 @@ class Past(InstantOpMixin):
     def get_ce(vrs):
         i = self.instant.put(vrs)
         return '''(test (and (neq %s -1)
-                             (< %s (python-call ptime))))''' % (i, i)
+                             (< %s ?*now*)))''' % (i, i)
 
 class Present(InstantOpMixin):
     """
@@ -343,7 +343,7 @@ class Present(InstantOpMixin):
     def get_ce(vrs):
         i = self.instant.put(vrs)
         return '''(test (or (eq %s -1)
-                            (eq %s (python-call ptime))))''' % (i, i)
+                            (eq %s ?*now*)))''' % (i, i)
 
 class Future(InstantOpMixin):
     """
@@ -352,7 +352,7 @@ class Future(InstantOpMixin):
     """
     def get_ce(vrs):
         i = self.instant.put(vrs)
-        return '''(test (> %s (python-call ptime)))''' % (i, i)
+        return '''(test (> %s ?*now*))''' % (i, i)
 
 
 import time as t
