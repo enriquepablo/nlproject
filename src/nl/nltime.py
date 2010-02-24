@@ -101,7 +101,7 @@ class Duration(Time):
         else:
             self.end = isinstance(end, Instant) and end or \
                                                   Instant(end)
-            if not utils.varpat.match(self.end.value) and \
+            if not utils.varpat.match(str(self.end.value)) and \
                    float(self.end.value) == float(utils._now):
                 self.end = Instant('-1.0')
 
@@ -237,10 +237,16 @@ class During(Namable):
                                          for duration in durations]
 
     def get_ce(self, vrs):
-        durs = []
-        for duration in self.durations:
-            durs.append('(test (and (<= (send %(dur)s get-start) %(ins)s) (or (= (send %(dur)s get-end) -1) (>= (send %(dur)s get-end) %(ins)s))))' % {'dur': duration.put(vrs), 'ins': self.instant.put(vrs)})
-        return ' '.join(durs)
+        return """
+(test
+  (and
+   (<= (max-start %(durs)s) %(ins)s)
+   (or
+     (>= (min-end %(durs)s) %(ins)s)
+     (and (= (min-end %(durs)s) -1)
+          (>= (python-call ptime) %(ins)s)))))
+       """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations]),
+              'ins': self.instant.put(vrs)}
 
 
 class DurationOpMixin(Namable):
