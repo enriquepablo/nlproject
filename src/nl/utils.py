@@ -55,7 +55,7 @@ def clips_instance(ancestor, mod_path, meths=None):
     return ancestor
 
 
-_now = '1'
+_now = '1.0'
 
 def change_now(i=0):
     global _now

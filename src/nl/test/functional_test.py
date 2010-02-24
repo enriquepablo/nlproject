@@ -183,7 +183,7 @@ class cms3_test(object):
                                  self.cms.Has(what=self.cms.Status('public')),
                                  nl.Duration(start=nl.Instant('now'))))
 
-        nl.change_now()
+        nl.nltime.now()
 
         nl.kb.tell(nl.Fact(self.cms.Person('m3'),
                            self.cms.Wants(
@@ -197,7 +197,7 @@ class cms3_test(object):
                                  self.cms.Has(what=self.cms.Status('private')),
                                  nl.Duration(start=nl.Instant('now'))))
 
-        nl.change_now()
+        nl.nltime.now()
 
         nl.kb.tell(nl.Fact(self.cms.Person('m6'),
                            self.cms.Wants(
