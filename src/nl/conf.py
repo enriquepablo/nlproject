@@ -28,4 +28,4 @@ import clips
 
 clips.DebugConfig.ExternalTraceback = True
 #clips.EngineConfig.ResetGlobals = True
-clips.EngineConfig.IncrementalReset = True
+#clips.EngineConfig.IncrementalReset = True

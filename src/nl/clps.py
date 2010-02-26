@@ -20,9 +20,6 @@ import clips
 from nl.log import logger
 from nl import conf
 
-_now = '(defglobal ?*now* = 0.0)'
-logger.info(_now)
-clips.Build(_now)
 
 # CLIPS SNIPPETS
 ################
@@ -55,15 +52,15 @@ clips.Build(_duration_clps)
 _minend_clp = '''
 (deffunction min-end ($?durations)
     (bind ?end (send (nth$ 1 ?durations) get-end))
-    (bind ?now ?*now*)
-    (if (= ?end -1) then (bind ?end ?now))
+    (bind ?now (python-call ptime))
+    (if (= ?end -1.0) then (bind ?end ?now))
     (progn$ (?dur (rest$ ?durations))
         (bind ?this-end (send ?dur get-end))
-        (if (= ?this-end -1) then (bind ?this-end ?now))
+        (if (= ?this-end -1.0) then (bind ?this-end ?now))
         (if (< ?this-end ?end)
             then (bind ?end ?this-end))
     )
-    (if (= ?end ?now) then (bind ?end -1))
+    (if (= ?end ?now) then (bind ?end -1.0))
     (return ?end)
 )
 '''
@@ -167,8 +164,8 @@ clips.Build(_add_prop)
 
 _resolvetime = '''
 (deffunction resolvetime (?t)
-    (if (eq ?t -1)
-        then (return ?*now*)
+    (if (eq ?t -1.0)
+        then (return (python-call ptime))
         else (return ?t)
     )
 )

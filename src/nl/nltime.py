@@ -73,7 +73,8 @@ class Instant(Time, Number):
             queries.append( '''
                (or (and (eq (class ?%(parent)s:time) Duration)
                         (<= (send ?%(parent)s:time get-start) %(self)s)
-                        (or (= (send ?%(parent)s:time get-end) -1)
+                        (or (and (= (send ?%(parent)s:time get-end) -1.0)
+                                 (>= (python-call ptime) %(self)s))
                             (>= (send ?%(parent)s:time get-end) %(self)s)))
                    (eq ?%(parent)s:time %(self)s))
             ''' % {'parent': parent, 'self': num} )
@@ -89,7 +90,7 @@ class Duration(Time):
     Can be used as time argument for instances of Fact.
     '''
 
-    def __init__(self, var='', start=-1, end=-1):
+    def __init__(self, var='', start=-1.0, end=-1.0):
         self.value = var
         if isinstance(start, MinComStart):
             self.pstart = start
@@ -102,7 +103,7 @@ class Duration(Time):
             self.end = isinstance(end, Instant) and end or \
                                                   Instant(end)
             if not utils.varpat.match(str(self.end.value)) and \
-                   float(self.end.value) == float(utils._now):
+                   float(self.end.value) == utils._now:
                 self.end = Instant('-1.0')
 
     def __str__(self):
@@ -118,11 +119,7 @@ class Duration(Time):
         if not isinstance(instance, clips._clips_wrap.Instance):
             instance = clips.FindInstance(instance)
         start = Instant(instance.GetSlot('start'))
-        if start.value in ('-1', '-1.0', 'now'):
-            start = Instant(utils._now)
         end = Instant(instance.GetSlot('end'))
-        if end.value == 'now':
-            start = Instant('-1.0')
         return Duration(start=start, end=end)
 
     def get_constraint(self, vrs, ancestor, mod_path):
@@ -243,8 +240,8 @@ class During(Namable):
    (<= (max-start %(durs)s) %(ins)s)
    (or
      (>= (min-end %(durs)s) %(ins)s)
-     (and (= (min-end %(durs)s) -1)
-          (>= ?*now* %(ins)s)))))
+     (and (= (min-end %(durs)s) -1.0)
+          (>= (python-call ptime) %(ins)s)))))
        """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations]),
               'ins': self.instant.put(vrs)}
 
@@ -270,8 +267,8 @@ class Coincide(DurationOpMixin):
   (or
     (<= (max-start %(durs)s) (min-end %(durs)s))
     (and
-      (<= (max-start %(durs)s) ?*now*)
-      (= (min-end %(durs)s) -1)))
+      (<= (max-start %(durs)s) (python-call ptime))
+      (= (min-end %(durs)s) -1.0)))
 )
         """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations])}
 
@@ -332,8 +329,8 @@ class Past(InstantOpMixin):
     """
     def get_ce(vrs):
         i = self.instant.put(vrs)
-        return '''(test (and (neq %s -1)
-                             (< %s ?*now*)))''' % (i, i)
+        return '''(test (and (neq %s -1.0)
+                             (< %s (python-call ptime))))''' % (i, i)
 
 class Present(InstantOpMixin):
     """
@@ -342,8 +339,8 @@ class Present(InstantOpMixin):
     """
     def get_ce(vrs):
         i = self.instant.put(vrs)
-        return '''(test (or (eq %s -1)
-                            (eq %s ?*now*)))''' % (i, i)
+        return '''(test (or (eq %s -1.0)
+                            (eq %s (python-call ptime))))''' % (i, i)
 
 class Future(InstantOpMixin):
     """
@@ -352,18 +349,16 @@ class Future(InstantOpMixin):
     """
     def get_ce(vrs):
         i = self.instant.put(vrs)
-        return '''(test (> %s ?*now*))''' % (i, i)
+        return '''(test (> %s (python-call ptime)))''' % (i, i)
 
 
-import time as t
+import time
 def now(new=0):
-    utils._now = new or int(t.time())
-    clips.Eval('(bind ?*now* %f)' % utils._now)
-    return utils._now
-
-now()
+    delta = float(int(time.time())) - utils._now
+    delta = delta < 1 and 1.0 or delta
+    utils._now = new or utils._now + delta
 
 def ptime():
-    return clips.Float(float(utils._now))
+    return clips.Float(utils._now)
 
 clips.RegisterPythonFunction(ptime)

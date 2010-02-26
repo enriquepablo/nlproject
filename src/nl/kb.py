@@ -7,9 +7,8 @@ from state import Exists
 from prop import Fact
 from nltime import (Time, Instant, Duration, Finish, During,
                     Coincide, MinComStart, MaxComEnd,
-                    Intersection, now)
+                    Intersection)
 from rule import Rule
-from utils import change_now
 
 from log import logger
 import utils

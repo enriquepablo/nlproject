@@ -17,6 +17,7 @@
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 # utils module
 
+import time
 import re
 
 from nl.log import logger
@@ -55,12 +56,15 @@ def clips_instance(ancestor, mod_path, meths=None):
     return ancestor
 
 
-_now = '1.0'
+_now = float(int(time.time()))
 
 def change_now(i=0):
+    'deprecated'
     global _now
-    _now = i and str(float(i)) or \
-            str(float(_now) + 1)
+    delta = float(int(time.time())) - _now
+    logger.debug('OOOOOOOOOOOOOO %f' %  delta)
+    _now = i and float(i) or \
+            float(_now) + 1000.0
 
 def parens(expr):
     """
