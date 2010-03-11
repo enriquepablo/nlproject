@@ -38,10 +38,11 @@ class Thing(Namable):
     """
     __metaclass__ = Noun
 
-    def __init__(self, value):
+    def __init__(self, value, _clsvar=''):
         if value.startswith('['):
             value = value[1:-1]
         self.value = value
+        self.clsvar = _clsvar
 
     def __str__(self):
         return self.value

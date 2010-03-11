@@ -177,6 +177,27 @@ class Workflow(Thing):
     a content type can have a workflow in a context
     """
 
+class Required(Exists):
+    """
+    an abstract action over a content
+    """
+    subject = Permission
+    instantaneous = False
+    mods = {'to': Verb,
+            'over': Status}
+
+kb.tell(Rule([
+     Fact(Permission('M1'), Required(to=Verb('V1', Action), over=Status('S1')), Duration('T5')),
+     Fact(Person('P1'), Wants(to=Verb('V1', Action)(what=Content('C1'))), Instant('I1')),
+     Fact(Content('C1'), Has(what=Status('S1')), Duration('T1')),
+     Fact(Content('C1'), Located(where=Context('X1')), Duration('T2')),
+     Fact(Person('P1'), Has(what=Role('R1'), where=Context('X1')), Duration('T3')),
+     Fact(Role('R1'), Has(what=Permission('M1')), Duration('T4')),
+     During('I1', 'T1','T2','T3','T4', 'T5')
+ ],[
+     Fact(Person('P1'), Verb('V1', Action)(what=Content('C1')), Instant('I1'))]))
+
+
 def r_permission(action, status, perm):
     """
     If a person wants to perform the given action on a content object,
@@ -185,15 +206,7 @@ def r_permission(action, status, perm):
     all at the same time,
     the person performs the given action
     """
-    kb.tell( Rule([
-        Fact(Person('P1'), Wants(to=action(what=Content('C1'))), Instant('I1')),
-        Fact(Content('C1'), Has(what=status), Duration('T1')),
-        Fact(Content('C1'), Located(where=Context('X1')), Duration('T2')),
-        Fact(Person('P1'), Has(what=Role('R1'), where=Context('X1')), Duration('T3')),
-        Fact(Role('R1'), Has(what=perm), Duration('T4')),
-        During('I1', 'T1','T2','T3','T4')
-    ],[
-        Fact(Person('P1'), action(what=Content('C1')), Instant('I1'))]))
+    kb.tell( Fact(perm, Required(to=action, over=status), Duration(start='now', end='now')) )
 
 r_permission(View, public, view_perm)
 
@@ -226,20 +239,44 @@ def r_workflow_for_content(content_type, workflow, context):
     """
     assign workflow to content_type in context
     """
-    kb.tell( Fact(workflow, AssignedTo(noun=content_type, where=context), Duration(start=Instant('now'))))
+    kb.tell( Fact(workflow, Assigned(to=content_type, where=context), Duration(start=Instant('now'))))
 
 
 
-class AssignedTo(Exists):
+class Assigned(Exists):
     """
     an abstract action over a content
     """
     subject = Workflow
     instantaneous = False
-    mods = {'noun': Noun,
+    mods = {'to': Noun,
             'where': Context}
 
-def r_transition(action, workflow, content_type, initial, final):
+class HasTransition(Exists):
+    subject = Workflow
+    instantaneous = False
+    mods = {'start': Status,
+            'end': Status,
+            'by': Verb} #WfAction
+
+try:
+  kb.tell(Rule([
+    Fact(Workflow('W1'), HasTransition(start=Status('S1'), end=Status('S2'), by=Verb('V1', WfAction)), Duration('T4')),
+    Fact(Workflow('W1'), Assigned(to=Noun('N1', Content), where=Context('X1')), Duration('T2')),
+    Fact(Noun('N1', Content)('C1'), Located(where=Context('X1')), Duration('T1')),
+    Fact(Person('P1'), Verb('V1', WfAction)(what=Noun('N1', Content)('C1')), Instant('I1')),
+    Fact(Noun('N1', Content)('C1'), Has(what=Status('S1')), Duration('T3')),
+    During('I1', 'T1','T2', 'T3', 'T4')
+],[
+    Fact(Noun('N1')('C1'), Has(what=Status('S2')), Duration(start=Instant('I1'), end=MaxComEnd('T1', 'T2'))),
+    Finish('T3', 'I1')]))
+except:
+   import clips
+   logger.info(clips.ErrorStream.Read())
+
+
+
+def r_transition(action, workflow, initial, final):
     """
     If a person performs a workflow action on a content object,
     and that object has the intitial status up till that moment,
@@ -249,15 +286,29 @@ def r_transition(action, workflow, content_type, initial, final):
     Note: The usage of Noun here is merely for testing purposes,
     the rule would be simpler substituting Noun('N1', content_type) for content_type
     """
-    kb.tell( Rule([
-        Fact(workflow, AssignedTo(noun=Noun('N1', content_type), where=Context('X1')), Duration('T2')),
-        Fact(Noun('N1', content_type)('C1'), Located(where=Context('X1')), Duration('T1')),
-        Fact(Person('P1'), action(what=Noun('N1', content_type)('C1')), Instant('I1')),
-        Fact(Noun('N1', content_type)('C1'), Has(what=initial), Duration('T3')),
-        During('I1', 'T1','T2', 'T3')
-    ],[
-        Fact(Noun('N1', content_type)('C1'), Has(what=final), Duration(start=Instant('I1'), end=MaxComEnd('T1', 'T2'))),
-        Finish('T3', 'I1')]))
+    kb.tell( Fact(workflow, HasTransition(start=initial, end=final, by=action), Duration(start='now', end='now')) )
+
+
+
+#def r_transition(action, workflow, content_type, initial, final):
+#    """
+#    If a person performs a workflow action on a content object,
+#    and that object has the intitial status up till that moment,
+#    and that workflow is assigned to the type of the object in the context in which it is,
+#    from now on it has status final
+#
+#    Note: The usage of Noun here is merely for testing purposes,
+#    the rule would be simpler substituting Noun('N1', content_type) for content_type
+#    """
+#    kb.tell( Rule([
+#        Fact(workflow, Assigned(to=Noun('N1', content_type), where=Context('X1')), Duration('T2')),
+#        Fact(Noun('N1', content_type)('C1'), Located(where=Context('X1')), Duration('T1')),
+#        Fact(Person('P1'), action(what=Noun('N1', content_type)('C1')), Instant('I1')),
+#        Fact(Noun('N1', content_type)('C1'), Has(what=initial), Duration('T3')),
+#        During('I1', 'T1','T2', 'T3')
+#    ],[
+#        Fact(Noun('N1', content_type)('C1'), Has(what=final), Duration(start=Instant('I1'), end=MaxComEnd('T1', 'T2'))),
+#        Finish('T3', 'I1')]))
 
 
 class Document(Content):
@@ -270,9 +321,9 @@ kb.tell(doc_workflow)
 
 r_workflow_for_content(Document, doc_workflow, basic_context)
 
-r_transition(Publish, doc_workflow, Document, private, public)
+r_transition(Publish, doc_workflow, private, public)
 
-r_transition(Hide, doc_workflow, Document, public, private)
+r_transition(Hide, doc_workflow, public, private)
 
 class Owns(Exists):
     """

@@ -117,11 +117,14 @@ class ClassVar(object):
     def __init__(self, var, cls=None):
         self.value = var
         self.cls = cls and cls or utils.get_class('Namable')
+        self.ob = self.cls(self.value)
 
     def __call__(self, var='', **kwargs):
-        if utils.varpat.match(self.value):
+        if utils.varpat.match(var):
             return ClassVarVar(self.value, self.cls, var, **kwargs)
-        return self.cls(self.value)
+        if issubclass(self.cls, utils.get_class('Exists')):
+            return self.cls(var, _clsvar=self.value, **kwargs)
+        return self.cls(var, **kwargs)
 
     def get_constraint(self, vrs, ancestor, mod_path):
         '''
@@ -131,7 +134,7 @@ class ClassVar(object):
         '''
         ci = utils.clips_instance(ancestor, mod_path)
         if self.value in vrs:
-            return self.cls(self.value).get_constraint(vrs, ancestor, mod_path)
+            return self.ob.get_constraint(vrs, ancestor, mod_path)
         else:
             vrs[self.value] = (ancestor, mod_path)
             return '''&:(or (eq %(ci)s %(cls)s)
@@ -146,7 +149,7 @@ class ClassVar(object):
         and the sentence is in the tail of a rule.
         """
         if self.value in vrs:
-            return self.cls(self.value).get_var_slot_constraint(vrs, self.value)
+            return self.ob.get_var_slot_constraint(vrs, self.value)
         else:
             vrs[self.value] = ()
             return '''?%(cvar)s&:(or (eq ?%(cvar)s %(cls)s)
@@ -194,7 +197,7 @@ class ClassVarVar(object):
         self.value = var
         self.clsvar = clsvar
         self.cls = cls
-        self.ob = cls(var, **kwargs)
+        self.ob = cls(var, _clsvar=clsvar, **kwargs)
 
     def get_constraint(self, vrs, ancestor, mod_path):
         '''
@@ -205,9 +208,25 @@ class ClassVarVar(object):
         ci = utils.clips_instance(ancestor, mod_path)
         constraint = []
         if not self.value or self.value in vrs:
+            if self.clsvar and self.clsvar not in vrs:
+                if vrs[self.value]:
+                    vrs[self.clsvar] = (
+                               utils.clips_instance(*(vrs[self.value])),
+                               [], ['class'])
+                else:
+                    vrs[self.clsvar] = (ancestor, mod_path, ['class'])
             return self.ob.get_constraint(vrs, ancestor, mod_path)
         else:
             vrs[self.value] = (ancestor, mod_path)
+            if self.clsvar in vrs:
+                if vrs[self.clsvar]:
+                    return '&:(eq (class %(var)s) %(cls)s)' % {
+                                    'var': ci,
+                         'cls': utils.clips_instance(*(vrs[self.clsvar]))}
+                else:
+                    return '&:(eq (class %(var)s) %(cls)s)' % {
+                                    'var': ci,
+                                    'cls': self.clsvar}
             vrs[self.clsvar] = (ancestor, mod_path, ['class'])
             return '''&:(or
                           (eq (class %(ci)s) %(cls)s)
@@ -220,11 +239,49 @@ class ClassVarVar(object):
         return clips snippet to be used
         when the variable is predicate or subject
         and the sentence is in the tail of a rule.
+
+        In case we are a Noun:
+
+        In case we are a Verb:
+        * in case the clsvar is vrs but not the var:
+          * in case
+
+
+          XXX dos cosas: aquí:
+
+          (logical (object (is-a Fact) (subject ?P1&:(or (eq (class ?P1) Person) (subclassp (class ?P1) Person))) (predicate ?Y10&:(or (eq (class ?Y10) WfAction) (subclassp (class ?Y10) WfAction))&:(eq (send ?Y10 get-what) ?C1)) (time ?I1) (truth 1))) (logical (object (is-a Fact) (subject ?C1&:(eq ?C1 (send ?Y10 get-what)))
+         se repite
+        (eq ?C1 (send ?Y10 get-what))
+
+        otra cosa: tanto en ClassVar como en ClassVarVar, al hacer get_slot_constraint (NO he mirado get_constraint, pero será igual) no se toma en cuanta cuando clsvar es var y está en vrs.
+
+        ClassVar lo tiene que hacer es, en __call__, si no se le llama con una variable sino con argumantos, y es un verbo (en el caso de una cosa da igual, está unívocamente determinada por el nombre propio), tiene que pasar el clsvar para que verb lo tenga en cuenta cuando haga get_slot constraint (y posiblemente los demás)
+
+        ClassVarVar lo tiene que tener en cuenta en get_slot_constraint cuando self value está en vrs, entonces tiene que pasarlo a self ob para que lo tenga en cuenta en get_var_slot_constraint
+
+
+        HAY QUE PONERSELO TB A THING, TODO LO DEL _CLSVAR
         """
-        if not self.value or self.value in vrs:
+        if self.value in vrs:
+            if self.clsvar and self.clsvar not in vrs:
+                if vrs[self.value]:
+                    vrs[self.clsvar] = (
+                               utils.clips_instance(*(vrs[self.value])),
+                               [], ['class'])
+                else:
+                    vrs[self.clsvar] = (self.value, [], ['class'])
             return self.ob.get_var_slot_constraint(vrs, self.value)
         else:
             vrs[self.value] = ()
+            if self.clsvar in vrs:
+                if vrs[self.clsvar]:
+                    return '?%(var)s&:(eq (class ?%(var)s) %(cls)s)' % {
+                                    'var': self.value,
+                         'cls': utils.clips_instance(*(vrs[self.clsvar]))}
+                else:
+                    return '?%(var)s&:(eq (class ?%(var)s) %(cls)s)' % {
+                                    'var': self.value,
+                                    'cls': self.clsvar}
             vrs[self.clsvar] = (self.value, [], ['class'])
             return '''?%(var)s&:(or
                                  (eq (class ?%(var)s) %(cls)s)

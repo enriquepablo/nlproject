@@ -239,9 +239,9 @@ class During(Namable):
   (and
    (<= (max-start %(durs)s) %(ins)s)
    (or
-     (>= (min-end %(durs)s) %(ins)s)
      (and (= (min-end %(durs)s) -1.0)
-          (>= (python-call ptime) %(ins)s)))))
+          (>= (python-call ptime) %(ins)s))
+     (>= (min-end %(durs)s) %(ins)s))))
        """ % {'durs': ' '.join([dur.put(vrs) for dur in self.durations]),
               'ins': self.instant.put(vrs)}
 
@@ -357,6 +357,7 @@ def now(new=0):
     delta = float(int(time.time())) - utils._now
     delta = delta < 1 and 1.0 or delta
     utils._now = new or utils._now + delta
+    return utils._now
 
 def ptime():
     return clips.Float(utils._now)

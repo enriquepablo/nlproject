@@ -52,6 +52,7 @@ class Exists(Namable):
 
     def __init__(self, *args, **kwargs):
         self.value = args and args[0] or ''
+        self.clsvar = kwargs.get('_clsvar', '')
         for mod,cls in self.mods.items():
             if kwargs.get(mod, _m) is not _m:
                 if isinstance(kwargs[mod], basestring) or \
@@ -60,8 +61,6 @@ class Exists(Namable):
                     setattr(self, mod, utils.get_class(cls)(kwargs[mod]))
                 else:
                     setattr(self, mod, kwargs[mod])
-            #else:
-            #    raise NlError("wrong modifier for verb")
 
     def __str__(self):
         if self.value:
@@ -91,10 +90,34 @@ class Exists(Namable):
         build rule CE constraint for clips
         for a slot constraint for a prop in a rule
         """
-        newvar = utils._newvar()
         if utils.varpat.match(self.value):
-            return self.get_var_slot_constraint(vrs, newvar) # XXX could be self.value
-        constraint = [class_constraint % {'val': newvar,
+            if self.clsvar and self.clsvar not in vrs:
+                if vrs[self.value]:
+                    vrs[self.clsvar] = (
+                               utils.clips_instance(*(vrs[self.value])),
+                               [], ['class'])
+                else:
+                    vrs[self.clsvar] = (self.value, [], ['class'])
+            return self.get_var_slot_constraint(vrs, self.value)
+        newvar = utils._newvar()
+        if self.clsvar:
+            if self.clsvar in vrs:
+                if vrs[self.clsvar]:
+                    constraint = [
+                     '?%(newvar)s&:(eq (class ?%(newvar)s) %(var)s)' % {
+                         'newvar': newvar,
+                         'var': utils.clips_instance(*(vrs[self.clsvar]))}]
+                else:
+                    constraint = [
+                     '?%(newvar)s&:(eq (class ?%(newvar)s) %(var)s)' % {
+                         'newvar': newvar,
+                         'var': self.clsvar}]
+            else:
+                vrs[self.clsvar] = (newvar, [], ('class',))
+                constraint = [class_constraint % {'val': newvar,
+                                         'cls': self.__class__.__name__}]
+        else:
+            constraint = [class_constraint % {'val': newvar,
                                          'cls': self.__class__.__name__}]
         for mod,cls in self.mods.items():
             mod_o =  getattr(self, mod, _m)
@@ -110,14 +133,41 @@ class Exists(Namable):
         if self.value:
             if self.value in vrs:
                 if vrs[self.value]:
+                    if self.clsvar and self.clsvar not in vrs:
+                        vrs[self.clsvar] = (
+                               utils.clips_instance(*(vrs[self.value])),
+                               [], ['class'])
                     v_ci = utils.clips_instance(*(vrs[self.value]))
                     constraint.append('&:(eq %s %s)' % (v_ci, ci))
                 else:
+                    if self.clsvar and self.clsvar not in vrs:
+                        vrs[self.clsvar] = (ancestor, mod_path, ['class'])
                     constraint.append('&:(eq %s ?%s)' % (ci, self.value))
             else:
                 vrs[self.value] = (ancestor, mod_path)
         else:
-            constraint.append('&:(or (eq (class %(val)s) %(cls)s) (subclassp (class %(val)s) %(cls)s))' % {'val': ci, 'cls': self.__class__.__name__})
+            if self.clsvar:
+                if self.clsvar in vrs:
+                    if vrs[self.clsvar]:
+                        constraint.append(
+                         '&:(eq (class %s) %s)' % (ci,
+                             utils.clips_instance(*(vrs[self.clsvar]))))
+                    else:
+                        constraint.append(
+                         '&:(eq (class %s) %s)' % (ci, self.clsvar))
+                else:
+                    vrs[self.clsvar] = (ancestor, mod_path, ('class',))
+                    constraint.append(
+                        '''&:(or (eq (class %(val)s) %(cls)s)
+                                 (subclassp (class %(val)s) %(cls)s))''' % {
+                                           'val': ci,
+                                           'cls': self.__class__.__name__})
+            else:
+                constraint.append(
+                        '''&:(or (eq (class %(val)s) %(cls)s)
+                                 (subclassp (class %(val)s) %(cls)s))''' % {
+                                           'val': ci,
+                                           'cls': self.__class__.__name__})
             for mod,cls in self.mods.items():
                 mod_o =  getattr(self, mod, _m)
                 if mod_o is not _m:
@@ -141,6 +191,12 @@ class Exists(Namable):
                 put_meth = getattr(mod_o, 'clsput', mod_o.put)
                 slots += [mod, put_meth(vrs)]
         slots = ' '.join(slots)
+        if self.clsvar:
+            if vrs[self.clsvar]:
+                return '(add-pred %s %s)' % (
+                    utils.clips_instance(*(vrs[self.clsvar])), slots)
+            else:
+                return '(add-pred %s %s)' % (self.clsvar, slots)
         return '(add-pred %s %s)' % (self.__class__.__name__, slots)
 
 
@@ -157,7 +213,14 @@ class Exists(Namable):
             else:
                 newvar = self.value
             vrs[self.value] = ()
-        templs.append((newvar, self.__class__.__name__))
+        if self.clsvar:
+            if vrs[self.clsvar]:
+                templs.append((newvar,
+                               utils.clips_instance(*(vrs[self.clsvar]))))
+            else:
+                templs.append((newvar, self.clsvar))
+        else:
+            templs.append((newvar, self.__class__.__name__))
         self.get_mod_isc(newvar, templs, queries, vrs)
         return '?%s' % newvar
 

@@ -46,6 +46,8 @@ def clips_instance(ancestor, mod_path, meths=None):
     send_str = '(send ?%s get-%s)'
     meth_str = '(%s ?%s)'
     for mod in mod_path:
+        if ancestor.startswith('('):
+            send_str = '(send %s get-%s)'
         ancestor = send_str % (ancestor, mod)
         send_str = '(send %s get-%s)'
         meth_str = '(%s %s)'
@@ -53,10 +55,15 @@ def clips_instance(ancestor, mod_path, meths=None):
         for meth in meths:
             ancestor = meth_str % (meth, ancestor)
             meth_str = '(%s %s)'
-    return ancestor
+    return possible_var(ancestor)
 
+def possible_var(var):
+    if varpat.match(var):
+        return '?%s' % var
+    return var
 
-_now = float(int(time.time()))
+#_now = float(int(time.time()))
+_now = 1.0
 
 def change_now(i=0):
     'deprecated'
