@@ -145,5 +145,7 @@ def factback(csubj, cpred, ctime, ctruth):
     truth = int(str(ctruth))
     fact = Fact(subj, pred, t, truth=truth)
     pred.in_fact(fact)
+    for plugin in utils.plugins:
+        plugin(fact)
 
 clips.RegisterPythonFunction(factback)

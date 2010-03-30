@@ -19,11 +19,24 @@
 
 import time
 import re
+import os
+import sys
+import pkg_resources  # setuptools specific
 
 from nl.log import logger
 
 # vars are always XNUM
 varpat = re.compile(r'^[A-Z]\w*\d+$')
+
+plugins = []
+
+
+def load_plugins():
+    '''setuptools based plugin loader'''
+    entrypoint = 'nl.new_fact'
+    for entrypoint in pkg_resources.iter_entry_points(entrypoint):
+        plugin = entrypoint.load()
+        plugins.append(plugin)
 
 # XXX not thread safe
 _vn = 0

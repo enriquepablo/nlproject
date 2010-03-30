@@ -16,9 +16,9 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
-debug_level = 'DEBUG'
+debug_level = 'ERROR'
 
-with_callback = False
+with_callback = True
 
 ####################
 ### CLIPS CONFIG ###

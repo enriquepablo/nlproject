@@ -135,6 +135,8 @@ clips.Build(_fact_clp)
 #clips.RegisterPythonFunction(ptonl)
 
 if conf.with_callback:
+    import utils
+    utils.load_plugins()
     callback = '(python-call factback ?s ?p ?t ?r)'
 else:
     callback = ''
@@ -173,3 +175,4 @@ _resolvetime = '''
 
 logger.info(_resolvetime)
 clips.Build(_resolvetime)
+
