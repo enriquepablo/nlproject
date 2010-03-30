@@ -186,6 +186,13 @@ class Required(Exists):
     mods = {'to': Verb,
             'over': Status}
 
+#If a person wants to perform a certain action on a content object,
+#and that object is in some context and has a certain status,
+#and the person has some role on that context,
+#and that permission is required to perform that kind of action over an object with that certain status,
+#and that role has that permission,
+#all at the same time,
+#the person performs the given action
 kb.tell(Rule([
      Fact(Permission('M1'), Required(to=Verb('V1', Action), over=Status('S1')), Duration('T5')),
      Fact(Person('P1'), Wants(to=Verb('V1', Action)(what=Content('C1'))), Instant('I1')),
@@ -197,18 +204,12 @@ kb.tell(Rule([
  ],[
      Fact(Person('P1'), Verb('V1', Action)(what=Content('C1')), Instant('I1'))]))
 
+kb.tell( Fact(view_perm, Required(to=View, over=public), Duration(start='now', end='now')) )
 
 def r_permission(action, status, perm):
     """
-    If a person wants to perform the given action on a content object,
-    and that object is in some context and has the given status,
-    and the person has the given perm on that context,
-    all at the same time,
-    the person performs the given action
     """
     kb.tell( Fact(perm, Required(to=action, over=status), Duration(start='now', end='now')) )
-
-r_permission(View, public, view_perm)
 
 r_permission(Edit, public, edit_perm)
 
@@ -259,6 +260,14 @@ class HasTransition(Exists):
             'end': Status,
             'by': Verb} #WfAction
 
+#if some workflow has some transition,
+#and that workflow is assigned to some content type in some context,
+#and a person performs the workflow action of the transition on a content object of thet type,
+#and the mentioned content object is located in the mentioned context,
+#and that object has the intitial status of the transtion up till that moment,
+#from now on it has status final
+#and no longer has status initial.
+
 try:
   kb.tell(Rule([
     Fact(Workflow('W1'), HasTransition(start=Status('S1'), end=Status('S2'), by=Verb('V1', WfAction)), Duration('T4')),
@@ -278,13 +287,7 @@ except:
 
 def r_transition(action, workflow, initial, final):
     """
-    If a person performs a workflow action on a content object,
-    and that object has the intitial status up till that moment,
-    and that workflow is assigned to the type of the object in the context in which it is,
-    from now on it has status final
 
-    Note: The usage of Noun here is merely for testing purposes,
-    the rule would be simpler substituting Noun('N1', content_type) for content_type
     """
     kb.tell( Fact(workflow, HasTransition(start=initial, end=final, by=action), Duration(start='now', end='now')) )
 
