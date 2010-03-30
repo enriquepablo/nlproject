@@ -100,10 +100,11 @@ def ask_obj(sentence):
     clps, templs = get_instances(sentence)
     sens = []
     if clps:
-        for ins in clps:
-            if isinstance(sentence, Thing):
+        if isinstance(sentence, Thing):
+            for ins in clps:
                 sens.append(Namable.from_clips(ins))
-            elif isinstance(sentence, Fact):
+        elif isinstance(sentence, Fact):
+            for ins in clps:
                 i = clips.FindInstance(ins)
                 if issubclass(utils.get_class(str(i.Class.Name)), Fact):
                     sens.append(Fact.from_clips(ins))
