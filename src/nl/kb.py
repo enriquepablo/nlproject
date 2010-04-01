@@ -52,7 +52,11 @@ def get_instancesn(*sentences):
 def get_instances(*sentences):
     q, templs = get_instancesn(*sentences)
     logger.info(q)
-    return clips.Eval(q), templs
+    try:
+        return clips.Eval(q), templs
+    except:
+        logger.error(clips.ErrorStream.Read())
+        raise
 
 def retract(sentence):
     for ins in get_instances(sentence):

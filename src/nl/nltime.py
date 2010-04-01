@@ -62,12 +62,12 @@ class Instant(Time, Number):
         else:
             super(Instant, self).__init__(*args, **kwargs)
 
-    def get_isc(self, templs, queries, vrs, parent=None):
+    def get_isc(self, queries, vrs, ancestor, mod_path):
         """
         """
         num = self._get_number(vrs)
-        if parent and (not utils.varpat.match(num[1:]) or \
-                       vrs.has_key(num[1:])):
+        if not utils.varpat.match(num[1:]) or \
+                       vrs.has_key(num[1:]):
             if vrs.has_key(num[1:]) and vrs[num[1:]]:
                 num = utils.clips_instance(*(vrs[num[1:]]))
             queries.append( '''
@@ -77,7 +77,7 @@ class Instant(Time, Number):
                                  (>= (python-call ptime) %(self)s))
                             (>= (send ?%(parent)s:time get-end) %(self)s)))
                    (eq ?%(parent)s:time %(self)s))
-            ''' % {'parent': parent, 'self': num} )
+            ''' % {'parent': ancestor, 'self': num} )
         return num
 
 
@@ -122,17 +122,17 @@ class Duration(Time):
         end = Instant(instance.GetSlot('end'))
         return Duration(start=start, end=end)
 
-    def get_constraint(self, vrs, ancestor, mod_path):
-        '''
-        build rule CE constraint for clips
-        as a mod in a predicate in a prem in a rule
-        '''
-        ci = utils.clips_instance(ancestor, mod_path)
-        if utils.varpat.match(self.value):
-            return self.get_var_constraint(vrs, ancestor, mod_path, ci)
-        else:
-            core = '(= (send %s get-start) %s)' % (ci, self.start.get_constraint(vrs))
-            return '&:(and %s (= (send %s get-end) %s))' % (core, ci, self.end.get_constraint(vrs))
+#    def get_constraint(self, vrs, ancestor, mod_path):
+#        '''
+#        build rule CE constraint for clips
+#        as a mod in a predicate in a prem in a rule
+#        '''
+#        ci = utils.clips_instance(ancestor, mod_path)
+#        if utils.varpat.match(self.value):
+#            return self.get_var_constraint(vrs, ancestor, mod_path, ci)
+#        else:
+#            core = '(= (send %s get-start) %s)' % (ci, self.start.get_constraint(vrs))
+#            return '&:(and %s (= (send %s get-end) %s))' % (core, ci, self.end.get_constraint(vrs))
 
 # XXX falta resolver el caso en ambos get constraint de que no haya end.
 
@@ -156,39 +156,42 @@ class Duration(Time):
                  getattr(self, 'pend', False) and self.pend.put(vrs) or \
                                            self.end.get_slot_constraint(vrs))
 
-    def get_isc(self, templs, queries, vrs, parent=None):
+    def get_isc(self, queries, vrs, ancestor, mod_path):
         """
         get instance-set condition;
         modify (instance-set templates, instance-set queries)
         """
+        ci = utils.clips_instance(ancestor, mod_path)
         if utils.varpat.match(self.value):
             if self.value in vrs:
                 if vrs[self.value]:
-                    queries.append('(eq ?%s %s)' % (self.value,
+                    queries.append('(eq %s %s)' % (ci,
                                      utils.clips_instance(*(vrs[self.value]))))
-            vrs[self.value] = ()
-            templs.append((self.value, 'Duration'))
-            return '?%s' % self.value
+                else:
+                    queries.append('(eq %s ?%s)' % (ci, self.value))
+            else:
+                vrs[self.value] = (ancestor, mod_path)
+                queries.append('(eq (class %s) Duration)' % ci)
+            return
         start = getattr(self, 'start', _m)
-        if parent:
-            core_start = '(send ?%s:time get-start)' % parent
-            core_end = '(send ?%s:time get-end)' % parent
-        else:
-            templs.append((self.value, 'Duration'))
-            core_start = '?%s:start' % self.value
-            core_end = '?%s:end' % self.value
-        if start is not _m and \
-           not (utils.varpat.match(str(start.value)) and \
-           start.value not in vrs):
-            queries.append('(= %s %s)' % (core_start,
-                                  start.get_isc(templs, queries, vrs)))
+        if utils.varpat.match(str(start.value)) and not vrs.has_key(start.value):
+            vrs[start.value] = (ancestor, mod_path+('start',))
+        nstart = start.get_isc([], vrs, ancestor, mod_path)
         end = getattr(self, 'end', _m)
-        if end is not _m and \
-           not (utils.varpat.match(str(end.value)) and \
-           end.value not in vrs):
-            queries.append('(= %s %s)' % (core_end,
-                                  end.get_isc(templs, queries, vrs)))
-        return '?%s' % self.value
+        if utils.varpat.match(str(end.value)) and not vrs.has_key(end.value):
+            vrs[end.value] = (ancestor, mod_path+('end',))
+        nend = end.get_isc([], vrs, ancestor, mod_path)
+        queries.append( '''
+                   (and (eq (class (send ?%(parent)s get-time)) Duration)
+                        (<= (send (send ?%(parent)s get-time) get-start) %(start)s)
+                        (or (= (send (send ?%(parent)s get-time) get-end) %(end)s)
+                            (and (= (send (send ?%(parent)s get-time) get-end) -1.0)
+                                 (>= (python-call ptime) %(end)s))
+                            (and (= %(end)s -1.0)
+                                 (<= (python-call ptime) (send (send ?%(parent)s get-time) get-end)))
+                            (and (<> %(end)s -1.0)
+                                 (>= (send (send ?%(parent)s get-time) get-end) %(end)s))))
+            ''' % {'parent': ancestor, 'start': nstart, 'end': nend} )
 
     def get_ism(self,  templs, queries, vrs, newvar='time'):
         """
@@ -201,6 +204,24 @@ class Duration(Time):
         else:
             templs.append((newvar, self.__class__.__name__))
             queries.append('(eq ?%s %s)' % (newvar, self.put(vrs)))
+
+
+#(find-all-instances ((?q0 Fact))
+#
+#    (and (eq (send ?q0 get-subject) [jane])
+#         (and (or
+#              (eq (class (send ?q0 get-predicate)) Can)
+#              (subclassp (class (send ?q0 get-predicate)) Can)))
+#         (and (eq (class (send ?q0 get-time)) Duration)
+#              (<= (send (send ?q0 get-time) get-start) 1270070257.0)
+#              (or (and (= (send (send ?q0 get-time) get-end) -1.0)
+#                       (>= (python-call ptime) -1.0))
+#                  (and (= -1.0 -1)
+#                       (<= (python-call ptime) (send (send ?q0 get-time) get-end)))
+#                  (>= (send (send ?q0 get-time) get-end) -1.0)))
+#         (eq ?q0:truth 1)))
+
+
 
 
 class Finish(Namable):

@@ -88,18 +88,16 @@ class Fact(Namable):
         self.truth = not self.truth and 1 or 0
         return negated
 
-    def get_ism(self, templs, queries, vrs, newvar='prop'):
+    def get_ism(self, templs, queries, vrs, newvar='fact'):
         """
         get instance-set method;
         return (instance-set templates, instance-set queries)
         """
         templs.append((newvar, self.__class__.__name__))
         isc_meth = getattr(self.subject, 'get_isc_cls', self.subject.get_isc)
-        s = isc_meth(templs, queries, vrs)
-        queries.append('(eq ?%s:subject %s)' % (newvar, s))
-        p = self.predicate.get_isc(templs, queries, vrs)
-        queries.append('(eq ?%s:predicate %s)' % (newvar, p))
-        self.time.get_isc(templs, queries, vrs, parent=newvar)
+        isc_meth(queries, vrs, newvar, ('subject',))
+        self.predicate.get_isc(queries, vrs, newvar, ('predicate',))
+        self.time.get_isc(queries, vrs, newvar, ('time',))
         queries.append('(eq ?%s:truth %s)' % (newvar,
                                          self.truth))
         return newvar

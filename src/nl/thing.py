@@ -80,29 +80,25 @@ class Thing(Namable):
         return '[%s]' % self.value
 
     def get_constraint(self, vrs, ancestor, mod_path):
+        constraint = self.get_query(vrs, ancestor, mod_path)
+        if not constraint:
+            return ''
+        return '&:%s' % '&:'.join(constraint)
+
+    def get_query(self, vrs, ancestor, mod_path):
         ci = utils.clips_instance(ancestor, mod_path)
         if utils.varpat.match(self.value):
-            constraint = self.get_var_constraint(vrs, ancestor, mod_path, ci)
+            constraint = self.get_var_query(vrs, ancestor, mod_path, ci)
         else:
-            constraint = '&:(eq %s [%s])' % (ci, self.value)
-        return constraint
+            constraint = '(eq %s [%s])' % (ci, self.value)
+        return [constraint]
 
-    def get_isc(self, templs, queries, vrs):
+    def get_isc(self, queries, vrs, ancestor, mod_path):
         """
         get instance-set condition;
         return (instance-set templates, instance-set queries)
         """
-        if utils.varpat.match(self.value):
-            if self.value in vrs:
-                if vrs[self.value]:
-                    queries.append('(eq ?%s %s)' % (self.value,
-                                     utils.clips_instance(*(vrs[self.value]))))
-            else:
-                templs.append((self.value, self.__class__.__name__))
-                vrs[self.value] = ()
-            return '?%s' % self.value
-        else:
-            return '[%s]' % self.value
+        queries += self.get_query(vrs, ancestor, mod_path)
 
     def get_ism(self,  templs, queries, vrs, newvar='sen'):
         """

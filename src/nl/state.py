@@ -128,6 +128,12 @@ class Exists(Namable):
         return ''.join(constraint)
 
     def get_constraint(self, vrs, ancestor, mod_path):
+        constraint = self.get_query(vrs, ancestor, mod_path)
+        if not constraint:
+            return ''
+        return '&:%s' % '&:'.join(constraint)
+
+    def get_query(self, vrs, ancestor, mod_path):
         ci = utils.clips_instance(ancestor, mod_path)
         constraint = []
         if self.value:
@@ -138,11 +144,11 @@ class Exists(Namable):
                                utils.clips_instance(*(vrs[self.value])),
                                [], ['class'])
                     v_ci = utils.clips_instance(*(vrs[self.value]))
-                    constraint.append('&:(eq %s %s)' % (v_ci, ci))
+                    constraint.append('(eq %s %s)' % (v_ci, ci))
                 else:
                     if self.clsvar and self.clsvar not in vrs:
                         vrs[self.clsvar] = (ancestor, mod_path, ['class'])
-                    constraint.append('&:(eq %s ?%s)' % (ci, self.value))
+                    constraint.append('(eq %s ?%s)' % (ci, self.value))
             else:
                 vrs[self.value] = (ancestor, mod_path)
         else:
@@ -150,33 +156,33 @@ class Exists(Namable):
                 if self.clsvar in vrs:
                     if vrs[self.clsvar]:
                         constraint.append(
-                         '&:(eq (class %s) %s)' % (ci,
+                         '(eq (class %s) %s)' % (ci,
                              utils.clips_instance(*(vrs[self.clsvar]))))
                     else:
                         constraint.append(
-                         '&:(eq (class %s) %s)' % (ci, self.clsvar))
+                         '(eq (class %s) %s)' % (ci, self.clsvar))
                 else:
                     vrs[self.clsvar] = (ancestor, mod_path, ('class',))
                     constraint.append(
-                        '''&:(or (eq (class %(val)s) %(cls)s)
+                        '''(or (eq (class %(val)s) %(cls)s)
                                  (subclassp (class %(val)s) %(cls)s))''' % {
                                            'val': ci,
                                            'cls': self.__class__.__name__})
             else:
                 constraint.append(
-                        '''&:(or (eq (class %(val)s) %(cls)s)
+                        '''(or (eq (class %(val)s) %(cls)s)
                                  (subclassp (class %(val)s) %(cls)s))''' % {
                                            'val': ci,
                                            'cls': self.__class__.__name__})
             for mod,cls in self.mods.items():
                 mod_o =  getattr(self, mod, _m)
                 if mod_o is not _m:
-                    constraint_meth = getattr(mod_o, 'clsput',
-                                              mod_o.get_constraint)
-                    constraint.append(constraint_meth(vrs,
+                    constraint_meth = getattr(mod_o, 'get_query_cls',
+                                              mod_o.get_query)
+                    constraint += constraint_meth(vrs,
                                                    ancestor,
-                                                 mod_path + (mod,)))
-        return ''.join(constraint)
+                                                 mod_path + (mod,))
+        return constraint
 
     def put(self, vrs, name=None):
         """
@@ -200,37 +206,16 @@ class Exists(Namable):
         return '(add-pred %s %s)' % (self.__class__.__name__, slots)
 
 
-    def get_isc(self, templs, queries, vrs):
+    def get_isc(self, queries, vrs, ancestor, mod_path):
         """
         get instance-set condition;
         return (instance-set templates, instance-set queries)
         """
-        newvar = utils._newvar()
-        if self.value:
-            if self.value in vrs and vrs[self.value]:
-                queries.append('(eq ?%s %s)' % (newvar,
-                                 utils.clips_instance(*(vrs[self.value]))))
-            else:
-                newvar = self.value
-            vrs[self.value] = ()
-        if self.clsvar:
-            if vrs[self.clsvar]:
-                templs.append((newvar,
-                               utils.clips_instance(*(vrs[self.clsvar]))))
-            else:
-                templs.append((newvar, self.clsvar))
-        else:
-            templs.append((newvar, self.__class__.__name__))
-        self.get_mod_isc(newvar, templs, queries, vrs)
-        return '?%s' % newvar
-
-    def get_mod_isc(self, newvar, templs, queries, vrs):
-        for mod,mcls in self.mods.items():
-            mod_o = getattr(self, mod, _m)
-            if mod_o is not _m and not (utils.varpat.match(mod_o.value) and mod_o.value not in vrs):
-                isc_meth = getattr(mod_o, 'get_isc_cls', mod_o.get_isc)
-                queries.append('(eq ?%s:%s %s)' % (newvar, mod,
-                                             isc_meth(templs, queries, vrs)))
+        constraint = self.get_query(vrs, ancestor, mod_path)
+        if len(constraint) == 1:
+            queries += constraint
+        elif constraint:
+            queries.append('(and %s)' % ' '.join(constraint))
 
     def in_fact(self, fact):
         '''
