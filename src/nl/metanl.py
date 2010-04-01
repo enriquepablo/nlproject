@@ -611,14 +611,16 @@ class Count(Namable):
         for MaxCount etc, the pinned free var has to be entered into vrs
         and as an instance set template, so we'll be iterating over them.
         '''
-
-        templs, queries, preq = [], [], []
-        self.sen.get_ism(templs, queries, vrs)
-        for templ in templs[1:]:
-            preq.append
-        clps = '''
-               (count-sentences )
-        '''
+        templs, queries = [], []
+        for n, sentence in enumerate(sentences):
+            sentence.get_ism(templs, queries, vrs, newvar='q%d' % n)
+        if len(queries) > 1:
+            q = '(and %s)' % ' '.join(queries)
+        else:
+            q = queries and queries[0] or 'TRUE'
+        clps = '(find-all-instances (%s) %s)' % \
+                (' '.join(['(?%s %s)' % templ for templ in templs]), q)
+        return '(count-sentences %s)' % clps
 
     def put(self, vrs):
         pass
