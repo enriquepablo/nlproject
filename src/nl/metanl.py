@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
+import uuid
 import clips
 from nl.log import logger
 from nl import utils
@@ -67,16 +68,19 @@ class Word(type):
         '''
         return self.__name__
 
-    def get_constraint_cls(self, vrs, ancestor=None, mod_path=None):
+    def get_constraint_cls(self, vrs, ancestor, mod_path):
         '''
         return clips snippet to be used
         when the class is a mod in a predicate
         and the sentence is in the tail of a rule.
         '''
-        ci = utils.clips_instance(ancestor, mod_path)
-        return '&:(eq %s %s)' % (self.__name__, ci)
+        return '&:%s' % self.get_query_cls(vrs, ancestor, mod_path)[0]
 
-    def get_isc_cls(self, templs, queries, vrs):
+    def get_query_cls(self, vrs, ancestor, mod_path):
+        ci = utils.clips_instance(ancestor, mod_path)
+        return ['(eq %s %s)' % (self.__name__, ci)]
+
+    def get_isc_cls(self, queries, vrs, ancestor, mod_path):
         """
         build clips snippet
         to be used when the class is the subject in a fact
@@ -84,7 +88,8 @@ class Word(type):
         and the sentence is in a query.
         return (instance-set templates, instance-set queries)
         """
-        return self.__name__
+        q = self.get_query_cls(vrs, ancestor, mod_path)
+        queries += q
 
     @classmethod
     def from_clips(cls, instance):
@@ -132,15 +137,21 @@ class ClassVar(object):
         when the class var is a mod in a predicate
         and the sentence is in the tail of a rule.
         '''
+        constraint = self.get_query(vrs, ancestor, mod_path)
+        if not constraint:
+            return ''
+        return '&:%s' % '&:'.join(constraint)
+
+    def get_query(self, vrs, ancestor, mod_path):
         ci = utils.clips_instance(ancestor, mod_path)
         if self.value in vrs:
-            return self.ob.get_constraint(vrs, ancestor, mod_path)
+            return self.ob.get_query(vrs, ancestor, mod_path)
         else:
             vrs[self.value] = (ancestor, mod_path)
-            return '''&:(or (eq %(ci)s %(cls)s)
+            return ['''(or (eq %(ci)s %(cls)s)
                             (subclassp %(ci)s %(cls)s))''' % {
                                     'ci': ci,
-                                    'cls': self.cls.__name__}
+                                    'cls': self.cls.__name__}]
 
     def get_slot_constraint(self, vrs):
         """
@@ -157,7 +168,7 @@ class ClassVar(object):
                                     'cvar': self.value,
                                     'cls': self.cls.__name__}
 
-    def get_isc(self, templs, queries, vrs):
+    def get_isc(self, queries, vrs, ancestor, mod_path):
         """
         build clips snippet
         to be used when the class var is the subject in a fact
@@ -165,17 +176,8 @@ class ClassVar(object):
         and the sentence is in a query.
         return (instance-set templates, instance-set queries)
         """
-        if self.value in vrs and vrs[self.value]:
-            queries.append('(eq ?%s %s)' % (self.value,
-                                 utils.clips_instance(*(vrs[self.value]))))
-        else:
-            queries.append('''(or
-                                 (eq %(val)s %(cls)s)
-                                 (subclassp %(val)s %(cls)s))''' % {
-                                           'val': self.value,
-                                           'cls': self.cls.__name__})
-        vrs[self.value] = ()
-        return '?%s' % self.value
+        q = self.get_query(vrs, ancestor, mod_path)
+        queries += q
 
     def put(self, vrs):
         # a hack
@@ -205,6 +207,12 @@ class ClassVarVar(object):
         when the variable is a mod in a predicate
         and the sentence is in the tail of a rule.
         '''
+        constraint = self.get_query(vrs, ancestor, mod_path)
+        if not constraint:
+            return ''
+        return '&:%s' % '&:'.join(constraint)
+
+    def get_query(self, vrs, ancestor, mod_path):
         ci = utils.clips_instance(ancestor, mod_path)
         constraint = []
         if not self.value or self.value in vrs:
@@ -215,24 +223,24 @@ class ClassVarVar(object):
                                [], ['class'])
                 else:
                     vrs[self.clsvar] = (ancestor, mod_path, ['class'])
-            return self.ob.get_constraint(vrs, ancestor, mod_path)
+            return self.ob.get_query(vrs, ancestor, mod_path)
         else:
             vrs[self.value] = (ancestor, mod_path)
             if self.clsvar in vrs:
                 if vrs[self.clsvar]:
-                    return '&:(eq (class %(var)s) %(cls)s)' % {
+                    return ['(eq (class %(var)s) %(cls)s)' % {
                                     'var': ci,
-                         'cls': utils.clips_instance(*(vrs[self.clsvar]))}
+                         'cls': utils.clips_instance(*(vrs[self.clsvar]))}]
                 else:
-                    return '&:(eq (class %(var)s) %(cls)s)' % {
+                    return ['(eq (class %(var)s) %(cls)s)' % {
                                     'var': ci,
-                                    'cls': self.clsvar}
+                                    'cls': self.clsvar}]
             vrs[self.clsvar] = (ancestor, mod_path, ['class'])
-            return '''&:(or
+            return ['''(or
                           (eq (class %(ci)s) %(cls)s)
                           (subclassp (class %(ci)s) %(cls)s))''' % {
                                     'ci': ci,
-                                    'cls': self.cls.__name__}
+                                    'cls': self.cls.__name__}]
 
     def get_slot_constraint(self, vrs):
         """
@@ -292,20 +300,13 @@ class ClassVarVar(object):
     def put(self, vrs):
         return self.ob.put(vrs)
 
-    def get_isc(self, templs, queries, vrs):
+    def get_isc(self, queries, vrs, ancestor, mod_path):
         """
         get instance-set condition;
         return (instance-set templates, instance-set queries)
         """
-        if self.value in vrs and vrs[self.value]:
-            templs.append((self.value, self.clsvar))
-            queries.append('(eq ?%s %s)' % (self.value,
-                                 utils.clips_instance(*(vrs[self.value]))))
-        try:
-            self.ob.get_mod_isc(self.value, templs, queries, vrs)
-        except AttributeError: pass
-        vrs[self.value] = ()
-        return '?%s' % self.value
+        q = self.get_query(vrs, ancestor, mod_path)
+        queries += q
 
 
 class Subword(object):
@@ -418,15 +419,18 @@ class Namable(object):
             return cls.from_clips(instance)
 
     def get_var_constraint(self, vrs, ancestor, mod_path, ci):
+        return '&:%s' % self.get_var_query(vrs, ancestor, mod_path, ci)
+
+    def get_var_query(self, vrs, ancestor, mod_path, ci):
         constraint = ''
         if self.value in vrs:
             if vrs[self.value]:
                 v_ci = utils.clips_instance(*(vrs[self.value]))
-                constraint = '&:(eq %s %s)' % (v_ci, ci)
+                constraint = '(eq %s %s)' % (v_ci, ci)
             else:
-                constraint = '&:(eq %s ?%s)' % (ci, self.value)
+                constraint = '(eq %s ?%s)' % (ci, self.value)
         elif not isinstance(self, Number):
-            constraint = '&:(or (eq (class %(ci)s) %(cls)s) (subclassp (class %(ci)s) %(cls)s))' % {'ci': ci, 'cls': self.__class__.__name__}
+            constraint = '(or (eq (class %(ci)s) %(cls)s) (subclassp (class %(ci)s) %(cls)s))' % {'ci': ci, 'cls': self.__class__.__name__}
         vrs[self.value] = (ancestor, mod_path)
         return constraint
 
@@ -507,22 +511,29 @@ class Number(Namable):
         return self._get_number(vrs)
 
     def get_constraint(self, vrs, ancestor, mod_path):
+        constraint = self.get_query(vrs, ancestor, mod_path)
+        if not constraint:
+            return ''
+        return '&:%s' % '&:'.join(constraint)
+
+    def get_query(self, vrs, ancestor, mod_path):
         ci = utils.clips_instance(ancestor, mod_path)
         if utils.varpat.match(self.value):
-            constraint = self.get_var_constraint(vrs, ancestor, mod_path, ci)
+            constraint = self.get_var_query(vrs, ancestor, mod_path, ci)
         else:
-            constraint = '&:(eq %s %s)' % (ci, self.get_slot_constraint(vrs))
-        return constraint
+            constraint = '(eq %s %s)' % (ci, self.get_slot_constraint(vrs))
+        return [constraint]
 
     def put(self, vrs):
         return self._get_number(vrs)
 
-    def get_isc(self, templs, queries, vrs):
+    def get_isc(self, queries, vrs, ancestor, mod_path):
         """
         get instance-set condition;
         return (instance-set templates, instance-set queries)
         """
-        return self._get_number(vrs)
+        q = self.get_query(vrs, ancestor, mod_path)
+        queries += q
 
     def __str__(self):
         return self._get_number({})
@@ -559,3 +570,60 @@ class Arith(Number):
         arg1 = self.arg1.put(vrs)
         arg2 = self.arg2.put(vrs)
         return '(test (%s %s %s))' % (self.value, arg1, arg2)
+
+
+class Count(Namable):
+    """
+    to be used in rules wherever a number can be used, i.e.,
+    as a mod in the predicate of a fact used as condition
+    or as consecuence;
+    or as an argument in an arithmetic predicate.
+
+    It is built with a sentence with any number of variables,
+    and returns the number of sentences in the kb that
+    match the given sentence.
+    """
+
+    def __init__(self, sen):
+        self.sen = sen
+        self.fun_name = uuid.uuid4().get_hex()
+
+    def get_slot_constraint(self, vrs):
+        '''
+        using the function count-sentences defined in clips,
+        find out how many sentences the instance-set method
+        from self.sen returns.
+
+        todo:
+        * refactor get_ism/get_isc to only produce the essential templates.
+        * with max-count: many unique free vars. only unique ones are distinguised
+        in the constructor. you get nstance-set like ((f1, o11, o12..), (f2, o21, o22...))
+        and count the number of f's that have identical objects.
+
+        Refactoring to query machinery.
+
+        1.- They have to query only one template. The rest must be converted to
+        queries of the form (or (eq (class ?X1) Exists) (subclassp (class ?X1) Exists))
+
+        2.- probably make a VarMap object in utils with methods like clips_instance.
+
+
+        for MaxCount etc, the pinned free var has to be entered into vrs
+        and as an instance set template, so we'll be iterating over them.
+        '''
+        templs, queries = [], []
+        for n, sentence in enumerate(sentences):
+            sentence.get_ism(templs, queries, vrs, newvar='q%d' % n)
+        if len(queries) > 1:
+            q = '(and %s)' % ' '.join(queries)
+        else:
+            q = queries and queries[0] or 'TRUE'
+        clps = '(find-all-instances (%s) %s)' % \
+                (' '.join(['(?%s %s)' % templ for templ in templs]), q)
+        return '(count-sentences %s)' % clps
+
+    def put(self, vrs):
+        pass
+
+    def get_isc(self, templs, queries, vrs):
+        pass

@@ -38,21 +38,22 @@ def get_instancesn(*sentences):
     vrs = {}
     for n, sentence in enumerate(sentences):
         sentence.get_ism(templs, queries, vrs, newvar='q%d' % n)
-    templs = list(set(templs))
     if len(queries) > 1:
-        q = '(find-all-instances (%s) (and %s))' % \
-            (' '.join(['(?%s %s)' % templ for templ in templs]),
-                               ' '.join(queries))
+        q = '(and %s)' % ' '.join(queries)
     else:
-        q = '(find-all-instances (%s) %s)' % \
-                (' '.join(['(?%s %s)' % templ for templ in templs]),
-                               queries and queries[0] or 'TRUE')
-    return q, templs
+        q = queries and queries[0] or 'TRUE'
+    clps = '(find-all-instances (%s) %s)' % \
+            (' '.join(['(?%s %s)' % templ for templ in templs]), q)
+    return clps, templs
 
 def get_instances(*sentences):
     q, templs = get_instancesn(*sentences)
     logger.info(q)
-    return clips.Eval(q), templs
+    try:
+        return clips.Eval(q), templs
+    except:
+        logger.error(clips.ErrorStream.Read())
+        raise
 
 def retract(sentence):
     for ins in get_instances(sentence):

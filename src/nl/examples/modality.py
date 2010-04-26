@@ -1,5 +1,5 @@
 from nl import *
-from persons import *
+from people import *
 
 class Wants(Exists):
     """

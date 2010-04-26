@@ -20,34 +20,14 @@ from nl.log import logger
 from nl import (Noun, Verb, Number, Thing, Exists, Fact, Rule,
                 Subword, Duration, Instant, During, Coincide,
                 Intersection, Finish, MinComStart, MaxComEnd, kb)
-
-class Person(Thing):
-    """
-    the name person
-    """
+from people import Person
+from modality import Wants, Can, Must
 
 admin = Person('admin')
 kb.tell(admin)
 
 anonymous = Person('anonymous')
 kb.tell(anonymous)
-
-class Wants(Exists):
-    """
-    the verb Wants has a person proper name as subject
-    and can take as 'to' modifier a verb prhase
-    """
-    subject = Person
-    mods = {'to': Exists}
-
-class Can(Exists):
-    """
-    the verb Can has a person proper name as subject
-    and can take as 'what' modifier a verb prhase
-    """
-    subject = Person
-    instantaneous = False
-    mods = {'what': Exists}
 
 class Role(Thing):
     """
