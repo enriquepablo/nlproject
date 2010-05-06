@@ -66,7 +66,7 @@ class Protocol(Thing):
 
 class Branch(Thing):
     """
-    A project can have any number of branches, that represent the code,
+    A project can have any number of branches,
     as can be installed in one or more Servers.
     """
 
@@ -87,11 +87,16 @@ class Error(Content):
     """
     An error can be in one or more servers,
     A changeset can affect one (or more) errors
+    An error can be open or closed or accepted for merge
+    when open, a developer owns it;
+    when closed, a qateam;
+    when accepted, the boss.
     """
 
 class Feature(Content):
     """
     A changeset can affect some feature.
+    A feature can be open or closed or accepted for merge
     """
 
 class Affects(Exists):
@@ -107,14 +112,10 @@ class Affects(Exists):
 
 
 
-
-
 ################################################################################
 ## APUNTES
 ##  
-##  count(fact()) -> number
-##  
-##  max_count(Xl, fact(X1)) -> ind
+##  count(fact() [, distinct(*vars)]) -> number
 ##  
 ##  
 ##  Fact(Person('X1'), Goes( to=mecca ), Instant('I1'))
@@ -126,19 +127,10 @@ class Affects(Exists):
 ##  Count(Fact(Person('X1'), Goes( to=mecca ), Instant('I1')), Distinct('X1'))
 ##  
 ##  #cuenta en cuantos momentos ha sido visitada la meca
-##  Count(Fact(Person('X1'), Goes( to=mecca ), Instant('I1')), Distinct('X1'))
+##  Count(Fact(Person('X1'), Goes( to=mecca ), Instant('I1')), Distinct('I1'))
 ##  
 ##  #cuántas son las máximas veces que alguien ha visitado la meca
 ##  
 ##  #cuántas son las máximas personas que han visitado la meca a la vez
 ##  
-##  #
-##  
-##  
-##  
-##  count(fact) # número de frases con la forma fact
-##  
-##  max_count(x, fact) #el número de frases en las que aparece el x que más aparece en frases con la forma fact
-##  
-##  different_values(x, fact) # cuántos x hay que aparezcan en frases con la forma fact
-##  
+
