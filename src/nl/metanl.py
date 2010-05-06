@@ -572,7 +572,32 @@ class Arith(Number):
         return '(test (%s %s %s))' % (self.value, arg1, arg2)
 
 
-class Count(Namable):
+class CountMixin(Namable):
+
+    def __init__(self, *sentences):
+        self.sentences = sentences
+
+    def s_get_slot_constraint(self, vrs, fun):
+        '''
+        using the function count-in-sentences defined in clips,
+        find out how many uniques the instance-set method
+        from self.sen returns.
+        '''
+        templs, queries = [], []
+        for unique in uniques:
+            vrs[unique] = ()
+        for n, sentence in enumerate(self.sentences):
+            sentence.get_ism(templs, queries, vrs, newvar='q%d' % n)
+        if len(queries) > 1:
+            q = '(and %s)' % ' '.join(queries)
+        else:
+            q = queries and queries[0] or 'TRUE'
+        clps = '(find-all-instances (%s) %s)' % \
+                (' '.join(['(?%s %s)' % templ for templ in templs]), q)
+        return '(%s %s)' % (fun, clps)
+
+
+class Count(CountMixin):
     """
     to be used in rules wherever a number can be used, i.e.,
     as a mod in the predicate of a fact used as condition
@@ -584,46 +609,55 @@ class Count(Namable):
     match the given sentence.
     """
 
-    def __init__(self, sen):
-        self.sen = sen
-        self.fun_name = uuid.uuid4().get_hex()
-
     def get_slot_constraint(self, vrs):
         '''
         using the function count-sentences defined in clips,
         find out how many sentences the instance-set method
         from self.sen returns.
-
-        todo:
-        * refactor get_ism/get_isc to only produce the essential templates.
-        * with max-count: many unique free vars. only unique ones are distinguised
-        in the constructor. you get nstance-set like ((f1, o11, o12..), (f2, o21, o22...))
-        and count the number of f's that have identical objects.
-
-        Refactoring to query machinery.
-
-        1.- They have to query only one template. The rest must be converted to
-        queries of the form (or (eq (class ?X1) Exists) (subclassp (class ?X1) Exists))
-
-        2.- probably make a VarMap object in utils with methods like clips_instance.
-
-
-        for MaxCount etc, the pinned free var has to be entered into vrs
-        and as an instance set template, so we'll be iterating over them.
         '''
-        templs, queries = [], []
-        for n, sentence in enumerate(sentences):
-            sentence.get_ism(templs, queries, vrs, newvar='q%d' % n)
-        if len(queries) > 1:
-            q = '(and %s)' % ' '.join(queries)
-        else:
-            q = queries and queries[0] or 'TRUE'
-        clps = '(find-all-instances (%s) %s)' % \
-                (' '.join(['(?%s %s)' % templ for templ in templs]), q)
-        return '(count-sentences %s)' % clps
+        return self.s_get_slot_constraint(vrs, 'count-sentences')
 
     def put(self, vrs):
         pass
 
     def get_isc(self, templs, queries, vrs):
         pass
+
+class UniqueCount(CountMixin):
+    """
+    to be used in rules wherever a number can be used, i.e.,
+    as a mod in the predicate of a fact used as condition
+    or as consecuence;
+    or as an argument in an arithmetic predicate.
+
+    It is built with a iterable of variable names,
+    and a sentence with any number of variables,
+    among which the previous ones are free,
+    and returns the number of different matches
+    of the iterable of variable names in sentences in the kb
+    that match the given sentence.
+    """
+
+    def __init__(self, uniques, *sentences):
+        self.uniques = uniques
+        self.sentences = sentences
+
+    def get_slot_constraint(self, vrs):
+        '''
+        using the function count-in-sentences defined in clips,
+        find out how many uniques the instance-set method
+        from self.sen returns.
+        '''
+        for unique in self.uniques:
+            vrs[unique] = ()
+        return self.s_get_slot_constraint(vrs, 'count-in-sentences')
+
+    def put(self, vrs):
+        pass
+
+    def get_isc(self, templs, queries, vrs):
+        pass
+
+
+class MaxCount(CounMixin): pass
+class MinCount(CounMixin): pass
