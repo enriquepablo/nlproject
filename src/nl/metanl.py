@@ -574,17 +574,14 @@ class Arith(Number):
 
 class CountMixin(Namable):
 
-    def __init__(self, *sentences):
-        self.sentences = sentences
-
-    def s_get_slot_constraint(self, vrs, fun):
+    def s_get_slot_constraint(self, vrs, fun, reorder=False):
         '''
         using the function count-in-sentences defined in clips,
         find out how many uniques the instance-set method
         from self.sen returns.
         '''
         templs, queries = [], []
-        for unique in uniques:
+        for unique in self.uniques:
             vrs[unique] = ()
         for n, sentence in enumerate(self.sentences):
             sentence.get_ism(templs, queries, vrs, newvar='q%d' % n)
@@ -592,6 +589,15 @@ class CountMixin(Namable):
             q = '(and %s)' % ' '.join(queries)
         else:
             q = queries and queries[0] or 'TRUE'
+        if reorder:
+            rtempls = []
+            for n, templ in enumerate(templs):
+                if templ[0] == self.unique:
+                    rtempls = [templ] + rtempls
+                    templs = rtempls + templs[n+1:]
+                    break
+                else:
+                    rtempls.append(templ)
         clps = '(find-all-instances (%s) %s)' % \
                 (' '.join(['(?%s %s)' % templ for templ in templs]), q)
         return '(%s %s)' % (fun, clps)
@@ -608,6 +614,9 @@ class Count(CountMixin):
     and returns the number of sentences in the kb that
     match the given sentence.
     """
+
+    def __init__(self, *sentences):
+        self.sentences = sentences
 
     def get_slot_constraint(self, vrs):
         '''
@@ -630,7 +639,7 @@ class UniqueCount(CountMixin):
     or as consecuence;
     or as an argument in an arithmetic predicate.
 
-    It is built with a iterable of variable names,
+    It is built with a iterable  'unique' of variable names,
     and a sentence with any number of variables,
     among which the previous ones are free,
     and returns the number of different matches
@@ -659,5 +668,50 @@ class UniqueCount(CountMixin):
         pass
 
 
-class MaxCount(CounMixin): pass
-class MinCount(CounMixin): pass
+class MaxCount(CounMixin):
+    """
+    to be used in rules wherever a number can be used, i.e.,
+    as a mod in the predicate of a fact used as condition
+    or as consecuence;
+    or as an argument in an arithmetic predicate.
+
+    It is built with a 'unique' variable name,
+    and a sentence with any number of variables,
+    among which the previous one is free,
+    and returns the maximum number of matches
+    that a single word makes with the distinguished variable
+    among the sentences that match the given sentences.
+
+    """
+
+    def __init__(self, unique, *sentences):
+        self.uniques = (unique,)
+        self.sentences = sentences
+
+    def get_slot_constraint(self, vrs):
+        vrs[self.unique] = ()
+        return self.s_get_slot_constraint(vrs, 'max-count', reorder=True)
+
+class MinCount(CounMixin):
+    """
+    to be used in rules wherever a number can be used, i.e.,
+    as a mod in the predicate of a fact used as condition
+    or as consecuence;
+    or as an argument in an arithmetic predicate.
+
+    It is built with a 'unique' variable name,
+    and a sentence with any number of variables,
+    among which the previous one is free,
+    and returns the minimum number of matches
+    that a single word makes with the distinguished variable
+    among the sentences that match the given sentences.
+
+    """
+
+    def __init__(self, unique, *sentences):
+        self.uniques = (unique,)
+        self.sentences = sentences
+
+    def get_slot_constraint(self, vrs):
+        vrs[self.unique] = ()
+        return self.s_get_slot_constraint(vrs, 'min-count', reorder=True)

@@ -235,12 +235,12 @@ _count_in_sentences = '''
 '''
 
 _max_count = '''
-(deffunction max-count (?index $?instance-sets)
+(deffunction max-count ($?instance-sets)
     (bind ?maxcount 0)
     (bind ?instances (create$))
     (progn$ (?instance-set ?instance-sets)
         (bind ?not-in TRUE)
-        (bind ?new (nth$ ?index ?instance-set))
+        (bind ?new (first$ ?instance-set))
         (bind ?count 0)
         (progn$ (?instance ?instances)
             (if (eq ?new (first$ ?instance))
@@ -263,11 +263,11 @@ _max_count = '''
 '''
 
 _min_count = '''
-(deffunction min-count (?index $?instance-sets)
+(deffunction min-count ($?instance-sets)
     (bind ?instances (create$))
     (progn$ (?instance-set ?instance-sets)
         (bind ?not-in TRUE)
-        (bind ?new (nth$ ?index ?instance-set))
+        (bind ?new (first$ ?instance-set))
         (progn$ (?instance ?instances)
             (if (eq ?new (first$ ?instance))
                 then (bind ?count (nth$ 2 ?instance))
