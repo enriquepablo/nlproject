@@ -592,12 +592,11 @@ class CountMixin(Namable):
         if reorder:
             rtempls = []
             for n, templ in enumerate(templs):
-                if templ[0] == self.unique:
+                if templ[0] in self.uniques:
                     rtempls = [templ] + rtempls
-                    templs = rtempls + templs[n+1:]
-                    break
                 else:
                     rtempls.append(templ)
+            templs = [len(self.uniques)] + rtempls
         clps = '(find-all-instances (%s) %s)' % \
                 (' '.join(['(?%s %s)' % templ for templ in templs]), q)
         return '(%s %s)' % (fun, clps)
@@ -684,12 +683,13 @@ class MaxCount(CounMixin):
 
     """
 
-    def __init__(self, unique, *sentences):
-        self.uniques = (unique,)
+    def __init__(self, uniques, *sentences):
+        self.uniques = uniques
         self.sentences = sentences
 
     def get_slot_constraint(self, vrs):
-        vrs[self.unique] = ()
+        for unique in self.uniques:
+            vrs[unique] = ()
         return self.s_get_slot_constraint(vrs, 'max-count', reorder=True)
 
 class MinCount(CounMixin):
@@ -708,10 +708,62 @@ class MinCount(CounMixin):
 
     """
 
-    def __init__(self, unique, *sentences):
-        self.uniques = (unique,)
+    def __init__(self, uniques, *sentences):
+        self.uniques = uniques
         self.sentences = sentences
 
     def get_slot_constraint(self, vrs):
-        vrs[self.unique] = ()
+        for unique in self.uniques:
+            vrs[unique] = ()
         return self.s_get_slot_constraint(vrs, 'min-count', reorder=True)
+
+
+class Not(Namable):
+    """
+    negation by failure
+    """
+
+    def __init__(self, sentence):
+        self.sentence = sentence
+
+    def get_ce(self, vrs=None):
+        if vrs is None: vrs = []
+        return '(not %s)' % self.sentence.get_ce(vrs)
+
+
+class BiConnMixin(Namable):
+    """
+    Binary connective mixin
+    """
+
+    def __init__(self, *sentences):
+        self.sentences = sentences
+
+    def _get_ce(self, vrs=None, conn='and'):
+        if vrs is None: vrs = []
+        if len(self.sentences) > 1:
+            sen = [s.get_ce(vrs) for s in self.sentences]
+            return '(%s %s)' % (conn, ' '.join(sen))
+        return self.sentences[0].get_ce(vrs)
+
+
+class And(BiConnMixin):
+    """
+    Conjunction
+
+    To be used as conditions in rules
+    """
+
+    def get_ce(self, vrs=None):
+        return self._get_ce(vrs)
+
+
+class Or(BiConnMixin):
+    """
+    Disjunction
+
+    To be used as conditions in rules
+    """
+
+    def get_ce(self, vrs=None):
+        return self._get_ce(vrs, conn='or')
