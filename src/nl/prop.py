@@ -106,6 +106,7 @@ class Fact(Namable):
         """
         put proposition in clips as a conditional element of a rule
         """
+        if vrs is None: vrs = []
         ce = '(logical (object (is-a Fact) (subject %s) (predicate %s) (time %s) (truth %s)))'
         constraint_meth = getattr(self.subject, 'clsput', self.subject.get_slot_constraint)
         s = constraint_meth(vrs)
