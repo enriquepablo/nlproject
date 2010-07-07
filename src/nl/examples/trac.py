@@ -128,7 +128,7 @@ class Affects(Exists):
 ################################
 
 
-# A ticket is current
+# A ticket is current (in some server)
 # And a server doesn't have that ticket neither current nor closed
 # ->
 # A qateam person with the less tickets has to review it on that server
@@ -138,7 +138,7 @@ Rule([
       Not(Fact(Ticket('T1'), Has(where=Server('S1')), Instant('I1'))),
       Fact(Person('P1'), Has(what=qateam), Instant('I1')),
       Arith('=', Count(Fact(Person('P1'), Owns(what=Ticket('T1')), Instant('I1')))
-                 MinCount((), Fact(Person('P2'), Owns(what=Ticket('T2')), Instant('I1')))),
+                 MinCount(('P2',), Fact(Person('P2'), Owns(what=Ticket('T2')), Instant('I1')))),
      ],[
       Fact(Person('P1'), Must(do=Test(what=Ticket('T1'), where=Server('S1'))), Duration(Instant('I1'), 'now')),
      ])
@@ -150,7 +150,7 @@ Rule([
 # (or: I ask the boss to whom do we give the ticket -> hook a notification)
 
 Rule([
-      Fact(Ticket('T1'), Has(what=open), Instant('I1')),
+      Fact(Ticket('T1'), Has(what=current), Instant('I1')),
       Fact(Person('P3'), Has(what=boss), Instant('I1')),
       Not(And(Fact(Person('P1'), Has(what=developer), Instant('I1')),
               Fact(Person('P2'), Owns(what=Ticket('T2')), Instant('I1')))),
