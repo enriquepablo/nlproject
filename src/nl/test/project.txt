@@ -1,0 +1,54 @@
+ >>> opimec = Project('opimec')
+ 
+ >>> beta = Server('beta')
+ >>> pre = Server('pre')
+ >>> pro = Server('pro')
+
+ >>> trunk = Branch('trunk')
+ >>> preproduction = Branch('preproduction')
+ >>> proproduction = Branch('proproduction')
+
+ >>> Fact(beta, Has(what=trunk), 'now')
+ >>> Fact(pre, Has(what=preproduction), 'now')
+ >>> Fact(pro, Has(what=produccion), 'now')
+
+ >>> eperez = Person('eperez')
+ >>> Fact(eperez, Has(what=boss), 'now')
+
+ >>> esanchez = Person('esanchez')
+ >>> Fact(esanchez, Has(what=developer), 'now')
+
+ >>> jcorrea = Person('jcorrea')
+ >>> Fact(jcorrea, Has(what=maquetator), 'now')
+
+ >>> imunoz = Person('imunoz')
+ >>> Fact(imunoz, Has(what=qaboss), 'now')
+
+ >>> pmartin = Person('pmartin')
+ >>> Fact(pmartin, Has(what=developer), 'now')
+
+ >>> makamoss = Person('makamoss')
+ >>> Fact(makamoss, Has(what=qateam), 'now')
+
+ >>> fgil = Person('fgil')
+ >>> Fact(fgil, Has(what=qateam), 'now')
+
+produccion tiene un ticket abierto
+y ese ticket está cerrado en todos los demás servidores
+y no hay ningún error abierto en stage
+->
+el boss tiene que mezclar ese changeset a produccion
+(o: I mezclo el changeset a produccion -> hook a script que hace la mezcla, actualza, captura la salida y a envía por correo al boss).
+
+
+I = Thing('i')
+
+I must do something
+->
+I do something
+
+I ask -> hook: send question
+
+I am a Talker
+
+negation as failure
