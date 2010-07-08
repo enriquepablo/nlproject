@@ -667,7 +667,7 @@ class UniqueCount(CountMixin):
         pass
 
 
-class MaxCount(CounMixin):
+class MaxCount(CountMixin):
     """
     to be used in rules wherever a number can be used, i.e.,
     as a mod in the predicate of a fact used as condition
@@ -692,7 +692,7 @@ class MaxCount(CounMixin):
             vrs[unique] = ()
         return self.s_get_slot_constraint(vrs, 'max-count', reorder=True)
 
-class MinCount(CounMixin):
+class MinCount(CountMixin):
     """
     to be used in rules wherever a number can be used, i.e.,
     as a mod in the predicate of a fact used as condition
