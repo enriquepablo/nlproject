@@ -1,0 +1,13 @@
+.installed.cfg
+bin
+develop-eggs
+downloads
+eggs
+include
+lib
+parts
+src/nl/nl/clips
+*.egg-info
+*.pyc
+*.pyo
+*.swp
