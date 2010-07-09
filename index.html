@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to nlproject’s documentation! &mdash; nlproject v1.0dev documentation</title>
+    <title>Documentation for nl &mdash; nlproject v1.0dev documentation</title>
     <link rel="stylesheet" href="static/default.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -40,8 +40,20 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="welcome-to-nlproject-s-documentation">
-<h1>Welcome to nlproject&#8217;s documentation!<a class="headerlink" href="#welcome-to-nlproject-s-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="documentation-for-nl">
+<h1>Documentation for nl<a class="headerlink" href="#documentation-for-nl" title="Permalink to this headline">¶</a></h1>
+<p>nl is a python library for logic programming. As normal with logic programming systems, it has a declarative API. It follows a productive paradigm, that stems from its internal use of the <a class="reference external" href="http://clipsrules.sourceforge.net/">CLIPS</a> expert system, and its basic usage can be summarized in four steps:</p>
+<blockquote>
+<ul class="simple">
+<li>Define terms to be used in sentences and rules;</li>
+<li>Build sentences and rules, and enter them into its kowledge base;</li>
+<li>Extend the knowledge base to all its logical consecuences;</li>
+<li>Query the knowledge base.</li>
+</ul>
+</blockquote>
+<p>In nl we can build 2 classes of sentences: copulative, and non-copulative sentences.</p>
+<p><strong>Copulative sentences</strong> have two parts: a proper name, and a common noun. They are semantically equivalent to English copulative sentences, such as &#8220;john is a man&#8221;, or &#8220;yellow is a colour&#8221;.</p>
+<p><strong>Non-copulative sentences</strong> (which I will hereforth call just sentences for short) are made up of 3 parts: a subject, a predicate, and a time expression. The subject would be a proper name, already declared in a copulative sentence. The predicate would be made up of a verb, and a number of named modifiers. They would be equivalent to non conjugated English predicates, of the kind that Tarzan of the apes accustomed to utter. For example, &#8220;go from London to Paris&#8221;, where &#8220;go&#8221; would be the verb, &#8220;London&#8221; would be a modifier and &#8220;from&#8221; its name, and &#8220;Paris&#8221; would be another modifier named &#8220;to&#8221;. Finally, time expressions would correspond to the conjugation of verbs, and can be of two kinds: instants, and intervals. A complete example of a &#8220;sort of English&#8221; sentence that could be expressed in nl might be &#8220;Tarzan go from London to Paris between &lt;date1&gt; and &lt;date2&gt;&#8221;.</p>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul class="simple">
@@ -53,58 +65,4 @@
 <ul class="simple">
 <li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
 <li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
-<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
-</ul>
-</div>
-
-
-          </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="#">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Welcome to nlproject&#8217;s documentation!</a><ul>
-</ul>
-</li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
-</ul>
-
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/index.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li><a href="#">nlproject v1.0dev documentation</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2010, Enrique Pablo Pérez Arnaud.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
-    </div>
-  </body>
-</html>
+<li><a class="reference internal
