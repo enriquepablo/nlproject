@@ -22,7 +22,8 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="nlproject v1.0dev documentation" href="#" /> 
+    <link rel="top" title="nlproject v1.0dev documentation" href="#" />
+    <link rel="next" title="Common nouns and copulative sentences" href="common_nouns.html" /> 
   </head>
   <body>
     <div class="related">
@@ -31,6 +32,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="common_nouns.html" title="Common nouns and copulative sentences"
+             accesskey="N">next</a> |</li>
         <li><a href="#">nlproject v1.0dev documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -42,27 +46,16 @@
             
   <div class="section" id="documentation-for-nl">
 <h1>Documentation for nl<a class="headerlink" href="#documentation-for-nl" title="Permalink to this headline">¶</a></h1>
-<p>nl is a python library for logic programming. As normal with logic programming systems, it has a declarative API. It follows a productive paradigm, that stems from its internal use of the <a class="reference external" href="http://clipsrules.sourceforge.net/">CLIPS</a> expert system, and its basic usage can be summarized in four steps:</p>
+<div class="section" id="introduction-to-nl-as-a-logic-system">
+<h2>Introduction to nl as a logic system<a class="headerlink" href="#introduction-to-nl-as-a-logic-system" title="Permalink to this headline">¶</a></h2>
+<p>nl is a <a class="reference external" href="http://www.python.org/">Python</a> library for logic programming. In this short introduction, I try to characterize nl as a logic system. However, its use is fairly straightforward, and, to use it, it is not essential to understand how it fits within the world of logic systems, so you can safely skip these couple of paragraphs and start with the following one about the basic pattern of usage.</p>
+<p>As normal with logic programming systems, it has a declarative API. It follows a productive paradigm, that stems from its internal use of the <a class="reference external" href="http://clipsrules.sourceforge.net/">CLIPS</a> expert system. Since it is a productive logic system, where we have a knowledge base that is extended to all its logical consecuences before querying it, its <em>ontologies</em> (see below) can only refer to (be interpreted in) finite universes. Therefore, for example, classical arithmetics could not be defined in nl, though we can use &#8220;computer&#8221; arithmetics as a built-in characteristc of the system.</p>
+<p>To finish the classification of nl within the family of logic systems, we can say that it is strictly monotonic, though some non-monotonic tricks of <a class="reference external" href="http://clipsrules.sourceforge.net/">CLIPS</a> are used in the built-in treatment of time, as will be shown in a later section.</p>
+</div>
+<div class="section" id="basic-pattern-of-usage-of-nl">
+<h2>Basic pattern of usage of nl<a class="headerlink" href="#basic-pattern-of-usage-of-nl" title="Permalink to this headline">¶</a></h2>
+<p>nl&#8217;s basic usage can be summarized in five steps:</p>
 <blockquote>
-<ul class="simple">
-<li>Define terms to be used in sentences and rules;</li>
-<li>Build sentences and rules, and enter them into its kowledge base;</li>
-<li>Extend the knowledge base to all its logical consecuences;</li>
-<li>Query the knowledge base.</li>
-</ul>
-</blockquote>
-<p>In nl we can build 2 classes of sentences: copulative, and non-copulative sentences.</p>
-<p><strong>Copulative sentences</strong> have two parts: a proper name, and a common noun. They are semantically equivalent to English copulative sentences, such as &#8220;john is a man&#8221;, or &#8220;yellow is a colour&#8221;.</p>
-<p><strong>Non-copulative sentences</strong> (which I will hereforth call just sentences for short) are made up of 3 parts: a subject, a predicate, and a time expression. The subject would be a proper name, already declared in a copulative sentence. The predicate would be made up of a verb, and a number of named modifiers. They would be equivalent to non conjugated English predicates, of the kind that Tarzan of the apes accustomed to utter. For example, &#8220;go from London to Paris&#8221;, where &#8220;go&#8221; would be the verb, &#8220;London&#8221; would be a modifier and &#8220;from&#8221; its name, and &#8220;Paris&#8221; would be another modifier named &#8220;to&#8221;. Finally, time expressions would correspond to the conjugation of verbs, and can be of two kinds: instants, and intervals. A complete example of a &#8220;sort of English&#8221; sentence that could be expressed in nl might be &#8220;Tarzan go from London to Paris between &lt;date1&gt; and &lt;date2&gt;&#8221;.</p>
-<p>Contents:</p>
-<div class="toctree-wrapper compound">
-<ul class="simple">
-</ul>
-</div>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
-<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
-<li><a class="reference internal
+<ol class="arabic simple">
+<li>Define a set of terms to be used in sentences and rules;</li>
+<li>Build a basic set of sentences and rules, and input them into nl&#8217;s kowledge base <a class="footnote-reference" href="#id5" id="id1">[1]</a>. The defined terms, and this basic set, 
