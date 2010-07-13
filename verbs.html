@@ -52,36 +52,14 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">Exists</span>
 </pre></div>
 </div>
+<p>Defining verbs, like defining nouns, affects the knowledge base, through the metaclasss of <strong>Exists</strong>, i.e. <strong>Verb</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">Verb</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">Exists</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Verb</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 <p>The definition of verbs is a little more complex than the definition of common nouns. There are three class attributes we may want to define for our verb (all three are optional). These attributes set limits to the subjects and time expressions of facts in which instances of our verbs take part (as predicates), and to the modifiers that they can take.</p>
 <blockquote>
 <ol class="arabic simple">
-<li>The first attribute is <strong>subject</strong>. This is assigned to a <strong>Noun</strong>, i.e., to <strong>Thing</strong> or to a class derived from it. So, for example, if we define a verb <strong>Loves</strong> and give it as subject <strong>HumanBeing</strong>, any fact that has <strong>Loves</strong> as a verb in its predicate, must have a <strong>HumanBeing</strong> as subject.</li>
-</ol>
-</blockquote>
-</div>
-</div>
-
-
-          </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Verbs and predicates</a><ul>
-<li><a class="reference internal" href="#definition-of-verbs">Definition of verbs</a></li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="common_nouns.html"
-                        title="previous chapter">Common nouns and copulative sentences</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/verbs.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick 
+<li>The first attribute is <strong>subject</strong>. This is assigned to a <strong>Noun</strong>, i.e., to <strong>Thing</strong> or to a class derived from it. So, for example, if we define a verb <strong>Loves</strong> and give it as subject <strong>HumanBeing</strong>, any fact that has <strong>Loves</strong> as a verb in its predicate, must have a <strong>HumanBeing</strong> as subject. If we don&#8217;t set the</li>
+<li>Then we can provide our class with an attribute called <strong>instantaneous</strong>, and assign to it a boolean value. If <strong
