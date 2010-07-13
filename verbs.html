@@ -62,4 +62,144 @@
 <blockquote>
 <ol class="arabic simple">
 <li>The first attribute is <strong>subject</strong>. This is assigned to a <strong>Noun</strong>, i.e., to <strong>Thing</strong> or to a class derived from it. So, for example, if we define a verb <strong>Loves</strong> and give it as subject <strong>HumanBeing</strong>, any fact that has <strong>Loves</strong> as a verb in its predicate, must have a <strong>HumanBeing</strong> as subject. If we don&#8217;t set the</li>
-<li>Then we can provide our class with an attribute called <strong>instantaneous</strong>, and assign to it a boolean value. If <strong
+<li>Then we can provide our class with an attribute called <strong>instantaneous</strong>, and assign to it a boolean value. If <strong>True</strong>, facts constructed upon the defined verb will have an instant as time expression, and if <strong>False</strong>, they will have an interval. If not assigned, <strong>instantaneous</strong> will default to <strong>True</strong>.</li>
+<li>Finally, we define the modifiers that the verb can take when used in a predicate. To do this, we assign a dictionary to a <strong>mods</strong> attribute on the class. The keys of this dictionary must be strings, and will correspond to the names of those modifiers. The values of this predicate must be classes, so that the corresponding named modifiers of the verb in a predicate will be objects of that class. If the <strong>mods</strong> attribute is not given, it will default to an empty dictionary.</li>
+</ol>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Loves</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">HumanBeing</span>
+<span class="gp">... </span>    <span class="n">instantaneous</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;who&#39;</span><span class="p">:</span> <span class="n">HumanBeing</span><span class="p">}</span>
+</pre></div>
+</div>
+</blockquote>
+</div>
+<div class="section" id="predicates">
+<h2>Predicates<a class="headerlink" href="#predicates" title="Permalink to this headline">¶</a></h2>
+<p>Now, we might instantiate <strong>Loves</strong> to produce a predicate:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">loves_anne</span> <span class="o">=</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">anne</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As is the case with things, this does not alter the knowledge base. And, contrary to the case with things, in the normal use of nl we do not <strong>tell</strong> predicates. We use predicates to build facts, which are then entered into the knowledge base through <strong>tell</strong>. There is no theoretical or technical reason for that, it is simply not implemented because I don&#8217;t see any practical use for it.</p>
+<p>A verb can have more than one item in the <strong>mods</strong> dictionary. For example, we might have defined a noun &#8220;amount&#8221; and given a few objects of the class, and we might have given an item &#8220;how_much&#8221; to the <strong>mods</strong> dictionary of <strong>Loves</strong>:</p>
+<blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Amount</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span> <span class="k">pass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a_lot</span> <span class="o">=</span> <span class="n">Amount</span><span class="p">(</span><span class="s">&#39;a_lot&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a_little</span> <span class="o">=</span> <span class="n">Amount</span><span class="p">(</span><span class="s">&#39;a_little&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">very_little</span> <span class="o">=</span> <span class="n">Amount</span><span class="p">(</span><span class="s">&#39;very_little&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Loves2</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">HumanBeing</span>
+<span class="gp">... </span>    <span class="n">instantaneous</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;who&#39;</span><span class="p">:</span> <span class="n">HumanBeing</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="s">&#39;how_much&#39;</span><span class="p">:</span> <span class="n">Amount</span><span class="p">}</span>
+</pre></div>
+</div>
+</blockquote>
+<p>Then, we might have a predicate like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">loves_anne_a_lot</span> <span class="o">=</span> <span class="n">Loves2</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">anne</span><span class="p">,</span> <span class="n">how_much</span><span class="o">=</span><span class="n">alot</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>However, we do not have to provide all the modifiers suggested in the definition of the verb, and might also have predicates like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">loves2_anne</span> <span class="o">=</span> <span class="n">Loves2</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">anne</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loves_a_lot</span> <span class="o">=</span> <span class="n">Loves2</span><span class="p">(</span><span class="n">how_much</span><span class="o">=</span><span class="n">a_lot</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As is also the case with things, we are not forced to extend <strong>Exists</strong> directly, and can extend from any other verb, so we might have:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Loves3</span><span class="p">(</span><span class="n">Loves</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;how_much&#39;</span><span class="p">:</span> <span class="n">Amount</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>In this case, we would have a verb, <strong>Loves3</strong> that has virtually the same form as <strong>Loves2</strong>, and with it we might build predicates exactly with the same form as <strong>loves2_anne</strong> or <strong>loves_a_lot</strong>. Thus, the modifiers that we may give to a verb to produce a predicate are not just given by the <strong>mods</strong> dictionary of its class, but by the union of all the <strong>mods</strong> dictionaries of its class, and all classes in its class&#8217; <strong>__bases__</strong>.</p>
+</div>
+<div class="section" id="classes-of-modifiers">
+<h2>Classes of modifiers<a class="headerlink" href="#classes-of-modifiers" title="Permalink to this headline">¶</a></h2>
+<p>In the previous sections we have defined verbs that have, as modifiers, <strong>Thing</strong> instances. We do not have to limit ourselves to this kind of objects, though. We can, for example, have a verb class with a modifier that extends Exists, so that the predicates that instantiate it have other predicates as modifiers. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Wants</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;what&#39;</span><span class="p">:</span> <span class="n">Exists</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>With this <strong>Wants</strong> verb, we might build predicates such as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">wants_to_luv_anne</span> <span class="o">=</span> <span class="n">Wants</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Love</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">anne</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Another important class of modifier we may provide a verb with are numbers. Instead of the rather absurd <strong>Amount</strong> class we defined earlier, we might have imported <strong>Number</strong> from nl, and provided it as value for the key <strong>&#8216;how_much&#8217;</strong>. For example:</p>
+<blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">Number</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Runs</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">HumanBeing</span>
+<span class="gp">... </span>    <span class="n">instantaneous</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;v&#39;</span><span class="p">:</span> <span class="n">Number</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r1</span> <span class="o">=</span> <span class="n">Runs</span><span class="p">(</span><span class="n">v</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</blockquote>
+<p>or, also, more inconveniently:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r2</span> <span class="o">=</span> <span class="n">Runs</span><span class="p">(</span><span class="n">v</span><span class="o">=</span><span class="n">Number</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>To finish this section, we will add that we can also provide <strong>Verb</strong> or <strong>Noun</strong> as values in the <strong>mods</strong> dictionary of a verb definition, so that in predicates, the modifiers of such verbs will be actual subclasses of <strong>thing</strong> or <strong>Exists</strong> rather than instances of them.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Verbs and predicates</a><ul>
+<li><a class="reference internal" href="#definition-of-verbs">Definition of verbs</a></li>
+<li><a class="reference internal" href="#predicates">Predicates</a></li>
+<li><a class="reference internal" href="#classes-of-modifiers">Classes of modifiers</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="common_nouns.html"
+                        title="previous chapter">Common nouns and copulative sentences</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/verbs.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="common_nouns.html" title="Common nouns and copulative sentences"
+             >previous</a> |</li>
+        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Enrique Pablo Pérez Arnaud &lt;enriquepablo at google&#39;s mail domain&gt;.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+    </div>
+  </body>
+</html>

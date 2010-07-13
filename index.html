@@ -58,4 +58,139 @@
 <blockquote>
 <ol class="arabic simple">
 <li>Define a set of terms to be used in sentences and rules;</li>
-<li>Build a basic set of sentences and rules, and input them into nl&#8217;s kowledge base <a class="footnote-reference" href="#id5" id="id1">[1]</a>. The defined terms, and this basic set, 
+<li>Build a basic set of sentences and rules, and input them into nl&#8217;s kowledge base <a class="footnote-reference" href="#id5" id="id1">[1]</a>. The defined terms, and this basic set, will be called here an <em>ontology</em>;</li>
+<li>Build a set of sentences based on the previous ontology, that I will call a <em>factset</em>, and input them to the knowledge base;</li>
+<li>Extend the knowledge base to all its logical consecuences;</li>
+<li>Query the knowledge base.</li>
+</ol>
+</blockquote>
+<p>After the fourth (and possibly fifth) steps in this pattern, we can further extend the factset and repeat the cycle of introducing sentences, extending the knowledge base, and querying it, as many times as necessary.</p>
+</div>
+<div class="section" id="introduction-to-the-sentences-that-we-can-express-in-nl">
+<h2>Introduction to the sentences that we can express in nl<a class="headerlink" href="#introduction-to-the-sentences-that-we-can-express-in-nl" title="Permalink to this headline">¶</a></h2>
+<p>Sentences are the principal units in the usage of nl. They have a meaning (whichever the user may want to assign them) and a truth value (tarskian, of course, i.e., a sentence is true or false only within the setting of a given ontology and factset), just as sentences in English.</p>
+<p>With nl we can build 2 classes of sentences: copulative (copulas), and non-copulative (facts). I will introduce them in comparison to the corresponding constructs of the English language <a class="footnote-reference" href="#id6" id="id2">[2]</a>.</p>
+<p><strong>Copulas</strong> have two parts: a proper name, and a common noun. They are semantically equivalent to English copulas, such as &#8220;john is a man&#8221;, or &#8220;yellow is a colour&#8221;.</p>
+<p><strong>Facts</strong> (Non-copulative sentences) are made up of 4 parts: a <em>subject</em>, a <em>predicate</em>, a <em>time expression</em>, and a <em>negation bit</em>.</p>
+<blockquote>
+<ul class="simple">
+<li>The subject would be a proper name, that has to be already declared in a copulative sentence.</li>
+<li>The predicate would be made up of a verb and a number of named modifiers. They would be equivalent to English predicates with non copulative, non conjugated verbs, of the kind that <a class="reference external" href="http://farm2.static.flickr.com/1287/1347675828_bd">Tarzan of the apes</a> accustomed to utter. For example, &#8220;go from London to Paris&#8221;, where &#8220;go&#8221; would be the verb, &#8220;London&#8221; would be a modifier named &#8220;from&#8221;, and &#8220;Paris&#8221; would be another modifier named &#8220;to&#8221;.</li>
+<li>Time expressions would correspond to the conjugation of verbs, and can be of two kinds: <em>instants</em>, and <em>intervals</em> (composed of a pair of instants).</li>
+<li>A fact can be negated, or not <a class="footnote-reference" href="#id7" id="id3">[3]</a>.</li>
+</ul>
+</blockquote>
+<p>A complete example of a &#8220;sort of English&#8221; sentence that could be expressed as a <em>fact</em> in nl might be &#8220;Tarzan go from London to Paris between &lt;date1&gt; and &lt;date2&gt;&#8221;. Another example, using an instant instead of an interval as time expression, might be &#8220;Tarzan kill what that_lion at &lt;date1&gt;&#8221; (here, we have to insert &#8220;what&#8221; as the name of the &#8220;that_lion&#8221; -the <em>proper name</em> of a lion- modifier for &#8220;kill&#8221;: all verb modifiers need a name).</p>
+<p>In principle, we make no distiction among verbs or their kinds of modifiers. Transitive and intransitive, direct or indirect objects, kinds of prepositions, etc., are treated all the same in the definition of the verbs, and are only differentiated through the rules in which they take part.</p>
+<p>One decisive characteristic of nl, which is what I think that sets it appart from other logic programming systems, is that the modifiers of the verbs in predicates are not restricted to proper names: they can be common nouns, or other verbs, or, even, other predicates, nested with no limit. For example, a predicate might be &#8220;want to go to Paris&#8221;, where we have a verb (&#8220;want&#8221;) and a modifier named &#8220;to&#8221; that is in itself another predicate, &#8220;go to Paris&#8221;, composed of a verb &#8220;go&#8221; and a modifier &#8220;Paris&#8221; named, also, &#8220;to&#8221;. Nesting further, we might express a predicate in nl corresponding to &#8220;think that want to go to Paris&#8221;, and so on.</p>
+</div>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="common_nouns.html">Common nouns and copulative sentences</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="common_nouns.html#definition-of-common-nouns">Definition of common nouns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_nouns.html#copulative-sentences">Copulative sentences</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="verbs.html">Verbs and predicates</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="verbs.html#definition-of-verbs">Definition of verbs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verbs.html#predicates">Predicates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verbs.html#classes-of-modifiers">Classes of modifiers</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+<p><strong>FOOTNOTES:</strong></p>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>nl&#8217;s knowledge base is actually a <a class="reference external" href="http://clipsrules.sourceforge.net/">CLIPS</a> &#8220;program&#8221;, which is manipulated by nl through the <a class="reference external" href="http://pyclips.sourceforge.net/">PyCLIPS</a> <a class="reference external" href="http://www.python.org/">Python</a> library.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>The name nl stands for &#8220;natural logic&#8221;, and the aim of nl is to be able to program in a way that is as close as possible to the way we use English (or any other natural langage) to produce science. So, in these docs, I will be continuously refering to the English language to describe the usage and semantics of nl.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>Here we talk about classical negation, where a sentence and its negated form constitute a contradiction. However, we can also, in the conditions of rules or in the queries, use negation by failure, i.e. ask whether a given sentence is or is not known (is present in the knowledge base).</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Documentation for nl</a><ul>
+<li><a class="reference internal" href="#introduction-to-nl-as-a-logic-system">Introduction to nl as a logic system</a></li>
+<li><a class="reference internal" href="#basic-pattern-of-usage-of-nl">Basic pattern of usage of nl</a></li>
+<li><a class="reference internal" href="#introduction-to-the-sentences-that-we-can-express-in-nl">Introduction to the sentences that we can express in nl</a></li>
+<li><a class="reference internal" href="#contents">Contents</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="common_nouns.html"
+                        title="next chapter">Common nouns and copulative sentences</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="common_nouns.html" title="Common nouns and copulative sentences"
+             >next</a> |</li>
+        <li><a href="#">nlproject v1.0dev documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Enrique Pablo Pérez Arnaud &lt;enriquepablo at google&#39;s mail domain&gt;.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+    </div>
+  </body>
+</html>
