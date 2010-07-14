@@ -54,7 +54,8 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">i1</span> <span class="o">=</span> <span class="n">Instant</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>As is the case with predicates, you don&#8217;t <strong>tell</strong> instants; that would be rather pointless. You use them to build facts that use verbs that are <strong>instantaneous</strong>. Appart from instantiating them with integers, you can also instantiate them with the special string <strong>&#8220;now&#8221;</strong>, and that will be the same as instantiating them with the number of seconds since &#8220;the epoch&#8221;.</p>
+<p>As is the case with predicates, you don&#8217;t <strong>tell</strong> instants (or durations); that would be rather pointless. You use them to build facts that use verbs that are <strong>instantaneous</strong>.</p>
+<p>Appart from instantiating them with integers, you can also instantiate them with the special string <strong>&#8220;now&#8221;</strong>, and that will be the same as instantiating them with the number of seconds since &#8220;the epoch&#8221;, i.e., it will be get the value of the present time.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">now</span> <span class="o">=</span> <span class="n">Instant</span><span class="p">(</span><span class="s">&#39;now&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">now2</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">())</span>
@@ -69,6 +70,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">d1</span> <span class="o">=</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">Instant</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="n">Instant</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 </pre></div>
 </div>
+<p>There is a special treatment of &#8220;now&#8221; in durations. If the start of a duration is now, it will be assigned the integer corresponding to that particular instant in the historical time. However, if the end of a duration is now, it will adopt a special value, (actually, -1), corresponding to a continuous present. This way, a fact that has a duration that ends in &#8220;now&#8221;, it will have a continuous present tense. There are ways, in rules, to terminate that continuous present, and so convert those sentences to a past tense. This is the non-monotonic trick we spoke about in the introduction to this documentation. The monotonicity of the whole system is however kept, since there is never a reduction in the number of sentences within the knowledge base. We shall delve more on this issue after we introduce the way we use rules in nl.</p>
 </div>
 </div>
 
