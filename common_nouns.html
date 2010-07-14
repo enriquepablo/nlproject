@@ -63,5 +63,120 @@
 <span class="go">True</span>
 </pre></div>
 </div>
-<p>The classes derived from <strong>Thing</strong> can be further subclassed to provide for all the common nouns that we may need for our <em>ontology</em>. This way, we might define:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</
+<p>The classes derived from <strong>Thing</strong> can be further subclassed to provide for all the common nouns that we may need for our <em>ontology</em>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Woman</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">):</span> <span class="k">pass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">CrazyWoman</span><span class="p">(</span><span class="n">Woman</span><span class="p">):</span> <span class="k">pass</span>
+</pre></div>
+</div>
+<p>to assert that a woman is a human being, and a crazy woman is a woman <a class="footnote-reference" href="#id3" id="id1">[1]</a>.</p>
+</div>
+<div class="section" id="copulative-sentences">
+<h2>Copulative sentences<a class="headerlink" href="#copulative-sentences" title="Permalink to this headline">¶</a></h2>
+<p>Copulative sentences are built by instantiating <strong>Thing</strong> derived classes. So if you want to say, for example, that Mary is (mmh, ok, just) a woman (let&#8217;s go back to gender politics correctness), you would instantiate woman with a string representing her name:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mary</span> <span class="o">=</span> <span class="n">Woman</span><span class="p">(</span><span class="s">&#39;mary&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The string has to be a legal <a class="reference external" href="http://www.python.org/">Python</a> name: its characters must belong to the ASCII set, it cannot contain spaces, dashes, slashes, etc.</p>
+<p>It is important to note that the instantiation and assignment above does not touch the knowledge base. It just gives us an object that has some internal (private in the loose pythonic sense of &#8220;private&#8221;) methods that allow nl to manipulate its knowledge base. To actually assert that Mary is a woman, we first have to import <strong>kb</strong> from nl:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">kb</span>
+</pre></div>
+</div>
+<p><strong>kb</strong> is a simple module that provides a couple of functions to interface with nl&#8217;s knowledge base. The function we want to use here is <strong>tell</strong>. Of course, we might also import <strong>tell</strong> from <strong>nl.kb</strong>. So, to finally assert our copula, we would:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">mary</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can also obviously (I say &#8220;obviously&#8221;, and &#8220;of course&#8221; a little above, because this things are due to the nature of <a class="reference external" href="http://www.python.org/">Python</a>, and not of nl) instantiate <strong>Woman</strong> in the call to <strong>tell</strong>, like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Woman</span><span class="p">(</span><span class="s">&#39;anne&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>However, we may want to get hold of the <strong>mary</strong> (or <strong>anne</strong>) object to use it later in the construction of facts (and rules) that talk about Mary (or Anne). This is just a convenience, though: If we later instantiate <strong>Woman</strong> again with the same <strong>&#8216;mary&#8217;</strong> string, the resulting object will correspond to the same <a class="reference external" href="http://clipsrules.sourceforge.net/">CLIPS</a> construct within the knowledge base.</p>
+<p>We may also add that the (non-) capitalization of proper names is optional, but, since conventionally classes in <a class="reference external" href="http://www.python.org/">Python</a> are capitalized, I have chosen to not capitalize my proper names.</p>
+<p>Not all concrete or individual things that we talk about in English have a proper name. Most often, we use determinate articles combined with common nouns to refer to them: this cat, that cat, or even that other cat. In nl, we convert those expressions into convenience proper names, and would use as proper names, for example, <strong>&#8216;that_cat&#8217;</strong>, <strong>&#8216;that_other_cat&#8217;</strong>, or <strong>&#8216;cat1&#8217;</strong> and <strong>&#8216;cat2&#8217;</strong>, or whatever may be convenient.</p>
+<p>Plurals, that refer to sets, lists ordered or unordered, etc., are not built in in nl. Therefore we have to define them in our ontologies as we see fit, as we shall (probably) see in another section.</p>
+<p>As a conclussion to this section, we may say that the English copular verb, explicitly given by &#8220;to be&#8221;, is implicit in nl. In English, &#8220;to be&#8221; establishes a very simple set theoretic system <a class="footnote-reference" href="#id4" id="id2">[2]</a>. In <a class="reference external" href="http://www.python.org/">Python</a>, the class system (or object orientation) establishes a similarly simple set theory, which is what we correspondingly use. Our <strong>mary</strong> object is not just a woman, it is also a human being and a thing, and will thus be affected by rules that talk about human beings and things. Obviously:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">mary</span><span class="p">,</span> <span class="n">HumanBeing</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">mary</span><span class="p">,</span> <span class="n">Thing</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p><strong>FOOTNOTES:</strong></p>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Of course, this last distinction can be subject to debate.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>I say simple in the sense that it implies no constructive axioms, such as unrestricted comprehension or those added to the set thories developed after the fall of the naïve set theory at the hands and genious of <a class="reference external" href="http://en.wikipedia.org/Bertrand_Russell">Bertrand Russell</a>.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Common nouns and copulative sentences</a><ul>
+<li><a class="reference internal" href="#definition-of-common-nouns">Definition of common nouns</a></li>
+<li><a class="reference internal" href="#copulative-sentences">Copulative sentences</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Documentation for nl</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="verbs.html"
+                        title="next chapter">Verbs and predicates</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/common_nouns.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="verbs.html" title="Verbs and predicates"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Documentation for nl"
+             >previous</a> |</li>
+        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Enrique Pablo Pérez Arnaud &lt;enriquepablo at google&#39;s mail domain&gt;.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+    </div>
+  </body>
+</html>
