@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Expression of facts &mdash; nlproject v1.0dev documentation</title>
+    <title>Facts &mdash; nlproject v1.0dev documentation</title>
     <link rel="stylesheet" href="static/default.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -23,6 +23,7 @@
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="nlproject v1.0dev documentation" href="index.html" />
+    <link rel="next" title="Rules" href="rules.html" />
     <link rel="prev" title="Time expressions" href="time.html" /> 
   </head>
   <body>
@@ -32,6 +33,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="rules.html" title="Rules"
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="time.html" title="Time expressions"
              accesskey="P">previous</a> |</li>
@@ -44,12 +48,22 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="expression-of-facts">
-<h1>Expression of facts<a class="headerlink" href="#expression-of-facts" title="Permalink to this headline">¶</a></h1>
-<p>To build facts, that can then be entered into the knowledge base, we must use the class <strong>Fact</strong>, imported from nl:</p>
+  <div class="section" id="facts">
+<h1>Facts<a class="headerlink" href="#facts" title="Permalink to this headline">¶</a></h1>
+<p>To build facts, that can then be entered into the knowledge base, we must use the class <tt class="docutils literal"><span class="pre">Fact</span></tt>, imported from <tt class="docutils literal"><span class="pre">nl</span></tt>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">Fact</span>
 </pre></div>
 </div>
+<p>Facts are then built by instantiating <tt class="docutils literal"><span class="pre">Fact</span></tt> with a subject, a predicate, a time expression, and a negation bit. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f1</span> <span class="o">=</span> <span class="n">Fact</span><span class="p">(</span><span class="n">mary</span><span class="p">,</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="s">&#39;anne&#39;</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="mi">23</span><span class="p">,</span><span class="mi">34</span><span class="p">),</span> <span class="n">truth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We cannot omit the subject or the predicate. If we don&#8217;t provide the <em>time expression</em>, it will default to <tt class="docutils literal"><span class="pre">Instant('now')</span></tt>, and if we omit the negation bit, it will default to true, or <tt class="docutils literal"><span class="pre">1</span></tt>.</p>
+<p>Facts have to be told to the knowledge base; we must use <tt class="docutils literal"><span class="pre">tell</span></tt> to enter them, so that later rules and queries may be aware of them.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">f1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Thre is not really much more to be said about facts. They are composed of the kinds of constructs that we have already seen, and any combination of them will be enough to build a fact.</p>
 </div>
 
 
@@ -61,6 +75,9 @@
   <h4>Previous topic</h4>
   <p class="topless"><a href="time.html"
                         title="previous chapter">Time expressions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="rules.html"
+                        title="next chapter">Rules</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/facts.txt"
@@ -89,6 +106,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="rules.html" title="Rules"
+             >next</a> |</li>
         <li class="right" >
           <a href="time.html" title="Time expressions"
              >previous</a> |</li>

@@ -1,0 +1,201 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Rules &mdash; nlproject v1.0dev documentation</title>
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="nlproject v1.0dev documentation" href="index.html" />
+    <link rel="prev" title="Facts" href="facts.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="facts.html" title="Facts"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="rules">
+<h1>Rules<a class="headerlink" href="#rules" title="Permalink to this headline">¶</a></h1>
+<p>Rules have 2 parts: the conditions, and the consecuences. Both are given mainly by lists of sentences (copulas or facts), though some other constructs can be used in those lists. For example, we can provide arithmetic conditions, or we can give &#8220;present tense terminating expressions&#8221; as consecuences.</p>
+<p>To define rules, first thing is to import <tt class="docutils literal"><span class="pre">Rule</span></tt> from <tt class="docutils literal"><span class="pre">nl</span></tt>.</p>
+<blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">Rule</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;john&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Woman</span><span class="p">(</span><span class="s">&#39;yoko&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r1</span> <span class="o">=</span> <span class="n">Rule</span><span class="p">([</span>
+<span class="gp">... </span>  <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;john&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">Woman</span><span class="p">(</span><span class="s">&#39;yoko&#39;</span><span class="p">))),</span>
+<span class="gp">... </span>  <span class="p">],[</span>
+<span class="gp">... </span>  <span class="n">Fact</span><span class="p">(</span><span class="n">Woman</span><span class="p">(</span><span class="s">&#39;yoko&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;john&#39;</span><span class="p">)))])</span>
+</pre></div>
+</div>
+</blockquote>
+<p>As always, we have to <tt class="docutils literal"><span class="pre">tell</span></tt> our rule into the kb:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">r1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If we now assert the condition,</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;john&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">Woman</span><span class="p">(</span><span class="s">&#39;yoko&#39;</span><span class="p">))))</span>
+</pre></div>
+</div>
+<p>We can ask the kb about the consecuence:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">Woman</span><span class="p">(</span><span class="s">&#39;yoko&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;john&#39;</span><span class="p">))))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>But we get a <tt class="xref docutils literal"><span class="pre">False</span></tt> answer. Why? Because we have not extended the knowledge base. Whenever we want to have consecuences in our knowledge base, we have to extend it. This is done through the <tt class="docutils literal"><span class="pre">extend</span></tt> function in <tt class="docutils literal"><span class="pre">kb</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">extend</span><span class="p">()</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">extend</span></tt> gives back the number of consecuences added to the knowledge base. And it is now that we can ask our question:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">Woman</span><span class="p">(</span><span class="s">&#39;yoko&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;john&#39;</span><span class="p">))))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="section" id="variables">
+<h2>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h2>
+<p>The main difference between standalone sentences and sentences in rules is that we can use variables in sentences within rules. These variables are typical universally quantified logical variables (except in certain &#8220;sentence counting&#8221; conditions where they can appear as free variables, as we shall see in a later section). Their role in conditions is pattern matching; their role in consecuences is their substitution for the objects that have matched with them in the conditions; and their scope is the rule in which they appear.</p>
+<p>Variables are given by a string, and are recognized by their form: A variable starts with an upper case alphabetical character, followed by any number of word characters, and ends in one or more digits. The regular expression pattern that identifies them is <tt class="docutils literal"><span class="pre">r'^[A-Z]\w*\d+$'</span></tt>.</p>
+<p><strong>Thing variables.</strong></p>
+<p>We may provide thing variables by instantiating <tt class="docutils literal"><span class="pre">Thing</span></tt> with a string with the form indicated above. An example might be <tt class="docutils literal"><span class="pre">Thing('X1')</span></tt>. Another example might be <tt class="docutils literal"><span class="pre">Woman('Woman1')</span></tt>. A thing variable can appear in any place in a sentence whithin a rule where a concrete thing might appear in a standalone sentence. So, if we want to generalize the rule given above to state, not just that if John loves Yoko then it follows that Yoko loves John, but that if John loves any woman, that woman is bound to also love him, we might say:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r2</span> <span class="o">=</span> <span class="n">Rule</span><span class="p">([</span>
+<span class="gp">... </span>  <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;john&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">Woman</span><span class="p">(</span><span class="s">&#39;W1&#39;</span><span class="p">))),</span>
+<span class="gp">... </span>  <span class="p">],[</span>
+<span class="gp">... </span>  <span class="n">Fact</span><span class="p">(</span><span class="n">Woman</span><span class="p">(</span><span class="s">&#39;W1&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;john&#39;</span><span class="p">)))])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">r2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With that rule, we will have exactly the same consecuence as with rule <tt class="docutils literal"><span class="pre">r1</span></tt>, once we enter the fact that John loves Yoko; but we will also get a consecuence if we say that John loves Linda, i.e., that Linda loves John:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;john&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">Woman</span><span class="p">(</span><span class="s">&#39;linda&#39;</span><span class="p">))))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">extend</span><span class="p">()</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">Woman</span><span class="p">(</span><span class="s">&#39;linda&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;john&#39;</span><span class="p">))))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>We can of course use more than one variable withn a rule. So, further generalizing, we might express a rule that simply states that love for a woman is always corresponded:</p>
+<blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r3</span> <span class="o">=</span> <span class="n">Rule</span><span class="p">([</span>
+<span class="gp">... </span>  <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;Hb1&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">Woman</span><span class="p">(</span><span class="s">&#39;W1&#39;</span><span class="p">))),</span>
+<span class="gp">... </span>  <span class="p">],[</span>
+<span class="gp">... </span>  <span class="n">Fact</span><span class="p">(</span><span class="n">Woman</span><span class="p">(</span><span class="s">&#39;W1&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;Hb1&#39;</span><span class="p">)))])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">r3</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;paul&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">Woman</span><span class="p">(</span><span class="s">&#39;yoko&#39;</span><span class="p">))))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">extend</span><span class="p">()</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">Woman</span><span class="p">(</span><span class="s">&#39;yoko&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;paul&#39;</span><span class="p">))))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</blockquote>
+<p><strong>Predicate variables</strong></p>
+<p>We have seen that we can use thing variables as verb modifiers within predicates. We can also have predicate variables. To do so, we instantiate a verb class with an unnamed variable string. In the most general case, we might use <tt class="docutils literal"><span class="pre">Exists('E1')</span></tt>. In this sense, suppose we want to assert that John does whatever he wants to do:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r4</span> <span class="o">=</span> <span class="n">Rule</span><span class="p">([</span>
+<span class="gp">... </span>  <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;john&#39;</span><span class="p">),</span> <span class="n">Wants</span><span class="p">(</span><span class="n">to</span><span class="o">=</span><span class="n">Exists</span><span class="p">(</span><span class="s">&#39;E1&#39;</span><span class="p">))),</span>
+<span class="gp">... </span>  <span class="p">],[</span>
+<span class="gp">... </span>  <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;john&#39;</span><span class="p">),</span> <span class="n">Exists</span><span class="p">(</span><span class="s">&#39;E1&#39;</span><span class="p">))])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">r4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With this rule in place, we would have, for example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;john&#39;</span><span class="p">),</span> <span class="n">Wants</span><span class="p">(</span><span class="n">to</span><span class="o">=</span><span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">Woman</span><span class="p">(</span><span class="s">&#39;yoko&#39;</span><span class="p">)))))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">extend</span><span class="p">()</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;john&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">Woman</span><span class="p">(</span><span class="s">&#39;yoko&#39;</span><span class="p">))))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Rules</a><ul>
+<li><a class="reference internal" href="#variables">Variables</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="facts.html"
+                        title="previous chapter">Facts</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/rules.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="facts.html" title="Facts"
+             >previous</a> |</li>
+        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Enrique Pablo Pérez Arnaud &lt;enriquepablo at google&#39;s mail domain&gt;.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+    </div>
+  </body>
+</html>

@@ -69,7 +69,7 @@
 </div>
 <div class="section" id="introduction-to-the-sentences-that-we-can-express-in-nl">
 <h2>Introduction to the sentences that we can express in nl<a class="headerlink" href="#introduction-to-the-sentences-that-we-can-express-in-nl" title="Permalink to this headline">¶</a></h2>
-<p>Sentences are the principal units in the usage of nl. They have a meaning (whichever the user may want to assign them) and a truth value (tarskian, of course, i.e., a sentence is true or false only within the setting of a given ontology and factset), just as sentences in English.</p>
+<p>Sentences are the principal units in the usage of nl. They have a meaning (in whichever universe of interpretation the user may want to choose) and a truth value (tarskian, i.e., a sentence is true or false only within the setting of a given ontology and factset and its given interpretation), just as might be said of sentences in English.</p>
 <p>With nl we can build 2 classes of sentences: copulative (copulas), and non-copulative (facts). I will introduce them in comparison to the corresponding constructs of the English language <a class="footnote-reference" href="#id6" id="id2">[2]</a>.</p>
 <p><strong>Copulas</strong> have two parts: a proper name, and a common noun. They are semantically equivalent to English copulas, such as &#8220;john is a man&#8221;, or &#8220;yellow is a colour&#8221;.</p>
 <p><strong>Facts</strong> (Non-copulative sentences) are made up of 4 parts: a <em>subject</em>, a <em>predicate</em>, a <em>time expression</em>, and a <em>negation bit</em>.</p>
@@ -81,7 +81,7 @@
 <li>A fact can be negated, or not <a class="footnote-reference" href="#id7" id="id3">[3]</a>.</li>
 </ul>
 </blockquote>
-<p>A complete example of a &#8220;sort of English&#8221; sentence that could be expressed as a <em>fact</em> in nl might be &#8220;Tarzan go from London to Paris between &lt;date1&gt; and &lt;date2&gt;&#8221;. Another example, using an instant instead of an interval as time expression, might be &#8220;Tarzan kill what that_lion at &lt;date1&gt;&#8221; (here, we have to insert &#8220;what&#8221; as the name of the &#8220;that_lion&#8221; -the <em>proper name</em> of a lion- modifier for &#8220;kill&#8221;: all verb modifiers need a name).</p>
+<p>A complete (and simple) example of a &#8220;sort of English&#8221; sentence that could be expressed as a <em>fact</em> in nl might be &#8220;Tarzan go from London to Paris between &lt;date1&gt; and &lt;date2&gt;&#8221;. Another example, using an instant instead of an interval as time expression, might be &#8220;Tarzan kill what that_lion at &lt;date1&gt;&#8221; (here, we have to insert &#8220;what&#8221; as the name of the &#8220;that_lion&#8221; -the <em>proper name</em> of a lion- modifier for &#8220;kill&#8221;: all verb modifiers need a name).</p>
 <p>In principle, we make no distiction among verbs or their kinds of modifiers. Transitive and intransitive, direct or indirect objects, kinds of prepositions, etc., are treated all the same in the definition of the verbs, and are only differentiated through the rules in which they take part.</p>
 <p>One decisive characteristic of nl, which is what I think that sets it appart from other logic programming systems, is that the modifiers of the verbs in predicates are not restricted to proper names: they can be common nouns, or other verbs, or, even, other predicates, nested with no limit. For example, a predicate might be &#8220;want to go to Paris&#8221;, where we have a verb (&#8220;want&#8221;) and a modifier named &#8220;to&#8221; that is in itself another predicate, &#8220;go to Paris&#8221;, composed of a verb &#8220;go&#8221; and a modifier &#8220;Paris&#8221; named, also, &#8220;to&#8221;. Nesting further, we might express a predicate in nl corresponding to &#8220;think that want to go to Paris&#8221;, and so on.</p>
 </div>
@@ -105,7 +105,11 @@
 <li class="toctree-l2"><a class="reference internal" href="time.html#durations">Durations</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="facts.html">Expression of facts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="facts.html">Facts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rules.html">Rules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rules.html#variables">Variables</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
