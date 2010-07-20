@@ -1,0 +1,131 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Arithmetics &mdash; nlproject v1.0dev documentation</title>
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="nlproject v1.0dev documentation" href="index.html" />
+    <link rel="prev" title="Rules" href="rules.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="rules.html" title="Rules"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="arithmetics">
+<h1>Arithmetics<a class="headerlink" href="#arithmetics" title="Permalink to this headline">¶</a></h1>
+<p>We have already seen, in the section speaking about predicates, we can use <tt class="docutils literal"><span class="pre">Number</span></tt> to use numbers. But we are not restricted to simple integers when using <tt class="docutils literal"><span class="pre">Number</span></tt>: we can also use arithmetic operations (with polish notation, stemming from the internal use of <a class="reference external" href="http://clipsrules.sourceforge.net/">CLIPS</a>). For example, we might have:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="n">Number</span><span class="p">(</span><span class="s">&#39;(+ 2 3)&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n2</span> <span class="o">=</span> <span class="n">Number</span><span class="p">(</span><span class="s">&#39;(+ 2 (* 5 6))&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can&#8217;t use this as a calculator, though; after all, this is <a class="reference external" href="http://www.python.org/">Python</a>, and <a class="reference external" href="http://www.python.org/">Python</a> is in itself enough of a calculator. So, if we resolve <tt class="docutils literal"><span class="pre">n</span></tt> to a string, we will get the actual operation:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="go">&#39;(+ 2.0 3.0)&#39;</span>
+</pre></div>
+</div>
+<p>As you can see, I am at the moment using floats in <a class="reference external" href="http://clipsrules.sourceforge.net/">CLIPS</a>, which I tend to think is a mistake, so I am leaving floats out of the official API.</p>
+<p>Arithmetics in nl is intended to be used whithin rules. So, for example, using the <tt class="docutils literal"><span class="pre">Runs</span></tt> verb defined in the section on verbs and predicates, and defining a <tt class="docutils literal"><span class="pre">Displaces</span></tt> verb defined as follows, we might have a rule such as the following:</p>
+<blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Displaces</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">HumanBeing</span>
+<span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;d&#39;</span><span class="p">:</span> <span class="n">Number</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r4</span> <span class="o">=</span> <span class="n">Rule</span><span class="p">([</span><span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Runs</span><span class="p">(</span><span class="n">v</span><span class="o">=</span><span class="s">&#39;V1&#39;</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;T1&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;T2&#39;</span><span class="p">)),</span>
+<span class="gp">... </span>     <span class="p">],[</span>
+<span class="gp">... </span>     <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Displaces</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="s">&#39;(* V1 (- T2 T1))&#39;</span><span class="p">),</span> <span class="n">Instant</span><span class="p">(</span><span class="s">&#39;T2&#39;</span><span class="p">))])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">r4</span><span class="p">)</span>
+</pre></div>
+</div>
+</blockquote>
+<p>Now we can do something like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">mary</span><span class="p">,</span> <span class="n">Runs</span><span class="p">(</span><span class="n">v</span><span class="o">=</span><span class="mi">8</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="mi">4</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">extend</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">mary</span><span class="p">,</span> <span class="n">Displaced</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="mi">16</span><span class="p">),</span> <span class="n">Instant</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="rules.html"
+                        title="previous chapter">Rules</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/arithmetics.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="rules.html" title="Rules"
+             >previous</a> |</li>
+        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Enrique Pablo Pérez Arnaud &lt;enriquepablo at google&#39;s mail domain&gt;.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+    </div>
+  </body>
+</html>
