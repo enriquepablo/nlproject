@@ -522,7 +522,10 @@ class Number(Namable):
             constraint = self.get_var_query(vrs, ancestor, mod_path, ci)
         else:
             constraint = '(eq %s %s)' % (ci, self.get_slot_constraint(vrs))
-        return [constraint]
+        if constraint:
+            return [constraint]
+        else:
+            return []
 
     def put(self, vrs):
         return self._get_number(vrs)

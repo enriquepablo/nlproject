@@ -143,8 +143,13 @@ class Duration(Time):
         """
         if utils.varpat.match(self.value):
             return self.get_var_slot_constraint(vrs, self.value)
-        core = '(eq (send %s get-start) %s)' % (self.value, self.start.get_slot_constraint(vrs))
-        return '?%(var)s&:(and %(core)s (eq (send %(var)s get-end) %(end)s))' % {'core': core, 'var': self.value, 'end': self.end.get_slot_constraint(vrs)}
+        newvar = utils._newvar()
+        constraint = '?'+newvar
+        for x in ('start', 'end'):
+            x_constraint = getattr(self, x).get_constraint(vrs, newvar, [x])
+            if x_constraint:
+                constraint += '&:(eq (send ?%s get-%s) %s)' % (newvar, x, x_constraint)
+        return constraint
 
     def put(self, vrs):
         if utils.varpat.match(self.value):
