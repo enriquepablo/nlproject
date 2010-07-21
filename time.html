@@ -79,9 +79,6 @@
 </pre></div>
 </div>
 <p>We have to name the start and end arguments, since, as we shall see later, we can instantiate <tt class="docutils literal"><span class="pre">Duration</span></tt> as a logical variable, and not naming the arguments would confuse nl.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">d3</span> <span class="o">=</span> <span class="n">Duration</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-</pre></div>
-</div>
 <p>There is a special treatment of &#8220;now&#8221; in durations. If the start of a duration is now, it will be assigned the integer corresponding to that particular instant in the historical time. However, if the end of a duration is now, it will adopt a special value, (actually, <tt class="docutils literal"><span class="pre">-1</span></tt>), corresponding to a continuous present. This way, a fact that has a duration that ends in &#8220;now&#8221; will have a continuous present tense. There are ways, in rules, to terminate that continuous present, and so convert those sentences to a past tense. This is the non-monotonic trick we spoke about in the introduction to this documentation. The monotonicity of the whole system is however kept, since there is never a reduction in the number of sentences within the knowledge base. We shall delve more on this issue after we introduce the way we use rules in nl.</p>
 </div>
 </div>
