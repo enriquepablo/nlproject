@@ -120,6 +120,7 @@
 <h2>Classes of modifiers<a class="headerlink" href="#classes-of-modifiers" title="Permalink to this headline">¶</a></h2>
 <p>In the previous sections we have defined verbs that have, as modifiers, <tt class="docutils literal"><span class="pre">Thing</span></tt> instances. We do not have to limit ourselves to this kind of objects, though. We can, for example, have a verb class with a modifier that extends <tt class="docutils literal"><span class="pre">Exists</span></tt>, so that the predicates that instantiate it have other predicates as modifiers. For example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Wants</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">HumanBeing</span>
 <span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;what&#39;</span><span class="p">:</span> <span class="n">Exists</span><span class="p">}</span>
 </pre></div>
 </div>

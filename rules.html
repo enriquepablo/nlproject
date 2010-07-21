@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Rules &mdash; nlproject v1.0dev documentation</title>
+    <title>Rules - basic &mdash; nlproject v1.0dev documentation</title>
     <link rel="stylesheet" href="static/default.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -48,8 +48,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="rules">
-<h1>Rules<a class="headerlink" href="#rules" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="rules-basic">
+<h1>Rules - basic<a class="headerlink" href="#rules-basic" title="Permalink to this headline">¶</a></h1>
 <p>Rules have 2 parts: the conditions, and the consecuences. Both are given mainly by lists of sentences (copulas or facts), though some other constructs can be used in those lists. For example, we can provide arithmetic conditions, or we can give &#8220;present tense terminating expressions&#8221; as consecuences.</p>
 <p>To define rules, first thing is to import <tt class="docutils literal"><span class="pre">Rule</span></tt> from <tt class="docutils literal"><span class="pre">nl</span></tt>.</p>
 <blockquote>
@@ -127,7 +127,8 @@
 </div>
 </blockquote>
 <p><strong>Predicate variables</strong></p>
-<p>We have seen that we can use thing variables as verb modifiers within predicates. We can also have predicate variables. To do so, we instantiate a verb class with an unnamed variable string. In the most general case, we might use <tt class="docutils literal"><span class="pre">Exists('E1')</span></tt>. In this sense, suppose we want to assert that John does whatever he wants to do:</p>
+<p>We have seen that we can use thing variables as verb modifiers within predicates. We can also have predicate variables. To do so, we instantiate a verb class with an unnamed variable string. In the most general case, we might use <tt class="docutils literal"><span class="pre">Exists('E1')</span></tt>. Note the difference with the common use of verbs: we instantiate the verb not with named modifiers (nl objects), but with an unnamed string matching the <em>variable</em> regular expression given above.</p>
+<p>In this sense, suppose we want to assert that John does whatever he wants to do:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r4</span> <span class="o">=</span> <span class="n">Rule</span><span class="p">([</span>
 <span class="gp">... </span>  <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;john&#39;</span><span class="p">),</span> <span class="n">Wants</span><span class="p">(</span><span class="n">to</span><span class="o">=</span><span class="n">Exists</span><span class="p">(</span><span class="s">&#39;E1&#39;</span><span class="p">))),</span>
 <span class="gp">... </span>  <span class="p">],[</span>
@@ -145,6 +146,13 @@
 </div>
 <p><strong>Word (Noun and Verb) variables</strong></p>
 <p>In the section dealing with predicates, we saw that we can use, as modifiers for verbs in predicates, not just things and and predicates, but also nouns and verbs. In this sense, we can use in rules variables that range over nouns and verbs, and place them, not just as modifiers for verbs in predicates, but also as proper name constructors or as verbs in predicates. And, in the same spirit in which I postponed that discussion, I postpone this one.</p>
+<p><strong>FOOTNOTES</strong></p>
+<table class="docutils footnote" frame="void" id="id1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td>We are here just giving fairly useless examples; for example, it may not be very useful to define a verb &#8220;can&#8221; whose only possible subjects are human beings. Defining an ontology can be a complex and iterative process, and with nl we just try to provide the tools to do so in the most general, concise, and convenient manner.</td></tr>
+</tbody>
+</table>
 </div>
 </div>
 
@@ -156,7 +164,7 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Rules</a><ul>
+<li><a class="reference internal" href="#">Rules - basic</a><ul>
 <li><a class="reference internal" href="#variables">Variables</a></li>
 </ul>
 </li>
