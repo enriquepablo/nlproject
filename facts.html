@@ -23,7 +23,7 @@
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="nlproject v1.0dev documentation" href="index.html" />
-    <link rel="next" title="Rules" href="rules.html" />
+    <link rel="next" title="Rules - basic" href="rules.html" />
     <link rel="prev" title="Time expressions" href="time.html" /> 
   </head>
   <body>
@@ -34,7 +34,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="rules.html" title="Rules"
+          <a href="rules.html" title="Rules - basic"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="time.html" title="Time expressions"
@@ -55,7 +55,10 @@
 </pre></div>
 </div>
 <p>Facts are then built by instantiating <tt class="docutils literal"><span class="pre">Fact</span></tt> with a subject, a predicate, a time expression, and a negation bit. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f1</span> <span class="o">=</span> <span class="n">Fact</span><span class="p">(</span><span class="n">mary</span><span class="p">,</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="s">&#39;anne&#39;</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="mi">23</span><span class="p">,</span><span class="mi">34</span><span class="p">),</span> <span class="n">truth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">john</span> <span class="o">=</span> <span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;john&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yoko</span> <span class="o">=</span> <span class="n">Woman</span><span class="p">(</span><span class="s">&#39;yoko&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">yoko</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f1</span> <span class="o">=</span> <span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">yoko</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s">&#39;now&#39;</span><span class="p">),</span> <span class="n">truth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We cannot omit the subject or the predicate. If we don&#8217;t provide the <em>time expression</em>, it will default to <tt class="docutils literal"><span class="pre">Instant('now')</span></tt>, and if we omit the negation bit, it will default to true, or <tt class="docutils literal"><span class="pre">1</span></tt>.</p>
@@ -77,7 +80,7 @@
                         title="previous chapter">Time expressions</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="rules.html"
-                        title="next chapter">Rules</a></p>
+                        title="next chapter">Rules - basic</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/facts.txt"
@@ -107,7 +110,7 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="rules.html" title="Rules"
+          <a href="rules.html" title="Rules - basic"
              >next</a> |</li>
         <li class="right" >
           <a href="time.html" title="Time expressions"
