@@ -75,8 +75,8 @@ def possible_var(var):
         return '?%s' % var
     return var
 
-#_now = float(int(time.time()))
-_now = 1.0
+_now = float(int(time.time()))
+#_now = 1.0
 
 def change_now(i=0):
     'deprecated'
