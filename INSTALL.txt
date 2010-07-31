@@ -1,24 +1,7 @@
-= Requirements
 
-Python-2.5 - http://www.python.org
-pyclips - http://pyclips.sourceforge.net/web/
-
-= Installation instructions.
-
-To just use the system, you can use setuptools to install nl from Pypi. However, due to some bug in pyclips' setup.py, pyclips hasto be installed by hand. Sometimes easy_install pyclips works, sometimes it doesn't. If it doesn't, follow instructions in http://pyclips.svn.sourceforge.net/viewvc/pyclips/pyclips/trunk/README?view=markup&pathrev=297. Once you have pyclips in your python environment, issue:
-
-$ easy_install nl
-
-If you want nl's development environment, you can use buildout. In this case pyclips is installed by buildout.
-
-$ hg clone https://bitbucket.org/enriquepablo/nl/
-$ cd nl
-$ python2.5 bootstrap.py
+$ git clone git@github.com:enriquepablo/nlproject.git
+$ cd nlproject
+$ virtualenv --no-site-packages --python=python2.5 .
+$ source bin/activate
+$ python bootstrap.py
 $ bin/buildout
-$ bin/test
-$ bin/ipython
-
-
-= POSSIBLE PROBLEMS
-
-For some reason, sometimes the pyclips library doesn't get installed properly through setuptools. Then the only option is to download pyclips from http://sourceforge.net/projects/pyclips/files/ and install it according to its own instructions.
