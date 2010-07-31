@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Documentation for nl &mdash; nlproject v1.0dev documentation</title>
+    <title>Welcome to nlproject &mdash; nlproject v1.0dev documentation</title>
     <link rel="stylesheet" href="static/default.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="nlproject v1.0dev documentation" href="#" />
-    <link rel="next" title="Common nouns and copulative sentences" href="common_nouns.html" /> 
+    <link rel="next" title="Documentation for nl" href="nl_intro.html" /> 
   </head>
   <body>
     <div class="related">
@@ -33,7 +33,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="common_nouns.html" title="Common nouns and copulative sentences"
+          <a href="nl_intro.html" title="Documentation for nl"
              accesskey="N">next</a> |</li>
         <li><a href="#">nlproject v1.0dev documentation</a> &raquo;</li> 
       </ul>
@@ -44,109 +44,36 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="documentation-for-nl">
-<h1>Documentation for nl<a class="headerlink" href="#documentation-for-nl" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="welcome-to-nlproject">
+<h1>Welcome to nlproject<a class="headerlink" href="#welcome-to-nlproject" title="Permalink to this headline">¶</a></h1>
 <p><strong>These docs are work in progress</strong></p>
-<div class="section" id="introduction-to-nl-as-a-logic-system">
-<h2>Introduction to nl as a logic system<a class="headerlink" href="#introduction-to-nl-as-a-logic-system" title="Permalink to this headline">¶</a></h2>
-<p>nl is a <a class="reference external" href="http://www.python.org/">Python</a> library for logic programming. In this short introduction, I try to characterize nl as a logic system. However, its use is fairly straightforward, and, to use it, it is not essential to understand how it fits within the world of logic systems, so you can safely skip these couple of paragraphs and start with the following one about the basic pattern of usage.</p>
-<p>As normal with logic programming systems, it has a declarative API. It follows a productive paradigm, that stems from its internal use of the <a class="reference external" href="http://clipsrules.sourceforge.net/">CLIPS</a> expert system. Since it is a productive logic system, where we have a knowledge base that is extended to all its logical consecuences before querying it, its <em>ontologies</em> (see below) can only refer to (be interpreted in) finite universes. Therefore, for example, classical arithmetics could not be defined in nl, though we can use &#8220;computer&#8221; arithmetics as a built-in characteristc of the system.</p>
-<p>To finish the classification of nl within the family of logic systems, we can say that it is strictly monotonic, though some non-monotonic tricks of <a class="reference external" href="http://clipsrules.sourceforge.net/">CLIPS</a> are used in the built-in treatment of time, as will be shown in a later section.</p>
+<p>nlproject is a set of software facilities that provide development environments for logic programming in <a class="reference external" href="http://www.python.org/">Python</a>. At its core is <tt class="docutils literal"><span class="pre">nl</span></tt>, a bare bones logic system, comprising the basic building blocks for sentences and rules, and an in-memory knowledge base to hold these sentences and rules. On top of it is nlserv, that provides persistence for <tt class="docutils literal"><span class="pre">nl</span></tt>&#8216;s knowledge bases and an XML-RPC interface to them.</p>
+<div class="section" id="support">
+<h2>Support<a class="headerlink" href="#support" title="Permalink to this headline">¶</a></h2>
+<p>There is a <a class="reference external" href="http://groups.google.es/group/nl-users">mailing list</a> for nlproject at google groups. You can also open an issue in <a class="reference external" href="http://github.com/enriquepablo/nlproject/issues">the tracker</a>.</p>
 </div>
-<div class="section" id="basic-pattern-of-usage-of-nl">
-<h2>Basic pattern of usage of nl<a class="headerlink" href="#basic-pattern-of-usage-of-nl" title="Permalink to this headline">¶</a></h2>
-<p>nl&#8217;s basic usage can be summarized in five steps:</p>
-<blockquote>
-<ol class="arabic simple">
-<li>Define a set of terms to be used in sentences and rules;</li>
-<li>Build a basic set of sentences and rules, and input them into nl&#8217;s kowledge base <a class="footnote-reference" href="#id5" id="id1">[1]</a>. The defined terms, and this basic set, will be called here an <em>ontology</em>;</li>
-<li>Build a set of sentences based on the previous ontology, that I will call a <em>factset</em>, and input them to the knowledge base;</li>
-<li>Extend the knowledge base to all its logical consecuences;</li>
-<li>Query the knowledge base.</li>
-</ol>
-</blockquote>
-<p>After the fourth (and possibly fifth) steps in this pattern, we can further extend the factset and repeat the cycle of introducing sentences, extending the knowledge base, and querying it, as many times as necessary.</p>
+<div class="section" id="to-install-the-software">
+<h2>To install the software<a class="headerlink" href="#to-install-the-software" title="Permalink to this headline">¶</a></h2>
+<p>The software is hosted at <a class="reference external" href="http://github.com/enriquepablo/nlproject">github</a>. To install it, clone the repository, make a python2.5 virtualenv (or use your system&#8217;s python2.5), and execute the buildout:</p>
+<div class="highlight-python"><pre>$ git clone git@github.com:enriquepablo/nlproject.git
+$ cd nlproject
+$ virtualenv --no-site-packages --python=python2.5 .
+$ source bin/activate
+$ python bootstrap.py
+$ bin/buildout
+
+$ ipython
+...
+In [1]: import nl
+
+In [2]:</pre>
 </div>
-<div class="section" id="introduction-to-the-sentences-that-we-can-express-in-nl">
-<h2>Introduction to the sentences that we can express in nl<a class="headerlink" href="#introduction-to-the-sentences-that-we-can-express-in-nl" title="Permalink to this headline">¶</a></h2>
-<p>Sentences are the principal units in the usage of nl. They have a meaning (in whichever universe of interpretation the user may want to choose) and a truth value (tarskian, i.e., a sentence is true or false only within the setting of a given ontology and factset and its given interpretation), just as might be said of sentences in English.</p>
-<p>With nl we can build 2 classes of sentences: copulative (copulas), and non-copulative (facts). I will introduce them in comparison to the corresponding constructs of the English language <a class="footnote-reference" href="#id6" id="id2">[2]</a>.</p>
-<p><strong>Copulas</strong> have two parts: a proper name, and a common noun. They are semantically equivalent to English copulas, such as &#8220;john is a man&#8221;, or &#8220;yellow is a colour&#8221;.</p>
-<p><strong>Facts</strong> (Non-copulative sentences) are made up of 4 parts: a <em>subject</em>, a <em>predicate</em>, a <em>time expression</em>, and a <em>negation bit</em>.</p>
-<blockquote>
-<ul class="simple">
-<li>The subject would be a proper name, that has to be already declared in a copulative sentence.</li>
-<li>The predicate would be made up of a verb and a number of named modifiers. They would be equivalent to English predicates with non copulative, non conjugated verbs, of the kind that <a class="reference external" href="http://farm2.static.flickr.com/1287/1347675828_bd">Tarzan of the apes</a> accustomed to utter. For example, &#8220;go from London to Paris&#8221;, where &#8220;go&#8221; would be the verb, &#8220;London&#8221; would be a modifier named &#8220;from&#8221;, and &#8220;Paris&#8221; would be another modifier named &#8220;to&#8221;.</li>
-<li>Time expressions would correspond to the conjugation of verbs, and can be of two kinds: <em>instants</em>, and <em>intervals</em> (composed of a pair of instants).</li>
-<li>A fact can be negated, or not <a class="footnote-reference" href="#id7" id="id3">[3]</a>.</li>
-</ul>
-</blockquote>
-<p>A complete (and simple) example of a &#8220;sort of English&#8221; sentence that could be expressed as a <em>fact</em> in nl might be &#8220;Tarzan go from London to Paris between &lt;date1&gt; and &lt;date2&gt;&#8221;. Another example, using an instant instead of an interval as time expression, might be &#8220;Tarzan kill what that_lion at &lt;date1&gt;&#8221; (here, we have to insert &#8220;what&#8221; as the name of the &#8220;that_lion&#8221; -the <em>proper name</em> of a lion- modifier for &#8220;kill&#8221;: all verb modifiers need a name).</p>
-<p>In principle, we make no distiction among verbs or their kinds of modifiers. Transitive and intransitive, direct or indirect objects, kinds of prepositions, etc., are treated all the same in the definition of the verbs, and are only differentiated through the rules in which they take part.</p>
-<p>One decisive characteristic of nl, which is what I think that sets it appart from other logic programming systems, is that the modifiers of the verbs in predicates are not restricted to proper names: they can be common nouns, or other verbs, or, even, other predicates, nested with no limit. For example, a predicate might be &#8220;want to go to Paris&#8221;, where we have a verb (&#8220;want&#8221;) and a modifier named &#8220;to&#8221; that is in itself another predicate, &#8220;go to Paris&#8221;, composed of a verb &#8220;go&#8221; and a modifier &#8220;Paris&#8221; named, also, &#8220;to&#8221;. Nesting further, we might express a predicate in nl corresponding to &#8220;think that want to go to Paris&#8221;, and so on.</p>
-</div>
-<div class="section" id="contents">
-<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="common_nouns.html">Common nouns and copulative sentences</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="common_nouns.html#definition-of-common-nouns">Definition of common nouns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="common_nouns.html#copulative-sentences">Copulative sentences</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="verbs.html">Verbs and predicates</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="verbs.html#definition-of-verbs">Definition of verbs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verbs.html#predicates">Predicates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verbs.html#classes-of-modifiers">Classes of modifiers</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="time.html">Time expressions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="time.html#instants">Instants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="time.html#durations">Durations</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="facts.html">Facts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rules.html">Rules - basic</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="rules.html#variables">Variables</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="arithmetics.html">Arithmetics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="arithmetics.html#arithetic-conditions">Arithetic conditions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="special_conditions.html">More special conditions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="special_conditions.html#time-conditions">Time conditions</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="nl_intro.html">Documentation for nl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nlserv.html">Documentation for nlserv</a></li>
 </ul>
 </div>
-</div>
-<div class="section" id="indices-and-tables">
-<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
-<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
-<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
-</ul>
-<p><strong>FOOTNOTES:</strong></p>
-<table class="docutils footnote" frame="void" id="id5" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>nl&#8217;s knowledge base is actually a <a class="reference external" href="http://clipsrules.sourceforge.net/">CLIPS</a> &#8220;program&#8221;, which is manipulated by nl through the <a class="reference external" href="http://pyclips.sourceforge.net/">PyCLIPS</a> <a class="reference external" href="http://www.python.org/">Python</a> library.</td></tr>
-</tbody>
-</table>
-<table class="docutils footnote" frame="void" id="id6" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>The name nl stands for &#8220;natural logic&#8221;, and the aim of nl is to be able to program in a way that is as close as possible to the way we use English (or any other natural langage) to produce science. So, in these docs, I will be continuously refering to the English language to describe the usage and semantics of nl.</td></tr>
-</tbody>
-</table>
-<table class="docutils footnote" frame="void" id="id7" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>Here we talk about classical negation, where a sentence and its negated form constitute a contradiction. However, we can also, in the conditions of rules or in the queries, use negation by failure, i.e. ask whether a given sentence is or is not known (is present in the knowledge base).</td></tr>
-</tbody>
-</table>
 </div>
 </div>
 
@@ -158,21 +85,18 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Documentation for nl</a><ul>
-<li><a class="reference internal" href="#introduction-to-nl-as-a-logic-system">Introduction to nl as a logic system</a></li>
-<li><a class="reference internal" href="#basic-pattern-of-usage-of-nl">Basic pattern of usage of nl</a></li>
-<li><a class="reference internal" href="#introduction-to-the-sentences-that-we-can-express-in-nl">Introduction to the sentences that we can express in nl</a></li>
-<li><a class="reference internal" href="#contents">Contents</a><ul>
+<li><a class="reference internal" href="#">Welcome to nlproject</a><ul>
+<li><a class="reference internal" href="#support">Support</a></li>
+<li><a class="reference internal" href="#to-install-the-software">To install the software</a><ul>
 </ul>
 </li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Next topic</h4>
-  <p class="topless"><a href="common_nouns.html"
-                        title="next chapter">Common nouns and copulative sentences</a></p>
+  <p class="topless"><a href="nl_intro.html"
+                        title="next chapter">Documentation for nl</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"
@@ -202,7 +126,7 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="common_nouns.html" title="Common nouns and copulative sentences"
+          <a href="nl_intro.html" title="Documentation for nl"
              >next</a> |</li>
         <li><a href="#">nlproject v1.0dev documentation</a> &raquo;</li> 
       </ul>
