@@ -23,6 +23,7 @@
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="nlproject v1.0dev documentation" href="index.html" />
+    <link rel="up" title="Documentation for nl" href="nl_intro.html" />
     <link rel="next" title="Rules - basic" href="rules.html" />
     <link rel="prev" title="Time expressions" href="time.html" /> 
   </head>
@@ -39,7 +40,8 @@
         <li class="right" >
           <a href="time.html" title="Time expressions"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li> 
+        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li>
+          <li><a href="nl_intro.html" accesskey="U">Documentation for nl</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -66,7 +68,23 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">f1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Thre is not really much more to be said about facts. They are composed of the kinds of constructs that we have already seen, and any combination of them will be enough to build a fact.</p>
+<p>Facts are really a special kind of predicate. In fact, we might define a predicate that has the same form as a fact in its given modifiers, e.g.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Says</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;subject&#39;</span><span class="p">:</span> <span class="n">HumanBeing</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="s">&#39;predicate&#39;</span><span class="p">:</span> <span class="n">Exists</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="s">&#39;start&#39;</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="s">&#39;end&#39;</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="s">&#39;truth&#39;</span><span class="p">:</span> <span class="n">Number</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>They are special and differentiated for two reasons.</p>
+<blockquote>
+<ol class="arabic simple">
+<li>The first reason is their truth value, that can give rise to contradictions when two facts, identical except for their negation bit, are present in the same knowledge base.</li>
+<li>The second reason is the special treatment of time in facts. In particular, as we have seen in the previous section (on time expressions), the treatment of &#8220;now&#8221; as a continuous present when given as the end of a duration.</li>
+</ol>
+</blockquote>
+<p>There is not really much more to be said about facts. They are composed of the kinds of constructs that we have already seen, and any combination of them will be enough to build a fact.</p>
 </div>
 
 
@@ -115,7 +133,8 @@
         <li class="right" >
           <a href="time.html" title="Time expressions"
              >previous</a> |</li>
-        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li> 
+        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li>
+          <li><a href="nl_intro.html" >Documentation for nl</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

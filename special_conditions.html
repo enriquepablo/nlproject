@@ -23,6 +23,8 @@
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="nlproject v1.0dev documentation" href="index.html" />
+    <link rel="up" title="Documentation for nl" href="nl_intro.html" />
+    <link rel="next" title="Documentation for nlserv" href="nlserv.html" />
     <link rel="prev" title="Arithmetics" href="arithmetics.html" /> 
   </head>
   <body>
@@ -33,9 +35,13 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="nlserv.html" title="Documentation for nlserv"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
           <a href="arithmetics.html" title="Arithmetics"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li> 
+        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li>
+          <li><a href="nl_intro.html" accesskey="U">Documentation for nl</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -176,7 +182,70 @@
 <p>Yes, he had since 3.</p>
 </blockquote>
 </blockquote>
-<p>Etc. etc.</p>
+<p>Etc. etc. Of course, this is not a very satisfying ontology; we would want to take into account &#8220;amounts&#8221; had and smoked, consumption of existences, and so on. Defining acceptable ontologies requires some work and iterations until you get it right. But our aim here is not to define acceptable ontologies, only to demonstrate how to use <tt class="docutils literal"><span class="pre">nl</span></tt>.</p>
+<p><strong>Coincide (and Intersection)</strong></p>
+<p>We can test whether a set of durations have an intersection. To do this, we import <tt class="docutils literal"><span class="pre">Coincide</span></tt> from nl, and use it as a condition in rules giving it any number of durations.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">Duration</span><span class="p">,</span> <span class="n">Intersection</span>
+</pre></div>
+</div>
+<p>With this, we may, for example, build a rule that states that, if two people live in the same place at the same time, they can meet each other. For this, we need a <tt class="docutils literal"><span class="pre">Place</span></tt> noun, a <tt class="docutils literal"><span class="pre">Lives</span></tt> verb, and a <tt class="docutils literal"><span class="pre">Meets</span></tt> verb.</p>
+<blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Place</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span> <span class="k">pass</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Lives</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">HumanBeing</span>
+<span class="gp">... </span>    <span class="n">instantaneous</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;where&#39;</span><span class="p">:</span> <span class="n">Place</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Meets</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">HumanBeing</span>
+<span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;who&#39;</span><span class="p">:</span> <span class="n">HumanBeing</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Rule</span><span class="p">([</span>
+<span class="gp">... </span>     <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Lives</span><span class="p">(</span><span class="n">where</span><span class="o">=</span><span class="n">Place</span><span class="p">(</span><span class="s">&#39;P1&#39;</span><span class="p">)),</span> <span class="n">Duration</span><span class="p">(</span><span class="s">&#39;D1&#39;</span><span class="p">)),</span>
+<span class="gp">... </span>     <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H2&#39;</span><span class="p">),</span> <span class="n">Lives</span><span class="p">(</span><span class="n">where</span><span class="o">=</span><span class="n">Place</span><span class="p">(</span><span class="s">&#39;P1&#39;</span><span class="p">)),</span> <span class="n">Duration</span><span class="p">(</span><span class="s">&#39;D2&#39;</span><span class="p">)),</span>
+<span class="gp">... </span>     <span class="n">Coincide</span><span class="p">(</span><span class="s">&#39;D1&#39;</span><span class="p">,</span> <span class="s">&#39;D2&#39;</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">],[</span>
+<span class="gp">... </span>     <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Meets</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H2&#39;</span><span class="p">))),</span>
+<span class="gp">... </span>               <span class="n">Intersection</span><span class="p">(</span><span class="s">&#39;D1&#39;</span><span class="p">,</span> <span class="s">&#39;D2&#39;</span><span class="p">)),</span>
+<span class="gp">... </span><span class="p">]))</span>
+</pre></div>
+</div>
+</blockquote>
+<p>Note the use of <tt class="docutils literal"><span class="pre">Intersection</span></tt>. It is used where a <tt class="docutils literal"><span class="pre">Duration</span></tt> would be used, and does what might be expected, i.e., produces a duration that is the intersection of any number of durations.</p>
+<p>Now we might say:</p>
+<blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">england</span> <span class="o">=</span> <span class="n">Place</span><span class="p">(</span><span class="s">&#39;england&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eeuu</span> <span class="o">=</span> <span class="n">Place</span><span class="p">(</span><span class="s">&#39;eeuu&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">england</span><span class="p">,</span> <span class="n">eeuu</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Lives</span><span class="p">(</span><span class="n">where</span><span class="o">=</span><span class="n">england</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="mi">7</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">mary</span><span class="p">,</span> <span class="n">Lives</span><span class="p">(</span><span class="n">where</span><span class="o">=</span><span class="n">england</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="mi">9</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Lives</span><span class="p">(</span><span class="n">where</span><span class="o">=</span><span class="n">eeuu</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="mi">9</span><span class="p">)))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">extend</span><span class="p">()</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+</blockquote>
+<p>And then ask:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Meets</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">mary</span><span class="p">)),</span> <span class="mi">5</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">mary</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Meets</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">john</span><span class="p">)),</span> <span class="mi">6</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">mary</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Meets</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">john</span><span class="p">)),</span> <span class="mi">8</span><span class="p">))</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Meets</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">mary</span><span class="p">)),</span> <span class="mi">5</span><span class="p">))</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Meets</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">john</span><span class="p">)),</span> <span class="mi">5</span><span class="p">))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
 </div>
 </div>
 
@@ -197,6 +266,9 @@
   <h4>Previous topic</h4>
   <p class="topless"><a href="arithmetics.html"
                         title="previous chapter">Arithmetics</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="nlserv.html"
+                        title="next chapter">Documentation for nlserv</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/special_conditions.txt"
@@ -226,9 +298,13 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="nlserv.html" title="Documentation for nlserv"
+             >next</a> |</li>
+        <li class="right" >
           <a href="arithmetics.html" title="Arithmetics"
              >previous</a> |</li>
-        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li> 
+        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li>
+          <li><a href="nl_intro.html" >Documentation for nl</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
