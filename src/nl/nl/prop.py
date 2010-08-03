@@ -55,7 +55,7 @@ class Fact(Namable):
             self.predicate = Exists(pred)
         else:
             self.predicate = pred
-        if isinstance(t, Time):
+        if isinstance(t, Namable):
             self.time = t
         else:
             self.time = Instant(t)
