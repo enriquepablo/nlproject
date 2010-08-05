@@ -53,6 +53,7 @@
   <div class="section" id="more-special-conditions">
 <h1>More special conditions<a class="headerlink" href="#more-special-conditions" title="Permalink to this headline">¶</a></h1>
 <p>As we have already seen with <tt class="docutils literal"><span class="pre">Arith</span></tt> in the section on arithmetics, there are some special predicates that we can only use as conditions in rules. Here we shall go over them.</p>
+<p>Note that</p>
 <div class="section" id="time-conditions">
 <h2>Time conditions<a class="headerlink" href="#time-conditions" title="Permalink to this headline">¶</a></h2>
 <p>There are in nl a number of predicates that test certain relationships among <em>time expressions</em>. For example, whether an instant is whithin a duration, or whether 2 or more durations intersect.</p>
@@ -249,6 +250,17 @@
 </div>
 <div class="section" id="negation-by-failure-unknown">
 <h2>Negation by failure (Unknown)<a class="headerlink" href="#negation-by-failure-unknown" title="Permalink to this headline">¶</a></h2>
+<p>In a rule, you can ask whether something is or is not known. For this, you import <tt class="docutils literal"><span class="pre">Not</span></tt> from <tt class="docutils literal"><span class="pre">nl</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">Not</span>
+</pre></div>
+</div>
+<p>Note that <tt class="docutils literal"><span class="pre">Not</span></tt> is not strictly &#8220;unknown&#8221;: it is just absence from the knowledge base. Thus, if the negation of the condition is actually known, the <tt class="docutils literal"><span class="pre">Not</span></tt> condition will be true, just as if it were really unknown. In the &#8220;TODO&#8221; list is a true <tt class="docutils literal"><span class="pre">Unknown</span></tt> condition, that will be the conjunction of <tt class="docutils literal"><span class="pre">Not</span></tt> true and <tt class="docutils literal"><span class="pre">Not</span></tt> false.</p>
+<p>Another issue with <tt class="docutils literal"><span class="pre">Not</span></tt> is that all variables that appear in the condition must be already bound in previous conditions. It cannot check all the unknowns, since they may be infinite, specially if the time expression is unbound.</p>
+<p>Because of these issues, I don&#8217;t feel like building a rather contrived ontology to give an example of this condition, so I will leave this matter at this.</p>
+</div>
+<div class="section" id="conjunction-and-disjunction">
+<h2>Conjunction and Disjunction<a class="headerlink" href="#conjunction-and-disjunction" title="Permalink to this headline">¶</a></h2>
+<p>We may import <tt class="docutils literal"><span class="pre">And</span></tt> and <tt class="docutils literal"><span class="pre">Or</span></tt> to build conditions that are conjuntions and disjunctions. The conjuntion of 2 conditions is just the same as the 2 separate conditions by themselves; they only make sense when used nested within disjunctions. However, for the moment I will just give an example of this with a simple conjunction:</p>
 </div>
 </div>
 
@@ -263,6 +275,7 @@
 <li><a class="reference internal" href="#">More special conditions</a><ul>
 <li><a class="reference internal" href="#time-conditions">Time conditions</a></li>
 <li><a class="reference internal" href="#negation-by-failure-unknown">Negation by failure (Unknown)</a></li>
+<li><a class="reference internal" href="#conjunction-and-disjunction">Conjunction and Disjunction</a></li>
 </ul>
 </li>
 </ul>
