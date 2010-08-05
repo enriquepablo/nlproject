@@ -11,4 +11,4 @@ src/nl/nl/clips
 *.pyc
 *.pyo
 *.swp
-nl-*
+nl-build
