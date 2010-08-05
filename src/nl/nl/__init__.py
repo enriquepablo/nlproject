@@ -19,7 +19,7 @@
 import clips
 
 import kb
-from metanl import Number, Arith, Noun, Word, Verb, Subword, Namable
+from metanl import Number, Arith, Noun, Word, Verb, Subword, Namable, Not, And, Or
 from thing import Thing
 from state import Exists
 from prop import Fact
