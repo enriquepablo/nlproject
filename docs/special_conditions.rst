@@ -4,6 +4,8 @@ More special conditions
 
 As we have already seen with ``Arith`` in the section on arithmetics, there are some special predicates that we can only use as conditions in rules. Here we shall go over them.
 
+Note that 
+
 Time conditions
 ---------------
 
@@ -168,6 +170,25 @@ And then ask:
   >>> kb.ask(Fact(bob, Can(what=Meets(who=john)), 5))
   False
 
+
+Negation by failure (Unknown)
+-----------------------------
+
+In a rule, you can ask whether something is or is not known. For this, you import ``Not`` from ``nl``:
+
+  >>> from nl import Not
+
+Note that ``Not`` is not strictly "unknown": it is just absence from the knowledge base. Thus, if the negation of the condition is actually known, the ``Not`` condition will be true, just as if it were really unknown. In the "TODO" list is a true ``Unknown`` condition, that will be the conjunction of ``Not`` true and ``Not`` false.
+
+Another issue with ``Not`` is that all variables that appear in the condition must be already bound in previous conditions. It cannot check all the unknowns, since they may be infinite, specially if the time expression is unbound.
+
+Because of these issues, I don't feel like building a rather contrived ontology to give an example of this condition, so I will leave this matter at this.
+
+
+Conjunction and Disjunction
+---------------------------
+
+We may import ``And`` and ``Or`` to build conditions that are conjuntions and disjunctions. The conjuntion of 2 conditions is just the same as the 2 separate conditions by themselves; they only make sense when used nested within disjunctions. However, for the moment I will just give an example of this with a simple conjunction:
 
 
 
