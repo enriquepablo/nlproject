@@ -1,8 +1,9 @@
 #!/bin/bash
 
-find . -name '*.html' -exec gawk '{gsub(/_static/,"static");print > "{}"}' {} \;
-find . -name '*.html' -exec git add {} \;
 cp -R _static/* static/
+find . -name '*.html' -exec sed -i 's/\<_static\>/static/g' {} \;
+find . -name '*.html' -exec git add {} \;
 git add static/*
-git commit -m 'static'
+git add searchindex.js
+git commit -m 'updated docs'
 git push origin gh-pages
