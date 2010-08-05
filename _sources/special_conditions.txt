@@ -169,6 +169,8 @@ And then ask:
   False
 
 
+Negation by failure (Unknown)
+-----------------------------
 
 
 .. _Python: http://www.python.org/
