@@ -95,7 +95,9 @@ With this rule in place, we would have, for example:
 
 **Word (Noun and Verb) variables**
 
-In the section dealing with predicates, we saw that we can use, as modifiers for verbs in predicates, not just things and and predicates, but also nouns and verbs. In this sense, we can use in rules variables that range over nouns and verbs, and place them, not just as modifiers for verbs in predicates, but also as proper name constructors or as verbs in predicates. And, in the same spirit in which I postponed that discussion, I postpone this one.
+In the section dealing with predicates, we saw that we can use, as modifiers for verbs in predicates, not just things and and predicates, but also nouns and verbs. In this sense, we can use in rules variables that range over nouns and verbs, and place them, not just as modifiers for verbs in predicates, but also as proper name constructors or as verbs in predicates. So, for example, we might have variables such as ``Noun('N1')``, to range over any noun, ``Noun('N1', HumanBeing)`` to range over nouns derived from ``HumanBeing``, and ``Noun('N1', HumanBeing)('H1')`` to range over actual human beings.
+
+I defer giving example rules using these kinds of variables until a later section in which I will provide a single complete real world ontology built with nl.
 
 
 **FOOTNOTES**

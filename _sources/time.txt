@@ -14,7 +14,10 @@ An instant is really simply a natural number. To create an instant, you import `
 
 As is the case with predicates, you don't ``tell`` instants (or durations); that would be rather pointless. You use them to build durations, or facts that use verbs that are ``instantaneous``.
 
-Appart from instantiating them with integers, you can also instantiate them with the special string ``"now"``, and that will be the same as instantiating them with the number of seconds since "the epoch", i.e., it will be get the value of the present time.
+Now
+----
+
+Appart from instantiating them with integers, you can also instantiate instants with the special string ``"now"``, and that will be the same as instantiating them with the number of seconds since the starting of 1970, i.e., it will be get the value of the present time.
 
   >>> from time import time
   >>> now = Instant('now')

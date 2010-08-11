@@ -1,10 +1,8 @@
 
-More special conditions
-=======================
+Special conditions and consecuences
+===================================
 
-As we have already seen with ``Arith`` in the section on arithmetics, there are some special predicates that we can only use as conditions in rules. Here we shall go over them.
-
-Note that 
+As we have already seen with ``Arith`` in the section on arithmetics, there are some special predicates that we can only use as conditions in rules. Here we shall go over them, and will also mention a special consecuence already hinted at in the section dealing with time expressions, ``Finish``.
 
 Time conditions
 ---------------
@@ -182,14 +180,60 @@ Note that ``Not`` is not strictly "unknown": it is just absence from the knowled
 
 Another issue with ``Not`` is that all variables that appear in the condition must be already bound in previous conditions. It cannot check all the unknowns, since they may be infinite, specially if the time expression is unbound.
 
-Because of these issues, I don't feel like building a rather contrived ontology to give an example of this condition, so I will leave this matter at this.
+Because of these issues, I don't feel like building a rather contrived ontology to give an example of this condition, so for now I will leave this matter at this.
 
 
 Conjunction and Disjunction
 ---------------------------
 
-We may import ``And`` and ``Or`` to build conditions that are conjuntions and disjunctions. The conjuntion of 2 conditions is just the same as the 2 separate conditions by themselves; they only make sense when used nested within disjunctions. However, for the moment I will just give an example of this with a simple conjunction:
+We may import ``And`` and ``Or`` to build conditions that are conjuntions and disjunctions. The conjuntion of 2 conditions is just the same as the 2 separate conditions by themselves; they only make sense when used nested within disjunctions.
 
+**TODO**
+
+Subwords
+--------
+
+We can use ``Subword`` to test a "subset relationship" between nouns or verbs. For example, we might have a condition like ``Subword(Noun('N1'), HumanBeing)`` to test whether a certain noun is a "subset" or subword of ``HumanBeing``. As I have been doing in previous sections dealing with ``Noun`` and ``Verb``, I will defer fully exemplifying this question until a later section.
+
+
+Finalization of the continuous present tense
+--------------------------------------------
+
+We can use, as a consecuence in rules, an expression that will terminate the continuous present tense of facts whose duration time expressions end in "now". To do so, we import ``Finish`` from ``nl``:
+
+  >>> from nl import Finish
+
+Now, suppose that we want to assert that, if someone loves someone else, and the lover dies, he stops loving her.
+
+  >>> class Dies(Exists):
+  ...     subject = HumanBeing
+
+  >>> kb.tell(Rule([
+  ...     Fact(HumanBeing('H1'), Loves(who=HumanBeing('H2')), Duration('D1')),
+  ...     Fact(HumanBeing('H1'), Dies(), Instant('I1')),
+  ...     During('I1', 'D1'),
+  ...     ],[
+  ...     Finish('D1', 'I1'),
+  ... ]))
+
+Now, if we have that John loves Yoko from 3 onwards, and John dies now, John's love for Yoko terminates now:
+
+  >>> kb.tell(Fact(john, Loves(who=yoko), Duration(start=3, end="now")))
+  >>> kb.tell(Fact(john, Dies(), Instant("now")))
+  >>> kb.extend()
+  1
+
+For now, to make time advace within nl's knowledge base, we have to execute the function ``now``. This is something which I wouldn't like ending up in the 1.0 API, though:
+
+  >>> from nl import now
+  >>> now()
+  1281517957.0
+
+  >>> kb.ask(Fact(john, Loves(who=yoko), Instant(5)))
+  True
+
+  >>> kb.ask(Fact(john, Loves(who=yoko), Instant("now")))
+  False
 
 
 .. _Python: http://www.python.org/

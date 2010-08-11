@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>More special conditions &mdash; nlproject v1.0dev documentation</title>
+    <title>Special conditions and consecuences &mdash; nlproject v1.0dev documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="nlproject v1.0dev documentation" href="index.html" />
     <link rel="up" title="Documentation for nl" href="nl_intro.html" />
-    <link rel="next" title="Documentation for nlserv" href="nlserv.html" />
+    <link rel="next" title="Queries" href="queries.html" />
     <link rel="prev" title="Arithmetics" href="arithmetics.html" /> 
   </head>
   <body>
@@ -35,7 +35,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="nlserv.html" title="Documentation for nlserv"
+          <a href="queries.html" title="Queries"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="arithmetics.html" title="Arithmetics"
@@ -50,10 +50,9 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="more-special-conditions">
-<h1>More special conditions<a class="headerlink" href="#more-special-conditions" title="Permalink to this headline">¶</a></h1>
-<p>As we have already seen with <tt class="docutils literal"><span class="pre">Arith</span></tt> in the section on arithmetics, there are some special predicates that we can only use as conditions in rules. Here we shall go over them.</p>
-<p>Note that</p>
+  <div class="section" id="special-conditions-and-consecuences">
+<h1>Special conditions and consecuences<a class="headerlink" href="#special-conditions-and-consecuences" title="Permalink to this headline">¶</a></h1>
+<p>As we have already seen with <tt class="docutils literal"><span class="pre">Arith</span></tt> in the section on arithmetics, there are some special predicates that we can only use as conditions in rules. Here we shall go over them, and will also mention a special consecuence already hinted at in the section dealing with time expressions, <tt class="docutils literal"><span class="pre">Finish</span></tt>.</p>
 <div class="section" id="time-conditions">
 <h2>Time conditions<a class="headerlink" href="#time-conditions" title="Permalink to this headline">¶</a></h2>
 <p>There are in nl a number of predicates that test certain relationships among <em>time expressions</em>. For example, whether an instant is whithin a duration, or whether 2 or more durations intersect.</p>
@@ -256,11 +255,62 @@
 </div>
 <p>Note that <tt class="docutils literal"><span class="pre">Not</span></tt> is not strictly &#8220;unknown&#8221;: it is just absence from the knowledge base. Thus, if the negation of the condition is actually known, the <tt class="docutils literal"><span class="pre">Not</span></tt> condition will be true, just as if it were really unknown. In the &#8220;TODO&#8221; list is a true <tt class="docutils literal"><span class="pre">Unknown</span></tt> condition, that will be the conjunction of <tt class="docutils literal"><span class="pre">Not</span></tt> true and <tt class="docutils literal"><span class="pre">Not</span></tt> false.</p>
 <p>Another issue with <tt class="docutils literal"><span class="pre">Not</span></tt> is that all variables that appear in the condition must be already bound in previous conditions. It cannot check all the unknowns, since they may be infinite, specially if the time expression is unbound.</p>
-<p>Because of these issues, I don&#8217;t feel like building a rather contrived ontology to give an example of this condition, so I will leave this matter at this.</p>
+<p>Because of these issues, I don&#8217;t feel like building a rather contrived ontology to give an example of this condition, so for now I will leave this matter at this.</p>
 </div>
 <div class="section" id="conjunction-and-disjunction">
 <h2>Conjunction and Disjunction<a class="headerlink" href="#conjunction-and-disjunction" title="Permalink to this headline">¶</a></h2>
-<p>We may import <tt class="docutils literal"><span class="pre">And</span></tt> and <tt class="docutils literal"><span class="pre">Or</span></tt> to build conditions that are conjuntions and disjunctions. The conjuntion of 2 conditions is just the same as the 2 separate conditions by themselves; they only make sense when used nested within disjunctions. However, for the moment I will just give an example of this with a simple conjunction:</p>
+<p>We may import <tt class="docutils literal"><span class="pre">And</span></tt> and <tt class="docutils literal"><span class="pre">Or</span></tt> to build conditions that are conjuntions and disjunctions. The conjuntion of 2 conditions is just the same as the 2 separate conditions by themselves; they only make sense when used nested within disjunctions.</p>
+<p><strong>TODO</strong></p>
+</div>
+<div class="section" id="subwords">
+<h2>Subwords<a class="headerlink" href="#subwords" title="Permalink to this headline">¶</a></h2>
+<p>We can use <tt class="docutils literal"><span class="pre">Subword</span></tt> to test a &#8220;subset relationship&#8221; between nouns or verbs. For example, we might have a condition like <tt class="docutils literal"><span class="pre">Subword(Noun('N1'),</span> <span class="pre">HumanBeing)</span></tt> to test whether a certain noun is a &#8220;subset&#8221; or subword of <tt class="docutils literal"><span class="pre">HumanBeing</span></tt>. As I have been doing in previous sections dealing with <tt class="docutils literal"><span class="pre">Noun</span></tt> and <tt class="docutils literal"><span class="pre">Verb</span></tt>, I will defer fully exemplifying this question until a later section.</p>
+</div>
+<div class="section" id="finalization-of-the-continuous-present-tense">
+<h2>Finalization of the continuous present tense<a class="headerlink" href="#finalization-of-the-continuous-present-tense" title="Permalink to this headline">¶</a></h2>
+<p>We can use, as a consecuence in rules, an expression that will terminate the continuous present tense of facts whose duration time expressions end in &#8220;now&#8221;. To do so, we import <tt class="docutils literal"><span class="pre">Finish</span></tt> from <tt class="docutils literal"><span class="pre">nl</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">Finish</span>
+</pre></div>
+</div>
+<p>Now, suppose that we want to assert that, if someone loves someone else, and the lover dies, he stops loving her.</p>
+<blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Dies</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">HumanBeing</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Rule</span><span class="p">([</span>
+<span class="gp">... </span>    <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H2&#39;</span><span class="p">)),</span> <span class="n">Duration</span><span class="p">(</span><span class="s">&#39;D1&#39;</span><span class="p">)),</span>
+<span class="gp">... </span>    <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Dies</span><span class="p">(),</span> <span class="n">Instant</span><span class="p">(</span><span class="s">&#39;I1&#39;</span><span class="p">)),</span>
+<span class="gp">... </span>    <span class="n">During</span><span class="p">(</span><span class="s">&#39;I1&#39;</span><span class="p">,</span> <span class="s">&#39;D1&#39;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="p">],[</span>
+<span class="gp">... </span>    <span class="n">Finish</span><span class="p">(</span><span class="s">&#39;D1&#39;</span><span class="p">,</span> <span class="s">&#39;I1&#39;</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">]))</span>
+</pre></div>
+</div>
+</blockquote>
+<p>Now, if we have that John loves Yoko from 3 onwards, and John dies now, John&#8217;s love for Yoko terminates now:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">yoko</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot;now&quot;</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Dies</span><span class="p">(),</span> <span class="n">Instant</span><span class="p">(</span><span class="s">&quot;now&quot;</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">extend</span><span class="p">()</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+<p>For now, to make time advace within nl&#8217;s knowledge base, we have to execute the function <tt class="docutils literal"><span class="pre">now</span></tt>. This is something which I wouldn&#8217;t like ending up in the 1.0 API, though:</p>
+<blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">now</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">now</span><span class="p">()</span>
+<span class="go">1281517957.0</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">yoko</span><span class="p">),</span> <span class="n">Instant</span><span class="p">(</span><span class="mi">5</span><span class="p">)))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">yoko</span><span class="p">),</span> <span class="n">Instant</span><span class="p">(</span><span class="s">&quot;now&quot;</span><span class="p">)))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</blockquote>
 </div>
 </div>
 
@@ -272,10 +322,12 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">More special conditions</a><ul>
+<li><a class="reference internal" href="#">Special conditions and consecuences</a><ul>
 <li><a class="reference internal" href="#time-conditions">Time conditions</a></li>
 <li><a class="reference internal" href="#negation-by-failure-unknown">Negation by failure (Unknown)</a></li>
 <li><a class="reference internal" href="#conjunction-and-disjunction">Conjunction and Disjunction</a></li>
+<li><a class="reference internal" href="#subwords">Subwords</a></li>
+<li><a class="reference internal" href="#finalization-of-the-continuous-present-tense">Finalization of the continuous present tense</a></li>
 </ul>
 </li>
 </ul>
@@ -284,8 +336,8 @@
   <p class="topless"><a href="arithmetics.html"
                         title="previous chapter">Arithmetics</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="nlserv.html"
-                        title="next chapter">Documentation for nlserv</a></p>
+  <p class="topless"><a href="queries.html"
+                        title="next chapter">Queries</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/special_conditions.txt"
@@ -315,7 +367,7 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="nlserv.html" title="Documentation for nlserv"
+          <a href="queries.html" title="Queries"
              >next</a> |</li>
         <li class="right" >
           <a href="arithmetics.html" title="Arithmetics"
