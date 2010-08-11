@@ -92,4 +92,7 @@ or, also, more inconveniently:
 
   >>> r2 = Runs(v=Number(2))
 
-To finish this section, we will add that we can also provide ``Verb`` or ``Noun`` as values in the ``mods`` dictionary of a verb definition, so that in predicates, the modifiers of such verbs will be actual subclasses of ``Thing`` or ``Exists`` rather than instances of them. Since the use cases I have for this feature translate rather bad to English, I'll leave this unfinished for now, until use cases that are not too contrived appear elsewhere in these docs.
+To finish this section, we will add that we can also provide ``Verb`` or ``Noun`` as values in the ``mods`` dictionary of a verb definition, so that in predicates, the modifiers of such verbs will be actual subclasses of ``Thing`` or ``Exists`` rather than instances of them.
+
+I will defer giving examples of this feature until a later section, in which I will provide a complete "real world example" of the usage of nl.
+

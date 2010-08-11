@@ -62,6 +62,7 @@ Contents
    rules
    arithmetics
    special_conditions
+   queries
 
 
 **FOOTNOTES:**
