@@ -8,8 +8,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Common nouns and copulative sentences &mdash; nlproject v1.0dev documentation</title>
-    <link rel="stylesheet" href="static/default.css" type="text/css" />
-    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -19,12 +19,13 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="static/jquery.js"></script>
-    <script type="text/javascript" src="static/underscore.js"></script>
-    <script type="text/javascript" src="static/doctools.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="nlproject v1.0dev documentation" href="index.html" />
+    <link rel="up" title="Documentation for nl" href="nl_intro.html" />
     <link rel="next" title="Verbs and predicates" href="verbs.html" />
-    <link rel="prev" title="Documentation for nl" href="index.html" /> 
+    <link rel="prev" title="Documentation for nl" href="nl_intro.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,9 +38,10 @@
           <a href="verbs.html" title="Verbs and predicates"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Documentation for nl"
+          <a href="nl_intro.html" title="Documentation for nl"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li> 
+        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li>
+          <li><a href="nl_intro.html" accesskey="U">Documentation for nl</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -65,14 +67,14 @@
 </div>
 <p>The classes derived from <tt class="docutils literal"><span class="pre">Thing</span></tt> can be further subclassed to provide for all the common nouns that we may need for our <em>ontology</em>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Woman</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">):</span> <span class="k">pass</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">CrazyWoman</span><span class="p">(</span><span class="n">Woman</span><span class="p">):</span> <span class="k">pass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Girl</span><span class="p">(</span><span class="n">Woman</span><span class="p">):</span> <span class="k">pass</span>
 </pre></div>
 </div>
-<p>to assert that a woman is a human being, and a crazy woman is a woman <a class="footnote-reference" href="#id3" id="id1">[1]</a>.</p>
+<p>to assert that a woman is a human being, and a girl is a woman.</p>
 </div>
 <div class="section" id="copulative-sentences">
 <h2>Copulative sentences<a class="headerlink" href="#copulative-sentences" title="Permalink to this headline">¶</a></h2>
-<p>Copulative sentences are built by instantiating <tt class="docutils literal"><span class="pre">Thing</span></tt> derived classes. So if you want to say, for example, that Mary is (mmh, ok, just) a woman (let&#8217;s go back to gender politics correctness), you would instantiate <tt class="docutils literal"><span class="pre">Woman</span></tt> with a string representing her name:</p>
+<p>Copulative sentences are built by instantiating <tt class="docutils literal"><span class="pre">Thing</span></tt> derived classes. So if you want to say, for example, that Mary is a woman, you would instantiate <tt class="docutils literal"><span class="pre">Woman</span></tt> with a string representing her name:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mary</span> <span class="o">=</span> <span class="n">Woman</span><span class="p">(</span><span class="s">&#39;mary&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -93,7 +95,7 @@
 <p>We may also add that the (non-) capitalization of proper names is optional, but, since conventionally classes in <a class="reference external" href="http://www.python.org/">Python</a> are capitalized, I have chosen to not capitalize my proper names.</p>
 <p>Not all concrete or individual things that we talk about in English have a proper name. Most often, we use determinate articles combined with common nouns to refer to them: this cat, that cat, or even that other cat. In nl, we convert those expressions into convenience proper names, and would use as proper names, for example, <tt class="docutils literal"><span class="pre">'that_cat'</span></tt>, <tt class="docutils literal"><span class="pre">'that_other_cat'</span></tt>, or <tt class="docutils literal"><span class="pre">'cat1'</span></tt> and <tt class="docutils literal"><span class="pre">'cat2'</span></tt>, or whatever may be convenient.</p>
 <p>Plurals, that refer to sets, lists ordered or unordered, etc., are not built in in nl. Therefore we have to define them in our ontologies as we see fit, as we shall (probably) see in another section.</p>
-<p>As a conclussion to this section, we may say that the English copular verb, explicitly given by &#8220;to be&#8221;, is implicit in nl. In English, &#8220;to be&#8221; establishes a very simple set theoretic system <a class="footnote-reference" href="#id4" id="id2">[2]</a>. In <a class="reference external" href="http://www.python.org/">Python</a>, the class system (or object orientation) establishes a similarly simple set theory, which is what we correspondingly use. Our <tt class="docutils literal"><span class="pre">mary</span></tt> object is not just a woman, it is also a human being and a thing, and will thus be affected by rules that talk about human beings and things. Obviously:</p>
+<p>As a conclussion to this section, we may say that the English copular verb, explicitly given by &#8220;to be&#8221;, is implicit in nl. In English, &#8220;to be&#8221; establishes a very simple set theoretic system <a class="footnote-reference" href="#id2" id="id1">[1]</a>. In <a class="reference external" href="http://www.python.org/">Python</a>, the class system (or object orientation) establishes a similarly simple set theory, which is what we correspondingly use. Our <tt class="docutils literal"><span class="pre">mary</span></tt> object is not just a woman, it is also a human being and a thing, and will thus be affected by rules that talk about human beings and things. Obviously:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">mary</span><span class="p">,</span> <span class="n">HumanBeing</span><span class="p">)</span>
 <span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">mary</span><span class="p">,</span> <span class="n">Thing</span><span class="p">)</span>
@@ -101,16 +103,10 @@
 </pre></div>
 </div>
 <p><strong>FOOTNOTES:</strong></p>
-<table class="docutils footnote" frame="void" id="id3" rules="none">
+<table class="docutils footnote" frame="void" id="id2" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Of course, this last distinction can be subject to debate.</td></tr>
-</tbody>
-</table>
-<table class="docutils footnote" frame="void" id="id4" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>I say simple in the sense that it implies no constructive axioms, such as unrestricted comprehension or those added (Axiom of choice, etc) to the set thories developed after the fall of the naïve set theory (formal naïve set theory, as given by <a class="reference external" href="http://en.wikipedia.org/wiki/Gottlob_Frege">Gottlob Frege</a>) at the hands and genious of <a class="reference external" href="http://en.wikipedia.org/wiki/Bertrand_Russell">Bertrand Russell</a>. Thus, what I refer to with simple set theory may be given by just the axiom of extensionality, the definition of subset, and the definition of the empty set.</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>I say simple in the sense that it implies no constructive axioms, such as unrestricted comprehension or those added (Axiom of choice, etc) to the set thories developed after the fall of the naïve set theory (formal naïve set theory, as given by <a class="reference external" href="http://en.wikipedia.org/wiki/Gottlob_Frege">Gottlob Frege</a>) at the hands and genious of <a class="reference external" href="http://en.wikipedia.org/wiki/Bertrand_Russell">Bertrand Russell</a>. Thus, what I refer to with simple set theory may be given by just the axiom of extensionality, the definition of subset, and the definition of the empty set.</td></tr>
 </tbody>
 </table>
 </div>
@@ -132,7 +128,7 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
+  <p class="topless"><a href="nl_intro.html"
                         title="previous chapter">Documentation for nl</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="verbs.html"
@@ -169,9 +165,10 @@
           <a href="verbs.html" title="Verbs and predicates"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Documentation for nl"
+          <a href="nl_intro.html" title="Documentation for nl"
              >previous</a> |</li>
-        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li> 
+        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li>
+          <li><a href="nl_intro.html" >Documentation for nl</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

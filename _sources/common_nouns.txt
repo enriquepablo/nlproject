@@ -19,14 +19,14 @@ Such a class definition would be semantically equivalent to asserting, in Englis
 The classes derived from ``Thing`` can be further subclassed to provide for all the common nouns that we may need for our *ontology*.
 
   >>> class Woman(HumanBeing): pass
-  >>> class CrazyWoman(Woman): pass
+  >>> class Girl(Woman): pass
 
-to assert that a woman is a human being, and a crazy woman is a woman [#]_.
+to assert that a woman is a human being, and a girl is a woman.
 
 Copulative sentences
 --------------------
 
-Copulative sentences are built by instantiating ``Thing`` derived classes. So if you want to say, for example, that Mary is (mmh, ok, just) a woman (let's go back to gender politics correctness), you would instantiate ``Woman`` with a string representing her name:
+Copulative sentences are built by instantiating ``Thing`` derived classes. So if you want to say, for example, that Mary is a woman, you would instantiate ``Woman`` with a string representing her name:
 
   >>> mary = Woman('mary')
 
@@ -63,7 +63,6 @@ As a conclussion to this section, we may say that the English copular verb, expl
 **FOOTNOTES:**
 
 
-.. [#] Of course, this last distinction can be subject to debate.
 .. [#] I say simple in the sense that it implies no constructive axioms, such as unrestricted comprehension or those added (Axiom of choice, etc) to the set thories developed after the fall of the naïve set theory (formal naïve set theory, as given by `Gottlob Frege`_) at the hands and genious of `Bertrand Russell`_. Thus, what I refer to with simple set theory may be given by just the axiom of extensionality, the definition of subset, and the definition of the empty set.
 
 .. _`Bertrand Russell`: http://en.wikipedia.org/wiki/Bertrand_Russell
