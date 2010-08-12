@@ -379,10 +379,10 @@ class Future(InstantOpMixin):
 
 
 import time
-def now(new=0.0):
+def now(new=0):
     delta = float(int(time.time())) - utils._now
     delta = delta < 1 and 1.0 or delta
-    utils._now = new or utils._now + delta
+    utils._now = float(new) or utils._now + delta
     return utils._now
 
 def ptime():
