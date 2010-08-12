@@ -15,7 +15,7 @@ Facts are then built by instantiating ``Fact`` with a subject, a predicate, a ti
 
 We cannot omit the subject or the predicate. If we don't provide the *time expression*, it will default to ``Instant('now')``, and if we omit the negation bit, it will default to true, or ``1``.
 
-Facts have to be told to the knowledge base; we must use ``tell`` to enter them, so that later rules and queries may be aware of them.
+Facts have to be "told" to the knowledge base; we must use ``tell`` to enter them, so that later rules and queries may be aware of them.
 
   >>> kb.tell(f1)
 

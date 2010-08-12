@@ -8,8 +8,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Facts &mdash; nlproject v1.0dev documentation</title>
-    <link rel="stylesheet" href="static/default.css" type="text/css" />
-    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -19,9 +19,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="static/jquery.js"></script>
-    <script type="text/javascript" src="static/underscore.js"></script>
-    <script type="text/javascript" src="static/doctools.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="nlproject v1.0dev documentation" href="index.html" />
     <link rel="up" title="Documentation for nl" href="nl_intro.html" />
     <link rel="next" title="Rules - basic" href="rules.html" />
@@ -64,7 +64,7 @@
 </pre></div>
 </div>
 <p>We cannot omit the subject or the predicate. If we don&#8217;t provide the <em>time expression</em>, it will default to <tt class="docutils literal"><span class="pre">Instant('now')</span></tt>, and if we omit the negation bit, it will default to true, or <tt class="docutils literal"><span class="pre">1</span></tt>.</p>
-<p>Facts have to be told to the knowledge base; we must use <tt class="docutils literal"><span class="pre">tell</span></tt> to enter them, so that later rules and queries may be aware of them.</p>
+<p>Facts have to be &#8220;told&#8221; to the knowledge base; we must use <tt class="docutils literal"><span class="pre">tell</span></tt> to enter them, so that later rules and queries may be aware of them.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">f1</span><span class="p">)</span>
 </pre></div>
 </div>

@@ -52,7 +52,7 @@ Not all concrete or individual things that we talk about in English have a prope
 
 Plurals, that refer to sets, lists ordered or unordered, etc., are not built in in nl. Therefore we have to define them in our ontologies as we see fit, as we shall (probably) see in another section.
 
-As a conclussion to this section, we may say that the English copular verb, explicitly given by "to be", is implicit in nl. In English, "to be" establishes a very simple set theoretic system [#]_. In Python_, the class system (or object orientation) establishes a similarly simple set theory, which is what we correspondingly use. Our ``mary`` object is not just a woman, it is also a human being and a thing, and will thus be affected by rules that talk about human beings and things. Obviously:
+As a conclussion to this section, we may say that the English copular verb, explicitly given by "to be", is implicit in nl. In English, "to be" establishes a very simple set theoretic system [#]_. In Python_ (and in CLIPS_'s COOL), the class system (or object orientation) establishes a similarly simple set theory, which is what we correspondingly use. Our ``mary`` object is not just a woman, it is also a human being and a thing, and will thus be affected by rules that talk about human beings and things. Obviously:
 
   >>> isinstance(mary, HumanBeing)
   True
