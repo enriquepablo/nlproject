@@ -51,9 +51,6 @@ We have to name the start and end arguments, since, as we shall see later, we ca
 
 There is a special treatment of "now" in durations. If the start of a duration is now, it will be assigned the integer corresponding to that particular instant in the historical time. However, if the end of a duration is now, it will adopt a special value, (actually, ``-1``), corresponding to a continuous present. This way, a fact that has a duration that ends in "now" will have a continuous present tense. There are ways, in rules, to terminate that continuous present, and so convert those sentences to a past tense. This is the non-monotonic trick we spoke about in the introduction to this documentation. The monotonicity of the whole system is however kept, since there is never a reduction in the number of sentences within the knowledge base. We shall delve more on this issue after we introduce the way we use rules in nl.
 
-**FOOTNOTES**
-
-[#]_ I say in principle, because that is just a convention, and we may interpret ``0`` as any particular time 
 
 
 .. _Python: http://www.python.org/
