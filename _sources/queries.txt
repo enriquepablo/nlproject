@@ -16,7 +16,7 @@ We may want to ask when does John loves Yoko:
 Or who ever loves Yoko:
 
   >>> kb.ask(HumanBeing('H1'), Fact(HumanBeing('H1'), Loves(who=yoko), Duration('D1')))
-  [{'H1': 'john', 'D1': 'from 3.0 till 1281517624.0'}]
+  [{'H1': 'john'}]
 
 Also, who ever loves Yoko and when:
 
@@ -32,5 +32,5 @@ If there are more people who love Yoko, the answer will be a list of dictionarie
 
 Finally, we can provide more facts in the query, possibly using some of the already given variables, and ``ask`` will "and" the facts to provide the answers for which all facts are true:
 
-  >>> kb.ask(Duration('D1'), HumanBeing('H1'), Fact(HumanBeing('H1'), Loves(who=yoko), Duration('D1')), Fact(HumanBeing('H1'), Lives(where=england), Duration(start=2, end=7)))
+  >>> kb.ask(Duration('D1'), HumanBeing('H1'), Fact(HumanBeing('H1'), Loves(who=yoko), Duration('D1')), Fact(HumanBeing('H1'), Lives(where=england), Duration('D2')))
   [{'H1': 'john', 'D1': 'from 3.0 till 1281517624.0'}]

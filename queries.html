@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="nlproject v1.0dev documentation" href="index.html" />
     <link rel="up" title="Documentation for nl" href="nl_intro.html" />
-    <link rel="next" title="Documentation for nlserv" href="nlserv.html" />
+    <link rel="next" title="Counting Sentences" href="counting.html" />
     <link rel="prev" title="Special conditions and consecuences" href="special_conditions.html" /> 
   </head>
   <body>
@@ -35,7 +35,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="nlserv.html" title="Documentation for nlserv"
+          <a href="counting.html" title="Counting Sentences"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="special_conditions.html" title="Special conditions and consecuences"
@@ -62,7 +62,7 @@
 </div>
 <p>Or who ever loves Yoko:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">yoko</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="s">&#39;D1&#39;</span><span class="p">)))</span>
-<span class="go">[{&#39;H1&#39;: &#39;john&#39;, &#39;D1&#39;: &#39;from 3.0 till 1281517624.0&#39;}]</span>
+<span class="go">[{&#39;H1&#39;: &#39;john&#39;}]</span>
 </pre></div>
 </div>
 <p>Also, who ever loves Yoko and when:</p>
@@ -81,7 +81,7 @@
 </div>
 </blockquote>
 <p>Finally, we can provide more facts in the query, possibly using some of the already given variables, and <tt class="docutils literal"><span class="pre">ask</span></tt> will &#8220;and&#8221; the facts to provide the answers for which all facts are true:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Duration</span><span class="p">(</span><span class="s">&#39;D1&#39;</span><span class="p">),</span> <span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">yoko</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="s">&#39;D1&#39;</span><span class="p">)),</span> <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Lives</span><span class="p">(</span><span class="n">where</span><span class="o">=</span><span class="n">england</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="mi">7</span><span class="p">)))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Duration</span><span class="p">(</span><span class="s">&#39;D1&#39;</span><span class="p">),</span> <span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">yoko</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="s">&#39;D1&#39;</span><span class="p">)),</span> <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Lives</span><span class="p">(</span><span class="n">where</span><span class="o">=</span><span class="n">england</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="s">&#39;D2&#39;</span><span class="p">)))</span>
 <span class="go">[{&#39;H1&#39;: &#39;john&#39;, &#39;D1&#39;: &#39;from 3.0 till 1281517624.0&#39;}]</span>
 </pre></div>
 </div>
@@ -97,8 +97,8 @@
   <p class="topless"><a href="special_conditions.html"
                         title="previous chapter">Special conditions and consecuences</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="nlserv.html"
-                        title="next chapter">Documentation for nlserv</a></p>
+  <p class="topless"><a href="counting.html"
+                        title="next chapter">Counting Sentences</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/queries.txt"
@@ -128,7 +128,7 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="nlserv.html" title="Documentation for nlserv"
+          <a href="counting.html" title="Counting Sentences"
              >next</a> |</li>
         <li class="right" >
           <a href="special_conditions.html" title="Special conditions and consecuences"

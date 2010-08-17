@@ -1,0 +1,132 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>A content management system &mdash; nlproject v1.0dev documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="nlproject v1.0dev documentation" href="index.html" />
+    <link rel="up" title="Documentation for nl" href="nl_intro.html" />
+    <link rel="next" title="Documentation for nlserv" href="nlserv.html" />
+    <link rel="prev" title="Counting Sentences" href="counting.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="nlserv.html" title="Documentation for nlserv"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="counting.html" title="Counting Sentences"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li>
+          <li><a href="nl_intro.html" accesskey="U">Documentation for nl</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="a-content-management-system">
+<h1>A content management system<a class="headerlink" href="#a-content-management-system" title="Permalink to this headline">¶</a></h1>
+<p>In this section we will try to develop a more complex ontology that might be used as the metadata backend for a real life CMS. Such a CMS would basically consist of the following parts:</p>
+<blockquote>
+<ol class="arabic simple">
+<li>A web application: mainly an HTTP request dispatcher and a system of views that the dispatcher calls to get responses for the requests;</li>
+<li>A database where actual content (text, images, etc.) is stored;</li>
+<li>A user authentication backend;</li>
+<li>The metadata backend that the views consult to produce responses.</li>
+</ol>
+</blockquote>
+<p>The metadata backend would therefore know about content types, users, permissions, workflows, etc.</p>
+<p>So let&#8217;s start by defining a &#8220;person&#8221; noun:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span> <span class="k">pass</span>
+</pre></div>
+</div>
+<p>The first verb that affects people that we are going to define is &#8220;wants&#8221;: Whenever a user attempts to perform an action on the system, we will tell the metadata backend (nl) that the user wants to perform the action. A basic pattern for the metadata rules will be &#8220;if someone wants to do such thing, and this and that conditions are met, (s)he does such thing&#8221;. Therefore, a basic pattern for the views will be to tell nl that a user wants to do something, and then ask whether the user does it. We might have developed an alternative ontology using &#8220;can&#8221;, defining a basic rule with the form &#8220;if someone wants to do X and can do X, the (s)he does X&#8221;, and afterwards defining rules with a basic pattern &#8220;if such and such conditions are met, user X can do Y&#8221;. This alternative ontology would be much less efficient, though, since we would end up with loads and loads of (possibly useless) sentences with the form &#8220;user X can do Y with content Z&#8221;.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Wants</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">Person</span>
+<span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;what&#39;</span><span class="p">:</span> <span class="n">Exists</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="counting.html"
+                        title="previous chapter">Counting Sentences</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="nlserv.html"
+                        title="next chapter">Documentation for nlserv</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/cms.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="nlserv.html" title="Documentation for nlserv"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="counting.html" title="Counting Sentences"
+             >previous</a> |</li>
+        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li>
+          <li><a href="nl_intro.html" >Documentation for nl</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Enrique Pablo Pérez Arnaud &lt;enriquepablo at google&#39;s mail domain&gt;.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+    </div>
+  </body>
+</html>
