@@ -8,8 +8,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Arithmetics &mdash; nlproject v1.0dev documentation</title>
-    <link rel="stylesheet" href="static/default.css" type="text/css" />
-    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -19,12 +19,12 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="static/jquery.js"></script>
-    <script type="text/javascript" src="static/underscore.js"></script>
-    <script type="text/javascript" src="static/doctools.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="nlproject v1.0dev documentation" href="index.html" />
     <link rel="up" title="Documentation for nl" href="nl_intro.html" />
-    <link rel="next" title="More special conditions" href="special_conditions.html" />
+    <link rel="next" title="Special conditions and consecuences" href="special_conditions.html" />
     <link rel="prev" title="Rules - basic" href="rules.html" /> 
   </head>
   <body>
@@ -35,7 +35,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="special_conditions.html" title="More special conditions"
+          <a href="special_conditions.html" title="Special conditions and consecuences"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="rules.html" title="Rules - basic"
@@ -95,7 +95,7 @@
 </ul>
 </blockquote>
 <p><em>NOTE</em>
-As we have seen, we can mix instants and numbers in arithmetic operations. There is a caveat here, though: if we use &#8220;now&#8221; as the end instant of a duration, and use it in rules that use that duration arithmetically, we shall certainly get unexpected results. This is an unsolved problem at the moment, and the only current solution is not to mix those features.</p>
+As we have seen, we can mix instants and numbers in arithmetic operations. There is a caveat here, though: if we use &#8220;now&#8221; as the end instant of a duration, and use it in rules that use that duration arithmetically, we shall certainly get unexpected results. This is an unsolved problem at the moment, (that would have to be solved at the <a class="reference external" href="http://clipsrules.sourceforge.net/">CLIPS</a> level) and the only current solution is not to mix those features.</p>
 <div class="section" id="arithetic-conditions">
 <h2>Arithetic conditions<a class="headerlink" href="#arithetic-conditions" title="Permalink to this headline">¶</a></h2>
 <p>We can also use arithmetics to establish conditions in rules. To do so, we must import <tt class="docutils literal"><span class="pre">Arith</span></tt> from <tt class="docutils literal"><span class="pre">nl</span></tt>. Again, all arithmetic predicates are binary, using polish notation, and the allowed predicates are:</p>
@@ -189,7 +189,7 @@ As we have seen, we can mix instants and numbers in arithmetic operations. There
                         title="previous chapter">Rules - basic</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="special_conditions.html"
-                        title="next chapter">More special conditions</a></p>
+                        title="next chapter">Special conditions and consecuences</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/arithmetics.txt"
@@ -219,7 +219,7 @@ As we have seen, we can mix instants and numbers in arithmetic operations. There
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="special_conditions.html" title="More special conditions"
+          <a href="special_conditions.html" title="Special conditions and consecuences"
              >next</a> |</li>
         <li class="right" >
           <a href="rules.html" title="Rules - basic"
