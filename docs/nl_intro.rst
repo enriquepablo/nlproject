@@ -63,6 +63,8 @@ Contents
    arithmetics
    special_conditions
    queries
+   counting
+   cms
 
 
 **FOOTNOTES:**
