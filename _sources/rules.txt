@@ -39,9 +39,11 @@ The main difference between standalone sentences and sentences in rules is that 
 
 Variables are given by a string, and are recognized by their form: A variable starts with an upper case alphabetical character, followed by any number of word characters, and ends in one or more digits. The regular expression pattern that identifies them is ``r'^[A-Z]\w*\d+$'``.
 
+Next, we shall see different types of variables: thing variables, predicate variables, noun variables, verb variables. However, it is important to note that they all are actually first order logical variables. They are only different in Python_; in CLIPS_, they are all the same, i.e. CLIPS_ variables, and the classification available in Python_ translates into the underlying CLIPS_ as a certain binding. Thus, nl's typification of variables is just synctacic sugar. For example, if we have a thing variable such as ``Woman('W1')``, the underlying CLIPS_ construct would be something with the form "for all ?W1, where ?W1 is a woman...".
+
 **Thing variables.**
 
-We may provide thing variables by instantiating ``Thing`` with a string with the form indicated above. An example might be ``Thing('X1')``. Another example might be ``Woman('Woman1')``. A thing variable can appear in any place in a sentence whithin a rule where a concrete thing might appear in a standalone sentence. So, if we want to generalize the rule given above to state, not just that if John loves Yoko then it follows that Yoko loves John, but that if John loves any woman, that woman is bound to also love him, we might say:
+We may provide thing variables by instantiating ``Thing`` (or one of its subclasses) with a string with the form indicated above. An example might be ``Thing('X1')``. Another example might be ``Woman('Woman1')``. A thing variable can appear in any place in a sentence whithin a rule where a concrete thing might appear in a standalone sentence. So, if we want to generalize the rule given above to state, not just that if John loves Yoko then it follows that Yoko loves John, but that if John loves any woman, that woman is bound to also love him, we might say:
 
   >>> r2 = Rule([
   ...   Fact(john, Loves(who=Woman('W1'))),

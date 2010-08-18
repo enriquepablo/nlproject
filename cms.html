@@ -66,12 +66,31 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span> <span class="k">pass</span>
 </pre></div>
 </div>
-<p>The first verb that affects people that we are going to define is &#8220;wants&#8221;: Whenever a user attempts to perform an action on the system, we will tell the metadata backend (nl) that the user wants to perform the action. A basic pattern for the metadata rules will be &#8220;if someone wants to do such thing, and this and that conditions are met, (s)he does such thing&#8221;. Therefore, a basic pattern for the views will be to tell nl that a user wants to do something, and then ask whether the user does it. We might have developed an alternative ontology using &#8220;can&#8221;, defining a basic rule with the form &#8220;if someone wants to do X and can do X, the (s)he does X&#8221;, and afterwards defining rules with a basic pattern &#8220;if such and such conditions are met, user X can do Y&#8221;. This alternative ontology would be much less efficient, though, since we would end up with loads and loads of (possibly useless) sentences with the form &#8220;user X can do Y with content Z&#8221;.</p>
+<p>The first verb that affects people that we are going to define is &#8220;wants&#8221;: Whenever a user attempts to perform an action on the system, we will tell the metadata backend (nl) that the user wants to perform the action. A basic pattern for the metadata rules will be &#8220;if someone wants to do such thing, and this and that conditions are met, (s)he does such thing&#8221;. Therefore, a basic pattern for the views will be to tell nl that a user wants to do something, and then ask whether the user does it. We might have developed an alternative ontology using &#8220;can&#8221;, defining a basic rule with the form &#8220;if someone wants to do X, and can do X, then (s)he does X&#8221;, and afterwards defining rules with a basic pattern &#8220;if such and such conditions are met, user X can do Y&#8221;. This alternative ontology would be much less efficient, though, since we would end up with loads and loads of (possibly useless) sentences with the form &#8220;user X can do Y with content Z&#8221;.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Wants</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">Person</span>
 <span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;what&#39;</span><span class="p">:</span> <span class="n">Exists</span><span class="p">}</span>
 </pre></div>
 </div>
+<p>We need a &#8220;content&#8221; class of things. <tt class="docutils literal"><span class="pre">Content</span></tt> will be the noun of all content objects, and the various content types (e.g., document) will be classes derived from <tt class="docutils literal"><span class="pre">Content</span></tt>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Content</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span> <span class="k">pass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Document</span><span class="p">(</span><span class="n">Content</span><span class="p">):</span> <span class="k">pass</span>
+</pre></div>
+</div>
+<p>Now we define a fairly general verb, <tt class="docutils literal"><span class="pre">Has</span></tt>, that can have anything as subject and can have to modifiers, <tt class="docutils literal"><span class="pre">what</span></tt>, that can be any thing, and <tt class="docutils literal"><span class="pre">where</span></tt>, that has to be a context:</p>
+<blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Context</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span> <span class="k">pass</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Has</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
+<span class="gp">... </span>     <span class="n">subject</span> <span class="o">=</span> <span class="n">Thing</span>
+<span class="gp">... </span>     <span class="n">instantaneous</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="gp">... </span>     <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;what&#39;</span><span class="p">:</span> <span class="n">Thing</span><span class="p">,</span>
+<span class="gp">... </span>             <span class="s">&#39;where&#39;</span><span class="p">:</span> <span class="n">Context</span><span class="p">}</span>
+</pre></div>
+</div>
+</blockquote>
+<p>We will use <tt class="docutils literal"><span class="pre">Has</span></tt></p>
 </div>
 
 
