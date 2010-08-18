@@ -66,7 +66,7 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span> <span class="k">pass</span>
 </pre></div>
 </div>
-<p>The first verb that affects people that we are going to define is &#8220;wants&#8221;: Whenever a user attempts to perform an action on the system, we will tell the metadata backend (nl) that the user wants to perform the action. A basic pattern for the metadata rules will be &#8220;if someone wants to do such thing, and this and that conditions are met, (s)he does such thing&#8221;. Therefore, a basic pattern for the views will be to tell nl that a user wants to do something, and then ask whether the user does it. We might have developed an alternative ontology using &#8220;can&#8221;, defining a basic rule with the form &#8220;if someone wants to do X, and can do X, then (s)he does X&#8221;, and afterwards defining rules with a basic pattern &#8220;if such and such conditions are met, user X can do Y&#8221;. This alternative ontology would be much less efficient, though, since we would end up with loads and loads of (possibly useless) sentences with the form &#8220;user X can do Y with content Z&#8221;.</p>
+<p>The first verb that affects people that we are going to define is &#8220;wants&#8221;: Whenever a user attempts to perform an action on the system (calls a URL, clicks a button, etc.), we will tell the metadata backend (nl) that the user wants to perform the action. A basic pattern for the metadata rules will be &#8220;if someone wants to do such thing, and this and that conditions are met, (s)he does such thing&#8221;. Therefore, a basic pattern for the views will be to tell nl that a user wants to do something, extend the knowledge base, and then ask whether the user does it. We might have developed an alternative ontology using &#8220;can&#8221;, defining a basic rule with the form &#8220;if someone wants to do X, and can do X, then (s)he does X&#8221;, and afterwards defining rules with a basic pattern &#8220;if such and such conditions are met, user X can do Y&#8221;. This alternative ontology would be much less efficient, though, since we would end up with loads and loads of (possibly useless) sentences with the form &#8220;user X can do Y with content Z&#8221;.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Wants</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">Person</span>
 <span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;what&#39;</span><span class="p">:</span> <span class="n">Exists</span><span class="p">}</span>
@@ -90,7 +90,60 @@
 </pre></div>
 </div>
 </blockquote>
-<p>We will use <tt class="docutils literal"><span class="pre">Has</span></tt></p>
+<p>We will use <tt class="docutils literal"><span class="pre">Has</span></tt> for various things. For example, to tell the system that a certain user has a certain role in some context, or that a certain role has a certain permission, or that a certain content object has some workflow state.</p>
+<p>Next, let&#8217;s define 2 nouns: role and permission. As we have hinted above, roles are related with permissions through the verb &#8220;has&#8221;. And, since it will be fairly common to assert that a given role has a certain permission, we will provide a shorthand <a href="#id1"><span class="problematic" id="id2">Python_</span></a> method to establish that relationship.</p>
+<blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Permission</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span> <span class="k">pass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Role</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span> <span class="k">pass</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">role_has_perm</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="n">perm</span><span class="p">):</span>
+<span class="go">        kb.tell( Fact(role, Has(what=perm), Duration(start=&#39;now&#39;)) )</span>
+</pre></div>
+</div>
+</blockquote>
+<p>We could now start to define a few proper names for our ontology:</p>
+<blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">member</span> <span class="o">=</span> <span class="n">Role</span><span class="p">(</span><span class="s">&#39;member&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">editor</span> <span class="o">=</span> <span class="n">Role</span><span class="p">(</span><span class="s">&#39;editor&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">Role</span><span class="p">(</span><span class="s">&#39;manager&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">editor</span><span class="p">,</span> <span class="n">member</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">basic_context</span> <span class="o">=</span> <span class="n">Context</span><span class="p">(</span><span class="s">&#39;basic_context&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">basic_context</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">view_perm</span> <span class="o">=</span> <span class="n">Permission</span><span class="p">(</span><span class="s">&#39;view_perm&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edit_perm</span> <span class="o">=</span> <span class="n">Permission</span><span class="p">(</span><span class="s">&#39;edit_perm&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">manage_perm</span> <span class="o">=</span> <span class="n">Permission</span><span class="p">(</span><span class="s">&#39;manage_perm&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">manage_perm</span><span class="p">,</span> <span class="n">edit_perm</span><span class="p">,</span> <span class="n">view_perm</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">role_has_perm</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="n">view_perm</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">role_has_perm</span><span class="p">(</span><span class="n">editor</span><span class="p">,</span> <span class="n">view_perm</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">role_has_perm</span><span class="p">(</span><span class="n">editor</span><span class="p">,</span> <span class="n">edit_perm</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">role_has_perm</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">view_perm</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">role_has_perm</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">edit_perm</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">role_has_perm</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">manage_perm</span><span class="p">)</span>
+</pre></div>
+</div>
+</blockquote>
+<p>We can now assert that, for whichever context, the admin person has the manager role:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Rule</span><span class="p">([</span>
+<span class="gp">... </span>    <span class="n">Context</span><span class="p">(</span><span class="s">&#39;X1&#39;</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">],[</span>
+<span class="gp">... </span>    <span class="n">Fact</span><span class="p">(</span><span class="n">admin</span><span class="p">,</span> <span class="n">Has</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">manager</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;now&#39;</span><span class="p">)),</span>
+<span class="gp">... </span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>We now define a verb, <tt class="docutils literal"><span class="pre">Located</span></tt>, that allows us to locate content objects in contexts:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Located</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">Content</span>
+<span class="gp">... </span>    <span class="n">instantaneous</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;where&#39;</span><span class="p">:</span> <span class="n">Context</span><span class="p">}</span>
+</pre></div>
+</div>
 </div>
 
 
