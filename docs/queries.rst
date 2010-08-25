@@ -6,7 +6,7 @@ Queries to the knowledge base are made in nl, as we have already seen in previou
 
 There are two ways of performing queries with ``ask``. The fisrt and simplest is to give it as an argument a fact with no variables. This will return ``True`` or ``False`` depending on whether the given fact is within the knowledge base or not, and we have seen plenty of examples in previous sections.
 
-The second way is using variables in the asked facts. In this usage, we have to provide ``ask`` with a few unnamed arguments of 2 kinds. The first kind are the variables we want to extract, and the second kind are the facts in which these variables are used. In this case, ``ask`` will return a dictionaries with the names of the variables as keys and the matched objects as values. Let's see a few examples.
+The second way is using variables in the asked facts. In this usage, we have to provide ``ask`` with a few unnamed arguments of 2 kinds. The first kind are the variables we want to extract, and the second kind are the facts in which these variables are used. In this case, ``ask`` will return a list of dictionaries with the names of the variables as keys and the matched objects as values. Let's see a few examples.
 
 We may want to ask when does John loves Yoko:
 

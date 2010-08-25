@@ -29,6 +29,7 @@ Now we can do something like this:
 
   >>> kb.tell(Fact(mary, Runs(v=8), Duration(start=2, end=4)))
   >>> kb.extend()
+  1
   >>> kb.ask(Fact(mary, Displaced(d=16), Instant(4)))
   True
 
@@ -43,7 +44,7 @@ At the moment, all arithmetic operations are binary, and we can only use the fol
 *NOTE*
 As we have seen, we can mix instants and numbers in arithmetic operations. There is a caveat here, though: if we use "now" as the end instant of a duration, and use it in rules that use that duration arithmetically, we shall certainly get unexpected results. This is an unsolved problem at the moment, (that would have to be solved at the CLIPS_ level) and the only current solution is not to mix those features.
 
-Arithetic conditions
+Arithmetic conditions
 --------------------
 
 We can also use arithmetics to establish conditions in rules. To do so, we must import ``Arith`` from ``nl``. Again, all arithmetic predicates are binary, using polish notation, and the allowed predicates are:

@@ -41,7 +41,7 @@ A verb can have more than one item in the ``mods`` dictionary. For example, we m
   >>> a_lot = Amount('a_lot')
   >>> a_little = Amount('a_little')
   >>> very_little = Amount('very_little')
-  >>> kb.tell(a_lot, alittle, very_little)
+  >>> kb.tell(a_lot, a_little, very_little)
   
   >>> class Loves2(Exists):
   ...     subject = HumanBeing

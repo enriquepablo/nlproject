@@ -74,7 +74,7 @@ We can now assert that, for whichever context, the admin person has the manager 
   >>> kb.tell(Rule([
   ...     Context('X1'),
   ... ],[
-  ...     Fact(admin, Has(what=manager), Duration(start='now')),
+  ...     Fact(admin, Has(what=manager, where=Context('X1')), Duration(start='now')),
   ... ]))
 
 We now define a verb, ``Located``, that allows us to locate content objects in contexts:
@@ -83,3 +83,8 @@ We now define a verb, ``Located``, that allows us to locate content objects in c
   ...     subject = Content
   ...     instantaneous = False
   ...     mods = {'where': Context}
+
+
+
+
+.. _Python: http://www.python.org/
