@@ -45,7 +45,7 @@ At the moment, all arithmetic operations are binary, and we can only use the fol
 As we have seen, we can mix instants and numbers in arithmetic operations. There is a caveat here, though: if we use "now" as the end instant of a duration, and use it in rules that use that duration arithmetically, we shall certainly get unexpected results. This is an unsolved problem at the moment, (that would have to be solved at the CLIPS_ level) and the only current solution is not to mix those features.
 
 Arithmetic conditions
---------------------
+---------------------
 
 We can also use arithmetics to establish conditions in rules. To do so, we must import ``Arith`` from ``nl``. Again, all arithmetic predicates are binary, using polish notation, and the allowed predicates are:
 

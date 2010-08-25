@@ -101,3 +101,7 @@ In the section dealing with predicates, we saw that we can use, as modifiers for
 
 I defer giving example rules using these kinds of variables until a later section in which I will provide a single complete real world ontology built with nl.
 
+
+.. _PyCLIPS: http://pyclips.sourceforge.net/
+
+.. _Python: http://www.python.org/
