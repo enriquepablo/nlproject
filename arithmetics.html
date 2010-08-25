@@ -80,6 +80,7 @@
 <p>Now we can do something like this:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">mary</span><span class="p">,</span> <span class="n">Runs</span><span class="p">(</span><span class="n">v</span><span class="o">=</span><span class="mi">8</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="mi">4</span><span class="p">)))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">extend</span><span class="p">()</span>
+<span class="go">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">mary</span><span class="p">,</span> <span class="n">Displaced</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="mi">16</span><span class="p">),</span> <span class="n">Instant</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
 <span class="go">True</span>
 </pre></div>
@@ -96,8 +97,8 @@
 </blockquote>
 <p><em>NOTE</em>
 As we have seen, we can mix instants and numbers in arithmetic operations. There is a caveat here, though: if we use &#8220;now&#8221; as the end instant of a duration, and use it in rules that use that duration arithmetically, we shall certainly get unexpected results. This is an unsolved problem at the moment, (that would have to be solved at the <a class="reference external" href="http://clipsrules.sourceforge.net/">CLIPS</a> level) and the only current solution is not to mix those features.</p>
-<div class="section" id="arithetic-conditions">
-<h2>Arithetic conditions<a class="headerlink" href="#arithetic-conditions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="arithmetic-conditions">
+<h2>Arithmetic conditions<a class="headerlink" href="#arithmetic-conditions" title="Permalink to this headline">¶</a></h2>
 <p>We can also use arithmetics to establish conditions in rules. To do so, we must import <tt class="docutils literal"><span class="pre">Arith</span></tt> from <tt class="docutils literal"><span class="pre">nl</span></tt>. Again, all arithmetic predicates are binary, using polish notation, and the allowed predicates are:</p>
 <blockquote>
 <ul class="simple">
@@ -179,7 +180,7 @@ As we have seen, we can mix instants and numbers in arithmetic operations. There
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Arithmetics</a><ul>
-<li><a class="reference internal" href="#arithetic-conditions">Arithetic conditions</a></li>
+<li><a class="reference internal" href="#arithmetic-conditions">Arithmetic conditions</a></li>
 </ul>
 </li>
 </ul>

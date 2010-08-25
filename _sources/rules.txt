@@ -101,8 +101,3 @@ In the section dealing with predicates, we saw that we can use, as modifiers for
 
 I defer giving example rules using these kinds of variables until a later section in which I will provide a single complete real world ontology built with nl.
 
-
-**FOOTNOTES**
-
-.. [#] We are here just giving fairly useless examples; for example, it may not be very useful to define a verb "can" whose only possible subjects are human beings. Defining an ontology can be a complex and iterative process, and with nl we just try to provide the tools to do so in the most general, concise, and convenient manner.
-

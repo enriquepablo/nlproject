@@ -91,7 +91,7 @@
 </div>
 </blockquote>
 <p>We will use <tt class="docutils literal"><span class="pre">Has</span></tt> for various things. For example, to tell the system that a certain user has a certain role in some context, or that a certain role has a certain permission, or that a certain content object has some workflow state.</p>
-<p>Next, let&#8217;s define 2 nouns: role and permission. As we have hinted above, roles are related with permissions through the verb &#8220;has&#8221;. And, since it will be fairly common to assert that a given role has a certain permission, we will provide a shorthand <a href="#id1"><span class="problematic" id="id2">Python_</span></a> method to establish that relationship.</p>
+<p>Next, let&#8217;s define 2 nouns: role and permission. As we have hinted above, roles are related with permissions through the verb &#8220;has&#8221;. And, since it will be fairly common to assert that a given role has a certain permission, we will provide a shorthand <a class="reference external" href="http://www.python.org/">Python</a> method to establish that relationship.</p>
 <blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Permission</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span> <span class="k">pass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Role</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span> <span class="k">pass</span>
@@ -133,7 +133,7 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Rule</span><span class="p">([</span>
 <span class="gp">... </span>    <span class="n">Context</span><span class="p">(</span><span class="s">&#39;X1&#39;</span><span class="p">),</span>
 <span class="gp">... </span><span class="p">],[</span>
-<span class="gp">... </span>    <span class="n">Fact</span><span class="p">(</span><span class="n">admin</span><span class="p">,</span> <span class="n">Has</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">manager</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;now&#39;</span><span class="p">)),</span>
+<span class="gp">... </span>    <span class="n">Fact</span><span class="p">(</span><span class="n">admin</span><span class="p">,</span> <span class="n">Has</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">manager</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">Context</span><span class="p">(</span><span class="s">&#39;X1&#39;</span><span class="p">)),</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;now&#39;</span><span class="p">)),</span>
 <span class="gp">... </span><span class="p">]))</span>
 </pre></div>
 </div>
