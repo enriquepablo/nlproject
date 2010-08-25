@@ -23,7 +23,7 @@ nl's basic usage can be summarized in five steps:
  #. Extend the knowledge base to all its logical consecuences;
  #. Query the knowledge base.
 
-After the fourth (and possibly fifth) steps in this pattern, we can further extend the factset and repeat the cycle of introducing sentences, extending the knowledge base, and querying it, as many times as necessary.
+This would be the simplest pattern of usage of nl. After extending the knowledge base and querying it, we may add more sentences to the factset, extend again the knowledge base, and query it, as many times as necessary. Also, we can build complex ontologies by importing from other more basic ontologies, through Python_'s import system.
 
 Introduction to the sentences that we can express in nl 
 -------------------------------------------------------
@@ -71,7 +71,7 @@ Contents
 
 .. [#] nl's knowledge base is actually a CLIPS_ "program", which is manipulated by nl through the PyCLIPS_ Python_ library.
 
-.. [#]  The name nl stands for "natural logic", and the aim of nl is to be able to program in a way that is as close as possible to the way we use English (or any other natural langage) to produce science. So, in these docs, I will be continuously refering to the English language to describe the usage and semantics of nl.
+.. [#]  The name nl stands for "natural logic", and the aim of nl is to be able to program in a way that is as close as possible to the way we use English (or any other natural langage) to produce science. So, in these docs, I will be continuously refering to the English language to describe the usage of nl.
 
 .. [#]  Here we talk about classical negation, where a sentence and its negated form constitute a contradiction. However, we can also, in the conditions of rules or in the queries, use negation by failure, i.e. ask whether a given sentence is or is not known (is present in the knowledge base).
 
