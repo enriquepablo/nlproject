@@ -84,7 +84,107 @@ We now define a verb, ``Located``, that allows us to locate content objects in c
   ...     instantaneous = False
   ...     mods = {'where': Context}
 
+Next, we define a ``Status`` noun, that refers to the different workflow states that a content object can be in. As a starting point, we shall define 2 different states, public and private:
 
+  >>> class Status(Thing): pass
 
+  >>> public = Status('public')
+  >>> private = Status('private')
+  >>> kb.tell(public, private)
+
+And now, we will define verbs that refer to the different actions that people can perform with content objects. First, we define an abstract ``Action`` verb that will be the ancestor of any other action:
+
+  >>> class Action(Exists):
+  ...     subject = Person
+  ...     mods = {'what': Content}
+
+  >>> class View(Action): pass
+  >>> class Edit(Action): pass
+
+We now define an abstract workflow action, that will be primitive to any workflow action:
+
+  >>> class WfAction(Action): pass
+  >>> class Publish(WfAction): pass
+  >>> class Hide(WfAction): pass
+
+Now we define a ``Required`` verb, that is used to state that a certain permission is required to perform a given action over any content that is in a certain workflow state. Note that in this case, we are using an actual verb, and not a predicate, as the modifier for the "required" verb: We define it with ``Verb`` in its ``mods`` dictionary. For the moment, we can not set bounds to the possible verbs that can be used as modifiers for these verbs: we use ``Verb``, that is the only class we hav:e for verbs.
+
+  >>> class Required(Exists):
+  ...     subject = Permission
+  ...     instantaneous = False
+  ...     mods = {'to': Verb,
+  ...             'over': Status}
+
+At this point, we can define a rule that, when someone wants to perform an action over some content, decides whether (s)he is allowed to perform it or not, according to her roles and to the workflow state of that content. We want to assert that, if someone want to perform some action on some content, and that content has some state and is located in some context, and the person has some role in that context that has the required permission to perform that action over that workflow state, then (s)he performs it:
+
+  >>> kb.tell(Rule([
+  ...      Fact(Permission('M1'), Required(to=Verb('V1', Action), over=Status('S1')), Duration('T5')),
+  ...      Fact(Person('P1'), Wants(to=Verb('V1', Action)(what=Content('C1'))), Instant('I1')),
+  ...      Fact(Content('C1'), Has(what=Status('S1')), Duration('T1')),
+  ...      Fact(Content('C1'), Located(where=Context('X1')), Duration('T2')),
+  ...      Fact(Person('P1'), Has(what=Role('R1'), where=Context('X1')), Duration('T3')),
+  ...      Fact(Role('R1'), Has(what=Permission('M1')), Duration('T4')),
+  ...      During('I1', 'T1','T2','T3','T4', 'T5')
+  ...  ],[
+  ...      Fact(Person('P1'), Verb('V1', Action)(what=Content('C1')), Instant('I1'))]))
+ 
+Note the use of the ``V1`` verb variable to range over actual "action" verbs.
+
+We can now define a utility funtion to assert that a given permission is required to perform a given action over content that is on a given workflow state, and use it to protect some actions with permissions:
+
+  >>> def r_permission(action, status, perm):
+  ...     kb.tell( Fact(perm, Required(to=action, over=status), Duration(start='now', end='now')) )
+
+  >>> r_permission(View, public, view_perm)
+  >>> r_permission(Edit, public, edit_perm)
+  >>> r_permission(Hide, public, manage_perm)
+  >>> r_permission(View, private, manage_perm)
+  >>> r_permission(Edit, private, manage_perm)
+  >>> r_permission(Publish, private, manage_perm)
+
+Next, we are going to give meaning to workflow actions. For that, we are going to define a ``Workflow`` noun, an ``Assigned`` verb that will relate workflows to content types (depending on the context the content object is in), and another verb ``HasTransition`` that relates a workflow with an initial and a final workflow state and the workflow action that performs the transition:
+
+  >>> class Workflow(Thing): pass
+
+  >>> class Assigned(Exists):
+  >>>     subject = Workflow
+  ...     instantaneous = False
+  ...     mods = {'to': Noun,
+  ...             'where': Context}
+
+  >>> class HasTransition(Exists):
+  ...     subject = Workflow
+  ...     instantaneous = False
+  ...     mods = {'start': Status,
+  ...             'end': Status,
+  ...             'by': Verb} #WfAction
+
+With these terms in place, we can add a rule that states that, if some person performs some workflow action on some content, and that content is in the initial state of the transition corresponding to that action, and that action embodies the transition of some workflow that is assigned to the content type of the content object in the context in which the object is located, then the object ceases to be in the initial state and starts being in the final state of the transition:
+
+  >>> kb.tell(Rule([
+  ...   Fact(Workflow('W1'), HasTransition(start=Status('S1'), end=Status('S2'), by=Verb('V1', WfAction)), Duration('T4')),
+  ...   Fact(Workflow('W1'), Assigned(to=Noun('N1', Content), where=Context('X1')), Duration('T2')),
+  ...   Fact(Noun('N1', Content)('C1'), Located(where=Context('X1')), Duration('T1')),
+  ...   Fact(Person('P1'), Verb('V1', WfAction)(what=Noun('N1', Content)('C1')), Instant('I1')),
+  ...   Fact(Noun('N1', Content)('C1'), Has(what=Status('S1')), Duration('T3')),
+  ...   During('I1', 'T1','T2', 'T3', 'T4')
+  ... ],[
+  ...   Fact(Noun('N1')('C1'), Has(what=Status('S2')), Duration(start=Instant('I1'), end=MaxComEnd('T1', 'T2'))),
+  ...   Finish('T3', 'I1')]))
+
+So, let's provide a function to define transitions, and a workflow for ``Document`` and assign it to ``Document`` in the basic context, and a couple of transitions for that workflow:
+
+  >>> def r_transition(action, workflow, initial, final):
+  ...     kb.tell( Fact(workflow, HasTransition(start=initial, end=final, by=action), Duration(start='now', end='now')) )
+
+  >>> doc_workflow = Workflow('doc_workflow')
+  >>> kb.tell(doc_workflow)
+
+  >>> kb.tell( Fact(doc_workflow, Assigned(to=Document, where=basic_context), Duration(start=Instant('now'))))
+
+  >>> r_transition(Publish, doc_workflow, private, public)
+  >>> r_transition(Hide, doc_workflow, public, private)
+
+With all this, we can start adding people and content objects, and test our ontology so far.
 
 .. _Python: http://www.python.org/
