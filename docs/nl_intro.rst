@@ -10,6 +10,8 @@ nl is a Python_ library for logic programming. In this short introduction, I try
 
 As normal with logic programming systems, it has a declarative API. It follows a productive paradigm, that stems from its internal use of the CLIPS_ expert system. Since it is a productive logic system, where we have a knowledge base that is extended to all its logical consecuences before querying it, its *ontologies* (see below) can only refer to (be interpreted in) finite universes. Therefore, for example, classical arithmetics could not be defined in nl, though we can use "computer" arithmetics as a built-in characteristc of the system.
 
+nl is not a general first order logic system, as could be said of prolog or CLIPS_. Rather, it implements a particular first order logic, and therefore can be said to belong to the category of description logics or CLIPS_'s COOL (CLIPS_ object oriented language). This particular first order theory implemented by nl is inspired in the form of the natural languages (again, the same can be said of description logics,) and will be given as an appendix to these docs.
+
 To finish the classification of nl within the family of logic systems, we can say that it is strictly monotonic, though some non-monotonic tricks of CLIPS_ are used in the built-in treatment of time, as will be shown in a later section. 
 
 Basic pattern of usage of nl
