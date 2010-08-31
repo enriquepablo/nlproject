@@ -28,38 +28,38 @@ To exemplify this feature, we will define a simple "modal" ontology, using the `
   >>> bob = HumanBeing('bob')
   >>> kb.tell(bob)
 
-Now, let us further complicate this example. We define a verb "smoke" and a verb "has", a noun "smokable substance", and a couple of substances:
+Now, let us further complicate this example. We define a verb "drinks" and a verb "has", a noun "drinkable substance", and a couple of substances:
 
-  >>> class SmokableSubstance(Thing): pass
-  >>> tobacco = SmokableSubstance('tobacco')
-  >>> grass = SmokableSubstance('grass')
-  >>> kb.tell(grass, tobacco)
+  >>> class DrinkableSubstance(Thing): pass
+  >>> beer = DrinkableSubstance('beer')
+  >>> coffee = DrinkableSubstance('coffee')
+  >>> kb.tell(beer, coffee)
 
-  >>> class Smoke(Exists):
+  >>> class Drinks(Exists):
   ...     subject = HumanBeing
-  ...     mods = {'what': SmokableSubstance}
+  ...     mods = {'what': DrinkableSubstance}
 
   >>> class Has(Exists):
   ...     subject = HumanBeing
   ...     mods = {'what': Thing}
 
-Now, we can define a rule that states that if someone has some smokable substance at some instant, (s)he can smoke it:
+Now, we can define a rule that states that if someone has some drinkable substance at some instant, (s)he can drink it:
 
   >>> r7 = Rule([
-  ...   Fact(HumanBeing('H1'), Has(what=SmokableSubstance('S1')), Instant('I1')),
+  ...   Fact(HumanBeing('H1'), Has(what=DrinkableSubstance('S1')), Instant('I1')),
   ...   ],[
-  ...   Fact(HumanBeing('H1'), Can(what=Smoke(what=SmokableSubstance('S1'))), Duration(start='I1'))])
+  ...   Fact(HumanBeing('H1'), Can(what=Drinks(what=DrinkableSubstance('S1'))), Duration(start='I1'))])
   >>> kb.tell(r7)
 
 With all this in place, we can now assert the following:
 
-  >>> kb.tell(Fact(john, Has(what=tobacco), 5))
-  >>> kb.tell(Fact(bob, Has(what=grass), 3))
+  >>> kb.tell(Fact(john, Has(what=beer), 5))
+  >>> kb.tell(Fact(bob, Has(what=coffee), 3))
 
 Furthermore, we assert that they wish:
 
-  >>> kb.tell(Fact(john, Wants(what=Smoke(what=tobacco)), 3))
-  >>> kb.tell(Fact(bob, Wants(what=Smoke(what=grass)), 3))
+  >>> kb.tell(Fact(john, Wants(what=Drinks(what=beer)), 3))
+  >>> kb.tell(Fact(bob, Wants(what=Drinks(what=coffee)), 3))
 
 Let us not forget to extend our kb:
 
@@ -68,49 +68,49 @@ Let us not forget to extend our kb:
 
 Now we are ready to ask a few things.
 
- - Does John smoke tobacco at 3?
+ - Does John drink beer at 3?
 
-  >>> kb.ask(Fact(john, Smoke(what=tobacco), 3))
+  >>> kb.ask(Fact(john, Drinks(what=beer), 3))
   False
 
-  No: he wanted, but he did not have tobacco until 5
+  No: he wanted, but he did not have beer until 5
 
- - Does John smoke tobacco at 5?
+ - Does John drink beer at 5?
 
-  >>> kb.ask(Fact(john, Smoke(what=tobacco), 3))
+  >>> kb.ask(Fact(john, Drinks(what=beer), 3))
   False
 
-  No: he already had tobacco, but he did not want to smoke at that time.
+  No: he already had beer, but he did not want to drink at that time.
 
- - Does Bob smoke grass at 3?
+ - Does Bob drink coffee at 3?
 
-  >>> kb.ask(Fact(bob, Smoke(what=grass), 3))
+  >>> kb.ask(Fact(bob, Drinks(what=coffee), 3))
   True
 
   Yes, at that time he had and wanted.
 
- - Can John smoke tobacco at 6?
+ - Can John drink beer at 6?
 
-  >>> kb.ask(Fact(john, Can(what=Smoke(what=tobacco)), 6))
+  >>> kb.ask(Fact(john, Can(what=Drinks(what=beer)), 6))
   True
 
   Yes, he had since 5.
 
- - Can Bob smoke tobacco at 6?
+ - Can Bob drink beer at 6?
 
-  >>> kb.ask(Fact(bob, Can(what=Smoke(what=tobacco)), 6))
+  >>> kb.ask(Fact(bob, Can(what=Drinks(what=beer)), 6))
   False
 
   No, he never had.
 
- - Can Bob smoke grass at 6?
+ - Can Bob drink coffee at 6?
 
-  >>> kb.ask(Fact(bob, Can(what=Smoke(what=grass)), 6))
+  >>> kb.ask(Fact(bob, Can(what=Drinks(what=coffee)), 6))
   True
 
   Yes, he had since 3.
 
-Etc. etc. Of course, this is not a very satisfying ontology; we would want to take into account "amounts" had and smoked, consumption of existences, and so on. Defining acceptable ontologies requires some work and iterations until you get it right. But our aim here is not to define acceptable ontologies, only to demonstrate how to use ``nl``.
+Etc. etc. Of course, this is not a very satisfying ontology; we would want to take into account "amounts" had and drunk, consumption of existences, and so on. Defining acceptable ontologies requires some work and iterations until you get it right. But our aim here is not to define acceptable ontologies, only to demonstrate how to use ``nl``.
 
 **Coincide (and Intersection)**
 
