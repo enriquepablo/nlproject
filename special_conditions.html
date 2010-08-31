@@ -77,17 +77,17 @@
 </pre></div>
 </div>
 </blockquote>
-<p>Now, let us further complicate this example. We define a verb &#8220;smoke&#8221; and a verb &#8220;has&#8221;, a noun &#8220;smokable substance&#8221;, and a couple of substances:</p>
+<p>Now, let us further complicate this example. We define a verb &#8220;drinks&#8221; and a verb &#8220;has&#8221;, a noun &#8220;drinkable substance&#8221;, and a couple of substances:</p>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">SmokableSubstance</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span> <span class="k">pass</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tobacco</span> <span class="o">=</span> <span class="n">SmokableSubstance</span><span class="p">(</span><span class="s">&#39;tobacco&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">grass</span> <span class="o">=</span> <span class="n">SmokableSubstance</span><span class="p">(</span><span class="s">&#39;grass&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">grass</span><span class="p">,</span> <span class="n">tobacco</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">DrinkableSubstance</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span> <span class="k">pass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">beer</span> <span class="o">=</span> <span class="n">DrinkableSubstance</span><span class="p">(</span><span class="s">&#39;beer&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coffee</span> <span class="o">=</span> <span class="n">DrinkableSubstance</span><span class="p">(</span><span class="s">&#39;coffee&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">beer</span><span class="p">,</span> <span class="n">coffee</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Smoke</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Drinks</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">HumanBeing</span>
-<span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;what&#39;</span><span class="p">:</span> <span class="n">SmokableSubstance</span><span class="p">}</span>
+<span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;what&#39;</span><span class="p">:</span> <span class="n">DrinkableSubstance</span><span class="p">}</span>
 </pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Has</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
@@ -96,22 +96,22 @@
 </pre></div>
 </div>
 </blockquote>
-<p>Now, we can define a rule that states that if someone has some smokable substance at some instant, (s)he can smoke it:</p>
+<p>Now, we can define a rule that states that if someone has some drinkable substance at some instant, (s)he can drink it:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r7</span> <span class="o">=</span> <span class="n">Rule</span><span class="p">([</span>
-<span class="gp">... </span>  <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Has</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">SmokableSubstance</span><span class="p">(</span><span class="s">&#39;S1&#39;</span><span class="p">)),</span> <span class="n">Instant</span><span class="p">(</span><span class="s">&#39;I1&#39;</span><span class="p">)),</span>
+<span class="gp">... </span>  <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Has</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">DrinkableSubstance</span><span class="p">(</span><span class="s">&#39;S1&#39;</span><span class="p">)),</span> <span class="n">Instant</span><span class="p">(</span><span class="s">&#39;I1&#39;</span><span class="p">)),</span>
 <span class="gp">... </span>  <span class="p">],[</span>
-<span class="gp">... </span>  <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Smoke</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">SmokableSubstance</span><span class="p">(</span><span class="s">&#39;S1&#39;</span><span class="p">))),</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;I1&#39;</span><span class="p">))])</span>
+<span class="gp">... </span>  <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">DrinkableSubstance</span><span class="p">(</span><span class="s">&#39;S1&#39;</span><span class="p">))),</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;I1&#39;</span><span class="p">))])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">r7</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>With all this in place, we can now assert the following:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Has</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">tobacco</span><span class="p">),</span> <span class="mi">5</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Has</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">grass</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Has</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">beer</span><span class="p">),</span> <span class="mi">5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Has</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">coffee</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Furthermore, we assert that they wish:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Wants</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Smoke</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">tobacco</span><span class="p">)),</span> <span class="mi">3</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Wants</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Smoke</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">grass</span><span class="p">)),</span> <span class="mi">3</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Wants</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">beer</span><span class="p">)),</span> <span class="mi">3</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Wants</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">coffee</span><span class="p">)),</span> <span class="mi">3</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Let us not forget to extend our kb:</p>
@@ -122,67 +122,67 @@
 <p>Now we are ready to ask a few things.</p>
 <blockquote>
 <ul class="simple">
-<li>Does John smoke tobacco at 3?</li>
+<li>Does John drink beer at 3?</li>
 </ul>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Smoke</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">tobacco</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">beer</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
 <span class="go">False</span>
 </pre></div>
 </div>
-<p>No: he wanted, but he did not have tobacco until 5</p>
+<p>No: he wanted, but he did not have beer until 5</p>
 </blockquote>
 <ul class="simple">
-<li>Does John smoke tobacco at 5?</li>
+<li>Does John drink beer at 5?</li>
 </ul>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Smoke</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">tobacco</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">beer</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
 <span class="go">False</span>
 </pre></div>
 </div>
-<p>No: he already had tobacco, but he did not want to smoke at that time.</p>
+<p>No: he already had beer, but he did not want to drink at that time.</p>
 </blockquote>
 <ul class="simple">
-<li>Does Bob smoke grass at 3?</li>
+<li>Does Bob drink coffee at 3?</li>
 </ul>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Smoke</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">grass</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">coffee</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
 <span class="go">True</span>
 </pre></div>
 </div>
 <p>Yes, at that time he had and wanted.</p>
 </blockquote>
 <ul class="simple">
-<li>Can John smoke tobacco at 6?</li>
+<li>Can John drink beer at 6?</li>
 </ul>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Smoke</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">tobacco</span><span class="p">)),</span> <span class="mi">6</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">beer</span><span class="p">)),</span> <span class="mi">6</span><span class="p">))</span>
 <span class="go">True</span>
 </pre></div>
 </div>
 <p>Yes, he had since 5.</p>
 </blockquote>
 <ul class="simple">
-<li>Can Bob smoke tobacco at 6?</li>
+<li>Can Bob drink beer at 6?</li>
 </ul>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Smoke</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">tobacco</span><span class="p">)),</span> <span class="mi">6</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">beer</span><span class="p">)),</span> <span class="mi">6</span><span class="p">))</span>
 <span class="go">False</span>
 </pre></div>
 </div>
 <p>No, he never had.</p>
 </blockquote>
 <ul class="simple">
-<li>Can Bob smoke grass at 6?</li>
+<li>Can Bob drink coffee at 6?</li>
 </ul>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Smoke</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">grass</span><span class="p">)),</span> <span class="mi">6</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">coffee</span><span class="p">)),</span> <span class="mi">6</span><span class="p">))</span>
 <span class="go">True</span>
 </pre></div>
 </div>
 <p>Yes, he had since 3.</p>
 </blockquote>
 </blockquote>
-<p>Etc. etc. Of course, this is not a very satisfying ontology; we would want to take into account &#8220;amounts&#8221; had and smoked, consumption of existences, and so on. Defining acceptable ontologies requires some work and iterations until you get it right. But our aim here is not to define acceptable ontologies, only to demonstrate how to use <tt class="docutils literal"><span class="pre">nl</span></tt>.</p>
+<p>Etc. etc. Of course, this is not a very satisfying ontology; we would want to take into account &#8220;amounts&#8221; had and drunk, consumption of existences, and so on. Defining acceptable ontologies requires some work and iterations until you get it right. But our aim here is not to define acceptable ontologies, only to demonstrate how to use <tt class="docutils literal"><span class="pre">nl</span></tt>.</p>
 <p><strong>Coincide (and Intersection)</strong></p>
 <p>We can test whether a set of durations have an intersection. To do this, we import <tt class="docutils literal"><span class="pre">Coincide</span></tt> from nl, and use it as a condition in rules giving it any number of durations.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">Duration</span><span class="p">,</span> <span class="n">Intersection</span>
