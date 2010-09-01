@@ -10,7 +10,7 @@ nl is a Python_ library for logic programming. In this short introduction, I try
 
 As normal with logic programming systems, it has a declarative API. It follows a productive paradigm, that stems from its internal use of the CLIPS_ expert system. Since it is a productive logic system, where we have a knowledge base that is extended to all its logical consecuences before querying it, its *ontologies* (see below) can only refer to (be interpreted in) finite universes. Therefore, for example, classical arithmetics could not be defined in nl, though we can use "computer" arithmetics as a built-in characteristc of the system.
 
-nl is not a general first order logic system, as could be said of prolog or CLIPS_. Rather, it implements a particular first order logic, and therefore can be said to belong to the category of description logics or CLIPS_'s COOL (CLIPS_ object oriented language). This particular first order theory implemented by nl is inspired in the form of the natural languages (again, the same can be said of description logics,) and will be given as an appendix to these docs.
+nl is not a general first order logic system, as could be said of prolog or CLIPS_. Rather, it implements a particular first order logic (i.e., it incorporates some built-in axioms), and therefore can be said to belong in the category of description logics or of CLIPS_'s COOL (CLIPS_ object oriented language). This particular first order theory implemented by nl is inspired in the form of the natural languages (again, the same can be said of description logics,) and will be given as an appendix to these docs.
 
 To finish the classification of nl within the family of logic systems, we can say that it is strictly monotonic, though some non-monotonic tricks of CLIPS_ are used in the built-in treatment of time, as will be shown in a later section. 
 
@@ -43,13 +43,18 @@ With nl we can build 2 classes of sentences: copulative (copulas), and non-copul
  - Time expressions would correspond to the conjugation of verbs, and can be of two kinds: *instants*, and *durations* (composed of a pair of instants).
  - A fact can be negated, or not [#]_.
  
-__ http://farm2.static.flickr.com/1287/1347675828_bd
+__ http://www.coverbrowser.com/image/tarzan-of-the-apes-1972/1-1.jpg
 
 A complete (and simple) example of a "sort of English" sentence that could be expressed as a *fact* in nl might be "Tarzan go from London to Paris between <date1> and <date2>". Another example, using an instant instead of a duration as time expression, might be "Tarzan kill what that_lion at <date1>" (here, we have to insert "what" as the name of the "that_lion" -the *proper name* of a lion- modifier for "kill": all verb modifiers need a name).
 
 In principle, we make no distiction among verbs or their kinds of modifiers. Transitive and intransitive, direct or indirect objects, kinds of prepositions, etc., are treated all the same in the definition of the verbs, and are only differentiated through the rules in which they take part.
 
 One decisive characteristic of nl, which is what I think that sets it appart from other logic programming systems, is that the modifiers of the verbs in predicates are not restricted to proper names: they can be common nouns, or other verbs, or, even, other predicates, nested with no limit. For example, a predicate might be "want to go to Paris", where we have a verb ("want") and a modifier named "to" that is in itself another predicate, "go to Paris", composed of a verb "go" and a modifier "Paris" named, also, "to". Nesting further, we might express a predicate in nl corresponding to "think that want to go to Paris", and so on.
+
+Installing nl
+-------------
+
+The software for this project can be found at `github` http://github.com/enriquepablo/nlproject, and installation instructions can be found in its `INSTALL.txt document` http://github.com/enriquepablo/nlproject/blob/master/INSTALL.txt.
 
 Contents
 --------
@@ -67,13 +72,6 @@ Contents
    queries
    counting
    cms
-
-Indices and tables
-------------------
- 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
 
 **FOOTNOTES:**
