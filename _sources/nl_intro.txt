@@ -54,7 +54,7 @@ One decisive characteristic of nl, which is what I think that sets it appart fro
 Installing nl
 -------------
 
-The software for this project can be found at `github` http://github.com/enriquepablo/nlproject, and installation instructions can be found in its `INSTALL.txt document` http://github.com/enriquepablo/nlproject/blob/master/INSTALL.txt.
+The software for this project can be found at `github <http://github.com/enriquepablo/nlproject>`_, and installation instructions can be found in its `INSTALL.txt document <http://github.com/enriquepablo/nlproject/blob/master/INSTALL.txt>`_.
 
 Contents
 --------
