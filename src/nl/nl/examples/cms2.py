@@ -83,7 +83,7 @@ class Permission(Thing): pass
 
 # If a person is in a group, and that group has some permission, the person also has it
 r4 = Rule([
-        Fact(Person('X1'), IsIn(group=Group('X2')), Duration('X3')),
+        Fact(Person('X1'), IsIn(what=Group('X2')), Duration('X3')),
         Fact(Group('X2'), Has(what=Permission('X4')), Duration('X5')),
         Coincide(Duration('X3'), Duration('X5'))
         ],[

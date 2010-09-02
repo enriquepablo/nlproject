@@ -51,6 +51,23 @@ class Exists(Namable):
     mods = {}
 
     def __init__(self, *args, **kwargs):
+        #if args and kwargs:
+        #    raise ValueError('You cannot instantiate a verb (%s) with both '
+        #                     'unnamed and named arguments' %
+        #                           self.__class__.__name__)
+        if len(args) > 1:
+            raise ValueError('You cannot instantiate a verb (%s) with more '
+                             'than one unnamed argument' %
+                                   self.__class__.__name__)
+        if args and args[0] and not utils.varpat.match(args[0]):
+            raise ValueError('You cannot instantiate a verb (%s) with an '
+                             'unnamed argument that does not correspond '
+                             'to a variable' %
+                                   self.__class__.__name__)
+        for kw in kwargs:
+            if kw not in self.mods and kw != '_clsvar':
+                raise KeyError('Unknown kwarg for %s: %s' %
+                               (self.__class__.__name__, kw))
         self.value = args and args[0] or ''
         self.clsvar = kwargs.get('_clsvar', '')
         for mod,cls in self.mods.items():
@@ -60,6 +77,10 @@ class Exists(Namable):
                    isinstance(kwargs[mod], float):
                     setattr(self, mod, utils.get_class(cls)(kwargs[mod]))
                 else:
+                    #if not isinstance(kwargs[mod], utils.get_class(cls)):
+                    #    raise ValueError('The %s arg to %s must be of '
+                    #                     'type %s' % (mod,
+                    #                        self.__class__.__name__, cls))
                     setattr(self, mod, kwargs[mod])
 
     def __str__(self):
