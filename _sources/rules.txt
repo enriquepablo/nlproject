@@ -103,5 +103,5 @@ I defer giving example rules using these kinds of variables until a later sectio
 
 
 .. _PyCLIPS: http://pyclips.sourceforge.net/
-
+.. _CLIPS: http://clipsrules.sourceforge.net/
 .. _Python: http://www.python.org/

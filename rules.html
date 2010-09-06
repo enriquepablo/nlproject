@@ -35,6 +35,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="arithmetics.html" title="Arithmetics"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -88,7 +91,7 @@
 <h2>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h2>
 <p>The main difference between standalone sentences and sentences in rules is that we can use variables in sentences within rules. These variables are typical universally quantified logical variables (except in certain &#8220;sentence counting&#8221; conditions where they can appear as free variables, as we shall see in a later section). Their role in conditions is pattern matching; their role in consecuences is their substitution for the objects that have matched with them in the conditions; and their scope is the rule in which they appear.</p>
 <p>Variables are given by a string, and are recognized by their form: A variable starts with an upper case alphabetical character, followed by any number of word characters, and ends in one or more digits. The regular expression pattern that identifies them is <tt class="docutils literal"><span class="pre">r'^[A-Z]\w*\d+$'</span></tt>.</p>
-<p>Next, we shall see different types of variables: thing variables, predicate variables, noun variables, verb variables. However, it is important to note that they all are actually first order logical variables. They are only different in <a class="reference external" href="http://www.python.org/">Python</a>; in <a href="#id1"><span class="problematic" id="id2">CLIPS_</span></a>, they are all the same, i.e. <a href="#id3"><span class="problematic" id="id4">CLIPS_</span></a> variables, and the classification available in <a class="reference external" href="http://www.python.org/">Python</a> translates into the underlying <a href="#id5"><span class="problematic" id="id6">CLIPS_</span></a> as a certain binding. Thus, nl&#8217;s typification of variables is just synctacic sugar. For example, if we have a thing variable such as <tt class="docutils literal"><span class="pre">Woman('W1')</span></tt>, the underlying <a href="#id7"><span class="problematic" id="id8">CLIPS_</span></a> construct would be something with the form &#8220;for all ?W1, where ?W1 is a woman...&#8221;.</p>
+<p>Next, we shall see different types of variables: thing variables, predicate variables, noun variables, verb variables. However, it is important to note that they all are actually first order logical variables. They are only different in <a class="reference external" href="http://www.python.org/">Python</a>; in <a class="reference external" href="http://clipsrules.sourceforge.net/">CLIPS</a>, they are all the same, i.e. <a class="reference external" href="http://clipsrules.sourceforge.net/">CLIPS</a> variables, and the classification available in <a class="reference external" href="http://www.python.org/">Python</a> translates into the underlying <a class="reference external" href="http://clipsrules.sourceforge.net/">CLIPS</a> as a certain binding. Thus, nl&#8217;s typification of variables is just synctacic sugar. For example, if we have a thing variable such as <tt class="docutils literal"><span class="pre">Woman('W1')</span></tt>, the underlying <a class="reference external" href="http://clipsrules.sourceforge.net/">CLIPS</a> construct would be something with the form &#8220;for all ?W1, where ?W1 is a woman...&#8221;.</p>
 <p><strong>Thing variables.</strong></p>
 <p>We may provide thing variables by instantiating <tt class="docutils literal"><span class="pre">Thing</span></tt> (or one of its subclasses) with a string with the form indicated above. An example might be <tt class="docutils literal"><span class="pre">Thing('X1')</span></tt>. Another example might be <tt class="docutils literal"><span class="pre">Woman('Woman1')</span></tt>. A thing variable can appear in any place in a sentence whithin a rule where a concrete thing might appear in a standalone sentence. So, if we want to generalize the rule given above to state, not just that if John loves Yoko then it follows that Yoko loves John, but that if John loves any woman, that woman is bound to also love him, we might say:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r2</span> <span class="o">=</span> <span class="n">Rule</span><span class="p">([</span>
@@ -197,6 +200,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="arithmetics.html" title="Arithmetics"
              >next</a> |</li>

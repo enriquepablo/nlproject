@@ -63,7 +63,7 @@ As a conclussion to this section, we may say that the English copular verb, expl
 **FOOTNOTES:**
 
 
-.. [#] I say simple in the sense that it implies no constructive axioms, such as unrestricted comprehension or those added (Axiom of choice, etc) to the set thories developed after the fall of the naïve set theory (formal naïve set theory, as given by `Gottlob Frege`_) at the hands and genious of `Bertrand Russell`_. Thus, what I refer to with simple set theory may be given by just the axiom of extensionality, the definition of subset, and the definition of the empty set.
+.. [#] I say simple in the sense that it implies no constructive axioms, such as unrestricted comprehension or those added (Axiom of choice, etc) to the set thories developed after the fall of the naïve set theory (formal naïve set theory, as given by `Gottlob Frege`_) at the hands and genious of `Bertrand Russell`_. Thus, what I refer to with simple set theory may be given by just the axiom of extensionality and the definition of subset.
 
 .. _`Bertrand Russell`: http://en.wikipedia.org/wiki/Bertrand_Russell
 .. _`Gottlob Frege`: http://en.wikipedia.org/wiki/Gottlob_Frege
