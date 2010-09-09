@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ln.  If not, see <http://www.gnu.org/licenses/>.
 
+import time
 import clips
 from nl.log import logger
 from nl import utils
@@ -378,12 +379,17 @@ class Future(InstantOpMixin):
         return '''(test (> %s (python-call ptime)))''' % (i, i)
 
 
-import time
 def now(new=0):
-    delta = float(int(time.time())) - utils._now
-    delta = delta < 1 and 1.0 or delta
-    utils._now = float(new) or utils._now + delta
+    if new:
+        utils._now = float(new)
+    else:
+        delta = float(int(time.time())) - utils._now
+        delta = delta < 1 and 1.0 or delta
+        utils._now = utils._now + utils._time_start_delta + delta
     return utils._now
+
+def start_of_time(start_delta):
+    utils._time_start_delta = start_delta
 
 def ptime():
     return clips.Float(utils._now)
