@@ -75,7 +75,8 @@ def possible_var(var):
         return '?%s' % var
     return var
 
-_now = float(int(time.time()))
+_now = 0
+_time_granularity = 1
 _time_start_delta = 0
 
 def change_now(i=0):

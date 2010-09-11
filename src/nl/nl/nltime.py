@@ -383,13 +383,18 @@ def now(new=0):
     if new:
         utils._now = float(new)
     else:
-        delta = float(int(time.time())) - utils._now
+        t = float(int(time.time() * utils._time_granularity))
+        delta = t - utils._now
         delta = delta < 1 and 1.0 or delta
         utils._now = utils._now + utils._time_start_delta + delta
     return utils._now
 
+def time_granularity(gr):
+    utils._time_granularity = gr
+
 def start_of_time(start_delta):
     utils._time_start_delta = start_delta
+    now()
 
 def ptime():
     return clips.Float(utils._now)
