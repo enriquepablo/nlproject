@@ -381,6 +381,8 @@ class Future(InstantOpMixin):
 
 def now(new=0):
     if new:
+        if new < utils._now:
+            raise ValueError('Time cannot go backwards')
         utils._now = float(new)
     else:
         t = float(int(time.time() * utils._time_granularity))
