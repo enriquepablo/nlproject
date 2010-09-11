@@ -75,6 +75,8 @@ We can of course use more than one variable withn a rule. So, further generalizi
   >>> kb.ask(Fact(yoko, Loves(who=HumanBeing('paul'))))
   True
 
+We may use aritmetic and time variables in just the same way we use thing variables, and have constructs such as ``Number('N1')``, ``Instant('I1')``, or ``Duration('D1')``.
+
 **Predicate variables**
 
 We have seen that we can use thing variables as verb modifiers within predicates. We can also have predicate variables. To do so, we instantiate a verb class with an unnamed variable string. In the most general case, we might use ``Exists('E1')``. Note the difference with the common use of verbs: we instantiate the verb not with named modifiers (nl objects), but with an unnamed string matching the *variable* regular expression given above.
