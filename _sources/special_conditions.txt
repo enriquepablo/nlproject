@@ -223,7 +223,7 @@ Now, if we have that John loves Yoko from 3 onwards, and John dies now, John's l
   >>> kb.extend()
   1
 
-For now, to make time advace within nl's knowledge base, we have to execute the function ``now``. This is something which I wouldn't like ending up in the 1.0 API, though:
+Now, to make time advace within nl's knowledge base, we have to execute the function ``now``.
 
   >>> from nl import now
   >>> now()
