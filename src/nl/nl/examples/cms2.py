@@ -44,7 +44,7 @@ r1 = Rule([
 
 # Has is a verb that takes a person as a subject and a thing as a modificator
 class Has(Exists):
-    subject = Person
+    subject = Thing
     mods = {'what': Thing}
 
 # IsNeeded is a verb that takes a Thing as a subject and a state as a modificator
@@ -55,7 +55,7 @@ class IsNeeded(Exists):
 # If something is needed for some state, and something else has it, that something else can be in that state
 r2 = Rule([
         Fact(Thing('X2'), IsNeeded(for_action=Exists('X4')), Duration('X3')),
-        Fact(Thing('X1'), Has(what=Thing('X2')), Duration('X5')),
+        Fact(Person('X1'), Has(what=Thing('X2')), Duration('X5')),
         Coincide(Duration('X3'), Duration('X5'))
         ],[
         Fact(Thing('X1'), Can(what=Exists('X4')), Duration(start=MinComStart('X3', 'X5'), end=MaxComEnd('X3', 'X5')))])

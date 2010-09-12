@@ -26,6 +26,7 @@ import clips
 from nl.log import logger
 from nl import utils
 from nl.metanl import Namable, Word
+from nl.metanl import ClassVar, ClassVarVar
 from nl.nltime import Time, Instant
 from nl.thing import Thing
 from nl.state import Exists
@@ -43,18 +44,37 @@ class Fact(Namable):
     """
     def __init__(self, subj, pred, t=Instant('now'), truth=1):
         self.truth = truth
-        if isinstance(subj, str):
-            if utils.varpat.match(subj):
-                self.subject = Thing(subj)
-            else:
-                from nl import kb
-                self.subject = kb.ask_obj(Thing(subj))[0]
-        else:
-            self.subject = subj
         if isinstance(pred, str):
             self.predicate = Exists(pred)
         else:
+            if not isinstance(pred, Exists) and \
+               not isinstance(pred, ClassVarVar):
+                raise ValueError('The predicate of a fact has to be a verb')
             self.predicate = pred
+        if isinstance(subj, str):
+            if utils.varpat.match(subj):
+                self.subject = self.pred.subject(subj)
+            else:
+                from nl import kb
+                self.subject = kb.ask_obj(Thing(subj))[0]
+                if not self.subject:
+                    raise ValueError('If Fact receives a string as subject'
+                                     'It has to be a variable or a thing'
+                                     'already defined in the knowledge base')
+        else:
+            if not isinstance(subj, Thing) and \
+               not isinstance(subj, Word) and \
+               not isinstance(subj, ClassVar) and \
+               not isinstance(subj, ClassVarVar):
+                raise ValueError('Not a proper subject for fact')
+            self.subject = subj
+        if not isinstance(subj, ClassVar) and \
+           not isinstance(subj, ClassVarVar) and \
+               (not isinstance(self.predicate, ClassVar) and
+                not isinstance(self.predicate, ClassVarVar) and
+                not isinstance(subj, self.predicate.subject)):
+            raise ValueError('Not a proper subject for %s' %
+                              self.predicate.__class__.__name__)
         if isinstance(t, Namable):
             self.time = t
         else:
