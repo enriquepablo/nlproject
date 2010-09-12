@@ -21,7 +21,8 @@ import clips
 from log import logger
 from nl.clps import class_constraint
 from nl import utils
-from nl.metanl import Verb, Namable
+from nl.metanl import Word, Verb, Namable
+from nl.metanl import ClassVar, ClassVarVar
 from nl.thing import Thing
 
 
@@ -77,10 +78,14 @@ class Exists(Namable):
                    isinstance(kwargs[mod], float):
                     setattr(self, mod, utils.get_class(cls)(kwargs[mod]))
                 else:
-                    #if not isinstance(kwargs[mod], utils.get_class(cls)):
-                    #    raise ValueError('The %s arg to %s must be of '
-                    #                     'type %s' % (mod,
-                    #                        self.__class__.__name__, cls))
+                    if not isinstance(kwargs[mod], utils.get_class(cls)) and \
+                       not (isinstance(utils.get_class(cls), Word) and
+                           (isinstance(kwargs[mod], ClassVarVar))) and \
+                       not (issubclass(utils.get_class(cls), Word) and
+                            isinstance(kwargs[mod], ClassVar)):
+                        raise ValueError('The %s arg to %s must be of '
+                                         'type %s' % (mod,
+                                            self.__class__.__name__, cls))
                     setattr(self, mod, kwargs[mod])
 
     def __str__(self):
