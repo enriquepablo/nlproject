@@ -46,7 +46,7 @@ The practical things regarding this issue are the following:
 Discrete time
 -------------
 
-As we have seen when introducing ``Instant``, in nl we take time to be discrete: any point in time is represented by an integer. An instant in nl has no duration. At instant 1 we have a state of affairs, at instant 2 we have another, and in between, we have no state of affairs. This is not a philosophical or scientific stance; it is merely practical. We are free to interpret what an instant is in any particular discourse developed with nl: an instant may be a milisecond, a second, or a year.
+As we have seen when introducing ``Instant``, in nl we take time to be discrete: any point in time is represented by an integer. An instant in nl has no duration. At instant 1 we have a state of affairs, at instant 2 we have another, and in between, we have no state of affairs. This is not a philosophical or scientific stance; it is merely practical. We are free to interpret how long does it take to go from one instant to the next in any particular discourse developed with nl: it may be a milisecond, a second, or a year.
 
 1. Saying "now"
 ---------------
@@ -96,8 +96,8 @@ To measure time in hours and to start time at the beginning of the 31st of decem
 
 etc.
 
-A continuous present time
--------------------------
+3. A continuous present time
+----------------------------
 
 Finally, we want a continuous present tense. We want to say "from now onwards", and have an open ended interval of time, that can be terminated according to as yet unknown conditions. To achieve that, there is a special treatment of "now" in durations. If the start of a duration is ``Instant("now")``, it will be assigned the integer that nl has internally stored as the present time. However, if the end of a duration is ``Instant("now")``, it will adopt a special value, (actually, ``-1``), corresponding to a continuous present. When comparing times, nl will interpret that this special value is bigger than whatever it has stored as the present time, but smaller than that plus 1. This way, a fact that has a duration that ends in "now" will have a continuous present tense.
 

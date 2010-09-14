@@ -93,7 +93,7 @@
 </div>
 <div class="section" id="discrete-time">
 <h2>Discrete time<a class="headerlink" href="#discrete-time" title="Permalink to this headline">¶</a></h2>
-<p>As we have seen when introducing <tt class="docutils literal"><span class="pre">Instant</span></tt>, in nl we take time to be discrete: any point in time is represented by an integer. An instant in nl has no duration. At instant 1 we have a state of affairs, at instant 2 we have another, and in between, we have no state of affairs. This is not a philosophical or scientific stance; it is merely practical. We are free to interpret what an instant is in any particular discourse developed with nl: an instant may be a milisecond, a second, or a year.</p>
+<p>As we have seen when introducing <tt class="docutils literal"><span class="pre">Instant</span></tt>, in nl we take time to be discrete: any point in time is represented by an integer. An instant in nl has no duration. At instant 1 we have a state of affairs, at instant 2 we have another, and in between, we have no state of affairs. This is not a philosophical or scientific stance; it is merely practical. We are free to interpret how long does it take to go from one instant to the next in any particular discourse developed with nl: it may be a milisecond, a second, or a year.</p>
 </div>
 <div class="section" id="saying-now">
 <h2>1. Saying &#8220;now&#8221;<a class="headerlink" href="#saying-now" title="Permalink to this headline">¶</a></h2>
@@ -137,7 +137,7 @@
 <p>etc.</p>
 </div>
 <div class="section" id="a-continuous-present-time">
-<h2>A continuous present time<a class="headerlink" href="#a-continuous-present-time" title="Permalink to this headline">¶</a></h2>
+<h2>3. A continuous present time<a class="headerlink" href="#a-continuous-present-time" title="Permalink to this headline">¶</a></h2>
 <p>Finally, we want a continuous present tense. We want to say &#8220;from now onwards&#8221;, and have an open ended interval of time, that can be terminated according to as yet unknown conditions. To achieve that, there is a special treatment of &#8220;now&#8221; in durations. If the start of a duration is <tt class="docutils literal"><span class="pre">Instant(&quot;now&quot;)</span></tt>, it will be assigned the integer that nl has internally stored as the present time. However, if the end of a duration is <tt class="docutils literal"><span class="pre">Instant(&quot;now&quot;)</span></tt>, it will adopt a special value, (actually, <tt class="docutils literal"><span class="pre">-1</span></tt>), corresponding to a continuous present. When comparing times, nl will interpret that this special value is bigger than whatever it has stored as the present time, but smaller than that plus 1. This way, a fact that has a duration that ends in &#8220;now&#8221; will have a continuous present tense.</p>
 <p>There are ways, in rules, to terminate that continuous present, and so convert those sentences to a perfect tense. This is the non-monotonic trick we spoke about in the introduction to this documentation. The monotonicity of the whole system is however kept, since there is never a reduction in the number of sentences within the knowledge base. Further, this termination propagates to whatever consecuences we may have derived from our original sentence. We shall delve more on this issue after we introduce the way we use rules in nl.</p>
 </div>
@@ -158,7 +158,7 @@
 <li><a class="reference internal" href="#discrete-time">Discrete time</a></li>
 <li><a class="reference internal" href="#saying-now">1. Saying &#8220;now&#8221;</a></li>
 <li><a class="reference internal" href="#saying-several-things-now">2. Saying several things now</a></li>
-<li><a class="reference internal" href="#a-continuous-present-time">A continuous present time</a></li>
+<li><a class="reference internal" href="#a-continuous-present-time">3. A continuous present time</a></li>
 </ul>
 </li>
 </ul>
