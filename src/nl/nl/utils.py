@@ -117,6 +117,8 @@ def parens(expr):
         else:
             term += c
     terms.append(term)
+    if depth != 0:
+        raise ValueError('wrong arithmetic expression')
     return terms
 
 def get_subclasses(cls):
