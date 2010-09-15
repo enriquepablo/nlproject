@@ -10,11 +10,13 @@ nl provides a primitive common noun, ``Thing``. To define further common nouns, 
   >>> from nl import Thing
   >>> class HumanBeing(Thing): pass
 
-Such a class definition would be semantically equivalent to asserting, in English, that a human being is a thing. Note that it is being asserted, i.e., something is being pushed into nl's knowledge base. This is due to the fact that ``Thing`` has a metaclass (``Noun``) that, among other things, touches the knowledge base in its ``__init__`` method.
+Such a class definition would be semantically equivalent to asserting, in English, that human beings are things. Note that it is being asserted, i.e., something is being pushed into nl's knowledge base. This is due to the fact that ``Thing`` has a metaclass (``Noun``) that, among other things, touches the knowledge base in its ``__init__`` method.
 
   >>> from nl import Noun
   >>> type(Thing) is Noun
   True
+
+Thus, with this simple class definition, we are actually asserting a copulative sentence, "human beings are things". There are two kinds of copulas that we can build with nl: those in which the subject is a common noun, such as the one above, and those in which the subject is a proper name, which we shall see shortly.
 
 The classes derived from ``Thing`` can be further subclassed to provide for all the common nouns that we may need for our *ontology*.
 
@@ -23,10 +25,10 @@ The classes derived from ``Thing`` can be further subclassed to provide for all 
 
 to assert that a woman is a human being, and a girl is a woman.
 
-Copulative sentences
---------------------
+Definition of proper names
+--------------------------
 
-Copulative sentences are built by instantiating ``Thing`` derived classes. So if you want to say, for example, that Mary is a woman, you would instantiate ``Woman`` with a string representing her name:
+Copulative sentences with proper names as subjects are built by instantiating ``Thing`` derived classes. So if you want to say, for example, that Mary is a woman, you would instantiate ``Woman`` with a string representing her proper name:
 
   >>> mary = Woman('mary')
 

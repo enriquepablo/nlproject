@@ -62,12 +62,13 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">HumanBeing</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span> <span class="k">pass</span>
 </pre></div>
 </div>
-<p>Such a class definition would be semantically equivalent to asserting, in English, that a human being is a thing. Note that it is being asserted, i.e., something is being pushed into nl&#8217;s knowledge base. This is due to the fact that <tt class="docutils literal"><span class="pre">Thing</span></tt> has a metaclass (<tt class="docutils literal"><span class="pre">Noun</span></tt>) that, among other things, touches the knowledge base in its <tt class="docutils literal"><span class="pre">__init__</span></tt> method.</p>
+<p>Such a class definition would be semantically equivalent to asserting, in English, that human beings are things. Note that it is being asserted, i.e., something is being pushed into nl&#8217;s knowledge base. This is due to the fact that <tt class="docutils literal"><span class="pre">Thing</span></tt> has a metaclass (<tt class="docutils literal"><span class="pre">Noun</span></tt>) that, among other things, touches the knowledge base in its <tt class="docutils literal"><span class="pre">__init__</span></tt> method.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">Noun</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">Thing</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Noun</span>
 <span class="go">True</span>
 </pre></div>
 </div>
+<p>Thus, with this simple class definition, we are actually asserting a copulative sentence, &#8220;human beings are things&#8221;. There are two kinds of copulas that we can build with nl: those in which the subject is a common noun, such as the one above, and those in which the subject is a proper name, which we shall see shortly.</p>
 <p>The classes derived from <tt class="docutils literal"><span class="pre">Thing</span></tt> can be further subclassed to provide for all the common nouns that we may need for our <em>ontology</em>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Woman</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">):</span> <span class="k">pass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Girl</span><span class="p">(</span><span class="n">Woman</span><span class="p">):</span> <span class="k">pass</span>
@@ -75,9 +76,9 @@
 </div>
 <p>to assert that a woman is a human being, and a girl is a woman.</p>
 </div>
-<div class="section" id="copulative-sentences">
-<h2>Copulative sentences<a class="headerlink" href="#copulative-sentences" title="Permalink to this headline">¶</a></h2>
-<p>Copulative sentences are built by instantiating <tt class="docutils literal"><span class="pre">Thing</span></tt> derived classes. So if you want to say, for example, that Mary is a woman, you would instantiate <tt class="docutils literal"><span class="pre">Woman</span></tt> with a string representing her name:</p>
+<div class="section" id="definition-of-proper-names">
+<h2>Definition of proper names<a class="headerlink" href="#definition-of-proper-names" title="Permalink to this headline">¶</a></h2>
+<p>Copulative sentences with proper names as subjects are built by instantiating <tt class="docutils literal"><span class="pre">Thing</span></tt> derived classes. So if you want to say, for example, that Mary is a woman, you would instantiate <tt class="docutils literal"><span class="pre">Woman</span></tt> with a string representing her proper name:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mary</span> <span class="o">=</span> <span class="n">Woman</span><span class="p">(</span><span class="s">&#39;mary&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -125,7 +126,7 @@
   <ul>
 <li><a class="reference internal" href="#">Common nouns and copulative sentences</a><ul>
 <li><a class="reference internal" href="#definition-of-common-nouns">Definition of common nouns</a></li>
-<li><a class="reference internal" href="#copulative-sentences">Copulative sentences</a></li>
+<li><a class="reference internal" href="#definition-of-proper-names">Definition of proper names</a></li>
 </ul>
 </li>
 </ul>

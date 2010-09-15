@@ -34,7 +34,7 @@ Sentences are the principal units in the usage of nl. They have a meaning (in wh
 
 With nl we can build 2 classes of sentences: copulative (copulas), and non-copulative (facts). I will introduce them in comparison to the corresponding constructs of the English language [#]_.
 
-**Copulas** have two parts: a proper name, and a common noun. They are semantically equivalent to English copulas, such as "john is a man", or "yellow is a colour".
+**Copulas** have two parts: a proper name or a common noun, and a common noun. They are semantically equivalent to English copulas, such as "john is a man", "men are animals", or "yellow is a colour".
 
 **Facts** (Non-copulative sentences) are made up of 4 parts: a *subject*, a *predicate*, a *time expression*, and a *negation bit*.
 
