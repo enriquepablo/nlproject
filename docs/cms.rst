@@ -1,6 +1,6 @@
 
-A content management system
-===========================
+Example: A content management system
+====================================
 
 In this section we will try to develop a more complex ontology that might be used as the metadata backend for a real life CMS. Such a CMS would basically consist of the following parts:
 
