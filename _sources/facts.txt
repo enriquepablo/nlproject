@@ -31,6 +31,6 @@ Facts are really a special kind of predicate. In fact, we might define a predica
 They are special and differentiated for two reasons.
 
  #. The first reason is their truth value, that can give rise to contradictions when two facts, identical except for their negation bit, are present in the same knowledge base.
- #. The second reason is the special treatment of time in facts. In particular, as we have seen in the previous section (on time expressions), the treatment of "now" as a continuous present when given as the end of a duration.
+ #. The second reason is the special treatment of time in facts. In particular, as we will see in a later section, the treatment of "now" as a continuous present when given as the end of a duration.
 
 There is not really much more to be said about facts. They are composed of the kinds of constructs that we have already seen, and any combination of them will be enough to build a fact.
