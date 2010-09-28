@@ -15,10 +15,10 @@ Defining verbs, like defining nouns, affects the knowledge base, through the met
   >>> type(Exists) is Verb
   True
 
-The definition of verbs is a little more complex than the definition of common nouns. There are three class attributes we may want to define for our verbs (all three are optional). These attributes set limits to the subjects and time expressions of facts in which instances of our verbs take part (as predicates), and to the modifiers that they can take.
+The definition of verbs is a little more complex than the definition of common nouns. There are 2 class attributes we may want to define for our verbs (all three are optional). These attributes set limits to the subjects of facts in which instances of our verbs take part (as predicates), and to the modifiers that they can take.
 
  #. The first attribute is ``subject``. This is assigned to a ``Noun``, i.e., to ``Thing`` or to a class derived from it. So, for example, if we define a verb ``Loves`` and give it as subject ``HumanBeing``, any fact that has ``Loves`` as a verb in its predicate, must have a ``HumanBeing`` instance as subject. If we don't set the ``subject`` of a verb, it will default to ``Thing``, so the subject in a fact with that verb could be anything.
- #. Finally, we define the modifiers that the verb can take when used in a predicate. To do this, we assign a dictionary to a ``mods`` attribute on the class. The keys of this dictionary must be strings, and will correspond to the names of those modifiers. The values of this predicate must be classes, so that the corresponding named modifiers of the verb in a predicate will be objects of that class. If the ``mods`` attribute is not given, it will default to an empty dictionary.
+ #. Second, we define the modifiers that the verb can take when used in a predicate. To do this, we assign a dictionary to a ``mods`` attribute on the class. The keys of this dictionary must be strings, and will correspond to the names of those modifiers. The values of this predicate must be classes, so that the corresponding named modifiers of the verb in a predicate will be objects of that class. If the ``mods`` attribute is not given, it will default to an empty dictionary.
 
   >>> class Loves(Exists):
   ...     subject = HumanBeing
