@@ -75,7 +75,6 @@ Let's give an example, such as "a person can only enter the 'Momentos' club if o
   >>> class Can(Exists):
   ...     subject = HumanBeing
   ...     mods = {'what': Exists}
-  ...     instantaneous = False
 
 Now we define our rule:
 
@@ -105,7 +104,7 @@ We have that
   >>> kb.ask(Fact(sean, Can(what=Enter(where=momentos)), 'now'))
   False
 
-Note that, in queries, we can provide an instant in a fact that has a non-instantaneous verb. nl will answer taking into account whether that instant is whithin the interval that it has stored in its kb.
+Note that, in queries, we can provide an instant in a fact, and nl will answer taking into account whether that instant is whithin the interval that it has stored in its kb, i.e., the instant in que query will match any duration in the knowledge base that contains it.
 
 
 .. _CLIPS: http://clipsrules.sourceforge.net/

@@ -56,7 +56,7 @@
   <div class="section" id="time-expressions">
 <h1>Time expressions<a class="headerlink" href="#time-expressions" title="Permalink to this headline">¶</a></h1>
 <p>Before exposing how we speak about time in nl, we have to say that we don&#8217;t necessarily have to take time into account when using nl. If we want to talk about geometry, for example, we may ignore time completely, and build facts without the time argument, so that our discourse wil be outside time (or, what is the same, within a single and unique instant).  That said, its time for time.</p>
-<p>There are 2 kinds of time expressions in nl: instants, and durations (intervals of time). They just basically boil down to integers and pairs of integers, except for some special treatment of the &#8220;now&#8221; concept.</p>
+<p>There are 2 kinds of time expressions in nl: instants, and durations (intervals of time). They just basically boil down to integers and pairs of integers, except for some special treatment of the &#8220;now&#8221; concept which we shall see in a later section. They are used to build facts, to convey the tense and aspect of the verbs.</p>
 <div class="section" id="instants">
 <h2>Instants<a class="headerlink" href="#instants" title="Permalink to this headline">¶</a></h2>
 <p>An instant is really simply a natural number. To create an instant, you import <tt class="docutils literal"><span class="pre">Instant</span></tt> from <tt class="docutils literal"><span class="pre">nl</span></tt>, and instantiate it with an non-negative integer.</p>
@@ -64,82 +64,20 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">i1</span> <span class="o">=</span> <span class="n">Instant</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>As is the case with predicates, you don&#8217;t <tt class="docutils literal"><span class="pre">tell</span></tt> instants (or durations); that would be rather pointless. You use them to build durations, or facts that use verbs that are <tt class="docutils literal"><span class="pre">instantaneous</span></tt>.</p>
+<p>As is the case with predicates, you don&#8217;t <tt class="docutils literal"><span class="pre">tell</span></tt> instants (or durations); that would be rather pointless. You use them to build durations or facts.</p>
 </div>
 <div class="section" id="durations">
 <h2>Durations<a class="headerlink" href="#durations" title="Permalink to this headline">¶</a></h2>
-<p>A duration is composed of 2 instants, where the first instant is a smaller integer than the second. To create a duration, you import <tt class="docutils literal"><span class="pre">Duration</span></tt> from <tt class="docutils literal"><span class="pre">nl</span></tt>, and implement it with an instant named <tt class="docutils literal"><span class="pre">start</span></tt> and another instant named <tt class="docutils literal"><span class="pre">end</span></tt>.</p>
+<p>A duration is composed of 2 instants, where the first instant is a smaller integer than the second. To create a duration, you import <tt class="docutils literal"><span class="pre">Duration</span></tt> from <tt class="docutils literal"><span class="pre">nl</span></tt>, and instantiate it with an <tt class="docutils literal"><span class="pre">Instant</span></tt> named <tt class="docutils literal"><span class="pre">start</span></tt> and another <tt class="docutils literal"><span class="pre">Instant</span></tt> named <tt class="docutils literal"><span class="pre">end</span></tt>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">Duration</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">d1</span> <span class="o">=</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">Instant</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="n">Instant</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>We can also implement <tt class="docutils literal"><span class="pre">Duration</span></tt> with just integers:</p>
+<p>We can also instantiate <tt class="docutils literal"><span class="pre">Duration</span></tt> with just integers:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">d2</span> <span class="o">=</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We have to name the start and end arguments, since, as we shall see later, we can instantiate <tt class="docutils literal"><span class="pre">Duration</span></tt> as a logical variable, and not naming the arguments would confuse nl.</p>
-</div>
-<div class="section" id="time-and-language">
-<h2>Time and language<a class="headerlink" href="#time-and-language" title="Permalink to this headline">¶</a></h2>
-<p>Time passes. Other dimensions, such as space or mass, don&#8217;t. There is a distinguished and everchanging point in time, which we call &#8220;now&#8221;. Every physical dimension is &#8220;enveloped&#8221; by time, and therefore, affected by that special instant (physical objects change their &#8220;position&#8221; in those dimensions over time). However, logic is not physical, and thus not affected by time. There is a difficulty here because we, the ones that use logic, are physical. We develop (or discover) and use logic within time. Therefore, we, within time, need logic to speak about time, to envelope time. But we are getting too philosophical, and that&#8217;s not practical.</p>
-<p>The practical things regarding this issue are the following:</p>
-<blockquote>
-<ol class="arabic simple">
-<li>We want to be able to say &#8220;now&#8221;, at the same time as we want to be able to name any particular instant of time. Obviously, &#8220;now&#8221; has to correspond to different instants when uttered at different times.</li>
-<li>We want to be able to say various things at the same &#8220;now&#8221;. Many things happen presently, but we may only say one thing at a time, so, to describe what happens now, we need a trick to cram the same &#8220;now&#8221; into any number of sentences.</li>
-<li>We need a continuous present tense. The future is mostly unknown, so, if something is happening now, we need a duration that starts in the past and ends in a moving &#8220;now&#8221;.</li>
-</ol>
-</blockquote>
-</div>
-<div class="section" id="discrete-time">
-<h2>Discrete time<a class="headerlink" href="#discrete-time" title="Permalink to this headline">¶</a></h2>
-<p>As we have seen when introducing <tt class="docutils literal"><span class="pre">Instant</span></tt>, in nl we take time to be discrete: any point in time is represented by an integer. An instant in nl has no duration. At instant 1 we have a state of affairs, at instant 2 we have another, and in between, we have no state of affairs. This is not a philosophical or scientific stance; it is merely practical. We are free to interpret how long does it take to go from one instant to the next in any particular discourse developed with nl: it may be a milisecond, a second, or a year.</p>
-</div>
-<div class="section" id="saying-now">
-<h2>1. Saying &#8220;now&#8221;<a class="headerlink" href="#saying-now" title="Permalink to this headline">¶</a></h2>
-<p>So, we want to be able to say &#8220;now&#8221;. That is easy; with python, we would just say <tt class="docutils literal"><span class="pre">import</span> <span class="pre">time;</span> <span class="pre">time.time()</span></tt>. With nl, we instantiate <tt class="docutils literal"><span class="pre">Instant</span></tt> with, instead of an integer, the string <tt class="docutils literal"><span class="pre">&quot;now&quot;</span></tt>: <tt class="docutils literal"><span class="pre">Instant(&quot;now&quot;)</span></tt>. In general (though not always, as we shall see below), nl will instantiate that instant with whatever integer it thinks that corresponds to the present time. &#8220;It thinks&#8221; means that it has an internal variable where it stores an integer that is made to correspond with the present time.</p>
-</div>
-<div class="section" id="saying-several-things-now">
-<h2>2. Saying several things now<a class="headerlink" href="#saying-several-things-now" title="Permalink to this headline">¶</a></h2>
-<p>We want to be able to say several things at the same time. We want to be able to say &#8220;John wants to eat now. Can he (now)?&#8221;, and both nows have to correspond, and cannot be different just because we take some time in saying one sentence after the other. In nl, we solve that by passing time explicitly, by calling a function <tt class="docutils literal"><span class="pre">now()</span></tt>. The internal variable mentioned above, that stores the present time, only changes when we tell it to change by calling the function <tt class="docutils literal"><span class="pre">now()</span></tt>. So:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">now</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">i1</span> <span class="o">=</span> <span class="n">Instant</span><span class="p">(</span><span class="s">&quot;now&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">i2</span> <span class="o">=</span> <span class="n">Instant</span><span class="p">(</span><span class="s">&quot;now&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">now</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">i3</span> <span class="o">=</span> <span class="n">Instant</span><span class="p">(</span><span class="s">&quot;now&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">i1</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">i2</span><span class="p">)</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">i1</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">i3</span><span class="p">)</span>
-<span class="go">False</span>
-</pre></div>
-</div>
-<p>Thus, let&#8217;s suppose that we say that, if at some point in time, someone has food, (s)he can eat. And then we call <tt class="docutils literal"><span class="pre">now()</span></tt>. And say that John has food now. And then we ask whether John can eat now: We get a &#8220;true&#8221; answer. But if then we call again <tt class="docutils literal"><span class="pre">now()</span></tt> and ask again whether John can eat, we don&#8217;t necessarily get a &#8220;true&#8221; answer. Things have, or may have, changed. Every <tt class="docutils literal"><span class="pre">Instant(&quot;now&quot;)</span></tt> between consecutive calls to <tt class="docutils literal"><span class="pre">now()</span></tt> coincide, have the same meaning, and correspond to the same internal CLIPS construct.</p>
-<p>There are 2 ways of using <tt class="docutils literal"><span class="pre">now()</span></tt>, one that establishes what we will call a &#8220;fictional time&#8221;, and another that establishes &#8220;historical time&#8221;.</p>
-<blockquote>
-<strong>Fictional time</strong></blockquote>
-<p>To establish fictional time, we call <tt class="docutils literal"><span class="pre">now()</span></tt> with an integer argument. That integer is what is stored by nl as &#8220;now&#8221; until a subsequent call to <tt class="docutils literal"><span class="pre">now()</span></tt> with another integer (not necessarily consecutive, but bigger). We are then free to give any interpretation to the difference between consecutive instants: seconds, years, whatever.</p>
-<blockquote>
-<strong>Historical time</strong></blockquote>
-<p>To establish historical time, we call <tt class="docutils literal"><span class="pre">now()</span></tt> with no arguments. In this case, nl makes a call to the <tt class="docutils literal"><span class="pre">time()</span></tt> function of the <tt class="docutils literal"><span class="pre">time</span></tt> module from the standard library, converts the result to an integer, and stores that as the present time. This means that, in principle, <tt class="docutils literal"><span class="pre">Instant(0)</span></tt> corresponds to the start of the year 1970, and the difference between 2 consecutive instants corresponds to a second. We may change this, however, by calling 2 functions at the beginning of the discourse: <tt class="docutils literal"><span class="pre">time_granularity(gr)</span></tt> and <tt class="docutils literal"><span class="pre">start_of_time(start)</span></tt>.</p>
-<p><tt class="docutils literal"><span class="pre">time_granularity(gr)</span></tt> is called with a <tt class="docutils literal"><span class="pre">float</span></tt> argument that multiplies the default granularity of historical time (seconds). So, to establish that the time elapsed between 2 consecutive instants is a milisecond, we call it with <tt class="docutils literal"><span class="pre">1000.0</span></tt>, and to establish that it is a minute, we call it with <tt class="docutils literal"><span class="pre">1.0/60.0</span></tt>.</p>
-<p><tt class="docutils literal"><span class="pre">start_of_time(start)</span></tt> is called with an integer that is interpreted as the difference (in whatever units of time we have established with <tt class="docutils literal"><span class="pre">time_granularity(gr)</span></tt>) between our intended start of time and the beginning of 1970. So, to measure time in milliseconds and establish the start of time one second after the beginning of 1970, we would do:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">time_granularity</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">start_of_time</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>To measure time in hours and to start time at the beginning of the 31st of december of 1969, we would:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">time_granularity</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3600.0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">start_of_time</span><span class="p">(</span><span class="o">-</span><span class="mi">24</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>etc.</p>
-</div>
-<div class="section" id="a-continuous-present-time">
-<h2>3. A continuous present time<a class="headerlink" href="#a-continuous-present-time" title="Permalink to this headline">¶</a></h2>
-<p>Finally, we want a continuous present tense. We want to say &#8220;from now onwards&#8221;, and have an open ended interval of time, that can be terminated according to as yet unknown conditions. To achieve that, there is a special treatment of &#8220;now&#8221; in durations. If the start of a duration is <tt class="docutils literal"><span class="pre">Instant(&quot;now&quot;)</span></tt>, it will be assigned the integer that nl has internally stored as the present time. However, if the end of a duration is <tt class="docutils literal"><span class="pre">Instant(&quot;now&quot;)</span></tt>, it will adopt a special value, (actually, <tt class="docutils literal"><span class="pre">-1</span></tt>), corresponding to a continuous present. When comparing times, nl will interpret that this special value is bigger than whatever it has stored as the present time, but smaller than that plus 1. This way, a fact that has a duration that ends in &#8220;now&#8221; will have a continuous present tense.</p>
-<p>There are ways, in rules, to terminate that continuous present, and so convert those sentences to a perfect tense. This is the non-monotonic trick we spoke about in the introduction to this documentation. The monotonicity of the whole system is however kept, since there is never a reduction in the number of sentences within the knowledge base. Further, this termination propagates to whatever consecuences we may have derived from our original sentence. We shall delve more on this issue after we introduce the way we use rules in nl.</p>
 </div>
 </div>
 
@@ -154,11 +92,6 @@
 <li><a class="reference internal" href="#">Time expressions</a><ul>
 <li><a class="reference internal" href="#instants">Instants</a></li>
 <li><a class="reference internal" href="#durations">Durations</a></li>
-<li><a class="reference internal" href="#time-and-language">Time and language</a></li>
-<li><a class="reference internal" href="#discrete-time">Discrete time</a></li>
-<li><a class="reference internal" href="#saying-now">1. Saying &#8220;now&#8221;</a></li>
-<li><a class="reference internal" href="#saying-several-things-now">2. Saying several things now</a></li>
-<li><a class="reference internal" href="#a-continuous-present-time">3. A continuous present time</a></li>
 </ul>
 </li>
 </ul>

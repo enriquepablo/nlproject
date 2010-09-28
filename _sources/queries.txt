@@ -8,7 +8,7 @@ There are two ways of performing queries with ``ask``. The fisrt and simplest is
 
 The second way is using variables in the asked facts. In this usage, we have to provide ``ask`` with a few unnamed arguments of 2 kinds. The first kind are the variables we want to extract, and the second kind are the facts in which these variables are used. In this case, ``ask`` will return a list of dictionaries with the names of the variables as keys and the matched objects as values. Let's see a few examples.
 
-We may want to ask when does John loves Yoko:
+We may want to ask when does John love Yoko:
 
   >>> kb.ask(Duration('D1'), Fact(john, Loves(who=yoko), Duration('D1')))
   [{'D1': 'from 3.0 till 1281517624.0'}]

@@ -71,12 +71,10 @@
 <blockquote>
 <ol class="arabic simple">
 <li>The first attribute is <tt class="docutils literal"><span class="pre">subject</span></tt>. This is assigned to a <tt class="docutils literal"><span class="pre">Noun</span></tt>, i.e., to <tt class="docutils literal"><span class="pre">Thing</span></tt> or to a class derived from it. So, for example, if we define a verb <tt class="docutils literal"><span class="pre">Loves</span></tt> and give it as subject <tt class="docutils literal"><span class="pre">HumanBeing</span></tt>, any fact that has <tt class="docutils literal"><span class="pre">Loves</span></tt> as a verb in its predicate, must have a <tt class="docutils literal"><span class="pre">HumanBeing</span></tt> instance as subject. If we don&#8217;t set the <tt class="docutils literal"><span class="pre">subject</span></tt> of a verb, it will default to <tt class="docutils literal"><span class="pre">Thing</span></tt>, so the subject in a fact with that verb could be anything.</li>
-<li>Then we can provide our class with an attribute called <tt class="docutils literal"><span class="pre">instantaneous</span></tt>, and assign to it a boolean value. If <tt class="xref docutils literal"><span class="pre">True</span></tt>, facts constructed upon the defined verb will have an instant as time expression, and if <tt class="xref docutils literal"><span class="pre">False</span></tt>, they will have an interval. If not assigned, <tt class="docutils literal"><span class="pre">instantaneous</span></tt> will default to <tt class="xref docutils literal"><span class="pre">True</span></tt>.</li>
 <li>Finally, we define the modifiers that the verb can take when used in a predicate. To do this, we assign a dictionary to a <tt class="docutils literal"><span class="pre">mods</span></tt> attribute on the class. The keys of this dictionary must be strings, and will correspond to the names of those modifiers. The values of this predicate must be classes, so that the corresponding named modifiers of the verb in a predicate will be objects of that class. If the <tt class="docutils literal"><span class="pre">mods</span></tt> attribute is not given, it will default to an empty dictionary.</li>
 </ol>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Loves</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">HumanBeing</span>
-<span class="gp">... </span>    <span class="n">instantaneous</span> <span class="o">=</span> <span class="bp">False</span>
 <span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;who&#39;</span><span class="p">:</span> <span class="n">HumanBeing</span><span class="p">}</span>
 </pre></div>
 </div>
@@ -100,7 +98,6 @@
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Loves2</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">HumanBeing</span>
-<span class="gp">... </span>    <span class="n">instantaneous</span> <span class="o">=</span> <span class="bp">False</span>
 <span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;who&#39;</span><span class="p">:</span> <span class="n">HumanBeing</span><span class="p">,</span>
 <span class="gp">... </span>            <span class="s">&#39;how_much&#39;</span><span class="p">:</span> <span class="n">Amount</span><span class="p">}</span>
 </pre></div>
@@ -120,7 +117,7 @@
 <span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;how_much&#39;</span><span class="p">:</span> <span class="n">Amount</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>In this case, we would have a verb, <tt class="docutils literal"><span class="pre">Loves3</span></tt>, that has virtually the same form as <tt class="docutils literal"><span class="pre">Loves2</span></tt>, and with it we might build predicates exactly with the same form as the above <tt class="docutils literal"><span class="pre">loves2_anne</span></tt> or <tt class="docutils literal"><span class="pre">loves_a_lot</span></tt>. Thus, the modifiers that we may give to a verb to produce a predicate are not just given by the <tt class="docutils literal"><span class="pre">mods</span></tt> dictionary of its class, but by the union of all the <tt class="docutils literal"><span class="pre">mods</span></tt> dictionaries of its class, and all classes in its class&#8217; <tt class="docutils literal"><span class="pre">__bases__</span></tt>.</p>
+<p>In this case, we would have a verb, <tt class="docutils literal"><span class="pre">Loves3</span></tt>, that has virtually the same form as <tt class="docutils literal"><span class="pre">Loves2</span></tt>, and with it we might build predicates exactly with the same form as the above <tt class="docutils literal"><span class="pre">loves2_anne</span></tt> or <tt class="docutils literal"><span class="pre">loves_a_lot</span></tt>. Thus, the modifiers that we may give to a verb to produce a predicate are not just given by the <tt class="docutils literal"><span class="pre">mods</span></tt> dictionary of its class, but by the union of all the <tt class="docutils literal"><span class="pre">mods</span></tt> dictionaries of its class, and all classes in its class&#8217; mro.</p>
 </div>
 <div class="section" id="classes-of-modifiers">
 <h2>Classes of modifiers<a class="headerlink" href="#classes-of-modifiers" title="Permalink to this headline">¶</a></h2>
@@ -139,7 +136,6 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">Number</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Runs</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">HumanBeing</span>
-<span class="gp">... </span>    <span class="n">instantaneous</span> <span class="o">=</span> <span class="bp">False</span>
 <span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;v&#39;</span><span class="p">:</span> <span class="n">Number</span><span class="p">}</span>
 </pre></div>
 </div>

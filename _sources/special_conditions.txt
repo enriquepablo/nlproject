@@ -124,7 +124,6 @@ With this, we may, for example, build a rule that states that, if two people liv
 
   >>> class Lives(Exists):
   ...     subject = HumanBeing
-  ...     instantaneous = False
   ...     mods = {'where': Place}
 
   >>> class Meets(Exists):
@@ -194,46 +193,6 @@ Subwords
 --------
 
 We can use ``Subword`` to test a "subset relationship" between nouns or verbs. For example, we might have a condition like ``Subword(Noun('N1'), HumanBeing)`` to test whether a certain noun is a "subset" or subword of ``HumanBeing``. As I have been doing in previous sections dealing with ``Noun`` and ``Verb``, I will defer fully exemplifying this question until a later section.
-
-
-Finalization of the continuous present tense
---------------------------------------------
-
-We can use, as a consecuence in rules, an expression that will terminate the continuous present tense of facts whose duration time expressions end in "now". To do so, we import ``Finish`` from ``nl``:
-
-  >>> from nl import Finish
-
-Now, suppose that we want to assert that, if someone loves someone else, and the lover dies, he stops loving her.
-
-  >>> class Dies(Exists):
-  ...     subject = HumanBeing
-
-  >>> kb.tell(Rule([
-  ...     Fact(HumanBeing('H1'), Loves(who=HumanBeing('H2')), Duration('D1')),
-  ...     Fact(HumanBeing('H1'), Dies(), Instant('I1')),
-  ...     During('I1', 'D1'),
-  ...     ],[
-  ...     Finish('D1', 'I1'),
-  ... ]))
-
-Now, if we have that John loves Yoko from 3 onwards, and John dies now, John's love for Yoko terminates now:
-
-  >>> kb.tell(Fact(john, Loves(who=yoko), Duration(start=3, end="now")))
-  >>> kb.tell(Fact(john, Dies(), Instant("now")))
-  >>> kb.extend()
-  1
-
-Now, to make time advace within nl's knowledge base, we have to execute the function ``now``.
-
-  >>> from nl import now
-  >>> now()
-  1281517957.0
-
-  >>> kb.ask(Fact(john, Loves(who=yoko), Instant(5)))
-  True
-
-  >>> kb.ask(Fact(john, Loves(who=yoko), Instant("now")))
-  False
 
 
 .. _Python: http://www.python.org/

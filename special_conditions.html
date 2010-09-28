@@ -198,7 +198,6 @@
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Lives</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">HumanBeing</span>
-<span class="gp">... </span>    <span class="n">instantaneous</span> <span class="o">=</span> <span class="bp">False</span>
 <span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;where&#39;</span><span class="p">:</span> <span class="n">Place</span><span class="p">}</span>
 </pre></div>
 </div>
@@ -269,52 +268,6 @@
 <h2>Subwords<a class="headerlink" href="#subwords" title="Permalink to this headline">¶</a></h2>
 <p>We can use <tt class="docutils literal"><span class="pre">Subword</span></tt> to test a &#8220;subset relationship&#8221; between nouns or verbs. For example, we might have a condition like <tt class="docutils literal"><span class="pre">Subword(Noun('N1'),</span> <span class="pre">HumanBeing)</span></tt> to test whether a certain noun is a &#8220;subset&#8221; or subword of <tt class="docutils literal"><span class="pre">HumanBeing</span></tt>. As I have been doing in previous sections dealing with <tt class="docutils literal"><span class="pre">Noun</span></tt> and <tt class="docutils literal"><span class="pre">Verb</span></tt>, I will defer fully exemplifying this question until a later section.</p>
 </div>
-<div class="section" id="finalization-of-the-continuous-present-tense">
-<h2>Finalization of the continuous present tense<a class="headerlink" href="#finalization-of-the-continuous-present-tense" title="Permalink to this headline">¶</a></h2>
-<p>We can use, as a consecuence in rules, an expression that will terminate the continuous present tense of facts whose duration time expressions end in &#8220;now&#8221;. To do so, we import <tt class="docutils literal"><span class="pre">Finish</span></tt> from <tt class="docutils literal"><span class="pre">nl</span></tt>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">Finish</span>
-</pre></div>
-</div>
-<p>Now, suppose that we want to assert that, if someone loves someone else, and the lover dies, he stops loving her.</p>
-<blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Dies</span><span class="p">(</span><span class="n">Exists</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="n">subject</span> <span class="o">=</span> <span class="n">HumanBeing</span>
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Rule</span><span class="p">([</span>
-<span class="gp">... </span>    <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H2&#39;</span><span class="p">)),</span> <span class="n">Duration</span><span class="p">(</span><span class="s">&#39;D1&#39;</span><span class="p">)),</span>
-<span class="gp">... </span>    <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Dies</span><span class="p">(),</span> <span class="n">Instant</span><span class="p">(</span><span class="s">&#39;I1&#39;</span><span class="p">)),</span>
-<span class="gp">... </span>    <span class="n">During</span><span class="p">(</span><span class="s">&#39;I1&#39;</span><span class="p">,</span> <span class="s">&#39;D1&#39;</span><span class="p">),</span>
-<span class="gp">... </span>    <span class="p">],[</span>
-<span class="gp">... </span>    <span class="n">Finish</span><span class="p">(</span><span class="s">&#39;D1&#39;</span><span class="p">,</span> <span class="s">&#39;I1&#39;</span><span class="p">),</span>
-<span class="gp">... </span><span class="p">]))</span>
-</pre></div>
-</div>
-</blockquote>
-<p>Now, if we have that John loves Yoko from 3 onwards, and John dies now, John&#8217;s love for Yoko terminates now:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">yoko</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot;now&quot;</span><span class="p">)))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Dies</span><span class="p">(),</span> <span class="n">Instant</span><span class="p">(</span><span class="s">&quot;now&quot;</span><span class="p">)))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">extend</span><span class="p">()</span>
-<span class="go">1</span>
-</pre></div>
-</div>
-<p>Now, to make time advace within nl&#8217;s knowledge base, we have to execute the function <tt class="docutils literal"><span class="pre">now</span></tt>.</p>
-<blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">now</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">now</span><span class="p">()</span>
-<span class="go">1281517957.0</span>
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">yoko</span><span class="p">),</span> <span class="n">Instant</span><span class="p">(</span><span class="mi">5</span><span class="p">)))</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">yoko</span><span class="p">),</span> <span class="n">Instant</span><span class="p">(</span><span class="s">&quot;now&quot;</span><span class="p">)))</span>
-<span class="go">False</span>
-</pre></div>
-</div>
-</blockquote>
-</div>
 </div>
 
 
@@ -330,7 +283,6 @@
 <li><a class="reference internal" href="#negation-by-failure-unknown">Negation by failure (Unknown)</a></li>
 <li><a class="reference internal" href="#conjunction-and-disjunction">Conjunction and Disjunction</a></li>
 <li><a class="reference internal" href="#subwords">Subwords</a></li>
-<li><a class="reference internal" href="#finalization-of-the-continuous-present-tense">Finalization of the continuous present tense</a></li>
 </ul>
 </li>
 </ul>
