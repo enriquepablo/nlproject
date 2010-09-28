@@ -57,7 +57,6 @@ class Has(Exists):
     a thing can have other things in a certain context
     """
     subject = Thing
-    instantaneous = False
     mods = {'what': Thing,
             'where': Context}
 
@@ -106,7 +105,6 @@ class Located(Exists):
     a thing can be located in some context
     """
     subject = Thing
-    instantaneous = False
     mods = {'where': Context}
 
 class Status(Thing):
@@ -162,7 +160,6 @@ class Required(Exists):
     an abstract action over a content
     """
     subject = Permission
-    instantaneous = False
     mods = {'to': Verb,
             'over': Status}
 
@@ -229,13 +226,11 @@ class Assigned(Exists):
     an abstract action over a content
     """
     subject = Workflow
-    instantaneous = False
     mods = {'to': Noun,
             'where': Context}
 
 class HasTransition(Exists):
     subject = Workflow
-    instantaneous = False
     mods = {'start': Status,
             'end': Status,
             'by': Verb} #WfAction
@@ -313,7 +308,6 @@ class Owns(Exists):
     a person can own some content
     """
     subject = Person
-    instantaneous = False
     mods = {'what': Content}
 
 def r_owner_can_action(action):
@@ -361,7 +355,6 @@ class ActionStep(Thing): pass
 
 class Contains(Exists):
     subject = Verb
-    instantaneous = False
     mods = {'what': Thing,
             'pos': Number}
 

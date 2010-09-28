@@ -15,7 +15,6 @@ class Can(Exists):
     and can take as 'what' modifier a verb prhase
     """
     subject = Person
-    instantaneous = False
     mods = {'what': Exists}
 
 
@@ -25,7 +24,6 @@ class Must(Exists):
     and can take as 'what' modifier a verb prhase
     """
     subject = Person
-    instantaneous = False
     mods = {'what': Exists}
 
 

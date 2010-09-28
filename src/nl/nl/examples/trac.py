@@ -37,7 +37,6 @@ class Works(Exists):
     A person can work on some content: Error, feature, component
     """
     subject = Person
-    instantaneous = False
     mods = {'on': Content}
 
 
