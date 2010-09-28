@@ -18,12 +18,10 @@ Defining verbs, like defining nouns, affects the knowledge base, through the met
 The definition of verbs is a little more complex than the definition of common nouns. There are three class attributes we may want to define for our verbs (all three are optional). These attributes set limits to the subjects and time expressions of facts in which instances of our verbs take part (as predicates), and to the modifiers that they can take.
 
  #. The first attribute is ``subject``. This is assigned to a ``Noun``, i.e., to ``Thing`` or to a class derived from it. So, for example, if we define a verb ``Loves`` and give it as subject ``HumanBeing``, any fact that has ``Loves`` as a verb in its predicate, must have a ``HumanBeing`` instance as subject. If we don't set the ``subject`` of a verb, it will default to ``Thing``, so the subject in a fact with that verb could be anything.
- #. Then we can provide our class with an attribute called ``instantaneous``, and assign to it a boolean value. If ``True``, facts constructed upon the defined verb will have an instant as time expression, and if ``False``, they will have an interval. If not assigned, ``instantaneous`` will default to ``True``.
  #. Finally, we define the modifiers that the verb can take when used in a predicate. To do this, we assign a dictionary to a ``mods`` attribute on the class. The keys of this dictionary must be strings, and will correspond to the names of those modifiers. The values of this predicate must be classes, so that the corresponding named modifiers of the verb in a predicate will be objects of that class. If the ``mods`` attribute is not given, it will default to an empty dictionary.
 
   >>> class Loves(Exists):
   ...     subject = HumanBeing
-  ...     instantaneous = False
   ...     mods = {'who': HumanBeing}
 
 Predicates
@@ -45,7 +43,6 @@ A verb can have more than one item in the ``mods`` dictionary. For example, we m
   
   >>> class Loves2(Exists):
   ...     subject = HumanBeing
-  ...     instantaneous = False
   ...     mods = {'who': HumanBeing,
   ...             'how_much': Amount}
 
@@ -63,7 +60,7 @@ As is also the case with things, we are not forced to extend ``Exists`` directly
   >>> class Loves3(Loves):
   ...     mods = {'how_much': Amount}
 
-In this case, we would have a verb, ``Loves3``, that has virtually the same form as ``Loves2``, and with it we might build predicates exactly with the same form as the above ``loves2_anne`` or ``loves_a_lot``. Thus, the modifiers that we may give to a verb to produce a predicate are not just given by the ``mods`` dictionary of its class, but by the union of all the ``mods`` dictionaries of its class, and all classes in its class' ``__bases__``.
+In this case, we would have a verb, ``Loves3``, that has virtually the same form as ``Loves2``, and with it we might build predicates exactly with the same form as the above ``loves2_anne`` or ``loves_a_lot``. Thus, the modifiers that we may give to a verb to produce a predicate are not just given by the ``mods`` dictionary of its class, but by the union of all the ``mods`` dictionaries of its class, and all classes in its class' mro.
 
 Classes of modifiers
 --------------------
@@ -83,7 +80,6 @@ Another important class of modifier we may provide a verb with are numbers. Inst
   >>> from nl import Number
   >>> class Runs(Exists):
   ...     subject = HumanBeing
-  ...     instantaneous = False
   ...     mods = {'v': Number}
 
   >>> r1 = Runs(v=1)

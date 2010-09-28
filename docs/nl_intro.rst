@@ -45,7 +45,7 @@ With nl we can build 2 classes of sentences: copulative (copulas), and non-copul
  
 __ http://www.coverbrowser.com/image/tarzan-of-the-apes-1972/1-1.jpg
 
-A complete (and simple) example of a "sort of English" sentence that could be expressed as a *fact* in nl might be "Tarzan go from London to Paris between <date1> and <date2>". Another example, using an instant instead of a duration as time expression, might be "Tarzan kill what that_lion at <date1>" (here, we have to insert "what" as the name of the "that_lion" -the *proper name* of a lion- modifier for "kill": all verb modifiers need a name).
+A complete (and simple) example of a "sort of English" sentence that could be expressed as a *fact* in nl might be "Tarzan go from London to Paris between <date1> and <date2>".
 
 In principle, we make no distiction among verbs or their kinds of modifiers. Transitive and intransitive, direct or indirect objects, kinds of prepositions, etc., are treated all the same in the definition of the verbs, and are only differentiated through the rules in which they take part.
 
@@ -67,6 +67,7 @@ Contents
    time
    facts
    rules
+   time2
    arithmetics
    special_conditions
    queries
@@ -80,7 +81,7 @@ Contents
 
 .. [#]  The name nl stands for "natural logic", and the aim of nl is to be able to program in a way that is as close as possible to the way we use English (or any other natural langage) to produce science. So, in these docs, I will be continuously refering to the English language to describe the usage of nl.
 
-.. [#]  Here we talk about classical negation, where a sentence and its negated form constitute a contradiction. However, we can also, in the conditions of rules or in the queries, use negation by failure, i.e. ask whether a given sentence is or is not known (is present in the knowledge base).
+.. [#]  Here we obviously talk about classical negation, where a sentence and its negated form constitute a contradiction. However, we can also, in the conditions of rules or in the queries, use negation by failure, i.e. ask whether a given sentence is or is not known (is present in the knowledge base).
 
 .. _CLIPS: http://clipsrules.sourceforge.net/
 
