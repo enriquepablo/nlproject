@@ -10,7 +10,7 @@ nl provides a primitive common noun, ``Thing``. To define further common nouns, 
   >>> from nl import Thing
   >>> class HumanBeing(Thing): pass
 
-Such a class definition would be semantically equivalent to asserting, in English, that human beings are things. Note that it is being asserted, i.e., something is being pushed into nl's knowledge base. This is due to the fact that ``Thing`` has a metaclass (``Noun``) that, among other things, touches the knowledge base in its ``__init__`` method.
+Such a class definition would be morphologically (and, thus, possibly semantically) equivalent to asserting, in English, that human beings are things. Note that it is being asserted, i.e., something is being pushed into nl's knowledge base. This is due to the fact that ``Thing`` has a metaclass (``Noun``) that, among other things, touches the knowledge base in its ``__init__`` method.
 
   >>> from nl import Noun
   >>> type(Thing) is Noun
@@ -34,7 +34,7 @@ Copulative sentences with proper names as subjects are built by instantiating ``
 
 The string has to be a legal Python_ name: its characters must belong to the ASCII set, it cannot contain spaces, dashes, slashes, etc.
 
-It is important to note that the instantiation and assignment above does not touch the knowledge base. It just gives us an object that has some internal (private in the loose pythonic sense of "private") methods that allow nl to manipulate its knowledge base. To actually assert that Mary is a woman, we first have to import ``kb`` from ``nl``:
+Note that the instantiation and assignment above does not touch the knowledge base. It just gives us an object that has some internal (private in the loose pythonic sense of "private") methods that allow nl to manipulate its knowledge base. To actually assert that Mary is a woman, we first have to import ``kb`` from ``nl``:
 
   >>> from nl import kb
 

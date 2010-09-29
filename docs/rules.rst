@@ -17,7 +17,11 @@ As always, we have to ``tell`` our rule into the kb:
 
   >>> kb.tell(r1)
 
-Having the condition from the previous section on facts, we can ask the kb about the consecuence:
+Now, having that:
+
+  >>> kb.tell(Fact(john, Loves(who=yoko)))
+
+We can ask the kb about the consecuence:
 
   >>> kb.ask(Fact(yoko, Loves(who=john)))
   False
@@ -39,7 +43,7 @@ The main difference between standalone sentences and sentences in rules is that 
 
 Variables are given by a string, and are recognized by their form: A variable starts with an upper case alphabetical character, followed by any number of word characters, and ends in one or more digits. The regular expression pattern that identifies them is ``r'^[A-Z]\w*\d+$'``.
 
-Next, we shall see different types of variables: thing variables, predicate variables, noun variables, verb variables. However, it is important to note that they all are actually first order logical variables. They are only different in Python_; in CLIPS_, they are all the same, i.e. CLIPS_ variables, and the classification available in Python_ translates into the underlying CLIPS_ as a certain binding. Thus, nl's typification of variables is just synctacic sugar. For example, if we have a thing variable such as ``Woman('W1')``, the underlying CLIPS_ construct would be something with the form "for all ?W1, where ?W1 is a woman...".
+Next, we shall see different types of variables: thing variables, predicate variables, noun variables, verb variables. However, it is important to note that they all are actually first order logical variables. They are only different in Python_; in CLIPS_, they are all the same, i.e. CLIPS_ variables, and the classification available in Python_ translates into the underlying CLIPS_ as a certain constraint. Thus, nl's typification of variables is just synctacic sugar. For example, if we have a thing variable such as ``Woman('W1')``, the underlying CLIPS_ construct would be something with the form "for all ?W1, where ?W1 is a woman...".
 
 **Thing variables.**
 
@@ -57,7 +61,7 @@ With that rule, we will have exactly the same consecuence as with rule ``r1``, o
   >>> kb.tell(Fact(john, Loves(who=Woman('linda'))))
   >>> kb.extend()
   1
-  >>> kb.ask(Fact(Woman('linda'), Loves(who=HumanBeing('john'))))
+  >>> kb.ask(Fact(Woman('linda'), Loves(who=john)))
   True
 
 We can of course use more than one variable withn a rule. So, further generalizing, we might express a rule that simply states that love for a woman is always corresponded:
@@ -75,7 +79,7 @@ We can of course use more than one variable withn a rule. So, further generalizi
   >>> kb.ask(Fact(yoko, Loves(who=HumanBeing('paul'))))
   True
 
-We may use aritmetic and time variables in just the same way we use thing variables, and have constructs such as ``Number('N1')``, ``Instant('I1')``, or ``Duration('D1')``.
+We may use aritmetic and time variables in just the same way we use thing variables, and have constructs such as ``Number('N1')``, ``Instant('I1')``, or ``Duration('D1')``. We shall look at these in more detail in later sections.
 
 **Predicate variables**
 
@@ -91,10 +95,12 @@ In this sense, suppose we want to assert that John does whatever he wants to do:
 
 With this rule in place, we would have, for example:
 
-  >>> kb.tell(Fact(john, Wants(to=Loves(who=yoko))))
+  >>> cynthia = Woman('cynthia')
+  >>> kb.tell(cynthia)
+  >>> kb.tell(Fact(john, Wants(to=Loves(who=cynthia))))
   >>> kb.extend()
   1
-  >>> kb.ask(Fact(john, Loves(who=yoko)))
+  >>> kb.ask(Fact(john, Loves(who=cynthia)))
   True
 
 **Word (Noun and Verb) variables**
