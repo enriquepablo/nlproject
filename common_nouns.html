@@ -62,7 +62,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">HumanBeing</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span> <span class="k">pass</span>
 </pre></div>
 </div>
-<p>Such a class definition would be semantically equivalent to asserting, in English, that human beings are things. Note that it is being asserted, i.e., something is being pushed into nl&#8217;s knowledge base. This is due to the fact that <tt class="docutils literal"><span class="pre">Thing</span></tt> has a metaclass (<tt class="docutils literal"><span class="pre">Noun</span></tt>) that, among other things, touches the knowledge base in its <tt class="docutils literal"><span class="pre">__init__</span></tt> method.</p>
+<p>Such a class definition would be morphologically (and, thus, possibly semantically) equivalent to asserting, in English, that human beings are things. Note that it is being asserted, i.e., something is being pushed into nl&#8217;s knowledge base. This is due to the fact that <tt class="docutils literal"><span class="pre">Thing</span></tt> has a metaclass (<tt class="docutils literal"><span class="pre">Noun</span></tt>) that, among other things, touches the knowledge base in its <tt class="docutils literal"><span class="pre">__init__</span></tt> method.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">Noun</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">Thing</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Noun</span>
 <span class="go">True</span>
@@ -83,7 +83,7 @@
 </pre></div>
 </div>
 <p>The string has to be a legal <a class="reference external" href="http://www.python.org/">Python</a> name: its characters must belong to the ASCII set, it cannot contain spaces, dashes, slashes, etc.</p>
-<p>It is important to note that the instantiation and assignment above does not touch the knowledge base. It just gives us an object that has some internal (private in the loose pythonic sense of &#8220;private&#8221;) methods that allow nl to manipulate its knowledge base. To actually assert that Mary is a woman, we first have to import <tt class="docutils literal"><span class="pre">kb</span></tt> from <tt class="docutils literal"><span class="pre">nl</span></tt>:</p>
+<p>Note that the instantiation and assignment above does not touch the knowledge base. It just gives us an object that has some internal (private in the loose pythonic sense of &#8220;private&#8221;) methods that allow nl to manipulate its knowledge base. To actually assert that Mary is a woman, we first have to import <tt class="docutils literal"><span class="pre">kb</span></tt> from <tt class="docutils literal"><span class="pre">nl</span></tt>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">kb</span>
 </pre></div>
 </div>

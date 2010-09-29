@@ -7,22 +7,15 @@ We have already seen, in the section speaking about predicates, that we can use 
   >>> n = Number('(+ 2 3)')
   >>> n2 = Number('(+ 2 (* 5 6))')
 
-We can't use this as a calculator, though; after all, this is Python_, and Python_ is in itself enough of a calculator. So, if we resolve ``n`` to a string, we will get the actual operation:
-
-  >>> str(n)
-  '(+ 2.0 3.0)'
-
-As you can see, I am at the moment using floats in CLIPS_, which I tend to think is a mistake, so for the moment I am leaving floats out of the official API.
-
 Arithmetics in nl is intended to be used whithin rules. So, for example, using the ``Runs`` verb defined in the section on verbs and predicates, and defining a ``Displaces`` verb defined as follows, we might have a rule such as the following:
 
   >>> class Displaces(Exists):
   ...     subject = HumanBeing
   ...     mods = {'d': Number}
 
-  >>> r4 = Rule([Fact(HumanBeing('H1'), Runs(v='V1'), Duration(start='T1', end='T2')),
+  >>> r4 = Rule([Fact(HumanBeing('H1'), Runs(v='V1'), Duration('D1')),
   ...      ],[
-  ...      Fact(HumanBeing('H1'), Displaces(d='(* V1 (- T2 T1))'), Instant('T2'))])
+  ...      Fact(HumanBeing('H1'), Displaces(d='(* V1 (- T2 T1))'), Duration('D1'))])
   >>> kb.tell(r4)
 
 Now we can do something like this:
