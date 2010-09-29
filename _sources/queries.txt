@@ -23,7 +23,7 @@ Also, who ever loves Yoko and when:
   >>> kb.ask(Duration('D1'), HumanBeing('H1'), Fact(HumanBeing('H1'), Loves(who=yoko), Duration('D1')))
   [{'H1': 'john', 'D1': 'from 3.0 till 1281517624.0'}]
 
-If there are more people who love Yoko, the answer will be a list of dictionaries:
+If there are more people who love Yoko, there will be more dictionaries in the list:
 
   >>> kb.tell(Fact(sean, Loves(who=yoko), Duration(start=2, end=5)))
 

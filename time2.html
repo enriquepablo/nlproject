@@ -92,15 +92,15 @@
 <span class="go">False</span>
 </pre></div>
 </div>
-<p>Every <tt class="docutils literal"><span class="pre">Instant(&quot;now&quot;)</span></tt> between consecutive calls to <tt class="docutils literal"><span class="pre">now()</span></tt> coincide, have the same meaning, and correspond to the same internal CLIPS construct.</p>
+<p>Every <tt class="docutils literal"><span class="pre">Instant(&quot;now&quot;)</span></tt> between consecutive calls to <tt class="docutils literal"><span class="pre">now()</span></tt> coincide, have the same meaning, and correspond to the same internal CLIPS construct. This means that nl defaults gracefully if you choose to not use its &#8220;time facilities&#8221;.</p>
 <p>There are 2 ways of using <tt class="docutils literal"><span class="pre">now()</span></tt>, one that establishes what we will call a &#8220;fictional time&#8221;, and another that establishes &#8220;historical time&#8221;.</p>
 <blockquote>
 <strong>Fictional time</strong></blockquote>
-<p>To establish fictional time, we call <tt class="docutils literal"><span class="pre">now()</span></tt> with an integer argument. That integer is what is stored by nl as &#8220;now&#8221; until a subsequent call to <tt class="docutils literal"><span class="pre">now()</span></tt> with another integer (not necessarily consecutive, but bigger). We are then free to give any interpretation to the difference between consecutive instants: seconds, years, whatever.</p>
+<p>To establish fictional time, we call <tt class="docutils literal"><span class="pre">now(n)</span></tt> with an integer argument. That integer is what is stored by nl as &#8220;now&#8221; until a subsequent call to <tt class="docutils literal"><span class="pre">now(n)</span></tt> with another integer (not necessarily consecutive, but bigger). We are then free to give any interpretation to the difference between consecutive instants: seconds, years, whatever.</p>
 <blockquote>
 <strong>Historical time</strong></blockquote>
 <p>To establish historical time, we call <tt class="docutils literal"><span class="pre">now()</span></tt> with no arguments. In this case, nl makes a call to the <tt class="docutils literal"><span class="pre">time()</span></tt> function of the <tt class="docutils literal"><span class="pre">time</span></tt> module from the standard library, converts the result to an integer, and stores that as the present time. This means that, in principle, <tt class="docutils literal"><span class="pre">Instant(0)</span></tt> corresponds to the start of the year 1970, and the difference between 2 consecutive instants corresponds to a second. We may change this, however, by calling 2 functions at the beginning of the discourse: <tt class="docutils literal"><span class="pre">time_granularity(gr)</span></tt> and <tt class="docutils literal"><span class="pre">start_of_time(start)</span></tt>.</p>
-<p><tt class="docutils literal"><span class="pre">time_granularity(gr)</span></tt> is called with a <tt class="docutils literal"><span class="pre">float</span></tt> argument that multiplies the default granularity of historical time (seconds). So, to establish that the time elapsed between 2 consecutive instants is a milisecond, we call it with <tt class="docutils literal"><span class="pre">1000.0</span></tt>, and to establish that it is a minute, we call it with <tt class="docutils literal"><span class="pre">1.0/60.0</span></tt>.</p>
+<p><tt class="docutils literal"><span class="pre">time_granularity(gr)</span></tt> is called with a <tt class="docutils literal"><span class="pre">float</span></tt> argument that divides the default granularity of historical time (seconds). So, to establish that the time elapsed between 2 consecutive instants is a milisecond, we call it with <tt class="docutils literal"><span class="pre">1000.0</span></tt>, and to establish that it is a minute, we call it with <tt class="docutils literal"><span class="pre">1.0/60.0</span></tt>.</p>
 <p><tt class="docutils literal"><span class="pre">start_of_time(start)</span></tt> is called with an integer that is interpreted as the difference (in whatever units of time we have established with <tt class="docutils literal"><span class="pre">time_granularity(gr)</span></tt>) between our intended start of time and the beginning of 1970. So, to measure time in milliseconds and establish the start of time one second after the beginning of 1970, we would do:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">time_granularity</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">start_of_time</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
@@ -120,7 +120,7 @@
 <div class="section" id="finalization-of-the-continuous-present-tense">
 <h2>Finalization of the continuous present tense<a class="headerlink" href="#finalization-of-the-continuous-present-tense" title="Permalink to this headline">¶</a></h2>
 <p>There are ways, in rules, to terminate that continuous present, and so convert those sentences to a perfect tense. This is the non-monotonic trick we spoke about in the introduction to this documentation. The monotonicity of the whole system is however kept, since there is never a reduction in the number of sentences within the knowledge base. Further, this termination propagates to whatever consecuences we may have derived from our original sentence.</p>
-<p>To do so, we can use, as a consecuence in rules, an expression built with <tt class="docutils literal"><span class="pre">Finish</span></tt>:</p>
+<p>To do so, we can use, as a consecuence in rules, an expression built with <tt class="docutils literal"><span class="pre">Finish</span></tt>, that accepts 2 arguments, a duration, and an instant within that duration, and truncates the duration so that it ends in the provided instant:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">Finish</span>
 </pre></div>
 </div>
@@ -147,7 +147,7 @@
 <span class="go">1</span>
 </pre></div>
 </div>
-<p>Now, to make time advace within nl&#8217;s knowledge base, we have to execute the function <tt class="docutils literal"><span class="pre">now</span></tt>.</p>
+<p>Now, to make time advace within nl&#8217;s knowledge base, we have to execute the function <tt class="docutils literal"><span class="pre">now</span></tt>, and we can see that:</p>
 <blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">now</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">now</span><span class="p">()</span>
