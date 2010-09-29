@@ -2,7 +2,7 @@
 Example: A content management system
 ====================================
 
-In this section we will try to develop a more complex ontology that might be used as the metadata backend for a real life CMS. Such a CMS would basically consist of the following parts:
+In this section we will try to develop a more complex ontology that might be used as the metadata backend for a content management system (CMS). Such a CMS would basically consist of the following parts:
 
  #. A web application: mainly an HTTP request dispatcher and a system of views that the dispatcher calls to get responses for the requests;
  #. A database where actual content (text, images, etc.) is stored;
@@ -145,7 +145,7 @@ Next, we are going to give meaning to workflow actions. For that, we are going t
 
   >>> class Assigned(Exists):
   >>>     subject = Workflow
-  ...     mods = {'to': Noun,
+  ...     mods = {'to': Noun, #Content
   ...             'where': Context}
 
   >>> class HasTransition(Exists):

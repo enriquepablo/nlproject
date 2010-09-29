@@ -43,19 +43,19 @@ We want to be able to say several things at the same time. We want to be able to
   >>> str(i1) == str(i3)
   False
 
-Every ``Instant("now")`` between consecutive calls to ``now()`` coincide, have the same meaning, and correspond to the same internal CLIPS construct.
+Every ``Instant("now")`` between consecutive calls to ``now()`` coincide, have the same meaning, and correspond to the same internal CLIPS construct. This means that nl defaults gracefully if you choose to not use its "time facilities".
 
 There are 2 ways of using ``now()``, one that establishes what we will call a "fictional time", and another that establishes "historical time".
 
  **Fictional time**
 
-To establish fictional time, we call ``now()`` with an integer argument. That integer is what is stored by nl as "now" until a subsequent call to ``now()`` with another integer (not necessarily consecutive, but bigger). We are then free to give any interpretation to the difference between consecutive instants: seconds, years, whatever.
+To establish fictional time, we call ``now(n)`` with an integer argument. That integer is what is stored by nl as "now" until a subsequent call to ``now(n)`` with another integer (not necessarily consecutive, but bigger). We are then free to give any interpretation to the difference between consecutive instants: seconds, years, whatever.
 
  **Historical time**
 
 To establish historical time, we call ``now()`` with no arguments. In this case, nl makes a call to the ``time()`` function of the ``time`` module from the standard library, converts the result to an integer, and stores that as the present time. This means that, in principle, ``Instant(0)`` corresponds to the start of the year 1970, and the difference between 2 consecutive instants corresponds to a second. We may change this, however, by calling 2 functions at the beginning of the discourse: ``time_granularity(gr)`` and ``start_of_time(start)``.
 
-``time_granularity(gr)`` is called with a ``float`` argument that multiplies the default granularity of historical time (seconds). So, to establish that the time elapsed between 2 consecutive instants is a milisecond, we call it with ``1000.0``, and to establish that it is a minute, we call it with ``1.0/60.0``.
+``time_granularity(gr)`` is called with a ``float`` argument that divides the default granularity of historical time (seconds). So, to establish that the time elapsed between 2 consecutive instants is a milisecond, we call it with ``1000.0``, and to establish that it is a minute, we call it with ``1.0/60.0``.
 
 ``start_of_time(start)`` is called with an integer that is interpreted as the difference (in whatever units of time we have established with ``time_granularity(gr)``) between our intended start of time and the beginning of 1970. So, to measure time in milliseconds and establish the start of time one second after the beginning of 1970, we would do:
 
@@ -79,7 +79,7 @@ Finalization of the continuous present tense
 
 There are ways, in rules, to terminate that continuous present, and so convert those sentences to a perfect tense. This is the non-monotonic trick we spoke about in the introduction to this documentation. The monotonicity of the whole system is however kept, since there is never a reduction in the number of sentences within the knowledge base. Further, this termination propagates to whatever consecuences we may have derived from our original sentence.
 
-To do so, we can use, as a consecuence in rules, an expression built with ``Finish``:
+To do so, we can use, as a consecuence in rules, an expression built with ``Finish``, that accepts 2 arguments, a duration, and an instant within that duration, and truncates the duration so that it ends in the provided instant:
 
   >>> from nl import Finish
 
@@ -103,7 +103,7 @@ Now, if we have that John loves Yoko from 3 onwards, and John dies now, John's l
   >>> kb.extend()
   1
 
-Now, to make time advace within nl's knowledge base, we have to execute the function ``now``.
+Now, to make time advace within nl's knowledge base, we have to execute the function ``now``, and we can see that:
 
   >>> from nl import now
   >>> now()

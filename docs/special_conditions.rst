@@ -15,7 +15,7 @@ We can test whether an instant lies between a given duration or list of duration
 
   >>> from nl import During
 
-To exemplify this feature, we will define a simple "modal" ontology, using the ``Wants`` verb (defined in the section on verbs and predicates) and the ``Can`` verb defined in the section on arithmetics. This ontology will be given by the additional rule, that translated into English, would assert that, if someone wants to do something at a given moment, and can do it in a duration that covers that moment, (s)he just does it (at that moment):
+To exemplify this feature, we will define a simple "modal" ontology, using the ``Wants`` verb (defined in the section on verbs and predicates) and the ``Can`` verb defined in the section on arithmetics. This ontology will be given by the following rule, that translated into English, would assert that, if someone wants to do something at a given moment, and can do it in a duration that covers that moment, (s)he just does it (at that moment):
 
   >>> r6 = Rule([
   ...   Fact(HumanBeing('H1'), Wants(to=Exists('E1')), Instant('I1')),
