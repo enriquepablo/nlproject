@@ -7,7 +7,9 @@ As we have already seen with ``Arith`` in the section on arithmetics, there are 
 Time conditions
 ---------------
 
-There are in nl a number of predicates that test certain relationships among *time expressions*. For example, whether an instant is whithin a duration, or whether 2 or more durations intersect.
+There are in nl a number of predicates that test certain relationships among *time expressions*. The reason we don't just use arithmetic conditions to test these relations is the special treatment of the present time when using time.
+
+For example, we can test whether an instant is whithin a duration, or whether 2 or more durations intersect.
 
 **During**
 
