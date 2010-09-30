@@ -58,7 +58,8 @@
 <p>As we have already seen with <tt class="docutils literal"><span class="pre">Arith</span></tt> in the section on arithmetics, there are some special predicates that we can only use as conditions in rules. Here we shall go over them, and will also mention a special consecuence already hinted at in the section dealing with time expressions, <tt class="docutils literal"><span class="pre">Finish</span></tt>.</p>
 <div class="section" id="time-conditions">
 <h2>Time conditions<a class="headerlink" href="#time-conditions" title="Permalink to this headline">¶</a></h2>
-<p>There are in nl a number of predicates that test certain relationships among <em>time expressions</em>. For example, whether an instant is whithin a duration, or whether 2 or more durations intersect.</p>
+<p>There are in nl a number of predicates that test certain relationships among <em>time expressions</em>. The reason we don&#8217;t just use arithmetic conditions to test these relations is the special treatment of the present time when using time.</p>
+<p>For example, we can test whether an instant is whithin a duration, or whether 2 or more durations intersect.</p>
 <p><strong>During</strong></p>
 <p>We can test whether an instant lies between a given duration or list of durations. To do so, we import <tt class="docutils literal"><span class="pre">During</span></tt> from <tt class="docutils literal"><span class="pre">nl</span></tt>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nl</span> <span class="kn">import</span> <span class="n">During</span>
