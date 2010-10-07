@@ -1,0 +1,134 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>NL, the first order theory behind nl &mdash; nlproject v1.0dev documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="nlproject v1.0dev documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="nl-the-first-order-theory-behind-nl">
+<h1>NL, the first order theory behind nl<a class="headerlink" href="#nl-the-first-order-theory-behind-nl" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-language">
+<h2>The language<a class="headerlink" href="#the-language" title="Permalink to this headline">¶</a></h2>
+<p>I will call NLL the first order language for NL. NLL is a FOL with equality (as a transitive, simmetrical and reflaxive relation) with the following non-logical terms:</p>
+<p>binary relations: is, isa.</p>
+<p>n-ary functor: proposition.</p>
+<p>atomic terms: verb, fact, expression.</p>
+</div>
+<div class="section" id="axiomatization">
+<h2>Axiomatization<a class="headerlink" href="#axiomatization" title="Permalink to this headline">¶</a></h2>
+<p>forall x, y, z: (is(x, y) -&gt; is(x, z)) -&gt; isa(y, z)</p>
+<p>forall x, y: isa(x, y) &amp; isa(y, x) -&gt; equals(x, y)</p>
+<p>forall x, y, z: is(x, y) &amp; equals(y, z) -&gt; is(x, z)</p>
+<p>These are taken from Paul Bernays, and provide us with the form of a simple set theory without &#8220;constructive&#8221; axioms. We only add to these:</p>
+<p>forall x: is(x, expression)</p>
+<p>forall x, y, z: is(x, y) &amp; is(y, z) -&gt; isa(z, expression)</p>
+<p>isa(verb, expression)</p>
+<p>isa(fact, expression)</p>
+<p>forall x, y1,...yn: is(proposition(x, y1,...yn), fact) -&gt; is(x, verb)</p>
+</div>
+<div class="section" id="interpretation">
+<h2>Interpretation.<a class="headerlink" href="#interpretation" title="Permalink to this headline">¶</a></h2>
+<p>We interpret extensions of NL in natural language texts. We take these texts as sets of expressions, that are related among them by the uses of the copular verb within the text. We interpret our predicates as different uses of the copular verb, and the construction &#8220;is(proposition(...), fact)&#8221; as the sentences of the text that are not made by copular verbs.</p>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>The text:</p>
+<p>People are things. Men and woman are people. John is a man, and Yoko is a woman. People can love other people. XXX TODO.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">NL, the first order theory behind nl</a><ul>
+<li><a class="reference internal" href="#the-language">The language</a></li>
+<li><a class="reference internal" href="#axiomatization">Axiomatization</a></li>
+<li><a class="reference internal" href="#interpretation">Interpretation.</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/NL.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Enrique Pablo Pérez Arnaud &lt;enriquepablo at google&#39;s mail domain&gt;.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+    </div>
+  </body>
+</html>
