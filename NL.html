@@ -45,11 +45,20 @@
             
   <div class="section" id="nl-the-first-order-theory-behind-nl">
 <h1>NL, the first order theory behind nl<a class="headerlink" href="#nl-the-first-order-theory-behind-nl" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-interpretation-informal">
+<h2>The interpretation (informal)<a class="headerlink" href="#the-interpretation-informal" title="Permalink to this headline">¶</a></h2>
+<p>We are going to examine the natural language. For that, we are going to talk about <em>expressions</em>. We are going to take that an expression is (almost) anything that might be said by a normal human being and that has meaning. Independently of whether it has truth value. So: &#8220;jonh&#8221;, &#8220;that man&#8221;, &#8220;a man&#8221;, &#8220;Jonh thinks about Mary&#8221;, are expressions. I say almost because we exclude from the set of expressions the copular sentences. So: &#8220;John is a man&#8221;, &#8220;Men are animals&#8221;, or &#8220;it is a fact that John is thinking about Mary&#8221; are not expressions.</p>
+<p>We can say a few things about the set of expressions. First, that they are composed of finitely many atomic expressions, and that there are limits to the amount of composite expressions that it is possible to form with them. The number is not only finite but fairly small, and perhaps not too different with the number of entries in the wikipedia.</p>
+<p>Second, that there seem to be two kinds of expressions in our set: those with truth value, and those without it. However, we are going to take an alternative but equivalent view here. We shall imagine that no expression has truth value, and that those that seem to have it, are in fact borrowing it from an underlying but implicit copular sentence: &#8220;it is a fact that...&#8221;.</p>
+<p>What we do now is to think about copular sentences as relations among expressions. So, Copular sentences, from this point of view, impose certain structures over sets of expressions. These structures are similar to the structures of set or class systems. We may distinguish 3 uses of the copular verb, that can be likened to the basic predicates of class systems: &#8220;x belongs to class y&#8221; (such as in &#8220;John is a man&#8221;), &#8220;x is a subclass of y&#8221; (such as in &#8220;a man is an animal&#8221;), and &#8220;x is the same as y&#8221; (such as in &#8220;that man is John&#8221;).</p>
+<p>These structures of expressions, which we might call discourses, have of course informal interpretations, they have semantics, and we use them to communicate truths. However, we are going to disregard those semantics, which are nebulous and reside in a strange universe, and we are going to try to take those structures of expressions themselves as semantics, as the standard interpretation of some language to be developed. If we disregard their interpretations, they are really simple structures.</p>
+<p>And the development of this language is very simple. We know that it is similar to some class or set system, and we know that there are a limited amount of of individuals in its domain of interpretation. We have 2 kinds of individuals: those that can have elements, and those that cannot. This language can be a really simple, consistent and decidable first order theory. It would not need of any productive axioms, since we don&#8217;t want it to contain all truth in a few axioms: we want it to extend it in an ad hoc manner to model different discourses.</p>
+</div>
 <div class="section" id="the-language">
 <h2>The language<a class="headerlink" href="#the-language" title="Permalink to this headline">¶</a></h2>
-<p>I will call NLL the first order language for NL. NLL is a FOL with equality (as a transitive, simmetrical and reflaxive relation) with the following non-logical terms:</p>
+<p>I will call NLL the first order language for NL. NLL is a fist order language with equality with the following non-logical terms:</p>
 <p>binary relations: is, isa.</p>
-<p>n-ary functor: proposition.</p>
+<p>functor: proposition. Note that we don&#8217;t impose an arity on this functor, though we might as well do so.</p>
 <p>atomic terms: verb, fact, expression.</p>
 </div>
 <div class="section" id="axiomatization">
@@ -64,9 +73,13 @@
 <p>isa(fact, expression)</p>
 <p>forall x, y1,...yn: is(proposition(x, y1,...yn), fact) -&gt; is(x, verb)</p>
 </div>
-<div class="section" id="interpretation">
-<h2>Interpretation.<a class="headerlink" href="#interpretation" title="Permalink to this headline">¶</a></h2>
-<p>We interpret extensions of NL in natural language texts. We take these texts as sets of expressions, that are related among them by the uses of the copular verb within the text. We interpret our predicates as different uses of the copular verb, and the construction &#8220;is(proposition(...), fact)&#8221; as the sentences of the text that are not made by copular verbs.</p>
+<div class="section" id="the-advantage">
+<h2>The advantage<a class="headerlink" href="#the-advantage" title="Permalink to this headline">¶</a></h2>
+<p>proposition is a functor. So, any function constructed upon proposition can be used as a term within another such function.</p>
+</div>
+<div class="section" id="the-interpretation-formal">
+<h2>The interpretation (formal)<a class="headerlink" href="#the-interpretation-formal" title="Permalink to this headline">¶</a></h2>
+<p>TODO XXX</p>
 </div>
 <div class="section" id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
@@ -84,9 +97,11 @@
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">NL, the first order theory behind nl</a><ul>
+<li><a class="reference internal" href="#the-interpretation-informal">The interpretation (informal)</a></li>
 <li><a class="reference internal" href="#the-language">The language</a></li>
 <li><a class="reference internal" href="#axiomatization">Axiomatization</a></li>
-<li><a class="reference internal" href="#interpretation">Interpretation.</a></li>
+<li><a class="reference internal" href="#the-advantage">The advantage</a></li>
+<li><a class="reference internal" href="#the-interpretation-formal">The interpretation (formal)</a></li>
 <li><a class="reference internal" href="#example">Example</a></li>
 </ul>
 </li>
