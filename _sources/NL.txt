@@ -1,5 +1,5 @@
 
-NL, the first order theory behind nl
+APPENDIX: NL, the first order theory behind nl
 ====================================
 
 The interpretation (informal)
