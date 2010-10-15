@@ -13,12 +13,12 @@ nlproject is a set of software facilities that provide development environments 
 Support
 -------
 
-There is a `mailing list <http://groups.google.es/group/nl-users>`_ for nlproject at google groups. You can also open an issue in `the tracker <http://github.com/enriquepablo/nlproject/issues>`_.
+There is a `mailing list <http://groups.google.es/group/nl-users>`_ for nlproject at google groups, and a `blog about nl <http://nl-project.blogspot.com/>`_. You can also open an issue in `the tracker <http://github.com/enriquepablo/nlproject/issues>`_.
 
 To install the software
 -----------------------
 
-The software is hosted at `github <http://github.com/enriquepablo/nlproject>`_. To install it, clone the repository, make a python2.5 virtualenv (or use your system's python2.5), and execute the buildout::
+The software is hosted at `github <http://github.com/enriquepablo/nlproject>`_. To install it, the easiest way is clone the repository, make a python2.5 virtualenv (or use your system's python2.5), and execute the buildout::
 
   $ git clone git@github.com:enriquepablo/nlproject.git
   $ cd nlproject
@@ -32,6 +32,8 @@ The software is hosted at `github <http://github.com/enriquepablo/nlproject>`_. 
   In [1]: import nl
 
   In [2]:
+
+Of course, buildout is not the best tool to distribute the software, and it would be best to have an egg in `pypi <http://pypi.python.org>`_ and allow installation through easy_install or pip. The problem with this is that `PyCLIPS <http://pyclips.sourceforge.net/>`_, a dependency of nl, doesn't install well as an egg (though there are eggs in sourceforge): I have spent a few hours trying to produce a working setup.py for nl that takes care of this dependency but have never managed to get repeatable results. So the alternative to buildout is, at the moment, to install PyCLIPS as per the instructions in its website, and then to easy_install the nl egg from pypi.
 
 Contents
 --------
