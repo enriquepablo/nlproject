@@ -72,6 +72,7 @@ In [1]: import nl
 In [2]:</pre>
 </div>
 <p>Of course, buildout is not the best tool to distribute the software, and it would be best to have an egg in <a class="reference external" href="http://pypi.python.org">pypi</a> and allow installation through easy_install or pip. The problem with this is that <a class="reference external" href="http://pyclips.sourceforge.net/">PyCLIPS</a>, a dependency of nl, doesn&#8217;t install well as an egg (though there are eggs in sourceforge): I have spent a few hours trying to produce a working setup.py for nl that takes care of this dependency but have never managed to get repeatable results. So the alternative to buildout is, at the moment, to install PyCLIPS as per the instructions in its website, and then to easy_install the nl egg from pypi.</p>
+<p>NOTE: Make sure to use python2.5. This restriction is due to PyCLIPS. If PyCLIPS installs on a python2.6 or 2.7, nl might as well, I haven&#8217;t tried.</p>
 </div>
 <div class="section" id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
