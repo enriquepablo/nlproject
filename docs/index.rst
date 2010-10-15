@@ -35,6 +35,8 @@ The software is hosted at `github <http://github.com/enriquepablo/nlproject>`_. 
 
 Of course, buildout is not the best tool to distribute the software, and it would be best to have an egg in `pypi <http://pypi.python.org>`_ and allow installation through easy_install or pip. The problem with this is that `PyCLIPS <http://pyclips.sourceforge.net/>`_, a dependency of nl, doesn't install well as an egg (though there are eggs in sourceforge): I have spent a few hours trying to produce a working setup.py for nl that takes care of this dependency but have never managed to get repeatable results. So the alternative to buildout is, at the moment, to install PyCLIPS as per the instructions in its website, and then to easy_install the nl egg from pypi.
 
+NOTE: Make sure to use python2.5. This restriction is due to PyCLIPS. If PyCLIPS installs on a python2.6 or 2.7, nl might as well, I haven't tried.
+
 Contents
 --------
 
