@@ -53,11 +53,11 @@
 <p>nlproject is a set of software facilities that provide development environments for logic programming in <a class="reference external" href="http://www.python.org/">Python</a>. At its core is <tt class="docutils literal"><span class="pre">nl</span></tt>, a bare bones logic system, comprising the basic building blocks for sentences and rules, and an in-memory knowledge base to hold these sentences and rules. On top of it is nlserv, that provides persistence for <tt class="docutils literal"><span class="pre">nl</span></tt>&#8216;s knowledge bases and an XML-RPC interface to them.</p>
 <div class="section" id="support">
 <h2>Support<a class="headerlink" href="#support" title="Permalink to this headline">¶</a></h2>
-<p>There is a <a class="reference external" href="http://groups.google.es/group/nl-users">mailing list</a> for nlproject at google groups. You can also open an issue in <a class="reference external" href="http://github.com/enriquepablo/nlproject/issues">the tracker</a>.</p>
+<p>There is a <a class="reference external" href="http://groups.google.es/group/nl-users">mailing list</a> for nlproject at google groups, and a <a class="reference external" href="http://nl-project.blogspot.com/">blog about nl</a>. You can also open an issue in <a class="reference external" href="http://github.com/enriquepablo/nlproject/issues">the tracker</a>.</p>
 </div>
 <div class="section" id="to-install-the-software">
 <h2>To install the software<a class="headerlink" href="#to-install-the-software" title="Permalink to this headline">¶</a></h2>
-<p>The software is hosted at <a class="reference external" href="http://github.com/enriquepablo/nlproject">github</a>. To install it, clone the repository, make a python2.5 virtualenv (or use your system&#8217;s python2.5), and execute the buildout:</p>
+<p>The software is hosted at <a class="reference external" href="http://github.com/enriquepablo/nlproject">github</a>. To install it, the easiest way is clone the repository, make a python2.5 virtualenv (or use your system&#8217;s python2.5), and execute the buildout:</p>
 <div class="highlight-python"><pre>$ git clone git@github.com:enriquepablo/nlproject.git
 $ cd nlproject
 $ virtualenv --no-site-packages --python=python2.5 .
@@ -71,6 +71,7 @@ In [1]: import nl
 
 In [2]:</pre>
 </div>
+<p>Of course, buildout is not the best tool to distribute the software, and it would be best to have an egg in <a class="reference external" href="http://pypi.python.org">pypi</a> and allow installation through easy_install or pip. The problem with this is that <a class="reference external" href="http://pyclips.sourceforge.net/">PyCLIPS</a>, a dependency of nl, doesn&#8217;t install well as an egg (though there are eggs in sourceforge): I have spent a few hours trying to produce a working setup.py for nl that takes care of this dependency but have never managed to get repeatable results. So the alternative to buildout is, at the moment, to install PyCLIPS as per the instructions in its website, and then to easy_install the nl egg from pypi.</p>
 </div>
 <div class="section" id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
