@@ -3,8 +3,8 @@ from setuptools import setup, find_packages
 
 setup(
     name = "nl",
-    version = "1.0dev",
-    url = 'http://bitbucket.org/enriquepablo/nl/wiki/Home',
+    version = "0.102",
+    url = 'http://http://enriquepablo.github.com/nlproject/',
     license = 'GPL',
     description = "A python library that provides a production system with an API modelled on the natural language",
     author = 'Enrique Perez Arnaud',
@@ -21,7 +21,7 @@ setup(
     ],
     install_requires = ['setuptools>=0.6c11',],
     entry_points = {
-        'console_scripts':
-            [ 'plot_ph22 = nl.examples.physics22:plotPh22', ],
+#        'console_scripts':
+#            [ 'plot_ph22 = nl.examples.physics22:plotPh22', ],
     }
 )
