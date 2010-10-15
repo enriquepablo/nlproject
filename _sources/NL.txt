@@ -25,7 +25,7 @@ One. "Natural" sentences -excluding copular ones- map to formal functions. This 
 
 Second. Since natural sentences map to functions, the antinomies that unrestricted comprehension produces are excluded when we use them to produce anonymous "classes". We only have one kind of individual, expression, and we may quantify over it with no restriction.
 
-In principle, I will develop the language with recourse to a single function term, that will allow us to produce non-copular sentences out of other terms, though there is no limit to the number of possible operators that we might use to, for example, mirror the adjectivation of nouns, etc.
+In principle, I will develop the language with recourse to a single function symbol, that will allow us to produce non-copular sentences out of other terms, though there is no limit to the number of possible operators that we might use to, for example, mirror the adjectivation of nouns, etc.
 
 The language
 ------------
