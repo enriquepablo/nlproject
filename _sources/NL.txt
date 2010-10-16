@@ -23,7 +23,7 @@ Finally, we can talk about the composition of expressions. This can be done thro
 
 One. "Natural" sentences -excluding copular ones- map to formal functions. This allows us to nest them, in contrast to what happens if we map them to formal predicates. For example, "thinks that wants to eat an apple" might map to something like "fact(thinks, fact(wants, fact(eat, apple)))".
 
-Second. Since natural sentences map to functions, the antinomies that unrestricted comprehension produces are excluded when we use them to produce anonymous "classes". We only have one kind of individual, expression, and we may quantify over it with no restriction.
+Second. Since natural sentences map to functions, the antinomies that unrestricted comprehension produces are excluded when we use them to produce anonymous "classes". We only have one kind of individual, expression, and we may quantify over it with no restriction. Of course we exclude copular sentences from this, but I think that we can easily live with that.
 
 In principle, I will develop the language with recourse to a single function symbol, that will allow us to produce non-copular sentences out of other terms, though there is no limit to the number of possible operators that we might use to, for example, mirror the adjectivation of nouns, etc.
 
@@ -41,28 +41,36 @@ atomic terms: verb, fact, expression.
 Axiomatization
 --------------
 
-forall x, y, z: (is(x, y) -> is(x, z)) -> isa(y, z)
+The first three are taken from Paul Bernays, and provide us with the form of a simple set theory without "constructive" axioms:
 
-forall x, y: isa(x, y) & isa(y, x) -> equals(x, y)
+1) forall x, y, z: (is(x, y) -> is(x, z)) -> isa(y, z)
 
-forall x, y, z: is(x, y) & equals(y, z) -> is(x, z)
+2) forall x, y: isa(x, y) & isa(y, x) -> equals(x, y)
 
-These are taken from Paul Bernays, and provide us with the form of a simple set theory without "constructive" axioms. We only add to these:
+3) forall x, y, z: is(x, y) & equals(y, z) -> is(x, z)
 
-forall x: is(x, expression)
+The fourth axiom establishes that there is a universal expression, that we denote with "expression":
 
-forall x, y, z: is(x, y) & is(y, z) -> equals(z, expression)
+4) forall x: is(x, expression)
 
-isa(verb, expression)
+The fifth axiom establishes that we only have three kinds of expressions with respect to the "is" relation: one kind is the one member set of "expression", the second kind are those expressions that can "contain" (to use the class terminology) other expressions, and the third kind are those that cannot contain other expressions. In particular, those of the second kind can contain only those of the third kind.
 
-isa(fact, expression)
+5) forall x, y, z: is(x, y) & is(y, z) -> equals(z, expression)
 
-forall x, y1,...yn: is(proposition(x, y1,...yn), fact) -> is(x, verb)
+The sixth and seventh axioms just define a couple of second kind expressions to begin with:
+
+6) isa(verb, expression)
+
+7) isa(fact, expression)
+
+The eighth axiom simply provides us with the basic form to produce non copular sentences. It has the form of an axiom schema, due to the fact that proposition is arity-less; however, due to the nature of our intended interpretation, we might limit n to, say, fifty, to be on the safe side (i.e., we don't have verbs that take more that fifty modifiers to produce sentences...)
+
+8) forall x, y1,...yn: is(proposition(x, y1,...yn), fact) -> is(x, verb)
 
 
 Example
 -------
 
-The text:
+The discourse. To keep it simple, we shall ignore time:
 
-People are things. Men and woman are people. John is a man, and Mary is a woman. People can love other people. XXX TODO.
+People are things. Men and woman are people. John is a man, and Mary is a woman. Some people love other people. Some people want things, some people want facts. If someone loves someone else, that someone wants that someone else lo love (she/him) XXX TODO.
