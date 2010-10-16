@@ -55,8 +55,8 @@
             
   <div class="section" id="appendix-nl-the-first-order-theory-behind-nl">
 <h1>APPENDIX: NL, the first order theory behind nl<a class="headerlink" href="#appendix-nl-the-first-order-theory-behind-nl" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="the-intended-interpretation-informal">
-<h2>The intended interpretation (informal)<a class="headerlink" href="#the-intended-interpretation-informal" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="the-intended-interpretation">
+<h2>The intended interpretation<a class="headerlink" href="#the-intended-interpretation" title="Permalink to this headline">¶</a></h2>
 <p>We are going to examine the natural language. For that, we are going to talk about <em>expressions</em>. We are going to take that an expression is (almost) anything that might be said by a normal human being and that has meaning. Independently of whether he assigns a truth value to them. So: &#8220;jonh&#8221;, &#8220;that man&#8221;, &#8220;a man&#8221;, &#8220;Jonh loves Mary&#8221;, are expressions. I say &#8220;almost&#8221; because we exclude from the set of expressions the copular sentences. So: &#8220;John is a man&#8221;, &#8220;Men are animals&#8221;, or &#8220;it is a fact that John loves Mary&#8221; are not to be considered expressions.</p>
 <p>We can say a couple of things about expressions. First, that there are atomic and composite expressions. In principle we won&#8217;t distinguish among them, and will just talk about expressions.</p>
 <p>Second, that there are finitely many atomic expressions, and that there are limits to the amount of composite expressions that it is possible to form with them. The number is not only finite but fairly small, and perhaps not too different from the number of entries in the wikipedia.</p>
@@ -83,14 +83,10 @@
 <p>forall x, y, z: is(x, y) &amp; equals(y, z) -&gt; is(x, z)</p>
 <p>These are taken from Paul Bernays, and provide us with the form of a simple set theory without &#8220;constructive&#8221; axioms. We only add to these:</p>
 <p>forall x: is(x, expression)</p>
-<p>forall x, y, z: is(x, y) &amp; is(y, z) -&gt; isa(z, expression)</p>
+<p>forall x, y, z: is(x, y) &amp; is(y, z) -&gt; equals(z, expression)</p>
 <p>isa(verb, expression)</p>
 <p>isa(fact, expression)</p>
 <p>forall x, y1,...yn: is(proposition(x, y1,...yn), fact) -&gt; is(x, verb)</p>
-</div>
-<div class="section" id="the-interpretation-formal">
-<h2>The interpretation (formal)<a class="headerlink" href="#the-interpretation-formal" title="Permalink to this headline">¶</a></h2>
-<p>TODO XXX</p>
 </div>
 <div class="section" id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
@@ -108,10 +104,9 @@
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">APPENDIX: NL, the first order theory behind nl</a><ul>
-<li><a class="reference internal" href="#the-intended-interpretation-informal">The intended interpretation (informal)</a></li>
+<li><a class="reference internal" href="#the-intended-interpretation">The intended interpretation</a></li>
 <li><a class="reference internal" href="#the-language">The language</a></li>
 <li><a class="reference internal" href="#axiomatization">Axiomatization</a></li>
-<li><a class="reference internal" href="#the-interpretation-formal">The interpretation (formal)</a></li>
 <li><a class="reference internal" href="#example">Example</a></li>
 </ul>
 </li>

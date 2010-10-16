@@ -2,8 +2,8 @@
 APPENDIX: NL, the first order theory behind nl
 ====================================
 
-The intended interpretation (informal)
---------------------------------------
+The intended interpretation
+---------------------------
 
 We are going to examine the natural language. For that, we are going to talk about *expressions*. We are going to take that an expression is (almost) anything that might be said by a normal human being and that has meaning. Independently of whether he assigns a truth value to them. So: "jonh", "that man", "a man", "Jonh loves Mary", are expressions. I say "almost" because we exclude from the set of expressions the copular sentences. So: "John is a man", "Men are animals", or "it is a fact that John loves Mary" are not to be considered expressions.
 
@@ -51,7 +51,7 @@ These are taken from Paul Bernays, and provide us with the form of a simple set 
 
 forall x: is(x, expression)
 
-forall x, y, z: is(x, y) & is(y, z) -> isa(z, expression)
+forall x, y, z: is(x, y) & is(y, z) -> equals(z, expression)
 
 isa(verb, expression)
 
@@ -59,11 +59,6 @@ isa(fact, expression)
 
 forall x, y1,...yn: is(proposition(x, y1,...yn), fact) -> is(x, verb)
 
-
-The interpretation (formal)
----------------------------
-
-TODO XXX
 
 Example
 -------
