@@ -67,10 +67,3 @@ The eighth axiom simply provides us with the basic form to produce non copular s
 
 8) forall x, y1,...yn: is(proposition(x, y1,...yn), fact) -> is(x, verb)
 
-
-Example
--------
-
-The discourse. To keep it simple, we shall ignore time:
-
-People are things. Men and woman are people. John is a man, and Mary is a woman. Some people love other people. Some people want things, some people want facts. If someone loves someone else, that someone wants that someone else lo love (she/him) XXX TODO.
