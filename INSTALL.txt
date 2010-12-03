@@ -1,7 +1,9 @@
 
 $ git clone git@github.com:enriquepablo/nlproject.git
 $ cd nlproject
-$ virtualenv --no-site-packages --python=python2.5 .
+$ virtualenv --no-site-packages --python=python2.6 .
 $ source bin/activate
 $ python bootstrap.py
 $ bin/buildout
+
+For some explanation, visit http://enriquepablo.github.com/nlproject/#to-install-the-software
