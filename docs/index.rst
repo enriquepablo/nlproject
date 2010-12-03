@@ -20,7 +20,7 @@ To install the software
 
 The software is hosted at `github <http://github.com/enriquepablo/nlproject>`_. To install it, the easiest way is clone the repository, make a python2.6 virtualenv (or use your system's python2.6), and execute the buildout::
 
-  $ git clone git@github.com:enriquepablo/nlproject.git
+  $ git clone git://github.com/enriquepablo/nlproject.git
   $ cd nlproject
   $ virtualenv --no-site-packages --python=python2.6 .
   $ source bin/activate
