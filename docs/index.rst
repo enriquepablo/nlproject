@@ -40,6 +40,11 @@ To run the tests, from the root of your buildout do as follows::
   $ cd src/nl
   $ ../../bin/test
 
+I have tried this on a machine like this::
+
+  $ uname -a
+  Linux gallina.yaco.es 2.6.32-22-generic #36-Ubuntu SMP Thu Jun 3 19:31:57 UTC 2010 x86_64 GNU/Linux
+
 If you try any of this, and get any errors, I would be very grateful if you report it at `the tracker <http://github.com/enriquepablo/nlproject/issues>`_.
 
 Contents
