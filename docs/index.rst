@@ -6,11 +6,7 @@
 Welcome to nlproject
 ====================
 
-**These docs are work in progress**
-
-**You probably want to go to nl's** `documentation <http://github.com/enriquepablo/nl_intro>`_.
-
-nlproject is a set of software facilities that provide development environments for logic programming in Python_. At its core is ``nl``, a bare bones logic system, comprising the basic building blocks for sentences and rules, and an in-memory knowledge base to hold these sentences and rules. On top of it is nlserv, that provides persistence for ``nl``'s knowledge bases and an XML-RPC interface to them.
+`**Documentation for nl** <http://github.com/enriquepablo/nl_intro>`_.
 
 Support
 -------
@@ -20,11 +16,11 @@ There is a `mailing list <http://groups.google.es/group/nl-users>`_ for nlprojec
 To install the software
 -----------------------
 
-The software is hosted at `github <http://github.com/enriquepablo/nlproject>`_. To install it, the easiest way is clone the repository, make a python2.6 virtualenv (or use your system's python2.6), and execute the buildout::
+The software is hosted at `github <http://github.com/enriquepablo/nl>`_. To install it, the easiest way is clone the buildouts repository, make a python2.7 virtualenv (or use your system's python2.7), and execute the buildout::
 
-  $ git clone git://github.com/enriquepablo/nlproject.git
-  $ cd nlproject
-  $ virtualenv --no-site-packages --python=python2.6 .
+  $ git clone git://github.com/enriquepablo/nlp.buildouts.git
+  $ cd nlp.buildouts
+  $ virtualenv --no-site-packages --python=python2.7 .
   $ source bin/activate
   $ python bootstrap.py
   $ bin/buildout
@@ -37,19 +33,10 @@ The software is hosted at `github <http://github.com/enriquepablo/nlproject>`_. 
 
 To run the tests, from the root of your buildout do as follows::
 
-  $ cd src/nl
-  $ ../../bin/test
+  $ bin/test -w src/nl/nl
 
 If you try any of this, and get any errors, I would be grateful if you report it at `the tracker <http://github.com/enriquepablo/nlproject/issues>`_.
 
-Contents
---------
-
-.. toctree::
-   :maxdepth: 1
-
-   nl_intro
-   nlserv
 
 .. _Python: http://www.python.org/
 
