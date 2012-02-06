@@ -37,6 +37,13 @@ To run the tests, from the root of your buildout do as follows::
 
 If you try any of this, and get any errors, I would be grateful if you report it at `the tracker <http://github.com/enriquepablo/nlproject/issues>`_.
 
+Contents
+--------
+
+.. toctree::
+   :maxdepth: 1
+
+   nl_intro
 
 .. _Python: http://www.python.org/
 
