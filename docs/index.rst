@@ -6,7 +6,7 @@
 Welcome to nlproject
 ====================
 
-`**Documentation for nl** <http://github.com/enriquepablo/nl_intro>`_.
+`**Documentation for nl** <http://enriquepablo.github.com/nlproject/nl_intro>`_.
 
 Support
 -------
