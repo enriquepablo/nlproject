@@ -27,13 +27,13 @@ Sentences are the principal units in the usage of nl. We can build 2 classes of 
 **Facts** (Non-copulative sentences) are made up of 4 parts: a *subject*, a *predicate*, a *time expression*, and a *negation bit*.
 
  - The subject would be a proper name, that has to be already declared in a copulative sentence.
- - The predicate would be made up of a verb and a number of named modifiers. They would be equivalent to English predicates with non copulative, non conjugated verbs, of the kind that `Tarzan of the apes`__ accustomed to utter. For example, "go from London to Paris", where "go" would be the verb, "London" would be a modifier named "from", and "Paris" would be another modifier named "to".
+ - The predicate would be made up of a verb and a number of named modifiers. They would have a form similar to English predicates with non copulative, non conjugated verbs, of the kind that `Tarzan of the apes`__ accustomed to utter. For example, "go from London to Paris", where "go" would be the verb, "London" would be a modifier named "from", and "Paris" would be another modifier named "to".
  - Time expressions would correspond to the conjugation of verbs, and can be of two kinds: *instants*, and *durations* (composed of a pair of instants).
  - A fact can be negated, or not [#]_.
  
 __ http://www.coverbrowser.com/image/tarzan-of-the-apes-1972/1-1.jpg
 
-A complete (and simple) example of a "sort of English" sentence that could be expressed as a *fact* in nl might be "Tarzan go from London to Paris between <date1> and <date2>".
+A complete (and simple) example of a "sort of English" sentence that could be expressed as a *fact* in nl might be "Tarzan go from London to Paris at <date1>".
 
 In principle, we make no distiction among verbs or their kinds of modifiers. Transitive and intransitive, direct or indirect objects, kinds of prepositions, etc., are treated all the same in the definition of the verbs, and are only differentiated through the rules in which they take part.
 
