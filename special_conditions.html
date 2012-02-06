@@ -3,13 +3,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Special conditions and consecuences &mdash; nlproject v1.0dev documentation</title>
+    <title>Special conditions and consecuences &mdash; nlproject 1.0dev documentation</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -22,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="nlproject v1.0dev documentation" href="index.html" />
+    <link rel="top" title="nlproject 1.0dev documentation" href="index.html" />
     <link rel="up" title="Documentation for nl" href="nl_intro.html" />
     <link rel="next" title="Queries" href="queries.html" />
     <link rel="prev" title="Arithmetics" href="arithmetics.html" /> 
@@ -35,15 +38,12 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
           <a href="queries.html" title="Queries"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="arithmetics.html" title="Arithmetics"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li>
+        <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
           <li><a href="nl_intro.html" accesskey="U">Documentation for nl</a> &raquo;</li> 
       </ul>
     </div>  
@@ -66,7 +66,6 @@
 </pre></div>
 </div>
 <p>To exemplify this feature, we will use the <tt class="docutils literal"><span class="pre">Wants</span></tt> verb (defined in the section on verbs and predicates) and the <tt class="docutils literal"><span class="pre">Can</span></tt> verb defined in the section on arithmetics. This example will be given by the following rule, that translated into English, would assert that, if someone wants to do something at a given moment, and can do it in a duration that covers that moment, (s)he just does it (at that moment):</p>
-<blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r6</span> <span class="o">=</span> <span class="n">Rule</span><span class="p">([</span>
 <span class="gp">... </span>  <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Wants</span><span class="p">(</span><span class="n">to</span><span class="o">=</span><span class="n">Exists</span><span class="p">(</span><span class="s">&#39;E1&#39;</span><span class="p">)),</span> <span class="n">Instant</span><span class="p">(</span><span class="s">&#39;I1&#39;</span><span class="p">)),</span>
 <span class="gp">... </span>  <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Exists</span><span class="p">(</span><span class="s">&#39;E1&#39;</span><span class="p">)),</span> <span class="n">Duration</span><span class="p">(</span><span class="s">&#39;D1&#39;</span><span class="p">)),</span>
@@ -80,9 +79,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">bob</span><span class="p">)</span>
 </pre></div>
 </div>
-</blockquote>
 <p>Now, let us further complicate this example. We define a verb &#8220;drinks&#8221; and a verb &#8220;has&#8221;, a noun &#8220;drinkable substance&#8221;, and a couple of substances:</p>
-<blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">DrinkableSubstance</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span> <span class="k">pass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">beer</span> <span class="o">=</span> <span class="n">DrinkableSubstance</span><span class="p">(</span><span class="s">&#39;beer&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">coffee</span> <span class="o">=</span> <span class="n">DrinkableSubstance</span><span class="p">(</span><span class="s">&#39;coffee&#39;</span><span class="p">)</span>
@@ -99,7 +96,6 @@
 <span class="gp">... </span>    <span class="n">mods</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;what&#39;</span><span class="p">:</span> <span class="n">Thing</span><span class="p">}</span>
 </pre></div>
 </div>
-</blockquote>
 <p>Now, we can define a rule that states that if someone has some drinkable substance at some instant, (s)he can drink it:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r7</span> <span class="o">=</span> <span class="n">Rule</span><span class="p">([</span>
 <span class="gp">... </span>  <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Has</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">DrinkableSubstance</span><span class="p">(</span><span class="s">&#39;S1&#39;</span><span class="p">)),</span> <span class="n">Instant</span><span class="p">(</span><span class="s">&#39;I1&#39;</span><span class="p">)),</span>
@@ -125,67 +121,67 @@
 </div>
 <p>Now we are ready to ask a few things.</p>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li>Does John drink beer at 3?</li>
 </ul>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">beer</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">beer</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
 <span class="go">False</span>
 </pre></div>
 </div>
 <p>No: he wanted, but he did not have beer until 5</p>
-</blockquote>
+</div></blockquote>
 <ul class="simple">
 <li>Does John drink beer at 5?</li>
 </ul>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">beer</span><span class="p">),</span> <span class="mi">5</span><span class="p">))</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">beer</span><span class="p">),</span> <span class="mi">5</span><span class="p">))</span>
 <span class="go">False</span>
 </pre></div>
 </div>
 <p>No: he already had beer, but he did not want to drink at that time.</p>
-</blockquote>
+</div></blockquote>
 <ul class="simple">
 <li>Does Bob drink coffee at 3?</li>
 </ul>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">coffee</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">coffee</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
 <span class="go">True</span>
 </pre></div>
 </div>
 <p>Yes, at that time he had and wanted.</p>
-</blockquote>
+</div></blockquote>
 <ul class="simple">
 <li>Can John drink beer at 6?</li>
 </ul>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">beer</span><span class="p">)),</span> <span class="mi">6</span><span class="p">))</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">beer</span><span class="p">)),</span> <span class="mi">6</span><span class="p">))</span>
 <span class="go">True</span>
 </pre></div>
 </div>
 <p>Yes, he had since 5.</p>
-</blockquote>
+</div></blockquote>
 <ul class="simple">
 <li>Can Bob drink beer at 6?</li>
 </ul>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">beer</span><span class="p">)),</span> <span class="mi">6</span><span class="p">))</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">beer</span><span class="p">)),</span> <span class="mi">6</span><span class="p">))</span>
 <span class="go">False</span>
 </pre></div>
 </div>
 <p>No, he never had.</p>
-</blockquote>
+</div></blockquote>
 <ul class="simple">
 <li>Can Bob drink coffee at 6?</li>
 </ul>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">coffee</span><span class="p">)),</span> <span class="mi">6</span><span class="p">))</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">bob</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Drinks</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">coffee</span><span class="p">)),</span> <span class="mi">6</span><span class="p">))</span>
 <span class="go">True</span>
 </pre></div>
 </div>
 <p>Yes, he had since 3.</p>
-</blockquote>
-</blockquote>
+</div></blockquote>
+</div></blockquote>
 <p>Etc. etc. Of course, this is not a very satisfying ontology; we would want to take into account &#8220;amounts&#8221; had and drunk, consumption of existences, and so on. Defining acceptable ontologies requires some work and iterations until you get it right. But our aim here is not to define acceptable ontologies, only to demonstrate how to use <tt class="docutils literal"><span class="pre">nl</span></tt>.</p>
 <p><strong>Coincide (and Intersection)</strong></p>
 <p>We can test whether a set of durations have an intersection. To do this, we import <tt class="docutils literal"><span class="pre">Coincide</span></tt> from nl, and use it as a condition in rules giving it any number of durations.</p>
@@ -193,7 +189,6 @@
 </pre></div>
 </div>
 <p>With this, we may, for example, build a rule that states that, if two people live in the same place at the same time, they can meet each other. For this, we need a <tt class="docutils literal"><span class="pre">Place</span></tt> noun, a <tt class="docutils literal"><span class="pre">Lives</span></tt> verb, and a <tt class="docutils literal"><span class="pre">Meets</span></tt> verb.</p>
-<blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Place</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span> <span class="k">pass</span>
 </pre></div>
 </div>
@@ -217,10 +212,8 @@
 <span class="gp">... </span><span class="p">]))</span>
 </pre></div>
 </div>
-</blockquote>
 <p>Note the use of <tt class="docutils literal"><span class="pre">Intersection</span></tt>. It is used where a <tt class="docutils literal"><span class="pre">Duration</span></tt> would be used, and does what might be expected, i.e., produces a duration that is the intersection of any number of durations.</p>
 <p>Now we might say:</p>
-<blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">england</span> <span class="o">=</span> <span class="n">Place</span><span class="p">(</span><span class="s">&#39;england&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">eeuu</span> <span class="o">=</span> <span class="n">Place</span><span class="p">(</span><span class="s">&#39;eeuu&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">england</span><span class="p">,</span> <span class="n">eeuu</span><span class="p">)</span>
@@ -235,7 +228,6 @@
 <span class="go">2</span>
 </pre></div>
 </div>
-</blockquote>
 <p>And then ask:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Can</span><span class="p">(</span><span class="n">what</span><span class="o">=</span><span class="n">Meets</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">mary</span><span class="p">)),</span> <span class="mi">5</span><span class="p">))</span>
 <span class="go">True</span>
@@ -302,7 +294,7 @@
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -323,21 +315,18 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
           <a href="queries.html" title="Queries"
              >next</a> |</li>
         <li class="right" >
           <a href="arithmetics.html" title="Arithmetics"
              >previous</a> |</li>
-        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li>
+        <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
           <li><a href="nl_intro.html" >Documentation for nl</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Enrique Pablo Pérez Arnaud &lt;enriquepablo at google&#39;s mail domain&gt;.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

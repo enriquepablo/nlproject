@@ -3,13 +3,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Queries &mdash; nlproject v1.0dev documentation</title>
+    <title>Queries &mdash; nlproject 1.0dev documentation</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -22,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="nlproject v1.0dev documentation" href="index.html" />
+    <link rel="top" title="nlproject 1.0dev documentation" href="index.html" />
     <link rel="up" title="Documentation for nl" href="nl_intro.html" />
     <link rel="next" title="Counting Sentences" href="counting.html" />
     <link rel="prev" title="Special conditions and consecuences" href="special_conditions.html" /> 
@@ -35,15 +38,12 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
           <a href="counting.html" title="Counting Sentences"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="special_conditions.html" title="Special conditions and consecuences"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li>
+        <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
           <li><a href="nl_intro.html" accesskey="U">Documentation for nl</a> &raquo;</li> 
       </ul>
     </div>  
@@ -56,7 +56,7 @@
   <div class="section" id="queries">
 <h1>Queries<a class="headerlink" href="#queries" title="Permalink to this headline">¶</a></h1>
 <p>Queries to the knowledge base are made in nl, as we have already seen in previous sections, through the <tt class="docutils literal"><span class="pre">ask</span></tt> function in the <tt class="docutils literal"><span class="pre">kb</span></tt> module.</p>
-<p>There are two ways of performing queries with <tt class="docutils literal"><span class="pre">ask</span></tt>. The fisrt and simplest is to give it as an argument a fact with no variables. This will return <tt class="xref docutils literal"><span class="pre">True</span></tt> or <tt class="xref docutils literal"><span class="pre">False</span></tt> depending on whether the given fact is within the knowledge base or not, and we have seen plenty of examples in previous sections.</p>
+<p>There are two ways of performing queries with <tt class="docutils literal"><span class="pre">ask</span></tt>. The fisrt and simplest is to give it as an argument a fact with no variables. This will return <tt class="docutils literal"><span class="pre">True</span></tt> or <tt class="docutils literal"><span class="pre">False</span></tt> depending on whether the given fact is within the knowledge base or not, and we have seen plenty of examples in previous sections.</p>
 <p>The second way is using variables in the asked facts. In this usage, we have to provide <tt class="docutils literal"><span class="pre">ask</span></tt> with a few unnamed arguments of 2 kinds. The first kind are the variables we want to extract, and the second kind are the facts in which these variables are used. In this case, <tt class="docutils literal"><span class="pre">ask</span></tt> will return a list of dictionaries with the names of the variables as keys and the matched objects as values. Let&#8217;s see a few examples.</p>
 <p>We may want to ask when does John love Yoko:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Duration</span><span class="p">(</span><span class="s">&#39;D1&#39;</span><span class="p">),</span> <span class="n">Fact</span><span class="p">(</span><span class="n">john</span><span class="p">,</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">yoko</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="s">&#39;D1&#39;</span><span class="p">)))</span>
@@ -74,7 +74,6 @@
 </pre></div>
 </div>
 <p>If there are more people who love Yoko, there will be more dictionaries in the list:</p>
-<blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">Fact</span><span class="p">(</span><span class="n">sean</span><span class="p">,</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">yoko</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="mi">5</span><span class="p">)))</span>
 </pre></div>
 </div>
@@ -82,7 +81,6 @@
 <span class="go">[{&#39;H1&#39;: &#39;john&#39;, &#39;D1&#39;: &#39;from 3.0 till 1281517624.0&#39;}, {&#39;H1&#39;: &#39;sean&#39;, &#39;D1&#39;: &#39;from 2.0 till 5.0&#39;}]</span>
 </pre></div>
 </div>
-</blockquote>
 <p>Finally, we can provide more facts in the query, possibly using some of the already given variables, and <tt class="docutils literal"><span class="pre">ask</span></tt> will &#8220;and&#8221; the facts to provide the answers for which all facts are true:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Duration</span><span class="p">(</span><span class="s">&#39;D1&#39;</span><span class="p">),</span> <span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Loves</span><span class="p">(</span><span class="n">who</span><span class="o">=</span><span class="n">yoko</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="s">&#39;D1&#39;</span><span class="p">)),</span> <span class="n">Fact</span><span class="p">(</span><span class="n">HumanBeing</span><span class="p">(</span><span class="s">&#39;H1&#39;</span><span class="p">),</span> <span class="n">Lives</span><span class="p">(</span><span class="n">where</span><span class="o">=</span><span class="n">england</span><span class="p">),</span> <span class="n">Duration</span><span class="p">(</span><span class="s">&#39;D2&#39;</span><span class="p">)))</span>
 <span class="go">[{&#39;H1&#39;: &#39;john&#39;, &#39;D1&#39;: &#39;from 3.0 till 1281517624.0&#39;}]</span>
@@ -110,7 +108,7 @@
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -131,21 +129,18 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
           <a href="counting.html" title="Counting Sentences"
              >next</a> |</li>
         <li class="right" >
           <a href="special_conditions.html" title="Special conditions and consecuences"
              >previous</a> |</li>
-        <li><a href="index.html">nlproject v1.0dev documentation</a> &raquo;</li>
+        <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
           <li><a href="nl_intro.html" >Documentation for nl</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Enrique Pablo Pérez Arnaud &lt;enriquepablo at google&#39;s mail domain&gt;.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>
