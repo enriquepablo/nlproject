@@ -25,8 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="nlproject 1.0dev documentation" href="#" />
-    <link rel="next" title="Documentation for nl" href="nl_intro.html" /> 
+    <link rel="top" title="nlproject 1.0dev documentation" href="#" /> 
   </head>
   <body>
     <div class="related">
@@ -35,9 +34,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="nl_intro.html" title="Documentation for nl"
-             accesskey="N">next</a> |</li>
         <li><a href="#">nlproject 1.0dev documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -49,19 +45,17 @@
             
   <div class="section" id="welcome-to-nlproject">
 <h1>Welcome to nlproject<a class="headerlink" href="#welcome-to-nlproject" title="Permalink to this headline">¶</a></h1>
-<p><strong>These docs are work in progress</strong></p>
-<p><strong>You probably want to go to nl&#8217;s</strong> <a class="reference external" href="http://github.com/enriquepablo/nl_intro">documentation</a>.</p>
-<p>nlproject is a set of software facilities that provide development environments for logic programming in <a class="reference external" href="http://www.python.org/">Python</a>. At its core is <tt class="docutils literal"><span class="pre">nl</span></tt>, a bare bones logic system, comprising the basic building blocks for sentences and rules, and an in-memory knowledge base to hold these sentences and rules. On top of it is nlserv, that provides persistence for <tt class="docutils literal"><span class="pre">nl</span></tt>&#8216;s knowledge bases and an XML-RPC interface to them.</p>
+<p><a class="reference external" href="http://github.com/enriquepablo/nl_intro">**Documentation for nl**</a>.</p>
 <div class="section" id="support">
 <h2>Support<a class="headerlink" href="#support" title="Permalink to this headline">¶</a></h2>
 <p>There is a <a class="reference external" href="http://groups.google.es/group/nl-users">mailing list</a> for nlproject at google groups, and a <a class="reference external" href="http://nl-project.blogspot.com/">blog about nl</a>. You can also open an issue in <a class="reference external" href="http://github.com/enriquepablo/nlproject/issues">the tracker</a>.</p>
 </div>
 <div class="section" id="to-install-the-software">
 <h2>To install the software<a class="headerlink" href="#to-install-the-software" title="Permalink to this headline">¶</a></h2>
-<p>The software is hosted at <a class="reference external" href="http://github.com/enriquepablo/nlproject">github</a>. To install it, the easiest way is clone the repository, make a python2.6 virtualenv (or use your system&#8217;s python2.6), and execute the buildout:</p>
-<div class="highlight-python"><pre>$ git clone git://github.com/enriquepablo/nlproject.git
-$ cd nlproject
-$ virtualenv --no-site-packages --python=python2.6 .
+<p>The software is hosted at <a class="reference external" href="http://github.com/enriquepablo/nl">github</a>. To install it, the easiest way is clone the buildouts repository, make a python2.7 virtualenv (or use your system&#8217;s python2.7), and execute the buildout:</p>
+<div class="highlight-python"><pre>$ git clone git://github.com/enriquepablo/nlp.buildouts.git
+$ cd nlp.buildouts
+$ virtualenv --no-site-packages --python=python2.7 .
 $ source bin/activate
 $ python bootstrap.py
 $ bin/buildout
@@ -73,19 +67,9 @@ In [1]: import nl
 In [2]:</pre>
 </div>
 <p>To run the tests, from the root of your buildout do as follows:</p>
-<div class="highlight-python"><pre>$ cd src/nl
-$ ../../bin/test</pre>
+<div class="highlight-python"><pre>$ bin/test -w src/nl/nl</pre>
 </div>
 <p>If you try any of this, and get any errors, I would be grateful if you report it at <a class="reference external" href="http://github.com/enriquepablo/nlproject/issues">the tracker</a>.</p>
-</div>
-<div class="section" id="contents">
-<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="nl_intro.html">Documentation for nl</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nlserv.html">Documentation for nlserv [TODO]</a></li>
-</ul>
-</div>
 </div>
 </div>
 
@@ -100,16 +84,10 @@ $ ../../bin/test</pre>
 <li><a class="reference internal" href="#">Welcome to nlproject</a><ul>
 <li><a class="reference internal" href="#support">Support</a></li>
 <li><a class="reference internal" href="#to-install-the-software">To install the software</a></li>
-<li><a class="reference internal" href="#contents">Contents</a><ul>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
 
-  <h4>Next topic</h4>
-  <p class="topless"><a href="nl_intro.html"
-                        title="next chapter">Documentation for nl</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"
@@ -138,9 +116,6 @@ $ ../../bin/test</pre>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="nl_intro.html" title="Documentation for nl"
-             >next</a> |</li>
         <li><a href="#">nlproject 1.0dev documentation</a> &raquo;</li> 
       </ul>
     </div>
