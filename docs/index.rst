@@ -6,7 +6,8 @@
 Welcome to nlproject
 ====================
 
-`**Documentation for nl** <http://enriquepablo.github.com/nlproject/nl_intro>`_.
+`**Documentation for nl python library** <http://enriquepablo.github.com/nlproject/nl_intro>`_.
+
 `**The nl language** <http://enriquepablo.github.com/nlproject/nl_lang>`_.
 
 Support
