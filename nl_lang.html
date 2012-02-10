@@ -1,0 +1,136 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The nl language &mdash; nlproject 1.0dev documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="nlproject 1.0dev documentation" href="index.html" />
+    <link rel="prev" title="APPENDIX: NL, the first order theory behind nl" href="NL.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="NL.html" title="APPENDIX: NL, the first order theory behind nl"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-nl-language">
+<h1>The nl language<a class="headerlink" href="#the-nl-language" title="Permalink to this headline">¶</a></h1>
+<p>The only documentation about nl is a blog entry hereXXX.</p>
+<div class="section" id="install">
+<h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
+<p>to install:</p>
+<div class="highlight-python"><pre>$ git clone git://github.com/enriquepablo/nlp.buildouts.git
+$ cd nlp.buildouts
+$ cp buildout.cfg.in buildout.cfg
+$ vim buildout.cfg  # -&gt; uncomment profiles/ircbot.cfg
+$ virtualenv --no-site-packages --python=python2.7 .
+$ source bin/activate
+$ python bootstrap.py
+$ bin/buildout
+...
+$ bin/ircbot some_name
+Generating LALR tables
+Signed on as some_name_bot.
+Joined #nlpbot_some_name.</pre>
+</div>
+<p>If you obtain any errors, please report at XXX.</p>
+<p>And you can talk to the ircbot on freenode at channel #nlpbot_some_name.
+You provide definitions, facts and rules ending them with a dot, and you ask
+facts ending them with a question mark. Question facts can contain variables.
+Whenever you tell or ask something to the bot, you have to address it
+prefixing your message with &#8220;some_name_bot: &lt;message&gt;&#8221; where &lt;message&gt;
+is any definition, fact, rule, or question.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The nl language</a><ul>
+<li><a class="reference internal" href="#install">Install</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="NL.html"
+                        title="previous chapter">APPENDIX: NL, the first order theory behind nl</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/nl_lang.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="NL.html" title="APPENDIX: NL, the first order theory behind nl"
+             >previous</a> |</li>
+        <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Enrique Pablo Pérez Arnaud &lt;enriquepablo at google&#39;s mail domain&gt;.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
