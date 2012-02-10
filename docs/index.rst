@@ -7,6 +7,7 @@ Welcome to nlproject
 ====================
 
 `**Documentation for nl** <http://enriquepablo.github.com/nlproject/nl_intro>`_.
+`**The nl language** <http://enriquepablo.github.com/nlproject/nl_lang>`_.
 
 Support
 -------
@@ -44,6 +45,7 @@ Contents
    :maxdepth: 1
 
    nl_intro
+   nl_lang
 
 .. _Python: http://www.python.org/
 
