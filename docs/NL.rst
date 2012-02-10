@@ -2,6 +2,9 @@
 APPENDIX: NL, the first order theory behind nl
 ====================================
 
+(This is really bad. It's not 2 years since I wrote this, and I already find it
+insanely difficult to follow. I must rewrite it.)
+
 The intended interpretation
 ---------------------------
 
