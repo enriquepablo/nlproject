@@ -2,7 +2,7 @@
 The nl language
 ===============
 
-The only documentation about nl is a blog entry hereXXX.
+At the oment, the only documentation about nl is a blog entry hereXXX.
 
 Install
 -------
@@ -22,14 +22,13 @@ to install::
   Generating LALR tables
   Signed on as some_name_bot.
   Joined #nlpbot_some_name.
+.
 
-If you obtain any errors, please report at XXX.
-
-And you can talk to the ircbot on freenode at channel #nlpbot_some_name.
+Now you can talk to the ircbot on freenode at channel #nlpbot_some_name.
 You provide definitions, facts and rules ending them with a dot, and you ask
 facts ending them with a question mark. Question facts can contain variables.
 Whenever you tell or ask something to the bot, you have to address it
-prefixing your message with "some_name_bot: <message>" where <message>
+prefixing your message with its nickname: "some_name_bot: <message>" where <message>
 is any definition, fact, rule, or question.
 
-
+If you obtain any errors trying this, please report at `the issue tracker <http://github.com/enriquepablo/nlproject/issues>`_.
