@@ -404,22 +404,33 @@ Time.
 
     fact : subject predicate time
 
-We can specify a time as a distinguished part of a fact. This time would
-correspond, at heart, to just another modifier in the predicate (like the
-subject). It would have the form of either an integer or a pair of
-integers. An integer would mark a fact whose interpretation is an
-instantaneous happening, and a pair would represent an interval of time.
-The reason we distinguish time is because we want to allow for the
+We can specify a time as a distinguished part of a fact. This time
+has the form of either an integer or a pair of
+integers. An integer marks a fact whose interpretation is an
+instantaneous happening, and a pair represents an interval of time,
+a duration.
+
+The reason we distinguish time (it would in principle suffice to represent
+times as just another modifier in the predicate)
+is because we want to allow for the
 present continuous (this is, for facts in which we know the starting instant
 but not the ending instant). To do this, we employ some non-monotonic
 technique. Now, the logic we have drawn up to this moment is strictly
 monotonic. And non-monotonicity scares the hell out of me. So, we isolate time
-in a reserved place and treat it carefully.
+in a reserved place and treat it very carefully.
 
-Time terms can take one of several forms.
+Time can thus be given as an instant or as a duration. To assert facts,
+or to specify conditions in rules, we can only use the present tense.
+We assume a closed world were everything is in known the instant it happens,
+i.e., we know everything about the past and the present but nothing about the
+future.
 
-Now.
-~~~~
+Instants.
+~~~~~~~~~
+
+    statement : order DOT
+
+    order : NOW
 
     time : NOW
 
@@ -428,10 +439,6 @@ Now.
 The time can be specified with the term `now`. We can say:
 
 280 sue [views what doc1] now.
-
-    statement : order DOT
-
-    order : NOW
 
 Internally, every instance of **npl** keeps a record of time.
 When **npl** is started, this record is set
@@ -447,6 +454,70 @@ When we say something like fact XXX, the time that is being stored for that fact
 the content of the said 'present' record at the time of saying. So, if we say several
 facts with time "now" without changing the internal time with "now.", they will
 all have the same time.
+
+The `now` term is optional, and we might have just said, in place of XXX:
+
+280 sue [views what doc1].
+
+Durations.
+~~~~~~~~~~
+
+    time : ONWARDS 
+
+    ONWARDS : "onwards"
+
+To build a duration, we can use the reserved word `onwards` as the time
+component. This will set the starting instant of the duration to the present,
+and will set a special value
+as the end of the duration. This value will stand for the 'present' time of the
+system, irrespectively of its changes. So, if the present time is 10, the final
+instant of these durations will evaluate to 10; and if we change the present
+(through `now.`) to 12, they will evaluate to 12.
+
+Time in conditions.
+~~~~~~~~~~~~~~~~~~~
+
+In conditions in rules, we can use, either `now`, `onwards`, or a duration
+variable, that will evaluate to `onwards` (will be matched were `onwards`
+would) but can be used in consecuences: `O1`.
+
+Time in consecuences.
+~~~~~~~~~~~~~~~~~~~~~
+
+In consecuences in rules, we can use the same constructs as in conditions,
+plus a special construct with the reserved word `until` followed by any
+number of duration variables (bound in the conditions of the rule):
+`until O1, O2, O3`. This will
+create an `onwards` duration that will be bound to the durations that have
+matched the duration variables specified, so that whenever any of them is
+terminated, the new one will also be terminated. If two rules produce the
+same consecuence, the system will do the right thing (require a condition
+of each to be terminated before terminating the consecuence).
+
+Terminating the continuous present.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    consecuence : FINISH VAR
+
+    FINISH : "finish"
+
+There is a special type of consecuence, built with the reserved word
+`finish`, that can be given as a consecuence in rules, like
+`finish O1;`. This
+statement will change the special value of the final instant of `O1`,
+to replace it with the present. Terminating a duration will terminate
+all durations that are derived from it through the `until` operator.
+
+ Arithmetics.
+ ============
+
+
+
+
+ Questions.
+ ----------
+
+XXX
 
 Instants.
 ~~~~~~~~~
@@ -487,81 +558,3 @@ do this, we use the reserved words `from` y `till`:
 Using variables in rules and queries, we can represent durations in 2 different
 ways, with 2 instant variables (`from Instant1 till Instant2`) or with just one
 duration variable (`Duration1`).
-
-Times as terms.
-~~~~~~~~~~~~~~~
-
-Instants and durations are terms, of type `instant` and `duration`. As such,
-they can only be used as time components of facts; you cannot have a modifier
-or a subject of type `instant`. You can, however, use their values in
-arithmetic operations, as we shall see later on, and create them in the
-consecuences of rules out of number variables.
-
-
-Continuous present tense.
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    time : FROM instant ONWARDS
-         | ONWARDS 
-
-    ONWARDS : "onwards"
-
-To build a duration, we can use the reserved word `onwards` as the final
-instant of a duration, like `from 20 onwards`. This will set a special value
-as the end of the duration. This value will stand for the 'present' time of the
-system, irrespectively of its changes. So, if the present time is 10, the final
-instant of these durations will evaluate to 10; and if we change the present
-(through `now.`) to 12, they will evaluate to 12. If we use `onwards` by itself
-as the time component of a fact, it will stand for `from now onwards`.
-
-Usage of the present continuous
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-To use the present continuous, there are some restrictions we must follow.
-We can only assert things in the present. Either we state facts `now`,
-or we state facts `onwards`. The rest of time constructs we have seen are
-reserved for rules and questions.
-
-In conditions in rules, we can use, either `now`, `onwards`, or a duration
-variable, that will evaluate to `onwards` (will be matched were `onwards`
-would) but can be used in consecuences: `O1`.
-
-In consecuences in rules, we can use the same constructs as in conditions,
-plus:
-
-  * A special construct with `until` followed by any number of duration
-    variables (bound in the conditions of the rule). This will create an
-    `onwards` duration that will be bound to the durations that have matched
-    the duration variables specified, so that whenever any of them is
-    terminated, the new one will also be terminated. If two rules produce the
-    same consecuence, the system will do the right thing (require a condition
-    of each to be terminated before terminating the consecuence).
-
-
-In questions, we can use whichever of the constructs we have seen.
-Note that the evaluation of time is smart: if there is a fact with a duration
-starting at **t**, and we enter a question that needs a duration starting at
-(or an instant at) **t + 1**, it will be a valid anwswer.
-
-Terminating the continuous present.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    consecuence : FINISH VAR
-
-    FINISH : "finish"
-
-There is a special type of consecuence, built with the reserved word
-`finish`, that can be given as a consecuence in rules, like
-`finish O1`. This
-statement will change the special value of the final instant of `O1`,
-to replace it with the present. This will unqualify the fact to
-participate in the logic of the system (since conditions can only match the
-present), and will move it to the historic store.
-
-Terminating a duration will terminate all durations that are derived from it
-by the `until` operator.
-
- Arithmetics.
- ============
-
-
