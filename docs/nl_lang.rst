@@ -43,9 +43,6 @@ The pattern of use of nl is to define terms, to build sets of facts and rules
 with these terms, to extend these sets to their logical consecuences, and to
 query those extended sets.
 
-You can install the software and test the examples following the instructions
-in XXX.
-
 The Basics.
 ===========
 
