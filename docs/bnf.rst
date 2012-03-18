@@ -394,6 +394,11 @@ over names that have a type given by another (noun) variable. In that case, we
 give the name variable inmediately followed by the noun variable enclosed in
 parentheses. For example, `Person1(PersonNoun1)`.
 
+Negation.
+---------
+
+XXX
+
 Time.
 -----
 
@@ -483,62 +488,6 @@ Using variables in rules and queries, we can represent durations in 2 different
 ways, with 2 instant variables (`from Instant1 till Instant2`) or with just one
 duration variable (`Duration1`).
 
-Special time conditions.
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-    condition : coincidence
-              | during
-
-    coincidence : COINCIDE durations
-
-    during : instant DURING durations
-           | instant DURING VAR
-
-    durations : durations COMMA VAR
-              | VAR COMMA VAR
-
-    COINCIDE : "coincide"
-
-    DURING : "during
-
-
-There are 2 special contructs we can use as conditions in rules.
-
-We can use the
-reserved word `coincide` followed by any number of duration variables
-separated by commas, like `coincide Duration1, Duration2, Duration3;`. This
-will evaluate to true when the listed durations have all some common interval.
-
-We can also use the reserved word `during`, preceded by an instant variable and
-followed by any number of duration variables separated by commas. This will
-evaluate to true when the given instant lies within all the given durations.
-
-Special time operators.
-~~~~~~~~~~~~~~~~~~~~~~~
-
-    time : INTERSECTION durations
-
-    instant : MAXSTART durations
-
-    instant : MINEND durations
-
-    INTERSECTION : "intersection"
-
-    MAXSTART : "maxstart"
-
-    MINEND : "minend"
-
-We will show 3 operators to be used in the consecences of rules, that each take
-a sequence of duration variables and produce new time terms.
-
-The first is `intersection`, that will produce a new duration that is the
-maximum duration included in all given durations.
-
-The second and third operators are `minend` and `maxstart`, that both produce
-a new instant from a sequence of durations. `maxstart` will produce the
-earliest instant that is included in all given durations, and `minend` the
-latest.
-
 Times as terms.
 ~~~~~~~~~~~~~~~
 
@@ -553,59 +502,64 @@ Continuous present tense.
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
     time : FROM instant ONWARDS
+         | ONWARDS 
 
     ONWARDS : "onwards"
 
 To build a duration, we can use the reserved word `onwards` as the final
-instant of a duration, like "from 20 onwards". This will set a special value
+instant of a duration, like `from 20 onwards`. This will set a special value
 as the end of the duration. This value will stand for the 'present' time of the
 system, irrespectively of its changes. So, if the present time is 10, the final
 instant of these durations will evaluate to 10; and if we change the present
-(through `now.`) to 12, they will evaluate to 12.
+(through `now.`) to 12, they will evaluate to 12. If we use `onwards` by itself
+as the time component of a fact, it will stand for `from now onwards`.
 
-    consecuence : ENDDURATION VAR AT instant
-                | ENDDURATION VAR NOW
+Usage of the present continuous
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To use the present continuous, there are some restrictions we must follow.
+We can only assert things in the present. Either we state facts `now`,
+or we state facts `onwards`. The rest of time constructs we have seen are
+reserved for rules and questions.
+
+In conditions in rules, we can use, either `now`, `onwards`, or a duration
+variable, that will evaluate to `onwards` (will be matched were `onwards`
+would) but can be used in consecuences: `O1`.
+
+In consecuences in rules, we can use the same constructs as in conditions,
+plus:
+
+  * A special construct with `until` followed by any number of duration
+    variables (bound in the conditions of the rule). This will create an
+    `onwards` duration that will be bound to the durations that have matched
+    the duration variables specified, so that whenever any of them is
+    terminated, the new one will also be terminated. If two rules produce the
+    same consecuence, the system will do the right thing (require a condition
+    of each to be terminated before terminating the consecuence).
+
+
+In questions, we can use whichever of the constructs we have seen.
+Note that the evaluation of time is smart: if there is a fact with a duration
+starting at **t**, and we enter a question that needs a duration starting at
+(or an instant at) **t + 1**, it will be a valid anwswer.
+
+Terminating the continuous present.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    consecuence : FINISH VAR
+
+    FINISH : "finish"
 
 There is a special type of consecuence, built with the reserved word
-`endduration`, that can be given as a consecuence in rules, like
-`endduration Duration1 now` or `endduration Duration1 at Instant1`. This
-statement will change the special value of the final instant of `Duration1`,
-to replace it with the value of `Instant1` (or with the present).
+`finish`, that can be given as a consecuence in rules, like
+`finish O1`. This
+statement will change the special value of the final instant of `O1`,
+to replace it with the present. This will unqualify the fact to
+participate in the logic of the system (since conditions can only match the
+present), and will move it to the historic store.
 
-Problems with the continuous present.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Though it can be useful in certain scenarios, where we want to track real time,
-this special behaviour of durations presents some problems and has to be used
-with care.
-
- 1- The value of the final instant of present continuous durations cannot be
- used in arithmetic operations or conditions, only in time operations or
- conditions (the ones we have just described). This is sensible, since it is a
- changing value, and the results of operations with it would have to change 
- value with time.
- There is a (TODO) condition to check that a duration is ended; and terminating
- a duration would trigger rules using `terminated`.
-
- 2- If we state a fact in the future, we cannot expect nl to recognize it when
- nl's present overtakes the time of that fact and makes it past. Rules that
- would fire if we had waited to enter the fact until it was in the present or
- the past (because its instant would be "during" a set of durations that are
- in the continuous present), will not fire when that fact is made past by the
- passage of time. This is kind of ok, though: if we speak about time from the
- perspective of a present, we cannot state facts about the future, as David
- Hume would have told us. What we can
- do is express present intentions or probabilities for the future.
-
-A possible pattern of use of the present continuous.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-A use of the present continuous that might be consistent and useful would
-be to always use, as instants, `now`, and as durations, `from now onwards`,
-and, in rules, `from Instant1 onwards`. With the rule XXX above, if a fact
-x in the present continuous entails a fact y, and the duration in x is
-terminated, it would still entail a fact y 
-
+Terminating a duration will terminate all durations that are derived from it
+by the `until` operator.
 
  Arithmetics.
  ============
