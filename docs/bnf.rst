@@ -1,5 +1,5 @@
 The npl language
-===============
+================
 
 **npl** is a logic programming language. In the use of **npl** there
 are basically 4 stages:
@@ -124,7 +124,7 @@ predifined term `verb`, and all nouns with `noun`, all numbers with
 
 This allows us to talk about types of terms. A type of terms is a term, and
 the terms that are of that type are the terms related with the type term
-through `isa`. Therefore, we have six main types of term: `noun`, `verb`,
+through `isa`. Therefore, we have six mayor types of term: `noun`, `verb`,
 `thing`, `exists` (the primitive predefined verb), `number`, and `time`,
 and any number of subtypes of those.
 
@@ -173,7 +173,9 @@ A modifier is composed of a label and an object, that can be any kind of
 (atomic or complex) term except a time: a noun, a verb, a name, a number, or a
 predicate.
 
-A simple example of a fact could be `john [goes to london_zoo]`.
+A simple example of a fact could be `john [goes to london_zoo]`, where `john`
+is the subject and `[goes to london_zoo]` the predicate, where `goes` is the
+verb, and `london_zoo` is a modifier with label `to`.
 
 Definition of verbs.
 --------------------
@@ -203,7 +205,7 @@ and third, the modifiers that the verb can take to form the predicate.
 
 The modifiers that a verb can take are specified through mod-defs, where we
 give the label that the modifier will take, connected through the reserved word
-`a` with the type of terms that can be used in that modifier.
+`a` with the type of terms that can be used as that modifier.
 
 So, for
 example, let's define verbs that express actions that a person can perform on
@@ -223,7 +225,7 @@ Derived verbs inherit the subject and mod-defs that they do not override.
 With this new verbs, we can state facts such as:
 
 013  pete [owns what doc1].
-014 sue [edit what img2].
+014  sue [edit what img2].
 
 Rules.
 ------
@@ -270,7 +272,7 @@ first letter and removing its final digits. A fact will match the condition of
 a rule if they are identical except that, where the condition has a variable,
 the fact has a term
 that is in the range of the variable. The scope of variables is the rule: if a
-variable matches a term, it does so for all its occurrences within the rule.
+term matches a variable, it does so for all its occurrences within the rule.
 
 for a first example, we need to add a couple more of BNF rules:
 
@@ -311,7 +313,7 @@ enclosing it in square brackets. For example, from `locate`, we might have
 `[Locate1]` (the brackets are not part of the variable, but mark it as a
 predicate).
 
-To provide a working example, we will define a coaple of verbs that take a
+To provide a working example, we will define a couple of verbs that take a
 predicate as modifier, and build a rule with it.
 
 000  wants is exists withsubject person andcanbe that a person, do a content_action.
@@ -369,9 +371,30 @@ We can also use a verb variable in a predicate with modifiers. Also without
 modifiers, just by itself in the predicate, like `[Content_actionVerb1]`. This
 stands for a predicate where the content_action verb is alone without
 modifiers, as opposed to `[Content_action1]` where nothing is said of the
-number of modifiers.
+number of modifiers. For an example of verb variables with modifiers, we might
+have defined `can` like:
+
+000  can is exists withsubject person
+                   andcanbe what a verb,
+                            where a context.
+
+The rule would now take the form:
+
+000  if:
+        Person1 [wants that Person1, to [Content_actionVerb1 what Content1]];
+        Person1 [can what Content_actionVerb1, where Context1];
+        Content1 [located where Context1];
+     then:
+        Person1 [Content_actionVerb1 what Content1].
 
 Verb variables can appear in rules anywhere a verb can appear.
+
+Now we might say:
+
+000  mary [wants that mary, do [wiew what doc1]].
+000  mary [can what wiew, where ctx1].
+
+The system will conclude that `mary [view what doc1]`.
 
 Noun variables.
 ---------------
@@ -413,11 +436,11 @@ a duration.
 The reason we distinguish time (it would in principle suffice to represent
 times as just another modifier in the predicate)
 is because we want to allow for the
-present continuous (this is, for facts in which we know the starting instant
-but not the ending instant). To do this, we employ some non-monotonic
+present continuous (this is, for facts that have a starting instant
+but not an ending instant). To do this, we employ some non-monotonic
 technique. Now, the logic we have drawn up to this moment is strictly
 monotonic. And non-monotonicity scares the hell out of me. So, we isolate time
-in a reserved place and treat it very carefully.
+in a reserved place and treat it very carefully, and make it optional.
 
 Time can thus be given as an instant or as a duration. To assert facts,
 or to specify conditions in rules, we can only use the present tense.
@@ -479,7 +502,7 @@ Time in conditions.
 
 In conditions in rules, we can use, either `now`, `onwards`, or a duration
 variable, that will evaluate to `onwards` (will be matched were `onwards`
-would) but can be used in consecuences: `O1`.
+would) but can be used in consecuences: `D1`.
 
 Time in consecuences.
 ~~~~~~~~~~~~~~~~~~~~~
@@ -487,7 +510,7 @@ Time in consecuences.
 In consecuences in rules, we can use the same constructs as in conditions,
 plus a special construct with the reserved word `until` followed by any
 number of duration variables (bound in the conditions of the rule):
-`until O1, O2, O3`. This will
+`until D1, D2, D3`. This will
 create an `onwards` duration that will be bound to the durations that have
 matched the duration variables specified, so that whenever any of them is
 terminated, the new one will also be terminated. If two rules produce the
@@ -503,13 +526,145 @@ Terminating the continuous present.
 
 There is a special type of consecuence, built with the reserved word
 `finish`, that can be given as a consecuence in rules, like
-`finish O1;`. This
-statement will change the special value of the final instant of `O1`,
+`finish D1;`. This
+statement will change the special value of the final instant of `D1`,
 to replace it with the present. Terminating a duration will terminate
 all durations that are derived from it through the `until` operator.
 
- Arithmetics.
- ============
+Final Example.
+--------------
+
+To round up, I will sketch a workflow machine on top of the terminology we
+have developed so far.
+
+First we will need some workflow action verbs:
+
+000  wf_action is content_action.
+000  publish is wf_action.
+000  hide is wf_action.
+
+States for content:
+
+000  status are thing.
+000  public isa status.
+000  private isa status.
+
+Now we want workflow objects:
+
+000  workflow are thing.
+
+Workflows are assigned to content types depending on the context:
+
+000  is_assigned is exists withsubject workflow
+                           andcanbe to a noun,
+                                    in a context.
+
+We also want transitions in those workflows:
+
+000  transition are thing.
+
+000  has is exists withsubject thing andcanbe what a thing.
+
+Transitions relate workflow actions with starting and ending states:
+
+000  executed is exists withsubject transition
+                        andcanbe by a wf_action,
+                                 from a status,
+                                 to a status.
+
+Finally, we need permissions and roles:
+
+000  role are thing.
+000  manager isa role.
+000  editor isa role.
+000  visitor isa role.
+
+000  permission are thing.
+000  basic_perm isa permission.
+000  edit_perm isa permission.
+000  manage_perm isa permission.
+
+We reuse the `has` term to say that roles have permissions, and to say that
+people have permissions. We also make a verb
+to protect actions with permissions for states in contexts:
+
+000  is_protected is exists withsubject content_action
+                            andcanbe by a permission,
+                                     in a context,
+                                     for a status.
+
+And then, we can make a rule that says that if someone wants to perform an
+action on a content, the content is in a context, the person has a role,
+the role has a permission, and that permissions protects that action in that
+context, then he does it:
+
+000  if:
+        Person1 [wants to [Content_actionVerb1 what Content1]];
+        Content1 [located where Context1];
+        Content1 [has what Status1];
+        Person1 [has what Role1];
+        Role1 [has what Permission1];
+        Content_actionVerb1 [protected by Permission1, in Context1, for Status1];
+    Then:
+        Person1 [Content_actionVerb1 what Content1].
+        
+Since the only consecuence of the rule is an instantaneous fact, we do not
+need to bother about times.
+
+The next rule will use workflow actions to transition content:
+
+000  if:
+        Person1 [Wf_action1 what Content1(ContentNoun1)];
+        Workflow1 [is_assigned to ContentNoun1, in Context1] D1;
+        Workflow [has Transition1] D2;
+        Transition1 [executed by Wf_action1, from Status1, to Status2] D3;
+        Content1 [has what Status1] D4;
+    then:
+        finish D4;
+        Content1 [has what Status2] until D1, D2, D3.
+
+
+Let's try now some atomic facts:
+
+000  manager [has what manage_perm] onwards.
+000  manager [has what edit_perm] onwards.
+000  manager [has what basic_perm] onwards.
+000  editor [has what edit_perm] onwards.
+000  editor [has what basic_perm] onwards.
+000  visitor [has what basic_perm] onwards.
+
+000  publish [is_protected by manage_perm, in ctx1, for private] onwards.
+000  hide [is_protected by edit_perm, in ctx1, for public] onwards.
+000  edit [is_protected by edit_perm, in ctx1, for private] onwards.
+000  edit [is_protected by manage_perm, in ctx1, for public] onwards.
+000  view [is_protected by edit_perm, in ctx1, for private] onwards.
+000  view [is_protected by basic_perm, in ctx1, for public] onwards.
+
+000  john [has what manager] onwards.
+000  mary [has what editor] onwards.
+000  pete [has what visitor] onwards.
+
+000  doc1 [has what private] onwards.
+
+000  pete [wants to [publish what doc1]].
+
+000  pete [publish what doc1]?
+     False
+
+000  doc1 [has what Status1]?
+     private
+
+000  john [wants to [publish what doc1]].
+
+000  john [publish what doc1]?
+     True
+
+000  doc1 [has what Status1]?
+     public
+
+ 
+Arithmetics.
+============
 
 
 
