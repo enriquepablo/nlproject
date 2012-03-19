@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The nl language &mdash; nlproject 1.0dev documentation</title>
+    <title>The npl language &mdash; nlproject 1.0dev documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,6 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="nlproject 1.0dev documentation" href="index.html" />
+    <link rel="next" title="Installation and execution." href="npl_install.html" />
     <link rel="prev" title="APPENDIX: NL, the first order theory behind nl" href="NL.html" /> 
   </head>
   <body>
@@ -35,6 +36,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="npl_install.html" title="Installation and execution."
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="NL.html" title="APPENDIX: NL, the first order theory behind nl"
              accesskey="P">previous</a> |</li>
@@ -47,34 +51,20 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="the-nl-language">
-<h1>The nl language<a class="headerlink" href="#the-nl-language" title="Permalink to this headline">¶</a></h1>
-<p>At the oment, the only documentation about nl is a blog entry hereXXX.</p>
-<div class="section" id="install">
-<h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
-<p>to install:</p>
-<div class="highlight-python"><pre>$ git clone git://github.com/enriquepablo/nlp.buildouts.git
-$ cd nlp.buildouts
-$ cp buildout.cfg.in buildout.cfg
-$ vim buildout.cfg  # -&gt; uncomment profiles/ircbot.cfg
-$ virtualenv --no-site-packages --python=python2.7 .
-$ source bin/activate
-$ python bootstrap.py
-$ bin/buildout
-...
-$ bin/ircbot some_name
-Generating LALR tables
-Signed on as some_name_bot.
-Joined #nlpbot_some_name.</pre>
+  <div class="section" id="the-npl-language">
+<h1>The npl language<a class="headerlink" href="#the-npl-language" title="Permalink to this headline">¶</a></h1>
+<p><strong>npl</strong> is a general purpose logic system, simple, yet extremelly powerful. It is
+distributed under an open source license.</p>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="npl_install.html">Installation and execution.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnf.html">The npl language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnf.html#arithmetics">Arithmetics.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnf.html#questions">Questions.</a></li>
+</ul>
 </div>
-<p>.</p>
-<p>Now you can talk to the ircbot on freenode at channel #nlpbot_some_name.
-You provide definitions, facts and rules ending them with a dot, and you ask
-facts ending them with a question mark. Question facts can contain variables.
-Whenever you tell or ask something to the bot, you have to address it
-prefixing your message with its nickname: &#8220;some_name_bot: &lt;message&gt;&#8221; where &lt;message&gt;
-is any definition, fact, rule, or question.</p>
-<p>If you obtain any errors trying this, please report at <a class="reference external" href="http://github.com/enriquepablo/nlproject/issues">the issue tracker</a>.</p>
 </div>
 </div>
 
@@ -86,8 +76,10 @@ is any definition, fact, rule, or question.</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">The nl language</a><ul>
-<li><a class="reference internal" href="#install">Install</a></li>
+<li><a class="reference internal" href="#">The npl language</a><ul>
+<li><a class="reference internal" href="#contents">Contents</a><ul>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -95,6 +87,9 @@ is any definition, fact, rule, or question.</p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="NL.html"
                         title="previous chapter">APPENDIX: NL, the first order theory behind nl</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="npl_install.html"
+                        title="next chapter">Installation and execution.</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/nl_lang.txt"
@@ -124,6 +119,9 @@ is any definition, fact, rule, or question.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="npl_install.html" title="Installation and execution."
+             >next</a> |</li>
+        <li class="right" >
           <a href="NL.html" title="APPENDIX: NL, the first order theory behind nl"
              >previous</a> |</li>
         <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li> 
@@ -131,7 +129,7 @@ is any definition, fact, rule, or question.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Enrique Pablo Pérez Arnaud &lt;enriquepablo at google&#39;s mail domain&gt;.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

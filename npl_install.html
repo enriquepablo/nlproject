@@ -1,0 +1,166 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation and execution. &mdash; nlproject 1.0dev documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="nlproject 1.0dev documentation" href="index.html" />
+    <link rel="up" title="The npl language" href="nl_lang.html" />
+    <link rel="next" title="The npl language" href="bnf.html" />
+    <link rel="prev" title="The npl language" href="nl_lang.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="bnf.html" title="The npl language"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="nl_lang.html" title="The npl language"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
+          <li><a href="nl_lang.html" accesskey="U">The npl language</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="installation-and-execution">
+<h1>Installation and execution.<a class="headerlink" href="#installation-and-execution" title="Permalink to this headline">¶</a></h1>
+<p>You can use <strong>npl</strong> in several different ways. You can start an ircbot and
+talk to
+it in an irchat, in a REPL manner. Or you can start a daemon and talk to it
+over HTTP. Or you can use it from python (for this, refer to the
+<a class="reference external" href="nl_intro">nl documentation</a>).</p>
+<div class="section" id="install">
+<h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
+<p>to install:</p>
+<div class="highlight-python"><pre>$ git clone git://github.com/enriquepablo/nlp.buildouts.git
+$ cd nlp.buildouts
+$ cp buildout.cfg.in buildout.cfg
+$ virtualenv --no-site-packages --python=python2.7 .
+$ source bin/activate
+$ python bootstrap.py
+$ bin/buildout
+...
+$ bin/ircbot some_name
+Generating LALR tables
+Signed on as some_name_bot.
+Joined #nlpbot_some_name.</pre>
+</div>
+<p>.</p>
+<p>Now you can talk to the ircbot on freenode at channel #nlpbot_some_name.
+You provide definitions, facts and rules ending them with a dot, and you ask
+facts ending them with a question mark. Question facts can contain variables.
+Whenever you tell or ask something to the bot, you have to address it
+prefixing your message with its nickname: &#8220;some_name_bot: &lt;message&gt;&#8221; where &lt;message&gt;
+is any definition, fact, rule, or question.</p>
+<p>You can now also start a daemon, and, as I said, talk to it over HTTP:</p>
+<div class="highlight-python"><pre>$ bin/npldaemon
+$</pre>
+</div>
+<p>A telnet session now with the daemon:</p>
+<div class="highlight-python"><pre>$ telnet localhost 8280
+Trying ::1...
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+person are thing.
+Noun Person defined.Connection closed by foreign host.</pre>
+</div>
+<p>If you obtain any errors trying this, please report at <a class="reference external" href="http://github.com/enriquepablo/nl/issues">the issue tracker</a>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation and execution.</a><ul>
+<li><a class="reference internal" href="#install">Install</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="nl_lang.html"
+                        title="previous chapter">The npl language</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="bnf.html"
+                        title="next chapter">The npl language</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/npl_install.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="bnf.html" title="The npl language"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="nl_lang.html" title="The npl language"
+             >previous</a> |</li>
+        <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
+          <li><a href="nl_lang.html" >The npl language</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Enrique Pablo Pérez Arnaud &lt;enriquepablo at google&#39;s mail domain&gt;.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
