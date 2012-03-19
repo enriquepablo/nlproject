@@ -288,7 +288,7 @@ So, if we define a verb `located`, we can build a rule such as what follows.
 
 019 located is exists withsubject thing andcanbe in a context.
 
-019  if:
+019  if::
         Thing1 [located in Context1];
         Context1 [located in Context2];
     then:
@@ -319,7 +319,7 @@ predicate as modifier, and build a rule with it.
 000  wants is exists withsubject person andcanbe that a person, do a content_action.
 000  is_allowed is exists withsubject person andcanbe to a content_action.
 
-000  if:
+000  if::
         Person1 [wants that Person1, do [Content_action1]];
         Person1 [is_allowed to [Content_action1]];
      then:
@@ -348,7 +348,7 @@ example of this, we define a verb `can`, that will take a verb as modifier:
 
 A rule with this verb:
 
-000  if:
+000  if::
         Person1 [wants that Person1, to [Content_actionVerb1 Content_action1]];
         Person1 [can what Content_actionVerb1];
      then:
@@ -380,7 +380,7 @@ have defined `can` like:
 
 The rule would now take the form:
 
-000  if:
+000  if::
         Person1 [wants that Person1, to [Content_actionVerb1 what Content1]];
         Person1 [can what Content_actionVerb1, where Context1];
         Content1 [located where Context1];
@@ -598,7 +598,7 @@ action on a content, the content is in a context, the person has a role,
 the role has a permission, and that permissions protects that action in that
 context, then he does it:
 
-000  if:
+000  if::
         Person1 [wants to [Content_actionVerb1 what Content1]];
         Content1 [located where Context1];
         Content1 [has what Status1];
@@ -613,7 +613,7 @@ need to bother about times.
 
 The next rule will use workflow actions to transition content:
 
-000  if:
+000  if::
         Person1 [Wf_action1 what Content1(ContentNoun1)];
         Workflow1 [is_assigned to ContentNoun1, in Context1] D1;
         Workflow [has Transition1] D2;
@@ -666,13 +666,13 @@ Let's try now some atomic facts:
 Arithmetics.
 ============
 
+XXX.
 
 
+Questions.
+==========
 
- Questions.
- ----------
-
-XXX
+XXX.
 
 Instants.
 ~~~~~~~~~
