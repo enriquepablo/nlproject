@@ -675,7 +675,7 @@ Questions.
 XXX.
 
 Instants.
-~~~~~~~~~
+---------
 
     time : AT instant
 
@@ -695,7 +695,7 @@ to allow other time formats), prefixing them with the reserved word "at". So we 
 In rules or queries, we would use variables with the form `Instant1`.
 
 Durations.
-~~~~~~~~~~
+----------
 
     time : FROM instant TILL instant
 
