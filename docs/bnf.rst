@@ -1,12 +1,12 @@
-The npl language
-================
+npl language essentials
+=======================
 
 **npl** is a logic programming language. In the use of **npl** there
 are basically 4 stages:
 
  * Define terms;
- * Build sentences and rules with those terms;
- * Extend the set of sentences and rules to all logical consequences;
+ * Build statements and rules with those terms;
+ * Extend the set of statements and rules to all logical consequences;
  * Query that extended set.
 
 <inmodest hype>
@@ -21,31 +21,31 @@ consistent and complete.
 
 I'm going to describe the **npl** language going through its BNF grammar, from
 top down. To illustrate the different constructs of the language, I will
-be sketching along a set of terms, sentences and rules to hold the bussiness
+be sketching along a set of terms, statements and rules to hold the bussiness
 logic of a content management system.
 
-Statements
+Sentences
 ----------
+::
+    sentence : statement
+             | question
 
-    statement : sentence
-              | question
-
-Statements are the top level grammatical elements. These are the elements that
+Sentences are the top level grammatical elements. These are the elements that
 can be entered (told or asked) into npl's knowledge base (kb). There are two
-kinds of statements, sentences and questions. Sentences
+kinds of sentences, statements and questions. Statements
 add to the information held in the kb, and questions query the kb.
 
-Sentences.
+Statements.
 ----------
-
-    sentence : definition DOT
-             | fact DOT
-             | rule DOT
+::
+    statement : definition DOT
+              | fact DOT
+              | rule DOT
 
     DOT : "."
 
-Sentences are asserted: they have truth value.
-There are 3 main forms of sentences, all ended with a dot, which we will
+Statements are asserted: they have truth value.
+There are 3 main forms of statements, all ended with a dot, which we will
 call definitions, facts, and rules.
 Definitions are used to define terms. Facts use those terms to establish
 relations among them. And rules establish relations (logical relations,
@@ -169,6 +169,8 @@ A modification is one or more modifiers, separated by commas.
     object : TERM
            | predicate
 
+    LABEL : <any sequence of lower case letters>
+
 A modifier is composed of a label and an object, that can be any kind of
 (atomic or complex) term except a time: a noun, a verb, a name, a number, or a
 predicate.
@@ -251,9 +253,9 @@ Rules.
 
     THEN : "then"
 
-A rule consists of 2 sets of sentences, the conditions and the consecuences.
+A rule consists of 2 sets of statements, the conditions and the consecuences.
 Conditions and consecuences are, mainly, facts (though they can be other types
-of sentences, as we shall be seeing below). Atomic facts (facts that are
+of statements, as we shall be seeing below). Atomic facts (facts that are
 asserted on their own, outside of rules) can match the conditions of rules,
 and, when all conditions in a rule are matched, its consecuences are
 automatically (atomically) added to the kb.
@@ -451,7 +453,7 @@ future.
 Instants.
 ~~~~~~~~~
 
-    statement : order DOT
+    sentence : order DOT
 
     order : NOW
 
@@ -466,7 +468,7 @@ The time can be specified with the term `now`. We can say:
 Internally, every instance of **npl** keeps a record of time.
 When **npl** is started, this record is set
 to the UNIX time of the moment. It is kept like that till further notice. And
-further notice is given with the statement:
+further notice is given with the sentence:
 
 290 now.
 
@@ -527,7 +529,7 @@ Terminating the continuous present.
 There is a special type of consecuence, built with the reserved word
 `finish`, that can be given as a consecuence in rules, like
 `finish D1;`. This
-statement will change the special value of the final instant of `D1`,
+sentence will change the special value of the final instant of `D1`,
 to replace it with the present. Terminating a duration will terminate
 all durations that are derived from it through the `until` operator.
 
@@ -661,55 +663,3 @@ Let's try now some atomic facts:
 
 000  doc1 [has what Status1]?
      public
-
- 
-Arithmetics.
-============
-
-XXX.
-
-
-Questions.
-==========
-
-XXX.
-
-Instants.
----------
-
-    time : AT instant
-
-    instant : NUMBER
-            | VAR
-            | NOW
-
-    AT : "at"
-
-    NUMBER : <any integer>
-
-We can provide specific instants for facts, as integers (it is in the TODO list
-to allow other time formats), prefixing them with the reserved word "at". So we can say:
-
-300 john [views what doc1] at 30.
-
-In rules or queries, we would use variables with the form `Instant1`.
-
-Durations.
-----------
-
-    time : FROM instant TILL instant
-
-    FROM : "from"
-
-    TILL : "till"
-
-Apart from instants, we can provide durations as time components of facts. To
-do this, we use the reserved words `from` y `till`:
-
-32) john [is_allowed to [edit what doc1]] from 10 till 20.
-
-    time : VAR
-
-Using variables in rules and queries, we can represent durations in 2 different
-ways, with 2 instant variables (`from Instant1 till Instant2`) or with just one
-duration variable (`Duration1`).
