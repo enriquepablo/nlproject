@@ -121,13 +121,13 @@ TERM : &lt;a lower case letter followed by any number of lower case letters,
           underscores, and digits. 2 underscores in a row are forbidden&gt;</pre>
 </div>
 <p>We define a new noun by relating it with another (already defined) noun through
-the reserved word <cite>are</cite>. To get started, we use a primitive predefined noun,
-<cite>thing</cite>.</p>
+the reserved word <tt class="docutils literal"><span class="pre">are</span></tt>. To get started, we use a primitive predefined noun,
+<tt class="docutils literal"><span class="pre">thing</span></tt>.</p>
 <p><strong>001</strong>  <tt class="docutils literal"><span class="pre">person</span> <span class="pre">are</span> <span class="pre">thing.</span></tt></p>
-<p><strong>002</strong>  <cite>content are thing.</cite></p>
-<p><strong>003</strong>  <cite>document are content.</cite></p>
-<p><strong>004</strong>  <cite>image are content.</cite></p>
-<p><strong>005</strong>  <cite>context are thing.</cite></p>
+<p><strong>002</strong>  <tt class="docutils literal"><span class="pre">content</span> <span class="pre">are</span> <span class="pre">thing.</span></tt></p>
+<p><strong>003</strong>  <tt class="docutils literal"><span class="pre">document</span> <span class="pre">are</span> <span class="pre">content.</span></tt></p>
+<p><strong>004</strong>  <tt class="docutils literal"><span class="pre">image</span> <span class="pre">are</span> <span class="pre">content.</span></tt></p>
+<p><strong>005</strong>  <tt class="docutils literal"><span class="pre">context</span> <span class="pre">are</span> <span class="pre">thing.</span></tt></p>
 </div>
 <div class="section" id="name-definitions">
 <h3>Name definitions<a class="headerlink" href="#name-definitions" title="Permalink to this headline">¶</a></h3>
@@ -136,42 +136,42 @@ the reserved word <cite>are</cite>. To get started, we use a primitive predefine
 ISA : "isa"</pre>
 </div>
 <p>Proper names are defined relating them with a noun through the reserved word
-<cite>isa</cite>.</p>
-<p><strong>005</strong>  <cite>john isa person.</cite></p>
-<p><strong>006</strong>  <cite>sue isa person.</cite></p>
-<p><strong>007</strong>  <cite>pete isa person.</cite></p>
-<p><strong>008</strong>  <cite>mary isa person.</cite></p>
-<p><strong>009</strong>  <cite>doc1 isa document.</cite></p>
-<p><strong>010</strong>  <cite>doc2 isa document.</cite></p>
-<p><strong>011</strong>  <cite>img1 isa image.</cite></p>
-<p><strong>012</strong>  <cite>img2 isa image.</cite></p>
-<p><strong>000</strong>  <cite>ctx1 isa context.</cite></p>
-<p><strong>000</strong>  <cite>ctx2 isa context.</cite></p>
+<tt class="docutils literal"><span class="pre">isa</span></tt>.</p>
+<p><strong>005</strong>  <tt class="docutils literal"><span class="pre">john</span> <span class="pre">isa</span> <span class="pre">person.</span></tt></p>
+<p><strong>006</strong>  <tt class="docutils literal"><span class="pre">sue</span> <span class="pre">isa</span> <span class="pre">person.</span></tt></p>
+<p><strong>007</strong>  <tt class="docutils literal"><span class="pre">pete</span> <span class="pre">isa</span> <span class="pre">person.</span></tt></p>
+<p><strong>008</strong>  <tt class="docutils literal"><span class="pre">mary</span> <span class="pre">isa</span> <span class="pre">person.</span></tt></p>
+<p><strong>009</strong>  <tt class="docutils literal"><span class="pre">doc1</span> <span class="pre">isa</span> <span class="pre">document.</span></tt></p>
+<p><strong>010</strong>  <tt class="docutils literal"><span class="pre">doc2</span> <span class="pre">isa</span> <span class="pre">document.</span></tt></p>
+<p><strong>011</strong>  <tt class="docutils literal"><span class="pre">img1</span> <span class="pre">isa</span> <span class="pre">image.</span></tt></p>
+<p><strong>012</strong>  <tt class="docutils literal"><span class="pre">img2</span> <span class="pre">isa</span> <span class="pre">image.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">ctx1</span> <span class="pre">isa</span> <span class="pre">context.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">ctx2</span> <span class="pre">isa</span> <span class="pre">context.</span></tt></p>
 </div>
 <div class="section" id="types-of-terms">
 <h3>Types of terms.<a class="headerlink" href="#types-of-terms" title="Permalink to this headline">¶</a></h3>
-<p>Names and nouns establish a class structure. The relation established by <cite>are</cite>
+<p>Names and nouns establish a class structure. The relation established by <tt class="docutils literal"><span class="pre">are</span></tt>
 among 2 nouns has the same form as the subclass relation among 2 classes, and
-the relation established by <cite>isa</cite> among a name and a noun has the same form as
+the relation established by <tt class="docutils literal"><span class="pre">isa</span></tt> among a name and a noun has the same form as
 the relation between an individual and a class it belongs to. So, for example,
-the above definitions entail that <cite>document are thing</cite>, or that
-<cite>mary isa thing</cite>. This means that if we ask the system for <cite>thing`s, `mary</cite>
-will be retrieved, and if in a rule we require a <cite>thing</cite>, <cite>mary</cite> will match.</p>
+the above definitions entail that <tt class="docutils literal"><span class="pre">document</span> <span class="pre">are</span> <span class="pre">thing</span></tt>, or that
+<tt class="docutils literal"><span class="pre">mary</span> <span class="pre">isa</span> <span class="pre">thing</span></tt>. This means that if we ask the system for <tt class="docutils literal"><span class="pre">thing``s,</span> <span class="pre">``mary</span></tt>
+will be retrieved, and if in a rule we require a <tt class="docutils literal"><span class="pre">thing</span></tt>, <tt class="docutils literal"><span class="pre">mary</span></tt> will match.</p>
 <p>This class structure is explicit in the case of nouns and names, and is
 (implicitly) pervasive among the rest of terms in <strong>npl</strong>. So, for
 example, all predicates
 (predicates are complex terms composed of a verb and any number of modifiers,
-as we shall see below) are implicitly related by <cite>isa</cite> with their verbs.
-In addition, all verbs are to be thought of as related through <cite>isa</cite> with the
-predifined term <cite>verb</cite>, and all nouns with <cite>noun</cite>, all numbers with
-<cite>number</cite>, and all times with <cite>time</cite>.</p>
+as we shall see below) are implicitly related by <tt class="docutils literal"><span class="pre">isa</span></tt> with their verbs.
+In addition, all verbs are to be thought of as related through <tt class="docutils literal"><span class="pre">isa</span></tt> with the
+predifined term <tt class="docutils literal"><span class="pre">verb</span></tt>, and all nouns with <tt class="docutils literal"><span class="pre">noun</span></tt>, all numbers with
+<tt class="docutils literal"><span class="pre">number</span></tt>, and all times with <tt class="docutils literal"><span class="pre">time</span></tt>.</p>
 <p>This allows us to talk about types of terms. A type of terms is a term, and
 the terms that are of that type are the terms related with the type term
-through <cite>isa</cite>. Therefore, we have six mayor types of term: <cite>noun</cite>, <cite>verb</cite>,
-<cite>thing</cite>, <cite>exists</cite> (the primitive predefined verb), <cite>number</cite>, and <cite>time</cite>,
+through <tt class="docutils literal"><span class="pre">isa</span></tt>. Therefore, we have six mayor types of term: <tt class="docutils literal"><span class="pre">noun</span></tt>, <tt class="docutils literal"><span class="pre">verb</span></tt>,
+<tt class="docutils literal"><span class="pre">thing</span></tt>, <tt class="docutils literal"><span class="pre">exists</span></tt> (the primitive predefined verb), <tt class="docutils literal"><span class="pre">number</span></tt>, and <tt class="docutils literal"><span class="pre">time</span></tt>,
 and any number of subtypes of those.</p>
-<p>For example, <cite>doc1</cite> is a term of type <cite>thing</cite>, and <cite>document</cite> is a term of type
-<cite>noun</cite>.</p>
+<p>For example, <tt class="docutils literal"><span class="pre">doc1</span></tt> is a term of type <tt class="docutils literal"><span class="pre">thing</span></tt>, and <tt class="docutils literal"><span class="pre">document</span></tt> is a term of type
+<tt class="docutils literal"><span class="pre">noun</span></tt>.</p>
 <p>NOTE: since the definitions of verbs set bounds on the predicates and facts
 where they can appear, we shall defer their introduction until we have
 introduced predicates and facts.</p>
@@ -212,9 +212,9 @@ LABEL : &lt;any sequence of lower case letters&gt;</pre>
 <p>A modifier is composed of a label and an object, that can be any kind of
 (atomic or complex) term except a time: a noun, a verb, a name, a number, or a
 predicate.</p>
-<p>A simple example of a fact could be <cite>john [goes to london_zoo]</cite>, where <cite>john</cite>
-is the subject and <cite>[goes to london_zoo]</cite> the predicate, where <cite>goes</cite> is the
-verb, and <cite>london_zoo</cite> is a modifier with label <cite>to</cite>.</p>
+<p>A simple example of a fact could be <tt class="docutils literal"><span class="pre">john</span> <span class="pre">[goes</span> <span class="pre">to</span> <span class="pre">london_zoo]</span></tt>, where <tt class="docutils literal"><span class="pre">john</span></tt>
+is the subject and <tt class="docutils literal"><span class="pre">[goes</span> <span class="pre">to</span> <span class="pre">london_zoo]</span></tt> the predicate, where <tt class="docutils literal"><span class="pre">goes</span></tt> is the
+verb, and <tt class="docutils literal"><span class="pre">london_zoo</span></tt> is a modifier with label <tt class="docutils literal"><span class="pre">to</span></tt>.</p>
 </div>
 <div class="section" id="definition-of-verbs">
 <h2>Definition of verbs.<a class="headerlink" href="#definition-of-verbs" title="Permalink to this headline">¶</a></h2>
@@ -242,22 +242,22 @@ term that can act as subject in a fact where the new verb forms the predicate;
 and third, the modifiers that the verb can take to form the predicate.</p>
 <p>The modifiers that a verb can take are specified through mod-defs, where we
 give the label that the modifier will take, connected through the reserved word
-<cite>a</cite> with the type of terms that can be used as that modifier.</p>
+<tt class="docutils literal"><span class="pre">a</span></tt> with the type of terms that can be used as that modifier.</p>
 <p>So, for
 example, let&#8217;s define verbs that express actions that a person can perform on
 content. For this we must use the primitive predefined verb
-we mentioned earlier: <cite>exists</cite>.</p>
-<p><strong>013</strong>  <cite>content_action is exists withsubject person andcanbe what a content.</cite></p>
-<p><strong>014</strong>  <cite>view is content_action.</cite></p>
-<p><strong>015</strong>  <cite>edit is content_action.</cite></p>
-<p><strong>016</strong>  <cite>owns is content_action.</cite></p>
+we mentioned earlier: <tt class="docutils literal"><span class="pre">exists</span></tt>.</p>
+<p><strong>013</strong>  <tt class="docutils literal"><span class="pre">content_action</span> <span class="pre">is</span> <span class="pre">exists</span> <span class="pre">withsubject</span> <span class="pre">person</span> <span class="pre">andcanbe</span> <span class="pre">what</span> <span class="pre">a</span> <span class="pre">content.</span></tt></p>
+<p><strong>014</strong>  <tt class="docutils literal"><span class="pre">view</span> <span class="pre">is</span> <span class="pre">content_action.</span></tt></p>
+<p><strong>015</strong>  <tt class="docutils literal"><span class="pre">edit</span> <span class="pre">is</span> <span class="pre">content_action.</span></tt></p>
+<p><strong>016</strong>  <tt class="docutils literal"><span class="pre">owns</span> <span class="pre">is</span> <span class="pre">content_action.</span></tt></p>
 <p>We do not need to specify the type of the subject for a verb if it coincides
 with that of its parent verb, and, if a mod-def for a child verb coincides with
 one of its parent, we do not need to explicitly specify it on the child.
 Derived verbs inherit the subject and mod-defs that they do not override.</p>
 <p>With this new verbs, we can state facts such as:</p>
-<p><strong>013</strong>  <cite>pete [owns what doc1].</cite></p>
-<p><strong>014</strong>  <cite>sue [edit what img2].</cite></p>
+<p><strong>013</strong>  <tt class="docutils literal"><span class="pre">pete</span> <span class="pre">[owns</span> <span class="pre">what</span> <span class="pre">doc1].</span></tt></p>
+<p><strong>014</strong>  <tt class="docutils literal"><span class="pre">sue</span> <span class="pre">[edit</span> <span class="pre">what</span> <span class="pre">img2].</span></tt></p>
 </div>
 <div class="section" id="rules">
 <h2>Rules.<a class="headerlink" href="#rules" title="Permalink to this headline">¶</a></h2>
@@ -311,23 +311,23 @@ VAR : &lt;an uppercase letter followed by any number of lower case letters,
        digits and underscores and ending in any number of digits. Double
        underscores are forbidden.&gt;</pre>
 </div>
-<p>So, if we define a verb <cite>located</cite>, we can build a rule such as what follows.</p>
+<p>So, if we define a verb <tt class="docutils literal"><span class="pre">located</span></tt>, we can build a rule such as what follows.</p>
 <p><strong>019</strong> located is exists withsubject thing andcanbe in a context.</p>
 <dl class="docutils">
-<dt><strong>019</strong>  <a href="#id1"><span class="problematic" id="id2">`</span></a>if:</dt>
+<dt><strong>019</strong>  <a href="#id1"><span class="problematic" id="id2">``</span></a>if:</dt>
 <dd><blockquote class="first">
 <div>Thing1 [located in Context1];
 Context1 [located in Context2];</div></blockquote>
 <dl class="last docutils">
 <dt>then:</dt>
-<dd>Thing1 [located in Context2].`</dd>
+<dd>Thing1 [located in Context2].``</dd>
 </dl>
 </dd>
 </dl>
 <p>With this, if we have that</p>
-<p><strong>020</strong>  <cite>doc1 [located where ctx1].</cite></p>
-<p><strong>021</strong>  <cite>ctx1 [located where ctx2].</cite></p>
-<p>The system will conclude that <cite>doc1 [located where ctx2]</cite>.</p>
+<p><strong>020</strong>  <tt class="docutils literal"><span class="pre">doc1</span> <span class="pre">[located</span> <span class="pre">where</span> <span class="pre">ctx1].</span></tt></p>
+<p><strong>021</strong>  <tt class="docutils literal"><span class="pre">ctx1</span> <span class="pre">[located</span> <span class="pre">where</span> <span class="pre">ctx2].</span></tt></p>
+<p>The system will conclude that <tt class="docutils literal"><span class="pre">doc1</span> <span class="pre">[located</span> <span class="pre">where</span> <span class="pre">ctx2]</span></tt>.</p>
 </div>
 <div class="section" id="predicate-variables">
 <h2>Predicate variables.<a class="headerlink" href="#predicate-variables" title="Permalink to this headline">¶</a></h2>
@@ -336,15 +336,15 @@ Context1 [located in Context2];</div></blockquote>
 <p>We have seen that we can use predicates as objects in the modifiers of other
 predicates. This means that, in rules, we must be able to use variables that
 range over predicates. We do this by building a variable from a verb, and
-enclosing it in square brackets. For example, from <cite>locate</cite>, we might have
-<cite>[Locate1]</cite> (the brackets are not part of the variable, but mark it as a
+enclosing it in square brackets. For example, from <tt class="docutils literal"><span class="pre">locate</span></tt>, we might have
+<tt class="docutils literal"><span class="pre">[Locate1]</span></tt> (the brackets are not part of the variable, but mark it as a
 predicate).</p>
 <p>To provide a working example, we will define a couple of verbs that take a
 predicate as modifier, and build a rule with it.</p>
-<p><strong>000</strong>  <cite>wants is exists withsubject person andcanbe that a person, do a content_action.</cite></p>
-<p><strong>000</strong>  <cite>is_allowed is exists withsubject person andcanbe to a content_action.</cite></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">wants</span> <span class="pre">is</span> <span class="pre">exists</span> <span class="pre">withsubject</span> <span class="pre">person</span> <span class="pre">andcanbe</span> <span class="pre">that</span> <span class="pre">a</span> <span class="pre">person,</span> <span class="pre">do</span> <span class="pre">a</span> <span class="pre">content_action.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">is_allowed</span> <span class="pre">is</span> <span class="pre">exists</span> <span class="pre">withsubject</span> <span class="pre">person</span> <span class="pre">andcanbe</span> <span class="pre">to</span> <span class="pre">a</span> <span class="pre">content_action.</span></tt></p>
 <dl class="docutils">
-<dt><strong>000</strong>  <cite>if::</cite></dt>
+<dt><strong>000</strong>  <tt class="docutils literal"><span class="pre">if::</span></tt></dt>
 <dd><blockquote class="first">
 <div>Person1 [wants that Person1, do [Content_action1]];
 Person1 [is_allowed to [Content_action1]];</div></blockquote>
@@ -355,9 +355,9 @@ Person1 [is_allowed to [Content_action1]];</div></blockquote>
 </dd>
 </dl>
 <p>If with all this we say that</p>
-<p><strong>000</strong>  <cite>sue [wants that sue, do [wiew what doc1]].</cite></p>
-<p><strong>000</strong>  <cite>sue [is_allowed to [wiew what doc1]].</cite></p>
-<p>The system will conclude that <cite>sue [view what doc1]</cite>.</p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">sue</span> <span class="pre">[wants</span> <span class="pre">that</span> <span class="pre">sue,</span> <span class="pre">do</span> <span class="pre">[wiew</span> <span class="pre">what</span> <span class="pre">doc1]].</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">sue</span> <span class="pre">[is_allowed</span> <span class="pre">to</span> <span class="pre">[wiew</span> <span class="pre">what</span> <span class="pre">doc1]].</span></tt></p>
+<p>The system will conclude that <tt class="docutils literal"><span class="pre">sue</span> <span class="pre">[view</span> <span class="pre">what</span> <span class="pre">doc1]</span></tt>.</p>
 </div>
 <div class="section" id="verb-variables">
 <h2>Verb variables.<a class="headerlink" href="#verb-variables" title="Permalink to this headline">¶</a></h2>
@@ -367,12 +367,12 @@ Person1 [is_allowed to [Content_action1]];</div></blockquote>
 <p>Since we can have verbs as subject or object in facts, we need to be able to
 use variables in rules that range over verbs. We do this by capitalizing the
 name of a verb, and appending to it &#8220;Verb&#8221; and an integer. for example, a verb
-variable made from <cite>locate</cite> would be <cite>LocateVerb1</cite>. To show a more complete
-example of this, we define a verb <cite>can</cite>, that will take a verb as modifier:</p>
-<p><strong>000</strong>  <cite>can is exists withsubject person andcanbe what a verb.</cite></p>
+variable made from <tt class="docutils literal"><span class="pre">locate</span></tt> would be <tt class="docutils literal"><span class="pre">LocateVerb1</span></tt>. To show a more complete
+example of this, we define a verb <tt class="docutils literal"><span class="pre">can</span></tt>, that will take a verb as modifier:</p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">can</span> <span class="pre">is</span> <span class="pre">exists</span> <span class="pre">withsubject</span> <span class="pre">person</span> <span class="pre">andcanbe</span> <span class="pre">what</span> <span class="pre">a</span> <span class="pre">verb.</span></tt></p>
 <p>A rule with this verb:</p>
 <dl class="docutils">
-<dt><strong>000</strong>  <cite>if::</cite></dt>
+<dt><strong>000</strong>  <tt class="docutils literal"><span class="pre">if::</span></tt></dt>
 <dd><blockquote class="first">
 <div>Person1 [wants that Person1, to [Content_actionVerb1 Content_action1]];
 Person1 [can what Content_actionVerb1];</div></blockquote>
@@ -382,23 +382,23 @@ Person1 [can what Content_actionVerb1];</div></blockquote>
 </dl>
 </dd>
 </dl>
-<p>Let&#8217;s take a look at the construct <cite>[Content_actionVerb1 Content_action1]</cite>. It
+<p>Let&#8217;s take a look at the construct <tt class="docutils literal"><span class="pre">[Content_actionVerb1</span> <span class="pre">Content_action1]</span></tt>. It
 stands for a predicate, and any predicate matching it would also match
-<cite>[Content_action1]</cite>. However, we want to specify that the matching predicate&#8217;s
-verb must be the one that matches the variable <cite>Content_actionVerb1</cite> in the
+<tt class="docutils literal"><span class="pre">[Content_action1]</span></tt>. However, we want to specify that the matching predicate&#8217;s
+verb must be the one that matches the variable <tt class="docutils literal"><span class="pre">Content_actionVerb1</span></tt> in the
 second condition. Thus the oddly redundant form.</p>
 <p>Now we can say:</p>
-<p><strong>000</strong>  <cite>mary [wants that mary, do [wiew what doc1]].</cite></p>
-<p><strong>000</strong>  <cite>mary [can what wiew].</cite></p>
-<p>The system will conclude that <cite>mary [view what doc1]</cite>.</p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">mary</span> <span class="pre">[wants</span> <span class="pre">that</span> <span class="pre">mary,</span> <span class="pre">do</span> <span class="pre">[wiew</span> <span class="pre">what</span> <span class="pre">doc1]].</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">mary</span> <span class="pre">[can</span> <span class="pre">what</span> <span class="pre">wiew].</span></tt></p>
+<p>The system will conclude that <tt class="docutils literal"><span class="pre">mary</span> <span class="pre">[view</span> <span class="pre">what</span> <span class="pre">doc1]</span></tt>.</p>
 <p>We can also use a verb variable in a predicate with modifiers. Also without
-modifiers, just by itself in the predicate, like <cite>[Content_actionVerb1]</cite>. This
+modifiers, just by itself in the predicate, like <tt class="docutils literal"><span class="pre">[Content_actionVerb1]</span></tt>. This
 stands for a predicate where the content_action verb is alone without
-modifiers, as opposed to <cite>[Content_action1]</cite> where nothing is said of the
+modifiers, as opposed to <tt class="docutils literal"><span class="pre">[Content_action1]</span></tt> where nothing is said of the
 number of modifiers. For an example of verb variables with modifiers, we might
-have defined <cite>can</cite> like:</p>
+have defined <tt class="docutils literal"><span class="pre">can</span></tt> like:</p>
 <dl class="docutils">
-<dt><strong>000</strong>  <cite>can is exists withsubject person</cite></dt>
+<dt><strong>000</strong>  <tt class="docutils literal"><span class="pre">can</span> <span class="pre">is</span> <span class="pre">exists</span> <span class="pre">withsubject</span> <span class="pre">person</span></tt></dt>
 <dd><dl class="first last docutils">
 <dt>andcanbe what a verb,</dt>
 <dd>where a context.</dd>
@@ -407,7 +407,7 @@ have defined <cite>can</cite> like:</p>
 </dl>
 <p>The rule would now take the form:</p>
 <dl class="docutils">
-<dt><strong>000</strong>  <cite>if::</cite></dt>
+<dt><strong>000</strong>  <tt class="docutils literal"><span class="pre">if::</span></tt></dt>
 <dd><blockquote class="first">
 <div>Person1 [wants that Person1, to [Content_actionVerb1 what Content1]];
 Person1 [can what Content_actionVerb1, where Context1];
@@ -420,9 +420,9 @@ Content1 [located where Context1];</div></blockquote>
 </dl>
 <p>Verb variables can appear in rules anywhere a verb can appear.</p>
 <p>Now we might say:</p>
-<p><strong>000</strong>  <cite>mary [wants that mary, do [wiew what doc1]].</cite></p>
-<p><strong>000</strong>  <cite>mary [can what wiew, where ctx1].</cite></p>
-<p>The system will conclude that <cite>mary [view what doc1]</cite>.</p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">mary</span> <span class="pre">[wants</span> <span class="pre">that</span> <span class="pre">mary,</span> <span class="pre">do</span> <span class="pre">[wiew</span> <span class="pre">what</span> <span class="pre">doc1]].</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">mary</span> <span class="pre">[can</span> <span class="pre">what</span> <span class="pre">wiew,</span> <span class="pre">where</span> <span class="pre">ctx1].</span></tt></p>
+<p>The system will conclude that <tt class="docutils literal"><span class="pre">mary</span> <span class="pre">[view</span> <span class="pre">what</span> <span class="pre">doc1]</span></tt>.</p>
 </div>
 <div class="section" id="noun-variables">
 <h2>Noun variables.<a class="headerlink" href="#noun-variables" title="Permalink to this headline">¶</a></h2>
@@ -442,7 +442,7 @@ XXX. The only difference is when we want a variable form in a
 condition to range
 over names that have a type given by another (noun) variable. In that case, we
 give the name variable inmediately followed by the noun variable enclosed in
-parentheses. For example, <cite>Person1(PersonNoun1)</cite>.</p>
+parentheses. For example, <tt class="docutils literal"><span class="pre">Person1(PersonNoun1)</span></tt>.</p>
 </div>
 <div class="section" id="negation">
 <h2>Negation.<a class="headerlink" href="#negation" title="Permalink to this headline">¶</a></h2>
@@ -478,7 +478,7 @@ time : NOW
 
 NOW : "now"</pre>
 </div>
-<p>The time can be specified with the term <cite>now</cite>. We can say:</p>
+<p>The time can be specified with the term <tt class="docutils literal"><span class="pre">now</span></tt>. We can say:</p>
 <p><strong>280</strong> sue [views what doc1] now.</p>
 <p>Internally, every instance of <strong>npl</strong> keeps a record of time.
 When <strong>npl</strong> is started, this record is set
@@ -491,7 +491,7 @@ this internal record represents the &#8216;present&#8217; time in the system.</p
 the content of the said &#8216;present&#8217; record at the time of saying. So, if we say several
 facts with time &#8220;now&#8221; without changing the internal time with &#8220;now.&#8221;, they will
 all have the same time.</p>
-<p>The <cite>now</cite> term is optional, and we might have just said, in place of XXX:</p>
+<p>The <tt class="docutils literal"><span class="pre">now</span></tt> term is optional, and we might have just said, in place of XXX:</p>
 <p><strong>280</strong> sue [views what doc1].</p>
 </div>
 <div class="section" id="durations">
@@ -500,27 +500,27 @@ all have the same time.</p>
 
 ONWARDS : "onwards"</pre>
 </div>
-<p>To build a duration, we can use the reserved word <cite>onwards</cite> as the time
+<p>To build a duration, we can use the reserved word <tt class="docutils literal"><span class="pre">onwards</span></tt> as the time
 component. This will set the starting instant of the duration to the present,
 and will set a special value
 as the end of the duration. This value will stand for the &#8216;present&#8217; time of the
 system, irrespectively of its changes. So, if the present time is 10, the final
 instant of these durations will evaluate to 10; and if we change the present
-(through <cite>now.</cite>) to 12, they will evaluate to 12.</p>
+(through <tt class="docutils literal"><span class="pre">now.</span></tt>) to 12, they will evaluate to 12.</p>
 </div>
 <div class="section" id="time-in-conditions">
 <h3>Time in conditions.<a class="headerlink" href="#time-in-conditions" title="Permalink to this headline">¶</a></h3>
-<p>In conditions in rules, we can use, either <cite>now</cite>, <cite>onwards</cite>, or a duration
-variable, that will evaluate to <cite>onwards</cite> (will be matched were <cite>onwards</cite>
-would) but can be used in consecuences: <cite>D1</cite>.</p>
+<p>In conditions in rules, we can use, either <tt class="docutils literal"><span class="pre">now</span></tt>, <tt class="docutils literal"><span class="pre">onwards</span></tt>, or a duration
+variable, that will evaluate to <tt class="docutils literal"><span class="pre">onwards</span></tt> (will be matched were <tt class="docutils literal"><span class="pre">onwards</span></tt>
+would) but can be used in consecuences: <tt class="docutils literal"><span class="pre">D1</span></tt>.</p>
 </div>
 <div class="section" id="time-in-consecuences">
 <h3>Time in consecuences.<a class="headerlink" href="#time-in-consecuences" title="Permalink to this headline">¶</a></h3>
 <p>In consecuences in rules, we can use the same constructs as in conditions,
-plus a special construct with the reserved word <cite>until</cite> followed by any
+plus a special construct with the reserved word <tt class="docutils literal"><span class="pre">until</span></tt> followed by any
 number of duration variables (bound in the conditions of the rule):
-<cite>until D1, D2, D3</cite>. This will
-create an <cite>onwards</cite> duration that will be bound to the durations that have
+<tt class="docutils literal"><span class="pre">until</span> <span class="pre">D1,</span> <span class="pre">D2,</span> <span class="pre">D3</span></tt>. This will
+create an <tt class="docutils literal"><span class="pre">onwards</span></tt> duration that will be bound to the durations that have
 matched the duration variables specified, so that whenever any of them is
 terminated, the new one will also be terminated. If two rules produce the
 same consecuence, the system will do the right thing (require a condition
@@ -533,11 +533,11 @@ of each to be terminated before terminating the consecuence).</p>
 FINISH : "finish"</pre>
 </div>
 <p>There is a special type of consecuence, built with the reserved word
-<cite>finish</cite>, that can be given as a consecuence in rules, like
-<cite>finish D1;</cite>. This
-sentence will change the special value of the final instant of <cite>D1</cite>,
+<tt class="docutils literal"><span class="pre">finish</span></tt>, that can be given as a consecuence in rules, like
+<tt class="docutils literal"><span class="pre">finish</span> <span class="pre">D1;</span></tt>. This
+sentence will change the special value of the final instant of <tt class="docutils literal"><span class="pre">D1</span></tt>,
 to replace it with the present. Terminating a duration will terminate
-all durations that are derived from it through the <cite>until</cite> operator.</p>
+all durations that are derived from it through the <tt class="docutils literal"><span class="pre">until</span></tt> operator.</p>
 </div>
 </div>
 <div class="section" id="final-example">
@@ -545,18 +545,18 @@ all durations that are derived from it through the <cite>until</cite> operator.<
 <p>To round up, I will sketch a workflow machine on top of the terminology we
 have developed so far.</p>
 <p>First we will need some workflow action verbs:</p>
-<p><strong>000</strong>  <cite>wf_action is content_action.</cite></p>
-<p><strong>000</strong>  <cite>publish is wf_action.</cite></p>
-<p><strong>000</strong>  <cite>hide is wf_action.</cite></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">wf_action</span> <span class="pre">is</span> <span class="pre">content_action.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">publish</span> <span class="pre">is</span> <span class="pre">wf_action.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">hide</span> <span class="pre">is</span> <span class="pre">wf_action.</span></tt></p>
 <p>States for content:</p>
-<p><strong>000</strong>  <cite>status are thing.</cite></p>
-<p><strong>000</strong>  <cite>public isa status.</cite></p>
-<p><strong>000</strong>  <cite>private isa status.</cite></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">status</span> <span class="pre">are</span> <span class="pre">thing.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">public</span> <span class="pre">isa</span> <span class="pre">status.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">private</span> <span class="pre">isa</span> <span class="pre">status.</span></tt></p>
 <p>Now we want workflow objects:</p>
-<p><strong>000</strong>  <cite>workflow are thing.</cite></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">workflow</span> <span class="pre">are</span> <span class="pre">thing.</span></tt></p>
 <p>Workflows are assigned to content types depending on the context:</p>
 <dl class="docutils">
-<dt><strong>000</strong>  <cite>is_assigned is exists withsubject workflow</cite></dt>
+<dt><strong>000</strong>  <tt class="docutils literal"><span class="pre">is_assigned</span> <span class="pre">is</span> <span class="pre">exists</span> <span class="pre">withsubject</span> <span class="pre">workflow</span></tt></dt>
 <dd><dl class="first last docutils">
 <dt>andcanbe to a noun,</dt>
 <dd>in a context.</dd>
@@ -564,11 +564,11 @@ have developed so far.</p>
 </dd>
 </dl>
 <p>We also want transitions in those workflows:</p>
-<p><strong>000</strong>  <cite>transition are thing.</cite></p>
-<p><strong>000</strong>  <cite>has is exists withsubject thing andcanbe what a thing.</cite></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">transition</span> <span class="pre">are</span> <span class="pre">thing.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">has</span> <span class="pre">is</span> <span class="pre">exists</span> <span class="pre">withsubject</span> <span class="pre">thing</span> <span class="pre">andcanbe</span> <span class="pre">what</span> <span class="pre">a</span> <span class="pre">thing.</span></tt></p>
 <p>Transitions relate workflow actions with starting and ending states:</p>
 <dl class="docutils">
-<dt><strong>000</strong>  <cite>executed is exists withsubject transition</cite></dt>
+<dt><strong>000</strong>  <tt class="docutils literal"><span class="pre">executed</span> <span class="pre">is</span> <span class="pre">exists</span> <span class="pre">withsubject</span> <span class="pre">transition</span></tt></dt>
 <dd><dl class="first last docutils">
 <dt>andcanbe by a wf_action,</dt>
 <dd>from a status,
@@ -577,19 +577,19 @@ to a status.</dd>
 </dd>
 </dl>
 <p>Finally, we need permissions and roles:</p>
-<p><strong>000</strong>  <cite>role are thing.</cite></p>
-<p><strong>000</strong>  <cite>manager isa role.</cite></p>
-<p><strong>000</strong>  <cite>editor isa role.</cite></p>
-<p><strong>000</strong>  <cite>visitor isa role.</cite></p>
-<p><strong>000</strong>  <cite>permission are thing.</cite></p>
-<p><strong>000</strong>  <cite>basic_perm isa permission.</cite></p>
-<p><strong>000</strong>  <cite>edit_perm isa permission.</cite></p>
-<p><strong>000</strong>  <cite>manage_perm isa permission.</cite></p>
-<p>We reuse the <cite>has</cite> term to say that roles have permissions, and to say that
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">role</span> <span class="pre">are</span> <span class="pre">thing.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">manager</span> <span class="pre">isa</span> <span class="pre">role.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">editor</span> <span class="pre">isa</span> <span class="pre">role.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">visitor</span> <span class="pre">isa</span> <span class="pre">role.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">permission</span> <span class="pre">are</span> <span class="pre">thing.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">basic_perm</span> <span class="pre">isa</span> <span class="pre">permission.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">edit_perm</span> <span class="pre">isa</span> <span class="pre">permission.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">manage_perm</span> <span class="pre">isa</span> <span class="pre">permission.</span></tt></p>
+<p>We reuse the <tt class="docutils literal"><span class="pre">has</span></tt> term to say that roles have permissions, and to say that
 people have permissions. We also make a verb
 to protect actions with permissions for states in contexts:</p>
 <dl class="docutils">
-<dt><strong>000</strong>  <cite>is_protected is exists withsubject content_action</cite></dt>
+<dt><strong>000</strong>  <tt class="docutils literal"><span class="pre">is_protected</span> <span class="pre">is</span> <span class="pre">exists</span> <span class="pre">withsubject</span> <span class="pre">content_action</span></tt></dt>
 <dd><dl class="first last docutils">
 <dt>andcanbe by a permission,</dt>
 <dd>in a context,
@@ -602,7 +602,7 @@ action on a content, the content is in a context, the person has a role,
 the role has a permission, and that permissions protects that action in that
 context, then he does it:</p>
 <dl class="docutils">
-<dt><strong>000</strong>  <cite>if::</cite></dt>
+<dt><strong>000</strong>  <tt class="docutils literal"><span class="pre">if::</span></tt></dt>
 <dd><blockquote class="first">
 <div>Person1 [wants to [Content_actionVerb1 what Content1]];
 Content1 [located where Context1];
@@ -620,7 +620,7 @@ Content_actionVerb1 [protected by Permission1, in Context1, for Status1];</div><
 need to bother about times.</p>
 <p>The next rule will use workflow actions to transition content:</p>
 <dl class="docutils">
-<dt><strong>000</strong>  <a href="#id3"><span class="problematic" id="id4">`</span></a>if::</dt>
+<dt><strong>000</strong>  <a href="#id3"><span class="problematic" id="id4">``</span></a>if::</dt>
 <dd><blockquote class="first">
 <div>Person1 [Wf_action1 what Content1(ContentNoun1)];
 Workflow1 [is_assigned to ContentNoun1, in Context1] D1;
@@ -630,39 +630,39 @@ Content1 [has what Status1] D4;</div></blockquote>
 <dl class="last docutils">
 <dt>then:</dt>
 <dd>finish D4;
-Content1 [has what Status2] until D1, D2, D3.`</dd>
+Content1 [has what Status2] until D1, D2, D3.``</dd>
 </dl>
 </dd>
 </dl>
 <p>Let&#8217;s try now some atomic facts:</p>
-<p><strong>000</strong>  <cite>manager [has what manage_perm] onwards.</cite></p>
-<p><strong>000</strong>  <cite>manager [has what edit_perm] onwards.</cite></p>
-<p><strong>000</strong>  <cite>manager [has what basic_perm] onwards.</cite></p>
-<p><strong>000</strong>  <cite>editor [has what edit_perm] onwards.</cite></p>
-<p><strong>000</strong>  <cite>editor [has what basic_perm] onwards.</cite></p>
-<p><strong>000</strong>  <cite>visitor [has what basic_perm] onwards.</cite></p>
-<p><strong>000</strong>  <cite>publish [is_protected by manage_perm, in ctx1, for private] onwards.</cite></p>
-<p><strong>000</strong>  <cite>hide [is_protected by edit_perm, in ctx1, for public] onwards.</cite></p>
-<p><strong>000</strong>  <cite>edit [is_protected by edit_perm, in ctx1, for private] onwards.</cite></p>
-<p><strong>000</strong>  <cite>edit [is_protected by manage_perm, in ctx1, for public] onwards.</cite></p>
-<p><strong>000</strong>  <cite>view [is_protected by edit_perm, in ctx1, for private] onwards.</cite></p>
-<p><strong>000</strong>  <cite>view [is_protected by basic_perm, in ctx1, for public] onwards.</cite></p>
-<p><strong>000</strong>  <cite>john [has what manager] onwards.</cite></p>
-<p><strong>000</strong>  <cite>mary [has what editor] onwards.</cite></p>
-<p><strong>000</strong>  <cite>pete [has what visitor] onwards.</cite></p>
-<p><strong>000</strong>  <cite>doc1 [has what private] onwards.</cite></p>
-<p><strong>000</strong>  <cite>pete [wants to [publish what doc1]].</cite></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">manager</span> <span class="pre">[has</span> <span class="pre">what</span> <span class="pre">manage_perm]</span> <span class="pre">onwards.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">manager</span> <span class="pre">[has</span> <span class="pre">what</span> <span class="pre">edit_perm]</span> <span class="pre">onwards.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">manager</span> <span class="pre">[has</span> <span class="pre">what</span> <span class="pre">basic_perm]</span> <span class="pre">onwards.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">editor</span> <span class="pre">[has</span> <span class="pre">what</span> <span class="pre">edit_perm]</span> <span class="pre">onwards.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">editor</span> <span class="pre">[has</span> <span class="pre">what</span> <span class="pre">basic_perm]</span> <span class="pre">onwards.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">visitor</span> <span class="pre">[has</span> <span class="pre">what</span> <span class="pre">basic_perm]</span> <span class="pre">onwards.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">publish</span> <span class="pre">[is_protected</span> <span class="pre">by</span> <span class="pre">manage_perm,</span> <span class="pre">in</span> <span class="pre">ctx1,</span> <span class="pre">for</span> <span class="pre">private]</span> <span class="pre">onwards.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">hide</span> <span class="pre">[is_protected</span> <span class="pre">by</span> <span class="pre">edit_perm,</span> <span class="pre">in</span> <span class="pre">ctx1,</span> <span class="pre">for</span> <span class="pre">public]</span> <span class="pre">onwards.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">edit</span> <span class="pre">[is_protected</span> <span class="pre">by</span> <span class="pre">edit_perm,</span> <span class="pre">in</span> <span class="pre">ctx1,</span> <span class="pre">for</span> <span class="pre">private]</span> <span class="pre">onwards.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">edit</span> <span class="pre">[is_protected</span> <span class="pre">by</span> <span class="pre">manage_perm,</span> <span class="pre">in</span> <span class="pre">ctx1,</span> <span class="pre">for</span> <span class="pre">public]</span> <span class="pre">onwards.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">view</span> <span class="pre">[is_protected</span> <span class="pre">by</span> <span class="pre">edit_perm,</span> <span class="pre">in</span> <span class="pre">ctx1,</span> <span class="pre">for</span> <span class="pre">private]</span> <span class="pre">onwards.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">view</span> <span class="pre">[is_protected</span> <span class="pre">by</span> <span class="pre">basic_perm,</span> <span class="pre">in</span> <span class="pre">ctx1,</span> <span class="pre">for</span> <span class="pre">public]</span> <span class="pre">onwards.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">john</span> <span class="pre">[has</span> <span class="pre">what</span> <span class="pre">manager]</span> <span class="pre">onwards.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">mary</span> <span class="pre">[has</span> <span class="pre">what</span> <span class="pre">editor]</span> <span class="pre">onwards.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">pete</span> <span class="pre">[has</span> <span class="pre">what</span> <span class="pre">visitor]</span> <span class="pre">onwards.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">doc1</span> <span class="pre">[has</span> <span class="pre">what</span> <span class="pre">private]</span> <span class="pre">onwards.</span></tt></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">pete</span> <span class="pre">[wants</span> <span class="pre">to</span> <span class="pre">[publish</span> <span class="pre">what</span> <span class="pre">doc1]].</span></tt></p>
 <dl class="docutils">
-<dt><strong>000</strong>  <cite>pete [publish what doc1]?</cite></dt>
+<dt><strong>000</strong>  <tt class="docutils literal"><span class="pre">pete</span> <span class="pre">[publish</span> <span class="pre">what</span> <span class="pre">doc1]?</span></tt></dt>
 <dd>False</dd>
-<dt><strong>000</strong>  <cite>doc1 [has what Status1]?</cite></dt>
+<dt><strong>000</strong>  <tt class="docutils literal"><span class="pre">doc1</span> <span class="pre">[has</span> <span class="pre">what</span> <span class="pre">Status1]?</span></tt></dt>
 <dd>private</dd>
 </dl>
-<p><strong>000</strong>  <cite>john [wants to [publish what doc1]].</cite></p>
+<p><strong>000</strong>  <tt class="docutils literal"><span class="pre">john</span> <span class="pre">[wants</span> <span class="pre">to</span> <span class="pre">[publish</span> <span class="pre">what</span> <span class="pre">doc1]].</span></tt></p>
 <dl class="docutils">
-<dt><strong>000</strong>  <cite>john [publish what doc1]?</cite></dt>
+<dt><strong>000</strong>  <tt class="docutils literal"><span class="pre">john</span> <span class="pre">[publish</span> <span class="pre">what</span> <span class="pre">doc1]?</span></tt></dt>
 <dd>True</dd>
-<dt><strong>000</strong>  <cite>doc1 [has what Status1]?</cite></dt>
+<dt><strong>000</strong>  <tt class="docutils literal"><span class="pre">doc1</span> <span class="pre">[has</span> <span class="pre">what</span> <span class="pre">Status1]?</span></tt></dt>
 <dd>public</dd>
 </dl>
 </div>
