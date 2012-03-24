@@ -84,7 +84,7 @@ the reserved word `are`. To get started, we use a primitive predefined noun,
 `thing`.
 
 
-**001**  person are thing.
+**001**  `person are thing.`
 
 **002**  content are thing.
 
