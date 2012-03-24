@@ -65,42 +65,33 @@ are basically 4 stages:</p>
 <li>Query that extended set.</li>
 </ul>
 </div></blockquote>
-<p>&lt;inmodest hype&gt;
-<strong>npl</strong> offers a superior expressive power when compared to the rest of logic
+<p><strong>npl</strong> offers a superior expressive power when compared to the rest of logic
 programming languages (that I know of). For example, it is possible in <strong>npl</strong>
 to treat classes
 or relations (well, <strong>npl</strong>&#8216;s functional equivalent of the classes and relations
 of other logic languages) as individuals.
 Note that <strong>npl</strong> is based on a finite domain first order logical theory that is
-consistent and complete.
-&lt;/inmodest hype&gt;</p>
+consistent and complete.</p>
 <p>I&#8217;m going to describe the <strong>npl</strong> language going through its BNF grammar, from
 top down. To illustrate the different constructs of the language, I will
 be sketching along a set of terms, statements and rules to hold the bussiness
 logic of a content management system.</p>
 <div class="section" id="sentences">
 <h2>Sentences<a class="headerlink" href="#sentences" title="Permalink to this headline">¶</a></h2>
-<dl class="docutils">
-<dt>::</dt>
-<dd><dl class="first last docutils">
-<dt>sentence <span class="classifier-delimiter">:</span> <span class="classifier">statement</span></dt>
-<dd><div class="first last line-block">
-<div class="line">question</div>
+<div class="highlight-python"><pre>sentence : statement
+         | question
+         | order</pre>
 </div>
-</dd>
-</dl>
-</dd>
-</dl>
 <p>Sentences are the top level grammatical elements. These are the elements that
 can be entered (told or asked) into npl&#8217;s knowledge base (kb). There are two
 kinds of sentences, statements and questions. Statements
-add to the information held in the kb, and questions query the kb.</p>
+add to the information held in the kb, and questions query the kb. Orders
+do different things to the kb.</p>
 </div>
 <div class="section" id="statements">
-<h2>Statements.<a class="headerlink" href="#statements" title="Permalink to this headline">¶</a></h2>
-<dl class="docutils">
-<dt>::</dt>
-<dd><dl class="first docutils">
+<h2>Statements<a class="headerlink" href="#statements" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><dl class="docutils">
 <dt>statement <span class="classifier-delimiter">:</span> <span class="classifier">definition DOT</span></dt>
 <dd><div class="first last line-block">
 <div class="line">fact DOT</div>
@@ -108,9 +99,8 @@ add to the information held in the kb, and questions query the kb.</p>
 </div>
 </dd>
 </dl>
-<p class="last">DOT : &#8221;.&#8221;</p>
-</dd>
-</dl>
+<p>DOT : &#8221;.&#8221;</p>
+</div></blockquote>
 <p>Statements are asserted: they have truth value.
 There are 3 main forms of statements, all ended with a dot, which we will
 call definitions, facts, and rules.
@@ -723,7 +713,7 @@ Content1 [has what Status2] until D1, D2, D3.</dd>
   <ul>
 <li><a class="reference internal" href="#">npl language essentials</a><ul>
 <li><a class="reference internal" href="#sentences">Sentences</a></li>
-<li><a class="reference internal" href="#statements">Statements.</a></li>
+<li><a class="reference internal" href="#statements">Statements</a></li>
 <li><a class="reference internal" href="#definition-of-terms">Definition of terms.</a><ul>
 <li><a class="reference internal" href="#noun-definitions">Noun definitions.</a></li>
 <li><a class="reference internal" href="#name-definitions">Name definitions.</a></li>
