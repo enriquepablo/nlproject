@@ -314,13 +314,13 @@ VAR : &lt;an uppercase letter followed by any number of lower case letters,
 <p>So, if we define a verb <tt class="docutils literal"><span class="pre">located</span></tt>, we can build a rule such as what follows.</p>
 <p><strong>019</strong> located is exists withsubject thing andcanbe in a context.</p>
 <dl class="docutils">
-<dt><strong>019</strong>  <a href="#id1"><span class="problematic" id="id2">``</span></a>if:</dt>
+<dt><strong>019</strong>::  <tt class="docutils literal"><span class="pre">if:</span></tt></dt>
 <dd><blockquote class="first">
-<div>Thing1 [located in Context1];
-Context1 [located in Context2];</div></blockquote>
+<div><tt class="docutils literal"><span class="pre">Thing1</span> <span class="pre">[located</span> <span class="pre">in</span> <span class="pre">Context1];</span></tt>
+<tt class="docutils literal"><span class="pre">Context1</span> <span class="pre">[located</span> <span class="pre">in</span> <span class="pre">Context2];</span></tt></div></blockquote>
 <dl class="last docutils">
-<dt>then:</dt>
-<dd>Thing1 [located in Context2].``</dd>
+<dt><tt class="docutils literal"><span class="pre">then:</span></tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Thing1</span> <span class="pre">[located</span> <span class="pre">in</span> <span class="pre">Context2].</span></tt></dd>
 </dl>
 </dd>
 </dl>
@@ -620,7 +620,7 @@ Content_actionVerb1 [protected by Permission1, in Context1, for Status1];</div><
 need to bother about times.</p>
 <p>The next rule will use workflow actions to transition content:</p>
 <dl class="docutils">
-<dt><strong>000</strong>  <a href="#id3"><span class="problematic" id="id4">``</span></a>if::</dt>
+<dt><strong>000</strong>  <a href="#id1"><span class="problematic" id="id2">``</span></a>if::</dt>
 <dd><blockquote class="first">
 <div>Person1 [Wf_action1 what Content1(ContentNoun1)];
 Workflow1 [is_assigned to ContentNoun1, in Context1] D1;
