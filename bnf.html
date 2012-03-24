@@ -123,11 +123,11 @@ TERM : &lt;a lower case letter followed by any number of lower case letters,
 <p>We define a new noun by relating it with another (already defined) noun through
 the reserved word <cite>are</cite>. To get started, we use a primitive predefined noun,
 <cite>thing</cite>.</p>
-<p><strong>001</strong>  <cite>person are thing.</cite></p>
-<p><strong>002</strong>  content are thing.</p>
-<p><strong>003</strong>  document are content.</p>
-<p><strong>004</strong>  image are content.</p>
-<p><strong>005</strong>  context are thing.</p>
+<p><strong>001</strong>  <tt class="docutils literal"><span class="pre">person</span> <span class="pre">are</span> <span class="pre">thing.</span></tt></p>
+<p><strong>002</strong>  <cite>content are thing.</cite></p>
+<p><strong>003</strong>  <cite>document are content.</cite></p>
+<p><strong>004</strong>  <cite>image are content.</cite></p>
+<p><strong>005</strong>  <cite>context are thing.</cite></p>
 </div>
 <div class="section" id="name-definitions">
 <h3>Name definitions<a class="headerlink" href="#name-definitions" title="Permalink to this headline">¶</a></h3>
@@ -137,16 +137,16 @@ ISA : "isa"</pre>
 </div>
 <p>Proper names are defined relating them with a noun through the reserved word
 <cite>isa</cite>.</p>
-<p><strong>005</strong>  john isa person.</p>
-<p><strong>006</strong>  sue isa person.</p>
-<p><strong>007</strong>  pete isa person.</p>
-<p><strong>008</strong>  mary isa person.</p>
-<p><strong>009</strong>  doc1 isa document.</p>
-<p><strong>010</strong>  doc2 isa document.</p>
-<p><strong>011</strong>  img1 isa image.</p>
-<p><strong>012</strong>  img2 isa image.</p>
-<p><strong>000</strong>  ctx1 isa context.</p>
-<p><strong>000</strong>  ctx2 isa context.</p>
+<p><strong>005</strong>  <cite>john isa person.</cite></p>
+<p><strong>006</strong>  <cite>sue isa person.</cite></p>
+<p><strong>007</strong>  <cite>pete isa person.</cite></p>
+<p><strong>008</strong>  <cite>mary isa person.</cite></p>
+<p><strong>009</strong>  <cite>doc1 isa document.</cite></p>
+<p><strong>010</strong>  <cite>doc2 isa document.</cite></p>
+<p><strong>011</strong>  <cite>img1 isa image.</cite></p>
+<p><strong>012</strong>  <cite>img2 isa image.</cite></p>
+<p><strong>000</strong>  <cite>ctx1 isa context.</cite></p>
+<p><strong>000</strong>  <cite>ctx2 isa context.</cite></p>
 </div>
 <div class="section" id="types-of-terms">
 <h3>Types of terms.<a class="headerlink" href="#types-of-terms" title="Permalink to this headline">¶</a></h3>
@@ -247,17 +247,17 @@ give the label that the modifier will take, connected through the reserved word
 example, let&#8217;s define verbs that express actions that a person can perform on
 content. For this we must use the primitive predefined verb
 we mentioned earlier: <cite>exists</cite>.</p>
-<p><strong>013</strong>  content_action is exists withsubject person andcanbe what a content.</p>
-<p><strong>014</strong>  view is content_action.</p>
-<p><strong>015</strong>  edit is content_action.</p>
-<p><strong>016</strong>  owns is content_action.</p>
+<p><strong>013</strong>  <cite>content_action is exists withsubject person andcanbe what a content.</cite></p>
+<p><strong>014</strong>  <cite>view is content_action.</cite></p>
+<p><strong>015</strong>  <cite>edit is content_action.</cite></p>
+<p><strong>016</strong>  <cite>owns is content_action.</cite></p>
 <p>We do not need to specify the type of the subject for a verb if it coincides
 with that of its parent verb, and, if a mod-def for a child verb coincides with
 one of its parent, we do not need to explicitly specify it on the child.
 Derived verbs inherit the subject and mod-defs that they do not override.</p>
 <p>With this new verbs, we can state facts such as:</p>
-<p><strong>013</strong>  pete [owns what doc1].</p>
-<p><strong>014</strong>  sue [edit what img2].</p>
+<p><strong>013</strong>  <cite>pete [owns what doc1].</cite></p>
+<p><strong>014</strong>  <cite>sue [edit what img2].</cite></p>
 </div>
 <div class="section" id="rules">
 <h2>Rules.<a class="headerlink" href="#rules" title="Permalink to this headline">¶</a></h2>
@@ -314,19 +314,19 @@ VAR : &lt;an uppercase letter followed by any number of lower case letters,
 <p>So, if we define a verb <cite>located</cite>, we can build a rule such as what follows.</p>
 <p><strong>019</strong> located is exists withsubject thing andcanbe in a context.</p>
 <dl class="docutils">
-<dt><strong>019</strong>  if::</dt>
+<dt><strong>019</strong>  <a href="#id1"><span class="problematic" id="id2">`</span></a>if:</dt>
 <dd><blockquote class="first">
 <div>Thing1 [located in Context1];
 Context1 [located in Context2];</div></blockquote>
 <dl class="last docutils">
 <dt>then:</dt>
-<dd>Thing1 [located in Context2].</dd>
+<dd>Thing1 [located in Context2].`</dd>
 </dl>
 </dd>
 </dl>
 <p>With this, if we have that</p>
-<p><strong>020</strong>  doc1 [located where ctx1].</p>
-<p><strong>021</strong>  ctx1 [located where ctx2].</p>
+<p><strong>020</strong>  <cite>doc1 [located where ctx1].</cite></p>
+<p><strong>021</strong>  <cite>ctx1 [located where ctx2].</cite></p>
 <p>The system will conclude that <cite>doc1 [located where ctx2]</cite>.</p>
 </div>
 <div class="section" id="predicate-variables">
@@ -341,10 +341,10 @@ enclosing it in square brackets. For example, from <cite>locate</cite>, we might
 predicate).</p>
 <p>To provide a working example, we will define a couple of verbs that take a
 predicate as modifier, and build a rule with it.</p>
-<p><strong>000</strong>  wants is exists withsubject person andcanbe that a person, do a content_action.</p>
-<p><strong>000</strong>  is_allowed is exists withsubject person andcanbe to a content_action.</p>
+<p><strong>000</strong>  <cite>wants is exists withsubject person andcanbe that a person, do a content_action.</cite></p>
+<p><strong>000</strong>  <cite>is_allowed is exists withsubject person andcanbe to a content_action.</cite></p>
 <dl class="docutils">
-<dt><strong>000</strong>  if::</dt>
+<dt><strong>000</strong>  <cite>if::</cite></dt>
 <dd><blockquote class="first">
 <div>Person1 [wants that Person1, do [Content_action1]];
 Person1 [is_allowed to [Content_action1]];</div></blockquote>
@@ -355,8 +355,8 @@ Person1 [is_allowed to [Content_action1]];</div></blockquote>
 </dd>
 </dl>
 <p>If with all this we say that</p>
-<p><strong>000</strong>  sue [wants that sue, do [wiew what doc1]].</p>
-<p><strong>000</strong>  sue [is_allowed to [wiew what doc1]].</p>
+<p><strong>000</strong>  <cite>sue [wants that sue, do [wiew what doc1]].</cite></p>
+<p><strong>000</strong>  <cite>sue [is_allowed to [wiew what doc1]].</cite></p>
 <p>The system will conclude that <cite>sue [view what doc1]</cite>.</p>
 </div>
 <div class="section" id="verb-variables">
@@ -369,10 +369,10 @@ use variables in rules that range over verbs. We do this by capitalizing the
 name of a verb, and appending to it &#8220;Verb&#8221; and an integer. for example, a verb
 variable made from <cite>locate</cite> would be <cite>LocateVerb1</cite>. To show a more complete
 example of this, we define a verb <cite>can</cite>, that will take a verb as modifier:</p>
-<p><strong>000</strong>  can is exists withsubject person andcanbe what a verb.</p>
+<p><strong>000</strong>  <cite>can is exists withsubject person andcanbe what a verb.</cite></p>
 <p>A rule with this verb:</p>
 <dl class="docutils">
-<dt><strong>000</strong>  if::</dt>
+<dt><strong>000</strong>  <cite>if::</cite></dt>
 <dd><blockquote class="first">
 <div>Person1 [wants that Person1, to [Content_actionVerb1 Content_action1]];
 Person1 [can what Content_actionVerb1];</div></blockquote>
@@ -388,8 +388,8 @@ stands for a predicate, and any predicate matching it would also match
 verb must be the one that matches the variable <cite>Content_actionVerb1</cite> in the
 second condition. Thus the oddly redundant form.</p>
 <p>Now we can say:</p>
-<p><strong>000</strong>  mary [wants that mary, do [wiew what doc1]].</p>
-<p><strong>000</strong>  mary [can what wiew].</p>
+<p><strong>000</strong>  <cite>mary [wants that mary, do [wiew what doc1]].</cite></p>
+<p><strong>000</strong>  <cite>mary [can what wiew].</cite></p>
 <p>The system will conclude that <cite>mary [view what doc1]</cite>.</p>
 <p>We can also use a verb variable in a predicate with modifiers. Also without
 modifiers, just by itself in the predicate, like <cite>[Content_actionVerb1]</cite>. This
@@ -398,7 +398,7 @@ modifiers, as opposed to <cite>[Content_action1]</cite> where nothing is said of
 number of modifiers. For an example of verb variables with modifiers, we might
 have defined <cite>can</cite> like:</p>
 <dl class="docutils">
-<dt><strong>000</strong>  can is exists withsubject person</dt>
+<dt><strong>000</strong>  <cite>can is exists withsubject person</cite></dt>
 <dd><dl class="first last docutils">
 <dt>andcanbe what a verb,</dt>
 <dd>where a context.</dd>
@@ -407,7 +407,7 @@ have defined <cite>can</cite> like:</p>
 </dl>
 <p>The rule would now take the form:</p>
 <dl class="docutils">
-<dt><strong>000</strong>  if::</dt>
+<dt><strong>000</strong>  <cite>if::</cite></dt>
 <dd><blockquote class="first">
 <div>Person1 [wants that Person1, to [Content_actionVerb1 what Content1]];
 Person1 [can what Content_actionVerb1, where Context1];
@@ -420,8 +420,8 @@ Content1 [located where Context1];</div></blockquote>
 </dl>
 <p>Verb variables can appear in rules anywhere a verb can appear.</p>
 <p>Now we might say:</p>
-<p><strong>000</strong>  mary [wants that mary, do [wiew what doc1]].</p>
-<p><strong>000</strong>  mary [can what wiew, where ctx1].</p>
+<p><strong>000</strong>  <cite>mary [wants that mary, do [wiew what doc1]].</cite></p>
+<p><strong>000</strong>  <cite>mary [can what wiew, where ctx1].</cite></p>
 <p>The system will conclude that <cite>mary [view what doc1]</cite>.</p>
 </div>
 <div class="section" id="noun-variables">
@@ -545,18 +545,18 @@ all durations that are derived from it through the <cite>until</cite> operator.<
 <p>To round up, I will sketch a workflow machine on top of the terminology we
 have developed so far.</p>
 <p>First we will need some workflow action verbs:</p>
-<p><strong>000</strong>  wf_action is content_action.</p>
-<p><strong>000</strong>  publish is wf_action.</p>
-<p><strong>000</strong>  hide is wf_action.</p>
+<p><strong>000</strong>  <cite>wf_action is content_action.</cite></p>
+<p><strong>000</strong>  <cite>publish is wf_action.</cite></p>
+<p><strong>000</strong>  <cite>hide is wf_action.</cite></p>
 <p>States for content:</p>
-<p><strong>000</strong>  status are thing.</p>
-<p><strong>000</strong>  public isa status.</p>
-<p><strong>000</strong>  private isa status.</p>
+<p><strong>000</strong>  <cite>status are thing.</cite></p>
+<p><strong>000</strong>  <cite>public isa status.</cite></p>
+<p><strong>000</strong>  <cite>private isa status.</cite></p>
 <p>Now we want workflow objects:</p>
-<p><strong>000</strong>  workflow are thing.</p>
+<p><strong>000</strong>  <cite>workflow are thing.</cite></p>
 <p>Workflows are assigned to content types depending on the context:</p>
 <dl class="docutils">
-<dt><strong>000</strong>  is_assigned is exists withsubject workflow</dt>
+<dt><strong>000</strong>  <cite>is_assigned is exists withsubject workflow</cite></dt>
 <dd><dl class="first last docutils">
 <dt>andcanbe to a noun,</dt>
 <dd>in a context.</dd>
@@ -564,11 +564,11 @@ have developed so far.</p>
 </dd>
 </dl>
 <p>We also want transitions in those workflows:</p>
-<p><strong>000</strong>  transition are thing.</p>
-<p><strong>000</strong>  has is exists withsubject thing andcanbe what a thing.</p>
+<p><strong>000</strong>  <cite>transition are thing.</cite></p>
+<p><strong>000</strong>  <cite>has is exists withsubject thing andcanbe what a thing.</cite></p>
 <p>Transitions relate workflow actions with starting and ending states:</p>
 <dl class="docutils">
-<dt><strong>000</strong>  executed is exists withsubject transition</dt>
+<dt><strong>000</strong>  <cite>executed is exists withsubject transition</cite></dt>
 <dd><dl class="first last docutils">
 <dt>andcanbe by a wf_action,</dt>
 <dd>from a status,
@@ -577,19 +577,19 @@ to a status.</dd>
 </dd>
 </dl>
 <p>Finally, we need permissions and roles:</p>
-<p><strong>000</strong>  role are thing.</p>
-<p><strong>000</strong>  manager isa role.</p>
-<p><strong>000</strong>  editor isa role.</p>
-<p><strong>000</strong>  visitor isa role.</p>
-<p><strong>000</strong>  permission are thing.</p>
-<p><strong>000</strong>  basic_perm isa permission.</p>
-<p><strong>000</strong>  edit_perm isa permission.</p>
-<p><strong>000</strong>  manage_perm isa permission.</p>
+<p><strong>000</strong>  <cite>role are thing.</cite></p>
+<p><strong>000</strong>  <cite>manager isa role.</cite></p>
+<p><strong>000</strong>  <cite>editor isa role.</cite></p>
+<p><strong>000</strong>  <cite>visitor isa role.</cite></p>
+<p><strong>000</strong>  <cite>permission are thing.</cite></p>
+<p><strong>000</strong>  <cite>basic_perm isa permission.</cite></p>
+<p><strong>000</strong>  <cite>edit_perm isa permission.</cite></p>
+<p><strong>000</strong>  <cite>manage_perm isa permission.</cite></p>
 <p>We reuse the <cite>has</cite> term to say that roles have permissions, and to say that
 people have permissions. We also make a verb
 to protect actions with permissions for states in contexts:</p>
 <dl class="docutils">
-<dt><strong>000</strong>  is_protected is exists withsubject content_action</dt>
+<dt><strong>000</strong>  <cite>is_protected is exists withsubject content_action</cite></dt>
 <dd><dl class="first last docutils">
 <dt>andcanbe by a permission,</dt>
 <dd>in a context,
@@ -602,7 +602,7 @@ action on a content, the content is in a context, the person has a role,
 the role has a permission, and that permissions protects that action in that
 context, then he does it:</p>
 <dl class="docutils">
-<dt><strong>000</strong>  if::</dt>
+<dt><strong>000</strong>  <cite>if::</cite></dt>
 <dd><blockquote class="first">
 <div>Person1 [wants to [Content_actionVerb1 what Content1]];
 Content1 [located where Context1];
@@ -620,7 +620,7 @@ Content_actionVerb1 [protected by Permission1, in Context1, for Status1];</div><
 need to bother about times.</p>
 <p>The next rule will use workflow actions to transition content:</p>
 <dl class="docutils">
-<dt><strong>000</strong>  if::</dt>
+<dt><strong>000</strong>  <a href="#id3"><span class="problematic" id="id4">`</span></a>if::</dt>
 <dd><blockquote class="first">
 <div>Person1 [Wf_action1 what Content1(ContentNoun1)];
 Workflow1 [is_assigned to ContentNoun1, in Context1] D1;
@@ -630,39 +630,39 @@ Content1 [has what Status1] D4;</div></blockquote>
 <dl class="last docutils">
 <dt>then:</dt>
 <dd>finish D4;
-Content1 [has what Status2] until D1, D2, D3.</dd>
+Content1 [has what Status2] until D1, D2, D3.`</dd>
 </dl>
 </dd>
 </dl>
 <p>Let&#8217;s try now some atomic facts:</p>
-<p><strong>000</strong>  manager [has what manage_perm] onwards.</p>
-<p><strong>000</strong>  manager [has what edit_perm] onwards.</p>
-<p><strong>000</strong>  manager [has what basic_perm] onwards.</p>
-<p><strong>000</strong>  editor [has what edit_perm] onwards.</p>
-<p><strong>000</strong>  editor [has what basic_perm] onwards.</p>
-<p><strong>000</strong>  visitor [has what basic_perm] onwards.</p>
-<p><strong>000</strong>  publish [is_protected by manage_perm, in ctx1, for private] onwards.</p>
-<p><strong>000</strong>  hide [is_protected by edit_perm, in ctx1, for public] onwards.</p>
-<p><strong>000</strong>  edit [is_protected by edit_perm, in ctx1, for private] onwards.</p>
-<p><strong>000</strong>  edit [is_protected by manage_perm, in ctx1, for public] onwards.</p>
-<p><strong>000</strong>  view [is_protected by edit_perm, in ctx1, for private] onwards.</p>
-<p><strong>000</strong>  view [is_protected by basic_perm, in ctx1, for public] onwards.</p>
-<p><strong>000</strong>  john [has what manager] onwards.</p>
-<p><strong>000</strong>  mary [has what editor] onwards.</p>
-<p><strong>000</strong>  pete [has what visitor] onwards.</p>
-<p><strong>000</strong>  doc1 [has what private] onwards.</p>
-<p><strong>000</strong>  pete [wants to [publish what doc1]].</p>
+<p><strong>000</strong>  <cite>manager [has what manage_perm] onwards.</cite></p>
+<p><strong>000</strong>  <cite>manager [has what edit_perm] onwards.</cite></p>
+<p><strong>000</strong>  <cite>manager [has what basic_perm] onwards.</cite></p>
+<p><strong>000</strong>  <cite>editor [has what edit_perm] onwards.</cite></p>
+<p><strong>000</strong>  <cite>editor [has what basic_perm] onwards.</cite></p>
+<p><strong>000</strong>  <cite>visitor [has what basic_perm] onwards.</cite></p>
+<p><strong>000</strong>  <cite>publish [is_protected by manage_perm, in ctx1, for private] onwards.</cite></p>
+<p><strong>000</strong>  <cite>hide [is_protected by edit_perm, in ctx1, for public] onwards.</cite></p>
+<p><strong>000</strong>  <cite>edit [is_protected by edit_perm, in ctx1, for private] onwards.</cite></p>
+<p><strong>000</strong>  <cite>edit [is_protected by manage_perm, in ctx1, for public] onwards.</cite></p>
+<p><strong>000</strong>  <cite>view [is_protected by edit_perm, in ctx1, for private] onwards.</cite></p>
+<p><strong>000</strong>  <cite>view [is_protected by basic_perm, in ctx1, for public] onwards.</cite></p>
+<p><strong>000</strong>  <cite>john [has what manager] onwards.</cite></p>
+<p><strong>000</strong>  <cite>mary [has what editor] onwards.</cite></p>
+<p><strong>000</strong>  <cite>pete [has what visitor] onwards.</cite></p>
+<p><strong>000</strong>  <cite>doc1 [has what private] onwards.</cite></p>
+<p><strong>000</strong>  <cite>pete [wants to [publish what doc1]].</cite></p>
 <dl class="docutils">
-<dt><strong>000</strong>  pete [publish what doc1]?</dt>
+<dt><strong>000</strong>  <cite>pete [publish what doc1]?</cite></dt>
 <dd>False</dd>
-<dt><strong>000</strong>  doc1 [has what Status1]?</dt>
+<dt><strong>000</strong>  <cite>doc1 [has what Status1]?</cite></dt>
 <dd>private</dd>
 </dl>
-<p><strong>000</strong>  john [wants to [publish what doc1]].</p>
+<p><strong>000</strong>  <cite>john [wants to [publish what doc1]].</cite></p>
 <dl class="docutils">
-<dt><strong>000</strong>  john [publish what doc1]?</dt>
+<dt><strong>000</strong>  <cite>john [publish what doc1]?</cite></dt>
 <dd>True</dd>
-<dt><strong>000</strong>  doc1 [has what Status1]?</dt>
+<dt><strong>000</strong>  <cite>doc1 [has what Status1]?</cite></dt>
 <dd>public</dd>
 </dl>
 </div>

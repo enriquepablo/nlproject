@@ -84,15 +84,15 @@ the reserved word `are`. To get started, we use a primitive predefined noun,
 `thing`.
 
 
-**001**  `person are thing.`
+**001**  ``person are thing.``
 
-**002**  content are thing.
+**002**  `content are thing.`
 
-**003**  document are content.
+**003**  `document are content.`
 
-**004**  image are content.
+**004**  `image are content.`
 
-**005**  context are thing.
+**005**  `context are thing.`
 
 Name definitions
 ~~~~~~~~~~~~~~~~
@@ -107,25 +107,25 @@ Proper names are defined relating them with a noun through the reserved word
 `isa`.
 
 
-**005**  john isa person.
+**005**  `john isa person.`
 
-**006**  sue isa person.
+**006**  `sue isa person.`
 
-**007**  pete isa person.
+**007**  `pete isa person.`
 
-**008**  mary isa person.
+**008**  `mary isa person.`
 
-**009**  doc1 isa document.
+**009**  `doc1 isa document.`
 
-**010**  doc2 isa document.
+**010**  `doc2 isa document.`
 
-**011**  img1 isa image.
+**011**  `img1 isa image.`
 
-**012**  img2 isa image.
+**012**  `img2 isa image.`
 
-**000**  ctx1 isa context.
+**000**  `ctx1 isa context.`
 
-**000**  ctx2 isa context.
+**000**  `ctx2 isa context.`
 
 Types of terms.
 ~~~~~~~~~~~~~~~
@@ -250,13 +250,13 @@ content. For this we must use the primitive predefined verb
 we mentioned earlier: `exists`.
 
 
-**013**  content_action is exists withsubject person andcanbe what a content.
+**013**  `content_action is exists withsubject person andcanbe what a content.`
 
-**014**  view is content_action.
+**014**  `view is content_action.`
 
-**015**  edit is content_action.
+**015**  `edit is content_action.`
 
-**016**  owns is content_action.
+**016**  `owns is content_action.`
 
 We do not need to specify the type of the subject for a verb if it coincides
 with that of its parent verb, and, if a mod-def for a child verb coincides with
@@ -266,9 +266,9 @@ Derived verbs inherit the subject and mod-defs that they do not override.
 With this new verbs, we can state facts such as:
 
 
-**013**  pete [owns what doc1].
+**013**  `pete [owns what doc1].`
 
-**014**  sue [edit what img2].
+**014**  `sue [edit what img2].`
 
 Rules.
 ------
@@ -337,18 +337,18 @@ So, if we define a verb `located`, we can build a rule such as what follows.
 **019** located is exists withsubject thing andcanbe in a context.
 
 
-**019**  if::
+**019**  `if:
         Thing1 [located in Context1];
         Context1 [located in Context2];
     then:
-        Thing1 [located in Context2].
+        Thing1 [located in Context2].`
 
 With this, if we have that
 
 
-**020**  doc1 [located where ctx1].
+**020**  `doc1 [located where ctx1].`
 
-**021**  ctx1 [located where ctx2].
+**021**  `ctx1 [located where ctx2].`
 
 The system will conclude that `doc1 [located where ctx2]`.
 
@@ -370,12 +370,12 @@ To provide a working example, we will define a couple of verbs that take a
 predicate as modifier, and build a rule with it.
 
 
-**000**  wants is exists withsubject person andcanbe that a person, do a content_action.
+**000**  `wants is exists withsubject person andcanbe that a person, do a content_action.`
 
-**000**  is_allowed is exists withsubject person andcanbe to a content_action.
+**000**  `is_allowed is exists withsubject person andcanbe to a content_action.`
 
 
-**000**  if::
+**000**  `if::`
         Person1 [wants that Person1, do [Content_action1]];
         Person1 [is_allowed to [Content_action1]];
      then:
@@ -384,9 +384,9 @@ predicate as modifier, and build a rule with it.
 If with all this we say that
 
 
-**000**  sue [wants that sue, do [wiew what doc1]].
+**000**  `sue [wants that sue, do [wiew what doc1]].`
 
-**000**  sue [is_allowed to [wiew what doc1]].
+**000**  `sue [is_allowed to [wiew what doc1]].`
 
 The system will conclude that `sue [view what doc1]`.
 
@@ -405,12 +405,12 @@ variable made from `locate` would be `LocateVerb1`. To show a more complete
 example of this, we define a verb `can`, that will take a verb as modifier:
 
 
-**000**  can is exists withsubject person andcanbe what a verb.
+**000**  `can is exists withsubject person andcanbe what a verb.`
 
 A rule with this verb:
 
 
-**000**  if::
+**000**  `if::`
         Person1 [wants that Person1, to [Content_actionVerb1 Content_action1]];
         Person1 [can what Content_actionVerb1];
      then:
@@ -425,9 +425,9 @@ second condition. Thus the oddly redundant form.
 Now we can say:
 
 
-**000**  mary [wants that mary, do [wiew what doc1]].
+**000**  `mary [wants that mary, do [wiew what doc1]].`
 
-**000**  mary [can what wiew].
+**000**  `mary [can what wiew].`
 
 The system will conclude that `mary [view what doc1]`.
 
@@ -439,14 +439,14 @@ number of modifiers. For an example of verb variables with modifiers, we might
 have defined `can` like:
 
 
-**000**  can is exists withsubject person
+**000**  `can is exists withsubject person`
                    andcanbe what a verb,
                             where a context.
 
 The rule would now take the form:
 
 
-**000**  if::
+**000**  `if::`
         Person1 [wants that Person1, to [Content_actionVerb1 what Content1]];
         Person1 [can what Content_actionVerb1, where Context1];
         Content1 [located where Context1];
@@ -458,9 +458,9 @@ Verb variables can appear in rules anywhere a verb can appear.
 Now we might say:
 
 
-**000**  mary [wants that mary, do [wiew what doc1]].
+**000**  `mary [wants that mary, do [wiew what doc1]].`
 
-**000**  mary [can what wiew, where ctx1].
+**000**  `mary [can what wiew, where ctx1].`
 
 The system will conclude that `mary [view what doc1]`.
 
@@ -619,45 +619,45 @@ have developed so far.
 First we will need some workflow action verbs:
 
 
-**000**  wf_action is content_action.
+**000**  `wf_action is content_action.`
 
-**000**  publish is wf_action.
+**000**  `publish is wf_action.`
 
-**000**  hide is wf_action.
+**000**  `hide is wf_action.`
 
 States for content:
 
 
-**000**  status are thing.
+**000**  `status are thing.`
 
-**000**  public isa status.
+**000**  `public isa status.`
 
-**000**  private isa status.
+**000**  `private isa status.`
 
 Now we want workflow objects:
 
 
-**000**  workflow are thing.
+**000**  `workflow are thing.`
 
 Workflows are assigned to content types depending on the context:
 
 
-**000**  is_assigned is exists withsubject workflow
+**000**  `is_assigned is exists withsubject workflow`
                            andcanbe to a noun,
                                     in a context.
 
 We also want transitions in those workflows:
 
 
-**000**  transition are thing.
+**000**  `transition are thing.`
 
 
-**000**  has is exists withsubject thing andcanbe what a thing.
+**000**  `has is exists withsubject thing andcanbe what a thing.`
 
 Transitions relate workflow actions with starting and ending states:
 
 
-**000**  executed is exists withsubject transition
+**000**  `executed is exists withsubject transition`
                         andcanbe by a wf_action,
                                  from a status,
                                  to a status.
@@ -665,29 +665,29 @@ Transitions relate workflow actions with starting and ending states:
 Finally, we need permissions and roles:
 
 
-**000**  role are thing.
+**000**  `role are thing.`
 
-**000**  manager isa role.
+**000**  `manager isa role.`
 
-**000**  editor isa role.
+**000**  `editor isa role.`
 
-**000**  visitor isa role.
+**000**  `visitor isa role.`
 
 
-**000**  permission are thing.
+**000**  `permission are thing.`
 
-**000**  basic_perm isa permission.
+**000**  `basic_perm isa permission.`
 
-**000**  edit_perm isa permission.
+**000**  `edit_perm isa permission.`
 
-**000**  manage_perm isa permission.
+**000**  `manage_perm isa permission.`
 
 We reuse the `has` term to say that roles have permissions, and to say that
 people have permissions. We also make a verb
 to protect actions with permissions for states in contexts:
 
 
-**000**  is_protected is exists withsubject content_action
+**000**  `is_protected is exists withsubject content_action`
                             andcanbe by a permission,
                                      in a context,
                                      for a status.
@@ -698,7 +698,7 @@ the role has a permission, and that permissions protects that action in that
 context, then he does it:
 
 
-**000**  if::
+**000**  `if::`
         Person1 [wants to [Content_actionVerb1 what Content1]];
         Content1 [located where Context1];
         Content1 [has what Status1];
@@ -714,7 +714,7 @@ need to bother about times.
 The next rule will use workflow actions to transition content:
 
 
-**000**  if::
+**000**  `if::
         Person1 [Wf_action1 what Content1(ContentNoun1)];
         Workflow1 [is_assigned to ContentNoun1, in Context1] D1;
         Workflow [has Transition1] D2;
@@ -722,65 +722,65 @@ The next rule will use workflow actions to transition content:
         Content1 [has what Status1] D4;
     then:
         finish D4;
-        Content1 [has what Status2] until D1, D2, D3.
+        Content1 [has what Status2] until D1, D2, D3.`
 
 
 Let's try now some atomic facts:
 
 
-**000**  manager [has what manage_perm] onwards.
+**000**  `manager [has what manage_perm] onwards.`
 
-**000**  manager [has what edit_perm] onwards.
+**000**  `manager [has what edit_perm] onwards.`
 
-**000**  manager [has what basic_perm] onwards.
+**000**  `manager [has what basic_perm] onwards.`
 
-**000**  editor [has what edit_perm] onwards.
+**000**  `editor [has what edit_perm] onwards.`
 
-**000**  editor [has what basic_perm] onwards.
+**000**  `editor [has what basic_perm] onwards.`
 
-**000**  visitor [has what basic_perm] onwards.
-
-
-**000**  publish [is_protected by manage_perm, in ctx1, for private] onwards.
-
-**000**  hide [is_protected by edit_perm, in ctx1, for public] onwards.
-
-**000**  edit [is_protected by edit_perm, in ctx1, for private] onwards.
-
-**000**  edit [is_protected by manage_perm, in ctx1, for public] onwards.
-
-**000**  view [is_protected by edit_perm, in ctx1, for private] onwards.
-
-**000**  view [is_protected by basic_perm, in ctx1, for public] onwards.
+**000**  `visitor [has what basic_perm] onwards.`
 
 
-**000**  john [has what manager] onwards.
+**000**  `publish [is_protected by manage_perm, in ctx1, for private] onwards.`
 
-**000**  mary [has what editor] onwards.
+**000**  `hide [is_protected by edit_perm, in ctx1, for public] onwards.`
 
-**000**  pete [has what visitor] onwards.
+**000**  `edit [is_protected by edit_perm, in ctx1, for private] onwards.`
+
+**000**  `edit [is_protected by manage_perm, in ctx1, for public] onwards.`
+
+**000**  `view [is_protected by edit_perm, in ctx1, for private] onwards.`
+
+**000**  `view [is_protected by basic_perm, in ctx1, for public] onwards.`
 
 
-**000**  doc1 [has what private] onwards.
+**000**  `john [has what manager] onwards.`
+
+**000**  `mary [has what editor] onwards.`
+
+**000**  `pete [has what visitor] onwards.`
 
 
-**000**  pete [wants to [publish what doc1]].
+**000**  `doc1 [has what private] onwards.`
 
 
-**000**  pete [publish what doc1]?
+**000**  `pete [wants to [publish what doc1]].`
+
+
+**000**  `pete [publish what doc1]?`
      False
 
 
-**000**  doc1 [has what Status1]?
+**000**  `doc1 [has what Status1]?`
      private
 
 
-**000**  john [wants to [publish what doc1]].
+**000**  `john [wants to [publish what doc1]].`
 
 
-**000**  john [publish what doc1]?
+**000**  `john [publish what doc1]?`
      True
 
 
-**000**  doc1 [has what Status1]?
+**000**  `doc1 [has what Status1]?`
      public
