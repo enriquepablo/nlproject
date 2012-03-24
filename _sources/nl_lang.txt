@@ -13,5 +13,7 @@ Contents
 
    npl_install
    bnf
+   npl_arith
+   npl_questions
 
 .. _Python: http://www.python.org/

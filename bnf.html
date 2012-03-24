@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The npl language &mdash; nlproject 1.0dev documentation</title>
+    <title>npl language essentials &mdash; nlproject 1.0dev documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -27,6 +27,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="nlproject 1.0dev documentation" href="index.html" />
     <link rel="up" title="The npl language" href="nl_lang.html" />
+    <link rel="next" title="Arithmetics." href="npl_arith.html" />
     <link rel="prev" title="Installation and execution." href="npl_install.html" /> 
   </head>
   <body>
@@ -36,6 +37,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="npl_arith.html" title="Arithmetics."
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="npl_install.html" title="Installation and execution."
              accesskey="P">previous</a> |</li>
@@ -49,15 +53,15 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="the-npl-language">
-<h1>The npl language<a class="headerlink" href="#the-npl-language" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="npl-language-essentials">
+<h1>npl language essentials<a class="headerlink" href="#npl-language-essentials" title="Permalink to this headline">¶</a></h1>
 <p><strong>npl</strong> is a logic programming language. In the use of <strong>npl</strong> there
 are basically 4 stages:</p>
 <blockquote>
 <div><ul class="simple">
 <li>Define terms;</li>
-<li>Build sentences and rules with those terms;</li>
-<li>Extend the set of sentences and rules to all logical consequences;</li>
+<li>Build statements and rules with those terms;</li>
+<li>Extend the set of statements and rules to all logical consequences;</li>
 <li>Query that extended set.</li>
 </ul>
 </div></blockquote>
@@ -72,39 +76,43 @@ consistent and complete.
 &lt;/inmodest hype&gt;</p>
 <p>I&#8217;m going to describe the <strong>npl</strong> language going through its BNF grammar, from
 top down. To illustrate the different constructs of the language, I will
-be sketching along a set of terms, sentences and rules to hold the bussiness
+be sketching along a set of terms, statements and rules to hold the bussiness
 logic of a content management system.</p>
-<div class="section" id="statements">
-<h2>Statements<a class="headerlink" href="#statements" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><dl class="docutils">
-<dt>statement <span class="classifier-delimiter">:</span> <span class="classifier">sentence</span></dt>
+<div class="section" id="sentences">
+<h2>Sentences<a class="headerlink" href="#sentences" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>::</dt>
+<dd><dl class="first last docutils">
+<dt>sentence <span class="classifier-delimiter">:</span> <span class="classifier">statement</span></dt>
 <dd><div class="first last line-block">
 <div class="line">question</div>
 </div>
 </dd>
 </dl>
-</div></blockquote>
-<p>Statements are the top level grammatical elements. These are the elements that
+</dd>
+</dl>
+<p>Sentences are the top level grammatical elements. These are the elements that
 can be entered (told or asked) into npl&#8217;s knowledge base (kb). There are two
-kinds of statements, sentences and questions. Sentences
+kinds of sentences, statements and questions. Statements
 add to the information held in the kb, and questions query the kb.</p>
 </div>
-<div class="section" id="sentences">
-<h2>Sentences.<a class="headerlink" href="#sentences" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><dl class="docutils">
-<dt>sentence <span class="classifier-delimiter">:</span> <span class="classifier">definition DOT</span></dt>
+<div class="section" id="statements">
+<h2>Statements.<a class="headerlink" href="#statements" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>::</dt>
+<dd><dl class="first docutils">
+<dt>statement <span class="classifier-delimiter">:</span> <span class="classifier">definition DOT</span></dt>
 <dd><div class="first last line-block">
 <div class="line">fact DOT</div>
 <div class="line">rule DOT</div>
 </div>
 </dd>
 </dl>
-<p>DOT : &#8221;.&#8221;</p>
-</div></blockquote>
-<p>Sentences are asserted: they have truth value.
-There are 3 main forms of sentences, all ended with a dot, which we will
+<p class="last">DOT : &#8221;.&#8221;</p>
+</dd>
+</dl>
+<p>Statements are asserted: they have truth value.
+There are 3 main forms of statements, all ended with a dot, which we will
 call definitions, facts, and rules.
 Definitions are used to define terms. Facts use those terms to establish
 relations among them. And rules establish relations (logical relations,
@@ -233,6 +241,7 @@ and an (optional) modification.</p>
 </div>
 </dd>
 </dl>
+<p>LABEL : &lt;any sequence of lower case letters&gt;</p>
 </div></blockquote>
 <p>A modifier is composed of a label and an object, that can be any kind of
 (atomic or complex) term except a time: a noun, a verb, a name, a number, or a
@@ -314,9 +323,9 @@ Derived verbs inherit the subject and mod-defs that they do not override.</p>
 <p>SEMICOLON : &#8221;;&#8221;</p>
 <p>THEN : &#8220;then&#8221;</p>
 </div></blockquote>
-<p>A rule consists of 2 sets of sentences, the conditions and the consecuences.
+<p>A rule consists of 2 sets of statements, the conditions and the consecuences.
 Conditions and consecuences are, mainly, facts (though they can be other types
-of sentences, as we shall be seeing below). Atomic facts (facts that are
+of statements, as we shall be seeing below). Atomic facts (facts that are
 asserted on their own, outside of rules) can match the conditions of rules,
 and, when all conditions in a rule are matched, its consecuences are
 automatically (atomically) added to the kb.</p>
@@ -509,7 +518,7 @@ future.</p>
 <div class="section" id="instants">
 <h3>Instants.<a class="headerlink" href="#instants" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div><p>statement : order DOT</p>
+<div><p>sentence : order DOT</p>
 <p>order : NOW</p>
 <p>time : NOW</p>
 <p>NOW : &#8220;now&#8221;</p>
@@ -519,7 +528,7 @@ future.</p>
 <p>Internally, every instance of <strong>npl</strong> keeps a record of time.
 When <strong>npl</strong> is started, this record is set
 to the UNIX time of the moment. It is kept like that till further notice. And
-further notice is given with the statement:</p>
+further notice is given with the sentence:</p>
 <p>290 now.</p>
 <p>This causes <strong>npl</strong> to update its internal record with the UNIX time of the moment.
 this internal record represents the &#8216;present&#8217; time in the system.</p>
@@ -571,7 +580,7 @@ of each to be terminated before terminating the consecuence).</p>
 <p>There is a special type of consecuence, built with the reserved word
 <cite>finish</cite>, that can be given as a consecuence in rules, like
 <cite>finish D1;</cite>. This
-statement will change the special value of the final instant of <cite>D1</cite>,
+sentence will change the special value of the final instant of <cite>D1</cite>,
 to replace it with the present. Terminating a duration will terminate
 all durations that are derived from it through the <cite>until</cite> operator.</p>
 </div>
@@ -703,56 +712,6 @@ Content1 [has what Status2] until D1, D2, D3.</dd>
 </dl>
 </div>
 </div>
-<div class="section" id="arithmetics">
-<h1>Arithmetics.<a class="headerlink" href="#arithmetics" title="Permalink to this headline">¶</a></h1>
-<ol class="upperroman simple" start="30">
-<li></li>
-</ol>
-</div>
-<div class="section" id="questions">
-<h1>Questions.<a class="headerlink" href="#questions" title="Permalink to this headline">¶</a></h1>
-<ol class="upperroman simple" start="30">
-<li></li>
-</ol>
-<div class="section" id="id1">
-<h2>Instants.<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><p>time : AT instant</p>
-<dl class="docutils">
-<dt>instant <span class="classifier-delimiter">:</span> <span class="classifier">NUMBER</span></dt>
-<dd><div class="first last line-block">
-<div class="line">VAR</div>
-<div class="line">NOW</div>
-</div>
-</dd>
-</dl>
-<p>AT : &#8220;at&#8221;</p>
-<p>NUMBER : &lt;any integer&gt;</p>
-</div></blockquote>
-<p>We can provide specific instants for facts, as integers (it is in the TODO list
-to allow other time formats), prefixing them with the reserved word &#8220;at&#8221;. So we can say:</p>
-<p>300 john [views what doc1] at 30.</p>
-<p>In rules or queries, we would use variables with the form <cite>Instant1</cite>.</p>
-</div>
-<div class="section" id="id2">
-<h2>Durations.<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><p>time : FROM instant TILL instant</p>
-<p>FROM : &#8220;from&#8221;</p>
-<p>TILL : &#8220;till&#8221;</p>
-</div></blockquote>
-<p>Apart from instants, we can provide durations as time components of facts. To
-do this, we use the reserved words <cite>from</cite> y <cite>till</cite>:</p>
-<ol class="arabic" start="32">
-<li><p class="first">john [is_allowed to [edit what doc1]] from 10 till 20.</p>
-<p>time : VAR</p>
-</li>
-</ol>
-<p>Using variables in rules and queries, we can represent durations in 2 different
-ways, with 2 instant variables (<cite>from Instant1 till Instant2</cite>) or with just one
-duration variable (<cite>Duration1</cite>).</p>
-</div>
-</div>
 
 
           </div>
@@ -762,9 +721,9 @@ duration variable (<cite>Duration1</cite>).</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">The npl language</a><ul>
-<li><a class="reference internal" href="#statements">Statements</a></li>
-<li><a class="reference internal" href="#sentences">Sentences.</a></li>
+<li><a class="reference internal" href="#">npl language essentials</a><ul>
+<li><a class="reference internal" href="#sentences">Sentences</a></li>
+<li><a class="reference internal" href="#statements">Statements.</a></li>
 <li><a class="reference internal" href="#definition-of-terms">Definition of terms.</a><ul>
 <li><a class="reference internal" href="#noun-definitions">Noun definitions.</a></li>
 <li><a class="reference internal" href="#name-definitions">Name definitions.</a></li>
@@ -789,17 +748,14 @@ duration variable (<cite>Duration1</cite>).</p>
 <li><a class="reference internal" href="#final-example">Final Example.</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#arithmetics">Arithmetics.</a></li>
-<li><a class="reference internal" href="#questions">Questions.</a><ul>
-<li><a class="reference internal" href="#id1">Instants.</a></li>
-<li><a class="reference internal" href="#id2">Durations.</a></li>
-</ul>
-</li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="npl_install.html"
                         title="previous chapter">Installation and execution.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="npl_arith.html"
+                        title="next chapter">Arithmetics.</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/bnf.txt"
@@ -828,6 +784,9 @@ duration variable (<cite>Duration1</cite>).</p>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="npl_arith.html" title="Arithmetics."
+             >next</a> |</li>
         <li class="right" >
           <a href="npl_install.html" title="Installation and execution."
              >previous</a> |</li>
