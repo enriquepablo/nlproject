@@ -9,7 +9,6 @@ are basically 4 stages:
  * Extend the set of statements and rules to all logical consequences;
  * Query that extended set.
 
-<inmodest hype>
 **npl** offers a superior expressive power when compared to the rest of logic
 programming languages (that I know of). For example, it is possible in **npl**
 to treat classes
@@ -17,7 +16,6 @@ or relations (well, **npl**'s functional equivalent of the classes and relations
 of other logic languages) as individuals.
 Note that **npl** is based on a finite domain first order logical theory that is
 consistent and complete.
-</inmodest hype>
 
 I'm going to describe the **npl** language going through its BNF grammar, from
 top down. To illustrate the different constructs of the language, I will
@@ -26,18 +24,22 @@ logic of a content management system.
 
 Sentences
 ----------
+
 ::
+
     sentence : statement
              | question
+             | order
 
 Sentences are the top level grammatical elements. These are the elements that
 can be entered (told or asked) into npl's knowledge base (kb). There are two
 kinds of sentences, statements and questions. Statements
-add to the information held in the kb, and questions query the kb.
+add to the information held in the kb, and questions query the kb. Orders
+do different things to the kb.
 
-Statements.
+Statements
 ----------
-::
+
     statement : definition DOT
               | fact DOT
               | rule DOT
