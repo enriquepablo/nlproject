@@ -337,11 +337,11 @@ So, if we define a verb ``located``, we can build a rule such as what follows.
 **019** located is exists withsubject thing andcanbe in a context.
 
 
-**019**  ``if:
-        Thing1 [located in Context1];
-        Context1 [located in Context2];
-     then:
-        Thing1 [located in Context2].``
+**019**::  ``if:``
+        ``Thing1 [located in Context1];``
+        ``Context1 [located in Context2];``
+     ``then:``
+        ``Thing1 [located in Context2].``
 
 With this, if we have that
 
