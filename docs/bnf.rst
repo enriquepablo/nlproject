@@ -40,6 +40,8 @@ do different things to the kb.
 Statements
 ----------
 
+::
+
     statement : definition DOT
               | fact DOT
               | rule DOT
