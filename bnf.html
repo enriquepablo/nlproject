@@ -313,17 +313,16 @@ VAR : &lt;an uppercase letter followed by any number of lower case letters,
 </div>
 <p>So, if we define a verb <tt class="docutils literal"><span class="pre">located</span></tt>, we can build a rule such as what follows.</p>
 <p><strong>019</strong> located is exists withsubject thing andcanbe in a context.</p>
-<dl class="docutils">
-<dt><strong>019</strong>::  <tt class="docutils literal"><span class="pre">if:</span></tt></dt>
-<dd><blockquote class="first">
-<div><tt class="docutils literal"><span class="pre">Thing1</span> <span class="pre">[located</span> <span class="pre">in</span> <span class="pre">Context1];</span></tt>
-<tt class="docutils literal"><span class="pre">Context1</span> <span class="pre">[located</span> <span class="pre">in</span> <span class="pre">Context2];</span></tt></div></blockquote>
-<dl class="last docutils">
-<dt><tt class="docutils literal"><span class="pre">then:</span></tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Thing1</span> <span class="pre">[located</span> <span class="pre">in</span> <span class="pre">Context2].</span></tt></dd>
-</dl>
-</dd>
-</dl>
+<p><strong>019</strong>  <tt class="docutils literal"><span class="pre">if:</span></tt></p>
+<blockquote>
+<div><blockquote>
+<div><p><tt class="docutils literal"><span class="pre">Thing1</span> <span class="pre">[located</span> <span class="pre">in</span> <span class="pre">Context1];</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Context1</span> <span class="pre">[located</span> <span class="pre">in</span> <span class="pre">Context2];</span></tt></p>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">then:</span></tt></p>
+<blockquote>
+<div><tt class="docutils literal"><span class="pre">Thing1</span> <span class="pre">[located</span> <span class="pre">in</span> <span class="pre">Context2].</span></tt></div></blockquote>
+</div></blockquote>
 <p>With this, if we have that</p>
 <p><strong>020</strong>  <tt class="docutils literal"><span class="pre">doc1</span> <span class="pre">[located</span> <span class="pre">where</span> <span class="pre">ctx1].</span></tt></p>
 <p><strong>021</strong>  <tt class="docutils literal"><span class="pre">ctx1</span> <span class="pre">[located</span> <span class="pre">where</span> <span class="pre">ctx2].</span></tt></p>
