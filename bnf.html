@@ -90,17 +90,12 @@ do different things to the kb.</p>
 </div>
 <div class="section" id="statements">
 <h2>Statements<a class="headerlink" href="#statements" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><dl class="docutils">
-<dt>statement <span class="classifier-delimiter">:</span> <span class="classifier">definition DOT</span></dt>
-<dd><div class="first last line-block">
-<div class="line">fact DOT</div>
-<div class="line">rule DOT</div>
+<div class="highlight-python"><pre>statement : definition DOT
+          | fact DOT
+          | rule DOT
+
+DOT : "."</pre>
 </div>
-</dd>
-</dl>
-<p>DOT : &#8221;.&#8221;</p>
-</div></blockquote>
 <p>Statements are asserted: they have truth value.
 There are 3 main forms of statements, all ended with a dot, which we will
 call definitions, facts, and rules.
