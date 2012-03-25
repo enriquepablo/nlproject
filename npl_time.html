@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Time. &mdash; nlproject 1.0dev documentation</title>
+    <title>Time &mdash; nlproject 1.0dev documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -54,7 +54,7 @@
           <div class="body">
             
   <div class="section" id="time">
-<h1>Time.<a class="headerlink" href="#time" title="Permalink to this headline">¶</a></h1>
+<h1>Time<a class="headerlink" href="#time" title="Permalink to this headline">¶</a></h1>
 <div class="highlight-python"><pre>fact : subject predicate time</pre>
 </div>
 <p>We can specify a time as a distinguished part of a fact. This time
@@ -62,6 +62,8 @@ has the form of either an integer or a pair of
 integers. An integer marks a fact whose interpretation is an
 instantaneous happening, and a pair represents an interval of time,
 a duration.</p>
+<p>For examples of all this, you can look at
+<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl">this npl test</a>.</p>
 <p>The reason we distinguish time (it would in principle suffice to represent
 times as just another modifier in the predicate)
 is because we want to allow for the
@@ -76,33 +78,32 @@ We assume a closed world were everything is in known the instant it happens,
 i.e., we know everything about the past and the present but nothing about the
 future.</p>
 <div class="section" id="instants">
-<h2>Instants.<a class="headerlink" href="#instants" title="Permalink to this headline">¶</a></h2>
+<h2>Instants<a class="headerlink" href="#instants" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><pre>order : NOW DOT
 
 time : NOW
 
 NOW : "now"</pre>
 </div>
-<p>The time can be specified with the term <tt class="docutils literal"><span class="pre">now</span></tt>. We can say:</p>
-<p><strong>035</strong> <tt class="docutils literal"><span class="pre">sue</span> <span class="pre">[views</span> <span class="pre">what</span> <span class="pre">doc1]</span> <span class="pre">now.</span></tt></p>
+<p>The time can be specified with the term <tt class="docutils literal"><span class="pre">now</span></tt>. We can say
+<tt class="docutils literal"><span class="pre">sue</span> <span class="pre">[views</span> <span class="pre">what</span> <span class="pre">doc1]</span> <span class="pre">now.</span></tt>.</p>
 <p>Internally, every instance of <strong>npl</strong> keeps a record of time.
 When <strong>npl</strong> is started, this record is set
 to the UNIX time of the moment. It is kept like that till further notice. And
-further notice is given with the sentence:</p>
-<p><strong>036</strong> <tt class="docutils literal"><span class="pre">now.</span></tt></p>
-<p>This causes <strong>npl</strong> to update its internal record with the UNIX time of the moment.
+further notice is given with the order <tt class="docutils literal"><span class="pre">now.</span></tt>. This order causes <strong>npl</strong> to
+update its internal record with the UNIX time of the moment.
 this internal record represents the &#8216;present&#8217; time in the system.</p>
-<p>When we say something like fact XXX, the time that is being stored for that fact is
+<p>When we say something like fact <tt class="docutils literal"><span class="pre">sue</span> <span class="pre">[views</span> <span class="pre">what</span> <span class="pre">doc1]</span> <span class="pre">now.</span></tt>, the time that
+is being stored for that fact is
 the content of the said &#8216;present&#8217; record at the time of saying. So, if we say several
-facts with time &#8220;now&#8221; without changing the internal time with &#8220;now.&#8221;, they will
+facts with time <tt class="docutils literal"><span class="pre">now</span></tt> without changing the internal time with <tt class="docutils literal"><span class="pre">now.</span></tt>, they will
 all have the same time.</p>
-<p>The <tt class="docutils literal"><span class="pre">now</span></tt> term is optional, and we might have just said, in place of XXX:</p>
-<p><strong>036&#8217;</strong> <tt class="docutils literal"><span class="pre">sue</span> <span class="pre">[views</span> <span class="pre">what</span> <span class="pre">doc1].</span></tt></p>
+<p>The <tt class="docutils literal"><span class="pre">now</span></tt> term is optional, and we might have just said <tt class="docutils literal"><span class="pre">sue</span> <span class="pre">[views</span> <span class="pre">what</span> <span class="pre">doc1].</span></tt>.
+If we do not specify a time, it is assumed to be <tt class="docutils literal"><span class="pre">now</span></tt>.</p>
 </div>
 <div class="section" id="durations">
-<h2>Durations.<a class="headerlink" href="#durations" title="Permalink to this headline">¶</a></h2>
+<h2>Durations<a class="headerlink" href="#durations" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><pre>time : ONWARDS
-     | SINCE VAR ONWARDS
 
 ONWARDS : "onwards"
 
@@ -117,18 +118,29 @@ instant of these durations will evaluate to 10; and if we change the present
 (through <tt class="docutils literal"><span class="pre">now.</span></tt>) to 12, they will evaluate to 12.</p>
 </div>
 <div class="section" id="time-in-conditions">
-<h2>Time in conditions.<a class="headerlink" href="#time-in-conditions" title="Permalink to this headline">¶</a></h2>
+<h2>Time in conditions<a class="headerlink" href="#time-in-conditions" title="Permalink to this headline">¶</a></h2>
 <p>In conditions in rules, we can use, either <tt class="docutils literal"><span class="pre">now</span></tt>, <tt class="docutils literal"><span class="pre">onwards</span></tt>, or a duration
 variable, that will evaluate to <tt class="docutils literal"><span class="pre">onwards</span></tt>
 but can be used in consecuences: <tt class="docutils literal"><span class="pre">D1</span></tt>. Note though that it is not the same to
 say <tt class="docutils literal"><span class="pre">onwards</span></tt> as <tt class="docutils literal"><span class="pre">D1</span></tt>. If we say <tt class="docutils literal"><span class="pre">onwards</span></tt> (or <tt class="docutils literal"><span class="pre">now</span></tt>) in a rule, the
 condition will be formed with the &#8216;present&#8217; instant of npl at the time of
 asserting the rule.</p>
+<div class="highlight-python"><pre>time : SINCE VAR ONWARDS</pre>
+</div>
 <p>We can also specify a continuous present duration with a variable start:
 <tt class="docutils literal"><span class="pre">since</span> <span class="pre">I1</span> <span class="pre">onwards</span></tt>.</p>
 </div>
+<div class="section" id="the-during-condition">
+<h2>The <tt class="docutils literal"><span class="pre">during</span></tt> condition<a class="headerlink" href="#the-during-condition" title="Permalink to this headline">¶</a></h2>
+<p>We can build a special condition with <tt class="docutils literal"><span class="pre">during</span></tt>, where we give an instant
+variable and any number of duration variables like <tt class="docutils literal"><span class="pre">I1</span> <span class="pre">during</span> <span class="pre">D1,</span> <span class="pre">D2,</span> <span class="pre">D3</span></tt>.
+This condition will evaluate to true when the intant that matches <tt class="docutils literal"><span class="pre">I1</span></tt>
+is contained in the durations that match <tt class="docutils literal"><span class="pre">D1</span></tt>, <tt class="docutils literal"><span class="pre">D2</span></tt>, and <tt class="docutils literal"><span class="pre">D3</span></tt>.</p>
+</div>
 <div class="section" id="time-in-consecuences">
-<h2>Time in consecuences.<a class="headerlink" href="#time-in-consecuences" title="Permalink to this headline">¶</a></h2>
+<h2>Time in consecuences<a class="headerlink" href="#time-in-consecuences" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>time : SINCE instant UNTIL durations</pre>
+</div>
 <p>In consecuences in rules, we can use the same constructs as in conditions,
 plus a special construct for durations, in which we express the starting
 instant with a variable and the ending instant
@@ -142,7 +154,7 @@ same consecuence, the system will do the right thing (require a condition
 of each to be terminated before terminating the consecuence).</p>
 </div>
 <div class="section" id="terminating-the-continuous-present">
-<h2>Terminating the continuous present.<a class="headerlink" href="#terminating-the-continuous-present" title="Permalink to this headline">¶</a></h2>
+<h2>Terminating the continuous present<a class="headerlink" href="#terminating-the-continuous-present" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><pre>consecuence : FINISH VAR
 
 FINISH : "finish"</pre>
@@ -164,12 +176,13 @@ all durations that are derived from it through the <tt class="docutils literal">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Time.</a><ul>
-<li><a class="reference internal" href="#instants">Instants.</a></li>
-<li><a class="reference internal" href="#durations">Durations.</a></li>
-<li><a class="reference internal" href="#time-in-conditions">Time in conditions.</a></li>
-<li><a class="reference internal" href="#time-in-consecuences">Time in consecuences.</a></li>
-<li><a class="reference internal" href="#terminating-the-continuous-present">Terminating the continuous present.</a></li>
+<li><a class="reference internal" href="#">Time</a><ul>
+<li><a class="reference internal" href="#instants">Instants</a></li>
+<li><a class="reference internal" href="#durations">Durations</a></li>
+<li><a class="reference internal" href="#time-in-conditions">Time in conditions</a></li>
+<li><a class="reference internal" href="#the-during-condition">The <tt class="docutils literal"><span class="pre">during</span></tt> condition</a></li>
+<li><a class="reference internal" href="#time-in-consecuences">Time in consecuences</a></li>
+<li><a class="reference internal" href="#terminating-the-continuous-present">Terminating the continuous present</a></li>
 </ul>
 </li>
 </ul>

@@ -27,7 +27,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="nlproject 1.0dev documentation" href="index.html" />
     <link rel="up" title="The npl language" href="nl_lang.html" />
-    <link rel="next" title="Time." href="npl_time.html" />
+    <link rel="next" title="Time" href="npl_time.html" />
     <link rel="prev" title="The npl language" href="nl_lang.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="npl_time.html" title="Time."
+          <a href="npl_time.html" title="Time"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="nl_lang.html" title="The npl language"
@@ -94,7 +94,7 @@ do different things to the kb.</p>
 
 EXTEND : "extend"
 
-DOT : "dot"</pre>
+DOT : "."</pre>
 </div>
 <p>If you issue the order <tt class="docutils literal"><span class="pre">extend.</span></tt>, the kb will be extended to all its
 logical consecuences.</p>
@@ -153,7 +153,7 @@ among 2 nouns has the same form as the subclass relation among 2 classes, and
 the relation established by <tt class="docutils literal"><span class="pre">isa</span></tt> among a name and a noun has the same form as
 the relation between an individual and a class it belongs to. So, for example,
 the example definitions entail that <tt class="docutils literal"><span class="pre">document</span> <span class="pre">are</span> <span class="pre">thing</span></tt>, or that
-<tt class="docutils literal"><span class="pre">mary</span> <span class="pre">isa</span> <span class="pre">thing</span></tt>. This means that if we ask the system for <tt class="docutils literal"><span class="pre">thing``s,</span> <span class="pre">``mary</span></tt>
+<tt class="docutils literal"><span class="pre">mary</span> <span class="pre">isa</span> <span class="pre">thing</span></tt>. This means that if we ask the system for a <tt class="docutils literal"><span class="pre">thing</span></tt>, <tt class="docutils literal"><span class="pre">mary</span></tt>
 will be retrieved, and if in a rule we require a <tt class="docutils literal"><span class="pre">thing</span></tt>, <tt class="docutils literal"><span class="pre">mary</span></tt> will match.</p>
 <p>This class structure is explicit in the case of nouns and names, and is
 (implicitly) pervasive among the rest of terms in <strong>npl</strong>. So, for
@@ -167,9 +167,9 @@ predifined term <tt class="docutils literal"><span class="pre">verb</span></tt>,
 the terms that are of that type are the terms related with the type term
 through <tt class="docutils literal"><span class="pre">isa</span></tt>. Therefore, we have six mayor types of term: <tt class="docutils literal"><span class="pre">noun</span></tt>, <tt class="docutils literal"><span class="pre">verb</span></tt>,
 <tt class="docutils literal"><span class="pre">thing</span></tt>, <tt class="docutils literal"><span class="pre">exists</span></tt> (the primitive predefined verb), <tt class="docutils literal"><span class="pre">number</span></tt>, and <tt class="docutils literal"><span class="pre">time</span></tt>,
-and any number of subtypes of those.</p>
-<p>For example, <tt class="docutils literal"><span class="pre">doc1</span></tt> is a term of type <tt class="docutils literal"><span class="pre">thing</span></tt>, and <tt class="docutils literal"><span class="pre">document</span></tt> is a term of type
-<tt class="docutils literal"><span class="pre">noun</span></tt>.</p>
+and any number of subtypes of <tt class="docutils literal"><span class="pre">thing</span></tt> and <tt class="docutils literal"><span class="pre">exists</span></tt>.</p>
+<p>For example, <tt class="docutils literal"><span class="pre">doc1</span></tt> is a term of type <tt class="docutils literal"><span class="pre">thing</span></tt> (and also of type <tt class="docutils literal"><span class="pre">document</span></tt>),
+and <tt class="docutils literal"><span class="pre">document</span></tt> is a term of type <tt class="docutils literal"><span class="pre">noun</span></tt>.</p>
 <p>NOTE: since the definitions of verbs set bounds on the predicates and facts
 where they can appear, we shall defer their introduction until we have
 introduced predicates and facts.</p>
@@ -216,40 +216,40 @@ verb, and <tt class="docutils literal"><span class="pre">london_zoo</span></tt> 
 </div>
 <div class="section" id="definition-of-verbs">
 <h2>Definition of verbs<a class="headerlink" href="#definition-of-verbs" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><pre>verb-def : TERM CAN TERM LPAREN verbs RPAREN modification-def
-         | TERM CAN TERM LPAREN verbs RPAREN
+<div class="highlight-python"><pre>verb-def : A TERM CAN TERM LPAREN verbs RPAREN modification-def
+         | A TERM CAN TERM LPAREN verbs RPAREN
 
 verbs : verb COMMA verbs
       | verb
-
-modification-def : mod-def COMMA modification-def
-                 | mod-def
-
-mod-def : LABEL A TERM
 
 CAN : "can"
 
 A : "a"</pre>
 </div>
-<p>In the definition of a verb we can specify 3 different things. First, the
-type of
-term that can act as subject in a fact where the new verb forms the predicate;
-second, the
-(already defined) verb(s) from which we derive the new verb;
-and third, the modifiers that the verb can take to form the predicate.</p>
+<p>In the definition of a verb (with name given as the second TERM in the
+verb-def) we can specify 3 different things. First, the type of
+term that can act as subject in a fact where the new verb forms the predicate
+(given by the first TERM in the definition); second, the
+(already defined) verb(s) from which we derive the new verb (given in the
+verbs part of the definition); and third, the modifiers that the verb can take
+to form the predicate (the modification-def).</p>
+<div class="highlight-python"><pre>modification-def : mod-def COMMA modification-def
+                 | mod-def
+
+mod-def : LABEL A TERM</pre>
+</div>
 <p>The modifiers that a verb can take are specified through mod-defs, where we
 give the label that the modifier will take, connected through the reserved word
 <tt class="docutils literal"><span class="pre">a</span></tt> with the type of terms that can be used as that modifier.</p>
 <p>So, for
 example, in
-<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L18">lines 18-21 in the test program</a>.
+<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L18">lines 18-21 in the test program</a>,
 we define verbs that express actions that a person can perform on
 content. For this we must use the primitive predefined verb
 we mentioned earlier: <tt class="docutils literal"><span class="pre">exists</span></tt>.</p>
-<p>Derived verbs inherit the subject and mod-defs that they do not override.
+<p>Derived verbs inherit the mod-defs that they do not override.
 Therefore, we do not need to specify a mod-def for a child verb if it
-coincides with
-one of its parents.</p>
+coincides with one of its parents.</p>
 <p>With these new verbs, we can state facts such as <tt class="docutils literal"><span class="pre">pete</span> <span class="pre">[owns</span> <span class="pre">what</span> <span class="pre">doc1].</span></tt>
 or <tt class="docutils literal"><span class="pre">sue</span> <span class="pre">[edit</span> <span class="pre">what</span> <span class="pre">img2].</span></tt></p>
 </div>
@@ -281,14 +281,15 @@ Conditions and consecuences are, mainly, facts (though they can be other types
 of statements, as we shall be seeing below). Atomic facts (facts that are
 asserted on their own, outside of rules) can match the conditions of rules,
 and, when all conditions in a rule are matched, its consecuences are
-automatically (atomically) added to the kb.</p>
+(atomically) added to the kb when we issue an <tt class="docutils literal"><span class="pre">extend.</span></tt> order.</p>
 <p>An atomic fact matches a condition in a rule if (but not only if) they are
 identical (ignoring the order of modifiers in the predicate). It also matches
 when they are identical except that the atomic fact specifies more modifiers
 than the condition.</p>
 <p>We can use logical variables in place of terms in the conditions and
 consecuences of a rule. A logical variable is a symbol that starts with a
-capital letter, followed by any number of lower case letters and underscores,
+capital letter, followed by any number of lower case letters, digits,
+and underscores,
 and ends with any number of digits. A logical variable has a range, that is a
 type of terms. The range of a variable can be obtained by lower casing its
 first letter and removing its final digits. A fact will match the condition of
@@ -308,9 +309,9 @@ VAR : &lt;an uppercase letter followed by any number of lower case letters,
 <p>So, for example, in
 <a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L23">line 23 in the test program</a>
 we define a verb <tt class="docutils literal"><span class="pre">located</span></tt>, which we use in a rule in
-<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L25">line 25 in the test program</a>.
+<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L25">line 25</a>.
 With this rule, and the facts in
-<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L32">lines 32 and 33 in the test program</a>,
+<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L32">lines 32 and 33</a>,
 the system will conclude that <tt class="docutils literal"><span class="pre">doc1</span> <span class="pre">[located</span> <span class="pre">where</span> <span class="pre">ctx2]</span></tt>.</p>
 </div>
 <div class="section" id="predicate-variables">
@@ -360,7 +361,7 @@ is located with the context in which the person is allowed to do the content act
 we might have said:</p>
 <p><tt class="docutils literal"><span class="pre">if:</span></tt></p>
 <blockquote>
-<div><p><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[wants</span> <span class="pre">that</span> <span class="pre">Person1,</span> <span class="pre">to</span> <span class="pre">[Content_actionVerb1</span> <span class="pre">Content_action1]];</span></tt></p>
+<div><p><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[wants</span> <span class="pre">that</span> <span class="pre">Person1,</span> <span class="pre">do</span> <span class="pre">[Content_actionVerb1</span> <span class="pre">Content_action1]];</span></tt></p>
 <p><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[may</span> <span class="pre">what</span> <span class="pre">Content_actionVerb1];</span></tt></p>
 </div></blockquote>
 <p><tt class="docutils literal"><span class="pre">then:</span></tt></p>
@@ -384,10 +385,8 @@ LPAREN : "("
 
 RPAREN : ")"</pre>
 </div>
-<p>The same we have said about verb variables can be said of noun variables, if
-we substitute &#8220;verb&#8221; with &#8220;noun&#8221; throughout the first paragraph of the section
-XXX. The only difference is when we want a variable form in a
-condition to range
+<p>The same we have said about verb variables can be said of noun variables.
+The only difference is when we want a variable form in a condition to range
 over names that have a type given by another (noun) variable. In that case, we
 give the name variable inmediately followed by the noun variable enclosed in
 parentheses. For example, <tt class="docutils literal"><span class="pre">Person1(PersonNoun1)</span></tt>.</p>
@@ -430,7 +429,7 @@ There is an example of the use of noun variables.</p>
                         title="previous chapter">The npl language</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="npl_time.html"
-                        title="next chapter">Time.</a></p>
+                        title="next chapter">Time</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/bnf.txt"
@@ -460,7 +459,7 @@ There is an example of the use of noun variables.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="npl_time.html" title="Time."
+          <a href="npl_time.html" title="Time"
              >next</a> |</li>
         <li class="right" >
           <a href="nl_lang.html" title="The npl language"
