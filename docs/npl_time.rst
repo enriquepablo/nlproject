@@ -1,5 +1,5 @@
-Time.
------
+Time
+----
 
 ::
 
@@ -10,6 +10,9 @@ has the form of either an integer or a pair of
 integers. An integer marks a fact whose interpretation is an
 instantaneous happening, and a pair represents an interval of time,
 a duration.
+
+For examples of all this, you can look at
+`this npl test <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl>`_.
 
 The reason we distinguish time (it would in principle suffice to represent
 times as just another modifier in the predicate)
@@ -26,8 +29,8 @@ We assume a closed world were everything is in known the instant it happens,
 i.e., we know everything about the past and the present but nothing about the
 future.
 
-Instants.
-~~~~~~~~~
+Instants
+~~~~~~~~
 
 ::
 
@@ -37,39 +40,32 @@ Instants.
 
     NOW : "now"
 
-The time can be specified with the term ``now``. We can say:
-
-
-**035** ``sue [views what doc1] now.``
+The time can be specified with the term ``now``. We can say
+``sue [views what doc1] now.``.
 
 Internally, every instance of **npl** keeps a record of time.
 When **npl** is started, this record is set
 to the UNIX time of the moment. It is kept like that till further notice. And
-further notice is given with the sentence:
-
-
-**036** ``now.``
-
-This causes **npl** to update its internal record with the UNIX time of the moment.
+further notice is given with the order ``now.``. This order causes **npl** to
+update its internal record with the UNIX time of the moment.
 this internal record represents the 'present' time in the system.
 
-When we say something like fact XXX, the time that is being stored for that fact is
+When we say something like fact ``sue [views what doc1] now.``, the time that
+is being stored for that fact is
 the content of the said 'present' record at the time of saying. So, if we say several
-facts with time "now" without changing the internal time with "now.", they will
+facts with time ``now`` without changing the internal time with ``now.``, they will
 all have the same time.
 
-The ``now`` term is optional, and we might have just said, in place of XXX:
+The ``now`` term is optional, and we might have just said ``sue [views what doc1].``.
+If we do not specify a time, it is assumed to be ``now``.
 
 
-**036'** ``sue [views what doc1].``
-
-Durations.
-~~~~~~~~~~
+Durations
+~~~~~~~~~
 
 ::
 
     time : ONWARDS
-         | SINCE VAR ONWARDS
 
     ONWARDS : "onwards"
 
@@ -83,8 +79,8 @@ system, irrespectively of its changes. So, if the present time is 10, the final
 instant of these durations will evaluate to 10; and if we change the present
 (through ``now.``) to 12, they will evaluate to 12.
 
-Time in conditions.
-~~~~~~~~~~~~~~~~~~~
+Time in conditions
+~~~~~~~~~~~~~~~~~~
 
 In conditions in rules, we can use, either ``now``, ``onwards``, or a duration
 variable, that will evaluate to ``onwards``
@@ -93,11 +89,27 @@ say ``onwards`` as ``D1``. If we say ``onwards`` (or ``now``) in a rule, the
 condition will be formed with the 'present' instant of npl at the time of
 asserting the rule.
 
+::
+
+    time : SINCE VAR ONWARDS
+
 We can also specify a continuous present duration with a variable start:
 ``since I1 onwards``.
 
-Time in consecuences.
-~~~~~~~~~~~~~~~~~~~~~
+The ``during`` condition
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can build a special condition with ``during``, where we give an instant
+variable and any number of duration variables like ``I1 during D1, D2, D3``.
+This condition will evaluate to true when the intant that matches ``I1``
+is contained in the durations that match ``D1``, ``D2``, and ``D3``.
+
+Time in consecuences
+~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    time : SINCE instant UNTIL durations
 
 In consecuences in rules, we can use the same constructs as in conditions,
 plus a special construct for durations, in which we express the starting
@@ -111,8 +123,8 @@ terminated, the new one will also be terminated. If two rules produce the
 same consecuence, the system will do the right thing (require a condition
 of each to be terminated before terminating the consecuence).
 
-Terminating the continuous present.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Terminating the continuous present
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 

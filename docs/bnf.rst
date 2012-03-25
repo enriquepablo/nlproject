@@ -46,7 +46,7 @@ Order: extend
 
     EXTEND : "extend"
 
-    DOT : "dot"
+    DOT : "."
 
 If you issue the order ``extend.``, the kb will be extended to all its
 logical consecuences.
@@ -121,7 +121,7 @@ among 2 nouns has the same form as the subclass relation among 2 classes, and
 the relation established by ``isa`` among a name and a noun has the same form as
 the relation between an individual and a class it belongs to. So, for example,
 the example definitions entail that ``document are thing``, or that
-``mary isa thing``. This means that if we ask the system for ``thing``s, ``mary``
+``mary isa thing``. This means that if we ask the system for a ``thing``, ``mary``
 will be retrieved, and if in a rule we require a ``thing``, ``mary`` will match.
 
 This class structure is explicit in the case of nouns and names, and is
@@ -137,10 +137,10 @@ This allows us to talk about types of terms. A type of terms is a term, and
 the terms that are of that type are the terms related with the type term
 through ``isa``. Therefore, we have six mayor types of term: ``noun``, ``verb``,
 ``thing``, ``exists`` (the primitive predefined verb), ``number``, and ``time``,
-and any number of subtypes of those.
+and any number of subtypes of ``thing`` and ``exists``.
 
-For example, ``doc1`` is a term of type ``thing``, and ``document`` is a term of type
-``noun``.
+For example, ``doc1`` is a term of type ``thing`` (and also of type ``document``),
+and ``document`` is a term of type ``noun``.
 
 NOTE: since the definitions of verbs set bounds on the predicates and facts
 where they can appear, we shall defer their introduction until we have
@@ -203,27 +203,30 @@ Definition of verbs
 
 ::
 
-    verb-def : TERM CAN TERM LPAREN verbs RPAREN modification-def
-             | TERM CAN TERM LPAREN verbs RPAREN
+    verb-def : A TERM CAN TERM LPAREN verbs RPAREN modification-def
+             | A TERM CAN TERM LPAREN verbs RPAREN
 
     verbs : verb COMMA verbs
           | verb
-
-    modification-def : mod-def COMMA modification-def
-                     | mod-def
-
-    mod-def : LABEL A TERM
 
     CAN : "can"
 
     A : "a"
 
-In the definition of a verb we can specify 3 different things. First, the
-type of
-term that can act as subject in a fact where the new verb forms the predicate;
-second, the
-(already defined) verb(s) from which we derive the new verb;
-and third, the modifiers that the verb can take to form the predicate.
+In the definition of a verb (with name given as the second TERM in the
+verb-def) we can specify 3 different things. First, the type of
+term that can act as subject in a fact where the new verb forms the predicate
+(given by the first TERM in the definition); second, the
+(already defined) verb(s) from which we derive the new verb (given in the
+verbs part of the definition); and third, the modifiers that the verb can take
+to form the predicate (the modification-def).
+
+::
+
+    modification-def : mod-def COMMA modification-def
+                     | mod-def
+
+    mod-def : LABEL A TERM
 
 The modifiers that a verb can take are specified through mod-defs, where we
 give the label that the modifier will take, connected through the reserved word
@@ -231,15 +234,14 @@ give the label that the modifier will take, connected through the reserved word
 
 So, for
 example, in
-`lines 18-21 in the test program <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L18>`_.
+`lines 18-21 in the test program <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L18>`_,
 we define verbs that express actions that a person can perform on
 content. For this we must use the primitive predefined verb
 we mentioned earlier: ``exists``.
 
-Derived verbs inherit the subject and mod-defs that they do not override.
+Derived verbs inherit the mod-defs that they do not override.
 Therefore, we do not need to specify a mod-def for a child verb if it
-coincides with
-one of its parents.
+coincides with one of its parents.
 
 With these new verbs, we can state facts such as ``pete [owns what doc1].``
 or ``sue [edit what img2].``
@@ -275,7 +277,7 @@ Conditions and consecuences are, mainly, facts (though they can be other types
 of statements, as we shall be seeing below). Atomic facts (facts that are
 asserted on their own, outside of rules) can match the conditions of rules,
 and, when all conditions in a rule are matched, its consecuences are
-automatically (atomically) added to the kb.
+(atomically) added to the kb when we issue an ``extend.`` order.
 
 An atomic fact matches a condition in a rule if (but not only if) they are
 identical (ignoring the order of modifiers in the predicate). It also matches
@@ -284,7 +286,8 @@ than the condition.
 
 We can use logical variables in place of terms in the conditions and
 consecuences of a rule. A logical variable is a symbol that starts with a
-capital letter, followed by any number of lower case letters and underscores,
+capital letter, followed by any number of lower case letters, digits,
+and underscores,
 and ends with any number of digits. A logical variable has a range, that is a
 type of terms. The range of a variable can be obtained by lower casing its
 first letter and removing its final digits. A fact will match the condition of
@@ -308,9 +311,9 @@ for a first example, we need to add a couple more of BNF rules:
 So, for example, in
 `line 23 in the test program <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L23>`_
 we define a verb ``located``, which we use in a rule in
-`line 25 in the test program <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L25>`_.
+`line 25 <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L25>`_.
 With this rule, and the facts in
-`lines 32 and 33 in the test program <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L32>`_,
+`lines 32 and 33 <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L32>`_,
 the system will conclude that ``doc1 [located where ctx2]``.
 
 Predicate variables
@@ -370,7 +373,7 @@ we might have said:
 
 ``if:``
 
-    ``Person1 [wants that Person1, to [Content_actionVerb1 Content_action1]];``
+    ``Person1 [wants that Person1, do [Content_actionVerb1 Content_action1]];``
 
     ``Person1 [may what Content_actionVerb1];``
 
@@ -401,10 +404,8 @@ Noun variables
 
     RPAREN : ")"
 
-The same we have said about verb variables can be said of noun variables, if
-we substitute "verb" with "noun" throughout the first paragraph of the section
-XXX. The only difference is when we want a variable form in a
-condition to range
+The same we have said about verb variables can be said of noun variables.
+The only difference is when we want a variable form in a condition to range
 over names that have a type given by another (noun) variable. In that case, we
 give the name variable inmediately followed by the noun variable enclosed in
 parentheses. For example, ``Person1(PersonNoun1)``.
