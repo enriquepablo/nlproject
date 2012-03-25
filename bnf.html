@@ -342,17 +342,16 @@ predicate).</p>
 predicate as modifier, and build a rule with it.</p>
 <p><strong>026</strong>  <tt class="docutils literal"><span class="pre">person</span> <span class="pre">can</span> <span class="pre">wants</span> <span class="pre">(exists)</span> <span class="pre">that</span> <span class="pre">a</span> <span class="pre">person,</span> <span class="pre">do</span> <span class="pre">a</span> <span class="pre">content_action.</span></tt></p>
 <p><strong>027</strong>  <tt class="docutils literal"><span class="pre">person</span> <span class="pre">can</span> <span class="pre">is_allowed</span> <span class="pre">(exists)</span> <span class="pre">to</span> <span class="pre">a</span> <span class="pre">content_action.</span></tt></p>
-<dl class="docutils">
-<dt><strong>028</strong>  <tt class="docutils literal"><span class="pre">if:</span></tt></dt>
-<dd><blockquote class="first">
-<div><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[wants</span> <span class="pre">that</span> <span class="pre">Person1,</span> <span class="pre">do</span> <span class="pre">[Content_action1]];</span></tt>
-<tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[is_allowed</span> <span class="pre">to</span> <span class="pre">[Content_action1]];</span></tt></div></blockquote>
-<dl class="last docutils">
-<dt><tt class="docutils literal"><span class="pre">then:</span></tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[Content_action1].</span></tt></dd>
-</dl>
-</dd>
-</dl>
+<p><strong>028</strong>  <tt class="docutils literal"><span class="pre">if:</span></tt></p>
+<blockquote>
+<div><blockquote>
+<div><p><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[wants</span> <span class="pre">that</span> <span class="pre">Person1,</span> <span class="pre">do</span> <span class="pre">[Content_action1]];</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[is_allowed</span> <span class="pre">to</span> <span class="pre">[Content_action1]];</span></tt></p>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">then:</span></tt></p>
+<blockquote>
+<div><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[Content_action1].</span></tt></div></blockquote>
+</div></blockquote>
 <p>If with all this we say that</p>
 <p><strong>029</strong>  <tt class="docutils literal"><span class="pre">sue</span> <span class="pre">[wants</span> <span class="pre">that</span> <span class="pre">sue,</span> <span class="pre">do</span> <span class="pre">[wiew</span> <span class="pre">what</span> <span class="pre">doc1]].</span></tt></p>
 <p><strong>030</strong>  <tt class="docutils literal"><span class="pre">sue</span> <span class="pre">[is_allowed</span> <span class="pre">to</span> <span class="pre">[wiew</span> <span class="pre">what</span> <span class="pre">doc1]].</span></tt></p>
@@ -370,17 +369,16 @@ variable made from <tt class="docutils literal"><span class="pre">locate</span><
 example of this, we define a verb <tt class="docutils literal"><span class="pre">can</span></tt>, that will take a verb as modifier:</p>
 <p><strong>031</strong>  <tt class="docutils literal"><span class="pre">person</span> <span class="pre">can</span> <span class="pre">may</span> <span class="pre">(exists)</span> <span class="pre">what</span> <span class="pre">a</span> <span class="pre">verb.</span></tt></p>
 <p>A rule with this verb:</p>
-<dl class="docutils">
-<dt><strong>032</strong>  <tt class="docutils literal"><span class="pre">if::</span></tt></dt>
-<dd><blockquote class="first">
-<div><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[wants</span> <span class="pre">that</span> <span class="pre">Person1,</span> <span class="pre">to</span> <span class="pre">[Content_actionVerb1</span> <span class="pre">Content_action1]];</span></tt>
-<tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[may</span> <span class="pre">what</span> <span class="pre">Content_actionVerb1];</span></tt></div></blockquote>
-<dl class="last docutils">
-<dt><tt class="docutils literal"><span class="pre">then:</span></tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[Content_action1].</span></tt></dd>
-</dl>
-</dd>
-</dl>
+<p><strong>032</strong>  <tt class="docutils literal"><span class="pre">if::</span></tt></p>
+<blockquote>
+<div><blockquote>
+<div><p><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[wants</span> <span class="pre">that</span> <span class="pre">Person1,</span> <span class="pre">to</span> <span class="pre">[Content_actionVerb1</span> <span class="pre">Content_action1]];</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[may</span> <span class="pre">what</span> <span class="pre">Content_actionVerb1];</span></tt></p>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">then:</span></tt></p>
+<blockquote>
+<div><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[Content_action1].</span></tt></div></blockquote>
+</div></blockquote>
 <p>Let&#8217;s take a look at the construct <tt class="docutils literal"><span class="pre">[Content_actionVerb1</span> <span class="pre">Content_action1]</span></tt>. It
 stands for a predicate, and any predicate matching it would also match
 <tt class="docutils literal"><span class="pre">[Content_action1]</span></tt>. However, we want to specify that the matching predicate&#8217;s
@@ -402,18 +400,17 @@ have defined <tt class="docutils literal"><span class="pre">may</span></tt> like
 <tt class="docutils literal"><span class="pre">where</span> <span class="pre">a</span> <span class="pre">context.</span></tt></dd>
 </dl>
 <p>The rule would now take the form:</p>
-<dl class="docutils">
-<dt><strong>032&#8217;</strong>  <tt class="docutils literal"><span class="pre">if:</span></tt></dt>
-<dd><blockquote class="first">
-<div><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[wants</span> <span class="pre">that</span> <span class="pre">Person1,</span> <span class="pre">to</span> <span class="pre">[Content_actionVerb1</span> <span class="pre">what</span> <span class="pre">Content1]];</span></tt>
-<tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[can</span> <span class="pre">what</span> <span class="pre">Content_actionVerb1,</span> <span class="pre">where</span> <span class="pre">Context1];</span></tt>
-<tt class="docutils literal"><span class="pre">Content1</span> <span class="pre">[located</span> <span class="pre">where</span> <span class="pre">Context1];</span></tt></div></blockquote>
-<dl class="last docutils">
-<dt><tt class="docutils literal"><span class="pre">then:</span></tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[Content_actionVerb1</span> <span class="pre">what</span> <span class="pre">Content1].</span></tt></dd>
-</dl>
-</dd>
-</dl>
+<p><strong>032&#8217;</strong>  <tt class="docutils literal"><span class="pre">if:</span></tt></p>
+<blockquote>
+<div><blockquote>
+<div><p><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[wants</span> <span class="pre">that</span> <span class="pre">Person1,</span> <span class="pre">to</span> <span class="pre">[Content_actionVerb1</span> <span class="pre">what</span> <span class="pre">Content1]];</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[can</span> <span class="pre">what</span> <span class="pre">Content_actionVerb1,</span> <span class="pre">where</span> <span class="pre">Context1];</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Content1</span> <span class="pre">[located</span> <span class="pre">where</span> <span class="pre">Context1];</span></tt></p>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">then:</span></tt></p>
+<blockquote>
+<div><tt class="docutils literal"><span class="pre">Person1</span> <span class="pre">[Content_actionVerb1</span> <span class="pre">what</span> <span class="pre">Content1].</span></tt></div></blockquote>
+</div></blockquote>
 <p>Verb variables can appear in rules anywhere a verb can appear.</p>
 <p>Now we might say:</p>
 <p><strong>033&#8217;</strong>  <tt class="docutils literal"><span class="pre">mary</span> <span class="pre">[wants</span> <span class="pre">that</span> <span class="pre">mary,</span> <span class="pre">do</span> <span class="pre">[wiew</span> <span class="pre">what</span> <span class="pre">doc1]].</span></tt></p>

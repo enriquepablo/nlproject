@@ -380,9 +380,13 @@ predicate as modifier, and build a rule with it.
 
 
 **028**  ``if:``
+
         ``Person1 [wants that Person1, do [Content_action1]];``
+
         ``Person1 [is_allowed to [Content_action1]];``
+
      ``then:``
+
         ``Person1 [Content_action1].``
 
 If with all this we say that
@@ -415,9 +419,13 @@ A rule with this verb:
 
 
 **032**  ``if::``
+
         ``Person1 [wants that Person1, to [Content_actionVerb1 Content_action1]];``
+
         ``Person1 [may what Content_actionVerb1];``
+
      ``then:``
+   
         ``Person1 [Content_action1].``
 
 Let's take a look at the construct ``[Content_actionVerb1 Content_action1]``. It
@@ -451,10 +459,15 @@ The rule would now take the form:
 
 
 **032'**  ``if:``
+
         ``Person1 [wants that Person1, to [Content_actionVerb1 what Content1]];``
+
         ``Person1 [can what Content_actionVerb1, where Context1];``
+
         ``Content1 [located where Context1];``
+
      ``then:``
+
         ``Person1 [Content_actionVerb1 what Content1].``
 
 Verb variables can appear in rules anywhere a verb can appear.
