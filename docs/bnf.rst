@@ -107,25 +107,25 @@ Proper names are defined relating them with a noun through the reserved word
 ``isa``.
 
 
-**005**  ``john isa person.``
+**006**  ``john isa person.``
 
-**006**  ``sue isa person.``
+**007**  ``sue isa person.``
 
-**007**  ``pete isa person.``
+**008**  ``pete isa person.``
 
-**008**  ``mary isa person.``
+**009**  ``mary isa person.``
 
-**009**  ``doc1 isa document.``
+**010**  ``doc1 isa document.``
 
-**010**  ``doc2 isa document.``
+**011**  ``doc2 isa document.``
 
-**011**  ``img1 isa image.``
+**012**  ``img1 isa image.``
 
-**012**  ``img2 isa image.``
+**013**  ``img2 isa image.``
 
-**000**  ``ctx1 isa context.``
+**014**  ``ctx1 isa context.``
 
-**000**  ``ctx2 isa context.``
+**015**  ``ctx2 isa context.``
 
 Types of terms.
 ~~~~~~~~~~~~~~~
@@ -202,7 +202,7 @@ A modification is one or more modifiers, separated by commas.
     object : TERM
            | predicate
 
-    LABEL : <any sequence of lower case letters>
+    LABEL : <same pattern as TERM>
 
 A modifier is composed of a label and an object, that can be any kind of
 (atomic or complex) term except a time: a noun, a verb, a name, a number, or a
@@ -217,27 +217,26 @@ Definition of verbs.
 
 ::
 
-    verb-def : verb IS verb WITHSUBJECT TERM ANDCANBE modification-def
-             | verb IS verb  ANDCANBE modification-def
-             | verb IS verb WITHSUBJECT TERM
-             | verb IS verb
+    verb-def : TERM CAN TERM LPAREN verbs RPAREN modification-def
+             | TERM CAN TERM LPAREN verbs RPAREN
+
+    verbs : verb COMMA verbs
+          | verb
 
     modification-def : mod-def COMMA modification-def
                      | mod-def
 
     mod-def : LABEL A TERM
 
-    IS : "is"
-
-    WITHSUBJECT : "withsubject"
-
-    ANDCANBE : "andcanbe"
+    CAN : "can"
 
     A : "a"
 
 In the definition of a verb we can specify 3 different things. First, the
-(already defined) verb from which we derive the new verb; second, the type of
+type of
 term that can act as subject in a fact where the new verb forms the predicate;
+second, the
+(already defined) verb(s) from which we derive the new verb;
 and third, the modifiers that the verb can take to form the predicate.
 
 The modifiers that a verb can take are specified through mod-defs, where we
@@ -250,25 +249,26 @@ content. For this we must use the primitive predefined verb
 we mentioned earlier: ``exists``.
 
 
-**013**  ``content_action is exists withsubject person andcanbe what a content.``
+**016**  ``person can content_action (exists) what a content.``
 
-**014**  ``view is content_action.``
+**017**  ``person can view (content_action).``
 
-**015**  ``edit is content_action.``
+**018**  ``person can edit (content_action).``
 
-**016**  ``owns is content_action.``
+**019**  ``person can owns (content_action).``
 
 We do not need to specify the type of the subject for a verb if it coincides
-with that of its parent verb, and, if a mod-def for a child verb coincides with
-one of its parent, we do not need to explicitly specify it on the child.
+with that of its first parent verb, and, if a mod-def for a child verb
+coincides with
+one of its parents, it is not necessary to explicitly specify it on the child.
 Derived verbs inherit the subject and mod-defs that they do not override.
 
 With this new verbs, we can state facts such as:
 
 
-**013**  ``pete [owns what doc1].``
+**020**  ``pete [owns what doc1].``
 
-**014**  ``sue [edit what img2].``
+**021**  ``sue [edit what img2].``
 
 Rules.
 ------
@@ -334,10 +334,10 @@ for a first example, we need to add a couple more of BNF rules:
 So, if we define a verb ``located``, we can build a rule such as what follows.
 
 
-**019** located is exists withsubject thing andcanbe in a context.
+**022** ``thing can located (exists) in a context.``
 
 
-**019**  ``if:``
+**023**  ``if:``
 
         ``Thing1 [located in Context1];``
 
@@ -350,9 +350,9 @@ So, if we define a verb ``located``, we can build a rule such as what follows.
 With this, if we have that
 
 
-**020**  ``doc1 [located where ctx1].``
+**024**  ``doc1 [located where ctx1].``
 
-**021**  ``ctx1 [located where ctx2].``
+**025**  ``ctx1 [located where ctx2].``
 
 The system will conclude that ``doc1 [located where ctx2]``.
 
@@ -374,23 +374,23 @@ To provide a working example, we will define a couple of verbs that take a
 predicate as modifier, and build a rule with it.
 
 
-**000**  ``wants is exists withsubject person andcanbe that a person, do a content_action.``
+**026**  ``person can wants (exists) that a person, do a content_action.``
 
-**000**  ``is_allowed is exists withsubject person andcanbe to a content_action.``
+**027**  ``person can is_allowed (exists) to a content_action.``
 
 
-**000**  ``if::``
-        Person1 [wants that Person1, do [Content_action1]];
-        Person1 [is_allowed to [Content_action1]];
-     then:
-        Person1 [Content_action1].
+**028**  ``if:``
+        ``Person1 [wants that Person1, do [Content_action1]];``
+        ``Person1 [is_allowed to [Content_action1]];``
+     ``then:``
+        ``Person1 [Content_action1].``
 
 If with all this we say that
 
 
-**000**  ``sue [wants that sue, do [wiew what doc1]].``
+**029**  ``sue [wants that sue, do [wiew what doc1]].``
 
-**000**  ``sue [is_allowed to [wiew what doc1]].``
+**030**  ``sue [is_allowed to [wiew what doc1]].``
 
 The system will conclude that ``sue [view what doc1]``.
 
@@ -409,16 +409,16 @@ variable made from ``locate`` would be ``LocateVerb1``. To show a more complete
 example of this, we define a verb ``can``, that will take a verb as modifier:
 
 
-**000**  ``can is exists withsubject person andcanbe what a verb.``
+**031**  ``person can may (exists) what a verb.``
 
 A rule with this verb:
 
 
-**000**  ``if::``
-        Person1 [wants that Person1, to [Content_actionVerb1 Content_action1]];
-        Person1 [can what Content_actionVerb1];
-     then:
-        Person1 [Content_action1].
+**032**  ``if::``
+        ``Person1 [wants that Person1, to [Content_actionVerb1 Content_action1]];``
+        ``Person1 [may what Content_actionVerb1];``
+     ``then:``
+        ``Person1 [Content_action1].``
 
 Let's take a look at the construct ``[Content_actionVerb1 Content_action1]``. It
 stands for a predicate, and any predicate matching it would also match
@@ -429,9 +429,9 @@ second condition. Thus the oddly redundant form.
 Now we can say:
 
 
-**000**  ``mary [wants that mary, do [wiew what doc1]].``
+**033**  ``mary [wants that mary, do [wiew what doc1]].``
 
-**000**  ``mary [can what wiew].``
+**034**  ``mary [can what wiew].``
 
 The system will conclude that ``mary [view what doc1]``.
 
@@ -440,31 +440,31 @@ modifiers, just by itself in the predicate, like ``[Content_actionVerb1]``. This
 stands for a predicate where the content_action verb is alone without
 modifiers, as opposed to ``[Content_action1]`` where nothing is said of the
 number of modifiers. For an example of verb variables with modifiers, we might
-have defined ``can`` like:
+have defined ``may`` like:
 
 
-**000**  ``can is exists withsubject person``
-                   andcanbe what a verb,
-                            where a context.
+**031'**  ``person can may (exists)``
+                   ``what a verb,``
+                   ``where a context.``
 
 The rule would now take the form:
 
 
-**000**  ``if::``
-        Person1 [wants that Person1, to [Content_actionVerb1 what Content1]];
-        Person1 [can what Content_actionVerb1, where Context1];
-        Content1 [located where Context1];
-     then:
-        Person1 [Content_actionVerb1 what Content1].
+**032'**  ``if:``
+        ``Person1 [wants that Person1, to [Content_actionVerb1 what Content1]];``
+        ``Person1 [can what Content_actionVerb1, where Context1];``
+        ``Content1 [located where Context1];``
+     ``then:``
+        ``Person1 [Content_actionVerb1 what Content1].``
 
 Verb variables can appear in rules anywhere a verb can appear.
 
 Now we might say:
 
 
-**000**  ``mary [wants that mary, do [wiew what doc1]].``
+**033'**  ``mary [wants that mary, do [wiew what doc1]].``
 
-**000**  ``mary [can what wiew, where ctx1].``
+**034'**  ``mary [can what wiew, where ctx1].``
 
 The system will conclude that ``mary [view what doc1]``.
 
@@ -491,300 +491,3 @@ over names that have a type given by another (noun) variable. In that case, we
 give the name variable inmediately followed by the noun variable enclosed in
 parentheses. For example, ``Person1(PersonNoun1)``.
 
-Negation.
----------
-
-XXX
-
-Time.
------
-
-::
-
-    fact : subject predicate time
-
-We can specify a time as a distinguished part of a fact. This time
-has the form of either an integer or a pair of
-integers. An integer marks a fact whose interpretation is an
-instantaneous happening, and a pair represents an interval of time,
-a duration.
-
-The reason we distinguish time (it would in principle suffice to represent
-times as just another modifier in the predicate)
-is because we want to allow for the
-present continuous (this is, for facts that have a starting instant
-but not an ending instant). To do this, we employ some non-monotonic
-technique. Now, the logic we have drawn up to this moment is strictly
-monotonic. And non-monotonicity scares the hell out of me. So, we isolate time
-in a reserved place and treat it very carefully, and make it optional.
-
-Time can thus be given as an instant or as a duration. To assert facts,
-or to specify conditions in rules, we can only use the present tense.
-We assume a closed world were everything is in known the instant it happens,
-i.e., we know everything about the past and the present but nothing about the
-future.
-
-Instants.
-~~~~~~~~~
-
-::
-
-    order : NOW DOT
-
-    time : NOW
-
-    NOW : "now"
-
-The time can be specified with the term ``now``. We can say:
-
-
-**280** sue [views what doc1] now.
-
-Internally, every instance of **npl** keeps a record of time.
-When **npl** is started, this record is set
-to the UNIX time of the moment. It is kept like that till further notice. And
-further notice is given with the sentence:
-
-
-**290** now.
-
-This causes **npl** to update its internal record with the UNIX time of the moment.
-this internal record represents the 'present' time in the system.
-
-When we say something like fact XXX, the time that is being stored for that fact is
-the content of the said 'present' record at the time of saying. So, if we say several
-facts with time "now" without changing the internal time with "now.", they will
-all have the same time.
-
-The ``now`` term is optional, and we might have just said, in place of XXX:
-
-
-**280** sue [views what doc1].
-
-Durations.
-~~~~~~~~~~
-
-::
-
-    time : ONWARDS 
-
-    ONWARDS : "onwards"
-
-To build a duration, we can use the reserved word ``onwards`` as the time
-component. This will set the starting instant of the duration to the present,
-and will set a special value
-as the end of the duration. This value will stand for the 'present' time of the
-system, irrespectively of its changes. So, if the present time is 10, the final
-instant of these durations will evaluate to 10; and if we change the present
-(through ``now.``) to 12, they will evaluate to 12.
-
-Time in conditions.
-~~~~~~~~~~~~~~~~~~~
-
-In conditions in rules, we can use, either ``now``, ``onwards``, or a duration
-variable, that will evaluate to ``onwards`` (will be matched were ``onwards``
-would) but can be used in consecuences: ``D1``.
-
-Time in consecuences.
-~~~~~~~~~~~~~~~~~~~~~
-
-In consecuences in rules, we can use the same constructs as in conditions,
-plus a special construct with the reserved word ``until`` followed by any
-number of duration variables (bound in the conditions of the rule):
-``until D1, D2, D3``. This will
-create an ``onwards`` duration that will be bound to the durations that have
-matched the duration variables specified, so that whenever any of them is
-terminated, the new one will also be terminated. If two rules produce the
-same consecuence, the system will do the right thing (require a condition
-of each to be terminated before terminating the consecuence).
-
-Terminating the continuous present.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-::
-
-    consecuence : FINISH VAR
-
-    FINISH : "finish"
-
-There is a special type of consecuence, built with the reserved word
-``finish``, that can be given as a consecuence in rules, like
-``finish D1;``. This
-sentence will change the special value of the final instant of ``D1``,
-to replace it with the present. Terminating a duration will terminate
-all durations that are derived from it through the ``until`` operator.
-
-Final Example.
---------------
-
-To round up, I will sketch a workflow machine on top of the terminology we
-have developed so far.
-
-First we will need some workflow action verbs:
-
-
-**000**  ``wf_action is content_action.``
-
-**000**  ``publish is wf_action.``
-
-**000**  ``hide is wf_action.``
-
-States for content:
-
-
-**000**  ``status are thing.``
-
-**000**  ``public isa status.``
-
-**000**  ``private isa status.``
-
-Now we want workflow objects:
-
-
-**000**  ``workflow are thing.``
-
-Workflows are assigned to content types depending on the context:
-
-
-**000**  ``is_assigned is exists withsubject workflow``
-                           andcanbe to a noun,
-                                    in a context.
-
-We also want transitions in those workflows:
-
-
-**000**  ``transition are thing.``
-
-
-**000**  ``has is exists withsubject thing andcanbe what a thing.``
-
-Transitions relate workflow actions with starting and ending states:
-
-
-**000**  ``executed is exists withsubject transition``
-                        andcanbe by a wf_action,
-                                 from a status,
-                                 to a status.
-
-Finally, we need permissions and roles:
-
-
-**000**  ``role are thing.``
-
-**000**  ``manager isa role.``
-
-**000**  ``editor isa role.``
-
-**000**  ``visitor isa role.``
-
-
-**000**  ``permission are thing.``
-
-**000**  ``basic_perm isa permission.``
-
-**000**  ``edit_perm isa permission.``
-
-**000**  ``manage_perm isa permission.``
-
-We reuse the ``has`` term to say that roles have permissions, and to say that
-people have permissions. We also make a verb
-to protect actions with permissions for states in contexts:
-
-
-**000**  ``is_protected is exists withsubject content_action``
-                            andcanbe by a permission,
-                                     in a context,
-                                     for a status.
-
-And then, we can make a rule that says that if someone wants to perform an
-action on a content, the content is in a context, the person has a role,
-the role has a permission, and that permissions protects that action in that
-context, then he does it:
-
-
-**000**  ``if::``
-        Person1 [wants to [Content_actionVerb1 what Content1]];
-        Content1 [located where Context1];
-        Content1 [has what Status1];
-        Person1 [has what Role1];
-        Role1 [has what Permission1];
-        Content_actionVerb1 [protected by Permission1, in Context1, for Status1];
-    Then:
-        Person1 [Content_actionVerb1 what Content1].
-        
-Since the only consecuence of the rule is an instantaneous fact, we do not
-need to bother about times.
-
-The next rule will use workflow actions to transition content:
-
-
-**000**  ``if::
-        Person1 [Wf_action1 what Content1(ContentNoun1)];
-        Workflow1 [is_assigned to ContentNoun1, in Context1] D1;
-        Workflow [has Transition1] D2;
-        Transition1 [executed by Wf_action1, from Status1, to Status2] D3;
-        Content1 [has what Status1] D4;
-    then:
-        finish D4;
-        Content1 [has what Status2] until D1, D2, D3.``
-
-
-Let's try now some atomic facts:
-
-
-**000**  ``manager [has what manage_perm] onwards.``
-
-**000**  ``manager [has what edit_perm] onwards.``
-
-**000**  ``manager [has what basic_perm] onwards.``
-
-**000**  ``editor [has what edit_perm] onwards.``
-
-**000**  ``editor [has what basic_perm] onwards.``
-
-**000**  ``visitor [has what basic_perm] onwards.``
-
-
-**000**  ``publish [is_protected by manage_perm, in ctx1, for private] onwards.``
-
-**000**  ``hide [is_protected by edit_perm, in ctx1, for public] onwards.``
-
-**000**  ``edit [is_protected by edit_perm, in ctx1, for private] onwards.``
-
-**000**  ``edit [is_protected by manage_perm, in ctx1, for public] onwards.``
-
-**000**  ``view [is_protected by edit_perm, in ctx1, for private] onwards.``
-
-**000**  ``view [is_protected by basic_perm, in ctx1, for public] onwards.``
-
-
-**000**  ``john [has what manager] onwards.``
-
-**000**  ``mary [has what editor] onwards.``
-
-**000**  ``pete [has what visitor] onwards.``
-
-
-**000**  ``doc1 [has what private] onwards.``
-
-
-**000**  ``pete [wants to [publish what doc1]].``
-
-
-**000**  ``pete [publish what doc1]?``
-     False
-
-
-**000**  ``doc1 [has what Status1]?``
-     private
-
-
-**000**  ``john [wants to [publish what doc1]].``
-
-
-**000**  ``john [publish what doc1]?``
-     True
-
-
-**000**  ``doc1 [has what Status1]?``
-     public
