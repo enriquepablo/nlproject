@@ -1,0 +1,226 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Time. &mdash; nlproject 1.0dev documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="nlproject 1.0dev documentation" href="index.html" />
+    <link rel="up" title="The npl language" href="nl_lang.html" />
+    <link rel="next" title="Final Example" href="npl_example.html" />
+    <link rel="prev" title="npl language essentials" href="bnf.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="npl_example.html" title="Final Example"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="bnf.html" title="npl language essentials"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
+          <li><a href="nl_lang.html" accesskey="U">The npl language</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="time">
+<h1>Time.<a class="headerlink" href="#time" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-python"><pre>fact : subject predicate time</pre>
+</div>
+<p>We can specify a time as a distinguished part of a fact. This time
+has the form of either an integer or a pair of
+integers. An integer marks a fact whose interpretation is an
+instantaneous happening, and a pair represents an interval of time,
+a duration.</p>
+<p>The reason we distinguish time (it would in principle suffice to represent
+times as just another modifier in the predicate)
+is because we want to allow for the
+present continuous (this is, for facts that have a starting instant
+but not an ending instant). To do this, we employ some non-monotonic
+technique. Now, the logic we have drawn up to this moment is strictly
+monotonic. And non-monotonicity scares the hell out of me. So, we isolate time
+in a reserved place and treat it very carefully, and make it optional.</p>
+<p>Time can thus be given as an instant or as a duration. To assert facts,
+or to specify conditions in rules, we can only use the present tense.
+We assume a closed world were everything is in known the instant it happens,
+i.e., we know everything about the past and the present but nothing about the
+future.</p>
+<div class="section" id="instants">
+<h2>Instants.<a class="headerlink" href="#instants" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>order : NOW DOT
+
+time : NOW
+
+NOW : "now"</pre>
+</div>
+<p>The time can be specified with the term <tt class="docutils literal"><span class="pre">now</span></tt>. We can say:</p>
+<p><strong>035</strong> <tt class="docutils literal"><span class="pre">sue</span> <span class="pre">[views</span> <span class="pre">what</span> <span class="pre">doc1]</span> <span class="pre">now.</span></tt></p>
+<p>Internally, every instance of <strong>npl</strong> keeps a record of time.
+When <strong>npl</strong> is started, this record is set
+to the UNIX time of the moment. It is kept like that till further notice. And
+further notice is given with the sentence:</p>
+<p><strong>036</strong> <tt class="docutils literal"><span class="pre">now.</span></tt></p>
+<p>This causes <strong>npl</strong> to update its internal record with the UNIX time of the moment.
+this internal record represents the &#8216;present&#8217; time in the system.</p>
+<p>When we say something like fact XXX, the time that is being stored for that fact is
+the content of the said &#8216;present&#8217; record at the time of saying. So, if we say several
+facts with time &#8220;now&#8221; without changing the internal time with &#8220;now.&#8221;, they will
+all have the same time.</p>
+<p>The <tt class="docutils literal"><span class="pre">now</span></tt> term is optional, and we might have just said, in place of XXX:</p>
+<p><strong>036&#8217;</strong> <tt class="docutils literal"><span class="pre">sue</span> <span class="pre">[views</span> <span class="pre">what</span> <span class="pre">doc1].</span></tt></p>
+</div>
+<div class="section" id="durations">
+<h2>Durations.<a class="headerlink" href="#durations" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>time : ONWARDS
+     | SINCE VAR ONWARDS
+
+ONWARDS : "onwards"
+
+SINCE : "since"</pre>
+</div>
+<p>To build a duration, we can use the reserved word <tt class="docutils literal"><span class="pre">onwards</span></tt> as the time
+component. This will set the starting instant of the duration to the present,
+and will set a special value
+as the end of the duration. This value will stand for the &#8216;present&#8217; time of the
+system, irrespectively of its changes. So, if the present time is 10, the final
+instant of these durations will evaluate to 10; and if we change the present
+(through <tt class="docutils literal"><span class="pre">now.</span></tt>) to 12, they will evaluate to 12.</p>
+</div>
+<div class="section" id="time-in-conditions">
+<h2>Time in conditions.<a class="headerlink" href="#time-in-conditions" title="Permalink to this headline">¶</a></h2>
+<p>In conditions in rules, we can use, either <tt class="docutils literal"><span class="pre">now</span></tt>, <tt class="docutils literal"><span class="pre">onwards</span></tt>, or a duration
+variable, that will evaluate to <tt class="docutils literal"><span class="pre">onwards</span></tt>
+but can be used in consecuences: <tt class="docutils literal"><span class="pre">D1</span></tt>. Note though that it is not the same to
+say <tt class="docutils literal"><span class="pre">onwards</span></tt> as <tt class="docutils literal"><span class="pre">D1</span></tt>. If we say <tt class="docutils literal"><span class="pre">onwards</span></tt> (or <tt class="docutils literal"><span class="pre">now</span></tt>) in a rule, the
+condition will be formed with the &#8216;present&#8217; instant of npl at the time of
+asserting the rule.</p>
+<p>We can also specify a continuous present duration with a variable start:
+<tt class="docutils literal"><span class="pre">since</span> <span class="pre">I1</span> <span class="pre">onwards</span></tt>.</p>
+</div>
+<div class="section" id="time-in-consecuences">
+<h2>Time in consecuences.<a class="headerlink" href="#time-in-consecuences" title="Permalink to this headline">¶</a></h2>
+<p>In consecuences in rules, we can use the same constructs as in conditions,
+plus a special construct for durations, in which we express the starting
+instant with a variable and the ending instant
+with the reserved word <tt class="docutils literal"><span class="pre">until</span></tt> followed by any
+number of duration variables (bound in the conditions of the rule):
+<tt class="docutils literal"><span class="pre">since</span> <span class="pre">I1</span> <span class="pre">until</span> <span class="pre">D1,</span> <span class="pre">D2,</span> <span class="pre">D3</span></tt>. This will
+create an <tt class="docutils literal"><span class="pre">onwards</span></tt> duration that will be bound to the durations that have
+matched the duration variables specified, so that whenever any of them is
+terminated, the new one will also be terminated. If two rules produce the
+same consecuence, the system will do the right thing (require a condition
+of each to be terminated before terminating the consecuence).</p>
+</div>
+<div class="section" id="terminating-the-continuous-present">
+<h2>Terminating the continuous present.<a class="headerlink" href="#terminating-the-continuous-present" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>consecuence : FINISH VAR
+
+FINISH : "finish"</pre>
+</div>
+<p>There is a special type of consecuence, built with the reserved word
+<tt class="docutils literal"><span class="pre">finish</span></tt>, that can be given as a consecuence in rules, like
+<tt class="docutils literal"><span class="pre">finish</span> <span class="pre">D1;</span></tt>. This
+sentence will change the special value of the final instant of <tt class="docutils literal"><span class="pre">D1</span></tt>,
+to replace it with the present. Terminating a duration will terminate
+all durations that are derived from it through the <tt class="docutils literal"><span class="pre">until</span></tt> operator.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Time.</a><ul>
+<li><a class="reference internal" href="#instants">Instants.</a></li>
+<li><a class="reference internal" href="#durations">Durations.</a></li>
+<li><a class="reference internal" href="#time-in-conditions">Time in conditions.</a></li>
+<li><a class="reference internal" href="#time-in-consecuences">Time in consecuences.</a></li>
+<li><a class="reference internal" href="#terminating-the-continuous-present">Terminating the continuous present.</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="bnf.html"
+                        title="previous chapter">npl language essentials</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="npl_example.html"
+                        title="next chapter">Final Example</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/npl_time.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="npl_example.html" title="Final Example"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="bnf.html" title="npl language essentials"
+             >previous</a> |</li>
+        <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
+          <li><a href="nl_lang.html" >The npl language</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Enrique Pablo Pérez Arnaud &lt;enriquepablo at google&#39;s mail domain&gt;.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

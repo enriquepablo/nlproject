@@ -11,9 +11,12 @@ Contents
 .. toctree::
    :maxdepth: 1
 
-   npl_install
    bnf
+   npl_time
+   npl_example
    npl_arith
    npl_questions
+   npl_install
+   npl_interfaces
 
 .. _Python: http://www.python.org/

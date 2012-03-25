@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Installation and execution. &mdash; nlproject 1.0dev documentation</title>
+    <title>Interfacing with npl &mdash; nlproject 1.0dev documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -27,8 +27,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="nlproject 1.0dev documentation" href="index.html" />
     <link rel="up" title="The npl language" href="nl_lang.html" />
-    <link rel="next" title="Interfacing with npl" href="npl_interfaces.html" />
-    <link rel="prev" title="Questions." href="npl_questions.html" /> 
+    <link rel="prev" title="Installation and execution." href="npl_install.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,10 +37,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="npl_interfaces.html" title="Interfacing with npl"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="npl_questions.html" title="Questions."
+          <a href="npl_install.html" title="Installation and execution."
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
           <li><a href="nl_lang.html" accesskey="U">The npl language</a> &raquo;</li> 
@@ -53,26 +49,38 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="installation-and-execution">
-<h1>Installation and execution.<a class="headerlink" href="#installation-and-execution" title="Permalink to this headline">¶</a></h1>
-<p>You can use <strong>npl</strong> in several different ways. You can start an ircbot and
-talk to
-it in an irchat, in a REPL manner. Or you can start a daemon and talk to it
-over HTTP. Or you can use it from python (for this, refer to the
-<a class="reference external" href="nl_intro">nl documentation</a>).</p>
-<div class="section" id="install">
-<h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
-<p>to install:</p>
-<div class="highlight-python"><pre>$ git clone git://github.com/enriquepablo/nlp.buildouts.git
-$ cd nlp.buildouts
-$ cp buildout.cfg.in buildout.cfg
-$ virtualenv --no-site-packages --python=python2.7 .
-$ source bin/activate
-$ python bootstrap.py
-$ bin/buildout
-...</pre>
+  <div class="section" id="interfacing-with-npl">
+<h1>Interfacing with npl<a class="headerlink" href="#interfacing-with-npl" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ircbot">
+<h2>Ircbot<a class="headerlink" href="#ircbot" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>$ bin/ircbot some_name
+Generating LALR tables
+Signed on as some_name_bot.
+Joined #nlpbot_some_name.</div></blockquote>
+<p>.</p>
+<p>Now you can talk to the ircbot on freenode at channel #nlpbot_some_name.
+You provide definitions, facts and rules ending them with a dot, and you ask
+facts ending them with a question mark. Question facts can contain variables.
+Whenever you tell or ask something to the bot, you have to address it
+prefixing your message with its nickname: &#8220;some_name_bot: &lt;message&gt;&#8221; where &lt;message&gt;
+is any definition, fact, rule, or question.</p>
 </div>
-<p>If you obtain any errors trying this, please report at <a class="reference external" href="http://github.com/enriquepablo/nl/issues">the issue tracker</a>.</p>
+<div class="section" id="http">
+<h2>HTTP<a class="headerlink" href="#http" title="Permalink to this headline">¶</a></h2>
+<p>You can now also start a daemon, and, as I said, talk to it over HTTP:</p>
+<div class="highlight-python"><pre>$ bin/npldaemon
+$</pre>
+</div>
+<p>A telnet session now with the daemon:</p>
+<div class="highlight-python"><pre>$ telnet localhost 8280
+Trying ::1...
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+person are thing.
+Noun Person defined.Connection closed by foreign host.</pre>
+</div>
 </div>
 </div>
 
@@ -84,21 +92,19 @@ $ bin/buildout
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Installation and execution.</a><ul>
-<li><a class="reference internal" href="#install">Install</a></li>
+<li><a class="reference internal" href="#">Interfacing with npl</a><ul>
+<li><a class="reference internal" href="#ircbot">Ircbot</a></li>
+<li><a class="reference internal" href="#http">HTTP</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="npl_questions.html"
-                        title="previous chapter">Questions.</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="npl_interfaces.html"
-                        title="next chapter">Interfacing with npl</a></p>
+  <p class="topless"><a href="npl_install.html"
+                        title="previous chapter">Installation and execution.</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/npl_install.txt"
+    <li><a href="_sources/npl_interfaces.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -125,10 +131,7 @@ $ bin/buildout
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="npl_interfaces.html" title="Interfacing with npl"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="npl_questions.html" title="Questions."
+          <a href="npl_install.html" title="Installation and execution."
              >previous</a> |</li>
         <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
           <li><a href="nl_lang.html" >The npl language</a> &raquo;</li> 
