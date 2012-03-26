@@ -15,6 +15,7 @@ Contents
    npl_time
    npl_example
    npl_arith
+   npl_negation
    npl_questions
    npl_install
    npl_interfaces
