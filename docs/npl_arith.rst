@@ -41,6 +41,8 @@ Arithmetic operations
                    | MULTIPLICATION
                    | DIVISION
 
+    instant : arith-obj
+
 We can use arithmetic operations in the consecuences of rules, both in
 place of number modifiers and in place of instants. We enclose the
 operations in outermost curly brackets, and any internal grouping id done with
