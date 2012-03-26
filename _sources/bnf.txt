@@ -19,7 +19,7 @@ consistent and complete.
 
 I'm going to describe the **npl** language going through its BNF grammar, from
 top down. To illustrate the different constructs of the language, I will
-be taking sentences from
+be taking pieces from
 `this npl test <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl>`_.
 
 Sentences
@@ -93,10 +93,10 @@ Noun definitions
 
 We define a new noun by relating it with another (already defined) noun through
 the reserved word ``are``. To get started, we use a primitive predefined noun,
-``thing``.
+``thing``. An example of a noun definition is ``person are thing.``.
 
-For an example, you can look at
-`lines 1-5 in the test program <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L1>`_.
+For more examples, you can look at
+`lines 1-5 in the test program <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L2>`_.
 
 Name definitions
 ~~~~~~~~~~~~~~~~
@@ -108,9 +108,9 @@ Name definitions
     ISA : "isa"
 
 Proper names are defined relating them with a noun through the reserved word
-``isa``.
+``isa``. An example is ``john isa person.``.
 
-For example, you can look at
+For more examples, you can look at
 `lines 7-16 in the test program <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L7>`_.
 
 Types of terms
@@ -130,7 +130,7 @@ example, all predicates
 (predicates are complex terms composed of a verb and any number of modifiers,
 as we shall see below) are implicitly related by ``isa`` with their verbs.
 In addition, all verbs are to be thought of as related through ``isa`` with the
-predifined term ``verb``, and all nouns with ``noun``, all numbers with
+predefined term ``verb``, and all nouns with ``noun``, all numbers with
 ``number``, and all times with ``time``.
 
 This allows us to talk about types of terms. A type of terms is a term, and
@@ -194,9 +194,9 @@ A modifier is composed of a label and an object, that can be any kind of
 (atomic or complex) term except a time: a noun, a verb, a name, a number, or a
 predicate.
 
-A simple example of a fact could be ``john [goes to london_zoo]``, where ``john``
-is the subject and ``[goes to london_zoo]`` the predicate, where ``goes`` is the
-verb, and ``london_zoo`` is a modifier with label ``to``.
+A simple example of a fact could be ``john [view what doc1]``, where ``john``
+is the subject and ``[view what img1]`` the predicate, where ``view`` is the
+verb, and ``img1`` is a modifier with label ``what``.
 
 Definition of verbs
 -------------------
@@ -243,7 +243,7 @@ Derived verbs inherit the mod-defs that they do not override.
 Therefore, we do not need to specify a mod-def for a child verb if it
 coincides with one of its parents.
 
-With these new verbs, we can state facts such as ``pete [owns what doc1].``
+With these verbs, we can state facts such as ``pete [owns what doc1].``
 or ``sue [edit what img2].``
 
 Rules

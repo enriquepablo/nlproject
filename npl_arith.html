@@ -27,8 +27,8 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="nlproject 1.0dev documentation" href="index.html" />
     <link rel="up" title="The npl language" href="nl_lang.html" />
-    <link rel="next" title="Questions." href="npl_questions.html" />
-    <link rel="prev" title="npl language essentials" href="bnf.html" /> 
+    <link rel="next" title="Negation and counting sentences" href="npl_negation.html" />
+    <link rel="prev" title="Final Example" href="npl_example.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,10 +38,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="npl_questions.html" title="Questions."
+          <a href="npl_negation.html" title="Negation and counting sentences"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="bnf.html" title="npl language essentials"
+          <a href="npl_example.html" title="Final Example"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
           <li><a href="nl_lang.html" accesskey="U">The npl language</a> &raquo;</li> 
@@ -55,9 +55,61 @@
             
   <div class="section" id="arithmetics">
 <h1>Arithmetics.<a class="headerlink" href="#arithmetics" title="Permalink to this headline">¶</a></h1>
-<ol class="upperroman simple" start="30">
-<li></li>
-</ol>
+<p>Here we will see the syntax for arithmetics in <strong>npl</strong>. An example program
+that uses arithmetics can be seen
+<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/physics22.npl#L32">here</a>.</p>
+<div class="section" id="numbers">
+<h2>Numbers<a class="headerlink" href="#numbers" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>object : arith-obj</pre>
+</div>
+<p>We can use numbers as modifiers in predicates. To do so, we must define the
+modifiers of verbs with the term <tt class="docutils literal"><span class="pre">number</span></tt>. At the moment, numbers are simply
+floats, but this may change.</p>
+<p><tt class="docutils literal"><span class="pre">a</span> <span class="pre">thing</span> <span class="pre">can</span> <span class="pre">has_position</span> <span class="pre">x</span> <span class="pre">a</span> <span class="pre">number,</span> <span class="pre">y</span> <span class="pre">a</span> <span class="pre">number.</span></tt></p>
+<p>With this, we can say something like <tt class="docutils literal"><span class="pre">thing1</span> <span class="pre">[has_position</span> <span class="pre">x</span> <span class="pre">1,</span> <span class="pre">y</span> <span class="pre">2].</span></tt>.</p>
+</div>
+<div class="section" id="arithmetic-operations">
+<h2>Arithmetic operations<a class="headerlink" href="#arithmetic-operations" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>arith-obj : NUMBER
+          | LCURL arith-operation RCURL
+
+arith-operation : arith-operand arith-operator arith-operation
+                | arith-operand arith-operator arith-operand
+
+arith-operand : NUMBER
+              | VAR
+              | LPAREN arith-operation RPAREN
+
+arith-operator : PLUS
+               | MINUS
+               | MULTIPLICATION
+               | DIVISION</pre>
+</div>
+<p>We can use arithmetic operations in the consecuences of rules, both in
+place of number modifiers and in place of instants. We enclose the
+operations in outermost curly brackets, and any internal grouping id done with
+parentheses. The available operators are sum <tt class="docutils literal"><span class="pre">+</span></tt>, subtraction <tt class="docutils literal"><span class="pre">-</span></tt>,
+multiplication <tt class="docutils literal"><span class="pre">*</span></tt> and division <tt class="docutils literal"><span class="pre">/</span></tt>. For example, <tt class="docutils literal"><span class="pre">{4</span> <span class="pre">+</span> <span class="pre">(N1</span> <span class="pre">-</span> <span class="pre">N2)}</span></tt>.</p>
+</div>
+<div class="section" id="arithmetic-conditions">
+<h2>Arithmetic conditions<a class="headerlink" href="#arithmetic-conditions" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>condition : arith-condition
+
+arith-condition : LCURL arith-predication RCURL
+
+arith-predication : arith-operand arith-predicate arith-operand
+
+arith-predicate : LT
+                | GT
+                | EQ
+                | NEQ</pre>
+</div>
+<p>We can specify arithmetic conditions. We do so enclosing the condition in curly
+brackets. The available predicates are less than <tt class="docutils literal"><span class="pre">&lt;</span></tt>, greater than <tt class="docutils literal"><span class="pre">&gt;</span></tt>,
+equals <tt class="docutils literal"><span class="pre">=</span></tt>, and not equals <tt class="docutils literal"><span class="pre">&lt;&gt;</span></tt>. For example <tt class="docutils literal"><span class="pre">{</span> <span class="pre">I1</span> <span class="pre">&lt;</span> <span class="pre">33</span> <span class="pre">};</span></tt>. We can use
+instant variables in the condition, as well as number variables. We can also use
+arithmetic operations within arithmetic conditions.</p>
+</div>
 </div>
 
 
@@ -66,12 +118,22 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Arithmetics.</a><ul>
+<li><a class="reference internal" href="#numbers">Numbers</a></li>
+<li><a class="reference internal" href="#arithmetic-operations">Arithmetic operations</a></li>
+<li><a class="reference internal" href="#arithmetic-conditions">Arithmetic conditions</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
-  <p class="topless"><a href="bnf.html"
-                        title="previous chapter">npl language essentials</a></p>
+  <p class="topless"><a href="npl_example.html"
+                        title="previous chapter">Final Example</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="npl_questions.html"
-                        title="next chapter">Questions.</a></p>
+  <p class="topless"><a href="npl_negation.html"
+                        title="next chapter">Negation and counting sentences</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/npl_arith.txt"
@@ -101,10 +163,10 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="npl_questions.html" title="Questions."
+          <a href="npl_negation.html" title="Negation and counting sentences"
              >next</a> |</li>
         <li class="right" >
-          <a href="bnf.html" title="npl language essentials"
+          <a href="npl_example.html" title="Final Example"
              >previous</a> |</li>
         <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
           <li><a href="nl_lang.html" >The npl language</a> &raquo;</li> 

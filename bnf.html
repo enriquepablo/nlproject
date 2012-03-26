@@ -74,7 +74,7 @@ Note that <strong>npl</strong> is based on a finite domain first order logical t
 consistent and complete.</p>
 <p>I&#8217;m going to describe the <strong>npl</strong> language going through its BNF grammar, from
 top down. To illustrate the different constructs of the language, I will
-be taking sentences from
+be taking pieces from
 <a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl">this npl test</a>.</p>
 <div class="section" id="sentences">
 <h2>Sentences<a class="headerlink" href="#sentences" title="Permalink to this headline">¶</a></h2>
@@ -131,9 +131,9 @@ TERM : &lt;a lower case letter followed by any number of lower case letters,
 </div>
 <p>We define a new noun by relating it with another (already defined) noun through
 the reserved word <tt class="docutils literal"><span class="pre">are</span></tt>. To get started, we use a primitive predefined noun,
-<tt class="docutils literal"><span class="pre">thing</span></tt>.</p>
-<p>For an example, you can look at
-<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L1">lines 1-5 in the test program</a>.</p>
+<tt class="docutils literal"><span class="pre">thing</span></tt>. An example of a noun definition is <tt class="docutils literal"><span class="pre">person</span> <span class="pre">are</span> <span class="pre">thing.</span></tt>.</p>
+<p>For more examples, you can look at
+<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L2">lines 1-5 in the test program</a>.</p>
 </div>
 <div class="section" id="name-definitions">
 <h3>Name definitions<a class="headerlink" href="#name-definitions" title="Permalink to this headline">¶</a></h3>
@@ -142,8 +142,8 @@ the reserved word <tt class="docutils literal"><span class="pre">are</span></tt>
 ISA : "isa"</pre>
 </div>
 <p>Proper names are defined relating them with a noun through the reserved word
-<tt class="docutils literal"><span class="pre">isa</span></tt>.</p>
-<p>For example, you can look at
+<tt class="docutils literal"><span class="pre">isa</span></tt>. An example is <tt class="docutils literal"><span class="pre">john</span> <span class="pre">isa</span> <span class="pre">person.</span></tt>.</p>
+<p>For more examples, you can look at
 <a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L7">lines 7-16 in the test program</a>.</p>
 </div>
 <div class="section" id="types-of-terms">
@@ -161,7 +161,7 @@ example, all predicates
 (predicates are complex terms composed of a verb and any number of modifiers,
 as we shall see below) are implicitly related by <tt class="docutils literal"><span class="pre">isa</span></tt> with their verbs.
 In addition, all verbs are to be thought of as related through <tt class="docutils literal"><span class="pre">isa</span></tt> with the
-predifined term <tt class="docutils literal"><span class="pre">verb</span></tt>, and all nouns with <tt class="docutils literal"><span class="pre">noun</span></tt>, all numbers with
+predefined term <tt class="docutils literal"><span class="pre">verb</span></tt>, and all nouns with <tt class="docutils literal"><span class="pre">noun</span></tt>, all numbers with
 <tt class="docutils literal"><span class="pre">number</span></tt>, and all times with <tt class="docutils literal"><span class="pre">time</span></tt>.</p>
 <p>This allows us to talk about types of terms. A type of terms is a term, and
 the terms that are of that type are the terms related with the type term
@@ -210,9 +210,9 @@ LABEL : &lt;same pattern as TERM&gt;</pre>
 <p>A modifier is composed of a label and an object, that can be any kind of
 (atomic or complex) term except a time: a noun, a verb, a name, a number, or a
 predicate.</p>
-<p>A simple example of a fact could be <tt class="docutils literal"><span class="pre">john</span> <span class="pre">[goes</span> <span class="pre">to</span> <span class="pre">london_zoo]</span></tt>, where <tt class="docutils literal"><span class="pre">john</span></tt>
-is the subject and <tt class="docutils literal"><span class="pre">[goes</span> <span class="pre">to</span> <span class="pre">london_zoo]</span></tt> the predicate, where <tt class="docutils literal"><span class="pre">goes</span></tt> is the
-verb, and <tt class="docutils literal"><span class="pre">london_zoo</span></tt> is a modifier with label <tt class="docutils literal"><span class="pre">to</span></tt>.</p>
+<p>A simple example of a fact could be <tt class="docutils literal"><span class="pre">john</span> <span class="pre">[view</span> <span class="pre">what</span> <span class="pre">doc1]</span></tt>, where <tt class="docutils literal"><span class="pre">john</span></tt>
+is the subject and <tt class="docutils literal"><span class="pre">[view</span> <span class="pre">what</span> <span class="pre">img1]</span></tt> the predicate, where <tt class="docutils literal"><span class="pre">view</span></tt> is the
+verb, and <tt class="docutils literal"><span class="pre">img1</span></tt> is a modifier with label <tt class="docutils literal"><span class="pre">what</span></tt>.</p>
 </div>
 <div class="section" id="definition-of-verbs">
 <h2>Definition of verbs<a class="headerlink" href="#definition-of-verbs" title="Permalink to this headline">¶</a></h2>
@@ -250,7 +250,7 @@ we mentioned earlier: <tt class="docutils literal"><span class="pre">exists</spa
 <p>Derived verbs inherit the mod-defs that they do not override.
 Therefore, we do not need to specify a mod-def for a child verb if it
 coincides with one of its parents.</p>
-<p>With these new verbs, we can state facts such as <tt class="docutils literal"><span class="pre">pete</span> <span class="pre">[owns</span> <span class="pre">what</span> <span class="pre">doc1].</span></tt>
+<p>With these verbs, we can state facts such as <tt class="docutils literal"><span class="pre">pete</span> <span class="pre">[owns</span> <span class="pre">what</span> <span class="pre">doc1].</span></tt>
 or <tt class="docutils literal"><span class="pre">sue</span> <span class="pre">[edit</span> <span class="pre">what</span> <span class="pre">img2].</span></tt></p>
 </div>
 <div class="section" id="rules">
