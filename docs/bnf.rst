@@ -1,6 +1,9 @@
 npl language essentials
 =======================
 
+Introduction and a bit of hype
+------------------------------
+
 **npl** is a logic programming language. In the use of **npl** there
 are basically 4 stages:
 
@@ -120,7 +123,9 @@ Names and nouns establish a class structure. The relation established by ``are``
 among 2 nouns has the same form as the subclass relation among 2 classes, and
 the relation established by ``isa`` among a name and a noun has the same form as
 the relation between an individual and a class it belongs to. So, for example,
-the example definitions entail that ``document are thing``, or that
+the mentioned definitions in the
+`the test program <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl>`_.
+entail that ``document are thing``, or that
 ``mary isa thing``. This means that if we ask the system for a ``thing``, ``mary``
 will be retrieved, and if in a rule we require a ``thing``, ``mary`` will match.
 
@@ -175,7 +180,7 @@ and an (optional) modification.
 ::
 
     modification : modifier COMMA modification
-                 | modifier' 
+                 | modifier'
 
     COMMA : ","
 
@@ -194,7 +199,7 @@ A modifier is composed of a label and an object, that can be any kind of
 (atomic or complex) term except a time: a noun, a verb, a name, a number, or a
 predicate.
 
-A simple example of a fact could be ``john [view what doc1]``, where ``john``
+A simple example of a fact could be ``john [view what img1]``, where ``john``
 is the subject and ``[view what img1]`` the predicate, where ``view`` is the
 verb, and ``img1`` is a modifier with label ``what``.
 
@@ -204,6 +209,7 @@ Definition of verbs
 ::
 
     verb-def : A TERM CAN TERM LPAREN verbs RPAREN modification-def
+             | A TERM CAN TERM modification-def
              | A TERM CAN TERM LPAREN verbs RPAREN
 
     verbs : verb COMMA verbs
@@ -219,7 +225,10 @@ term that can act as subject in a fact where the new verb forms the predicate
 (given by the first TERM in the definition); second, the
 (already defined) verb(s) from which we derive the new verb (given in the
 verbs part of the definition); and third, the modifiers that the verb can take
-to form the predicate (the modification-def).
+to form the predicate (the modification-def). Both the verbs part or the
+modification-def part can be omitted. Omitting the verbs, we assume its
+parent to be ``exists``; omittin the modification-def, the verb will
+inherit those of its parents.
 
 ::
 
@@ -236,7 +245,7 @@ So, for
 example, in
 `lines 18-21 in the test program <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L18>`_,
 we define verbs that express actions that a person can perform on
-content. For this we must use the primitive predefined verb
+content. For this we use the primitive predefined verb
 we mentioned earlier: ``exists``.
 
 Derived verbs inherit the mod-defs that they do not override.
@@ -288,7 +297,8 @@ We can use logical variables in place of terms in the conditions and
 consecuences of a rule. A logical variable is a symbol that starts with a
 capital letter, followed by any number of lower case letters, digits,
 and underscores,
-and ends with any number of digits. A logical variable has a range, that is a
+and ends with any number of digits. For example, ``Person1``.
+A logical variable has a range, that is a
 type of terms. The range of a variable can be obtained by lower casing its
 first letter and removing its final digits. A fact will match the condition of
 a rule if they are identical except that, where the condition has a variable,
@@ -296,7 +306,7 @@ the fact has a term
 that is in the range of the variable. The scope of variables is the rule: if a
 term matches a variable, it does so for all its occurrences within the rule.
 
-for a first example, we need to add a couple more of BNF rules:
+For a first example, we need to add a couple more of BNF rules:
 
 ::
 
@@ -312,6 +322,7 @@ So, for example, in
 `line 23 in the test program <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L23>`_
 we define a verb ``located``, which we use in a rule in
 `line 25 <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L25>`_.
+
 With this rule, and the facts in
 `lines 32 and 33 <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L32>`_,
 the system will conclude that ``doc1 [located where ctx2]``.
@@ -323,7 +334,7 @@ Predicate variables
 
     predicate : LBRACK VAR RBRACK
 
-We have seen that we can use predicates as objects in the modifiers of other
+We have mentioned that we can use predicates as objects in the modifiers of other
 predicates. This means that, in rules, we must be able to use variables that
 range over predicates. We do this by building a variable from a verb, and
 enclosing it in square brackets. For example, from ``locate``, we might have
@@ -333,9 +344,10 @@ predicate).
 To provide a working example, we define a couple of verbs that take a
 predicate as modifier, in
 `lines 41 and 42 in the test program <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L41>`_,
-and build a rule with it in
+and build a rule with them in
 `line 44 <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L44>`_.
-With this rule and the facts in
+
+With this rule, and the facts in
 `lines 51-52 <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L51>`_,
 the system will conclude that ``sue [view what doc1]``.
 
@@ -356,8 +368,8 @@ example of this, we define a verb ``may`` in
 that will take a verb as modifier, and a rule that uses ``may`` in
 `line 65 <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L65>`_.
 Now, if we add the facts in
-`lines 72, 73 <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L72>`_
-The system will conclude that ``mary [view what doc1]``.
+`lines 72, 73 <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L72>`_,
+the system will conclude that ``mary [view what doc1]``.
 
 So, as seen in
 `line 66 <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L66>`_,
@@ -367,7 +379,9 @@ stands for a predicate where the content_action verb is alone without
 modifiers, as opposed to ``[Content_action1]`` where nothing is said of the
 number of modifiers.
 
-If in this last rule, we had not wanted to relate the context in which the content
+If, in the rule in
+`line 65 <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L65>`_,
+we had not wanted to relate the context in which the content
 is located with the context in which the person is allowed to do the content action,
 we might have said:
 
@@ -405,11 +419,11 @@ Noun variables
     RPAREN : ")"
 
 The same we have said about verb variables can be said of noun variables.
-The only difference is when we want a variable form in a condition to range
+The only difference is when, in a condition, we want a variable form to range
 over names that have a type given by another (noun) variable. In that case, we
 give the name variable inmediately followed by the noun variable enclosed in
 parentheses. For example, ``Person1(PersonNoun1)``.
 
 In the rule in
 `line 133 <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L133>`_
-There is an example of the use of noun variables.
+there is an example of the use of noun variables.
