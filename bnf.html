@@ -55,6 +55,8 @@
             
   <div class="section" id="npl-language-essentials">
 <h1>npl language essentials<a class="headerlink" href="#npl-language-essentials" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction-and-a-bit-of-hype">
+<h2>Introduction and a bit of hype<a class="headerlink" href="#introduction-and-a-bit-of-hype" title="Permalink to this headline">¶</a></h2>
 <p><strong>npl</strong> is a logic programming language. In the use of <strong>npl</strong> there
 are basically 4 stages:</p>
 <blockquote>
@@ -76,6 +78,7 @@ consistent and complete.</p>
 top down. To illustrate the different constructs of the language, I will
 be taking pieces from
 <a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl">this npl test</a>.</p>
+</div>
 <div class="section" id="sentences">
 <h2>Sentences<a class="headerlink" href="#sentences" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><pre>sentence : statement
@@ -152,7 +155,9 @@ ISA : "isa"</pre>
 among 2 nouns has the same form as the subclass relation among 2 classes, and
 the relation established by <tt class="docutils literal"><span class="pre">isa</span></tt> among a name and a noun has the same form as
 the relation between an individual and a class it belongs to. So, for example,
-the example definitions entail that <tt class="docutils literal"><span class="pre">document</span> <span class="pre">are</span> <span class="pre">thing</span></tt>, or that
+the mentioned definitions in the
+<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl">the test program</a>.
+entail that <tt class="docutils literal"><span class="pre">document</span> <span class="pre">are</span> <span class="pre">thing</span></tt>, or that
 <tt class="docutils literal"><span class="pre">mary</span> <span class="pre">isa</span> <span class="pre">thing</span></tt>. This means that if we ask the system for a <tt class="docutils literal"><span class="pre">thing</span></tt>, <tt class="docutils literal"><span class="pre">mary</span></tt>
 will be retrieved, and if in a rule we require a <tt class="docutils literal"><span class="pre">thing</span></tt>, <tt class="docutils literal"><span class="pre">mary</span></tt> will match.</p>
 <p>This class structure is explicit in the case of nouns and names, and is
@@ -210,13 +215,14 @@ LABEL : &lt;same pattern as TERM&gt;</pre>
 <p>A modifier is composed of a label and an object, that can be any kind of
 (atomic or complex) term except a time: a noun, a verb, a name, a number, or a
 predicate.</p>
-<p>A simple example of a fact could be <tt class="docutils literal"><span class="pre">john</span> <span class="pre">[view</span> <span class="pre">what</span> <span class="pre">doc1]</span></tt>, where <tt class="docutils literal"><span class="pre">john</span></tt>
+<p>A simple example of a fact could be <tt class="docutils literal"><span class="pre">john</span> <span class="pre">[view</span> <span class="pre">what</span> <span class="pre">img1]</span></tt>, where <tt class="docutils literal"><span class="pre">john</span></tt>
 is the subject and <tt class="docutils literal"><span class="pre">[view</span> <span class="pre">what</span> <span class="pre">img1]</span></tt> the predicate, where <tt class="docutils literal"><span class="pre">view</span></tt> is the
 verb, and <tt class="docutils literal"><span class="pre">img1</span></tt> is a modifier with label <tt class="docutils literal"><span class="pre">what</span></tt>.</p>
 </div>
 <div class="section" id="definition-of-verbs">
 <h2>Definition of verbs<a class="headerlink" href="#definition-of-verbs" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><pre>verb-def : A TERM CAN TERM LPAREN verbs RPAREN modification-def
+         | A TERM CAN TERM modification-def
          | A TERM CAN TERM LPAREN verbs RPAREN
 
 verbs : verb COMMA verbs
@@ -232,7 +238,10 @@ term that can act as subject in a fact where the new verb forms the predicate
 (given by the first TERM in the definition); second, the
 (already defined) verb(s) from which we derive the new verb (given in the
 verbs part of the definition); and third, the modifiers that the verb can take
-to form the predicate (the modification-def).</p>
+to form the predicate (the modification-def). Both the verbs part or the
+modification-def part can be omitted. Omitting the verbs, we assume its
+parent to be <tt class="docutils literal"><span class="pre">exists</span></tt>; omittin the modification-def, the verb will
+inherit those of its parents.</p>
 <div class="highlight-python"><pre>modification-def : mod-def COMMA modification-def
                  | mod-def
 
@@ -245,7 +254,7 @@ give the label that the modifier will take, connected through the reserved word
 example, in
 <a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L18">lines 18-21 in the test program</a>,
 we define verbs that express actions that a person can perform on
-content. For this we must use the primitive predefined verb
+content. For this we use the primitive predefined verb
 we mentioned earlier: <tt class="docutils literal"><span class="pre">exists</span></tt>.</p>
 <p>Derived verbs inherit the mod-defs that they do not override.
 Therefore, we do not need to specify a mod-def for a child verb if it
@@ -290,14 +299,15 @@ than the condition.</p>
 consecuences of a rule. A logical variable is a symbol that starts with a
 capital letter, followed by any number of lower case letters, digits,
 and underscores,
-and ends with any number of digits. A logical variable has a range, that is a
+and ends with any number of digits. For example, <tt class="docutils literal"><span class="pre">Person1</span></tt>.
+A logical variable has a range, that is a
 type of terms. The range of a variable can be obtained by lower casing its
 first letter and removing its final digits. A fact will match the condition of
 a rule if they are identical except that, where the condition has a variable,
 the fact has a term
 that is in the range of the variable. The scope of variables is the rule: if a
 term matches a variable, it does so for all its occurrences within the rule.</p>
-<p>for a first example, we need to add a couple more of BNF rules:</p>
+<p>For a first example, we need to add a couple more of BNF rules:</p>
 <div class="highlight-python"><pre>subject : VAR
 
 object : VAR
@@ -309,8 +319,8 @@ VAR : &lt;an uppercase letter followed by any number of lower case letters,
 <p>So, for example, in
 <a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L23">line 23 in the test program</a>
 we define a verb <tt class="docutils literal"><span class="pre">located</span></tt>, which we use in a rule in
-<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L25">line 25</a>.
-With this rule, and the facts in
+<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L25">line 25</a>.</p>
+<p>With this rule, and the facts in
 <a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L32">lines 32 and 33</a>,
 the system will conclude that <tt class="docutils literal"><span class="pre">doc1</span> <span class="pre">[located</span> <span class="pre">where</span> <span class="pre">ctx2]</span></tt>.</p>
 </div>
@@ -318,7 +328,7 @@ the system will conclude that <tt class="docutils literal"><span class="pre">doc
 <h2>Predicate variables<a class="headerlink" href="#predicate-variables" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><pre>predicate : LBRACK VAR RBRACK</pre>
 </div>
-<p>We have seen that we can use predicates as objects in the modifiers of other
+<p>We have mentioned that we can use predicates as objects in the modifiers of other
 predicates. This means that, in rules, we must be able to use variables that
 range over predicates. We do this by building a variable from a verb, and
 enclosing it in square brackets. For example, from <tt class="docutils literal"><span class="pre">locate</span></tt>, we might have
@@ -327,9 +337,9 @@ predicate).</p>
 <p>To provide a working example, we define a couple of verbs that take a
 predicate as modifier, in
 <a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L41">lines 41 and 42 in the test program</a>,
-and build a rule with it in
-<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L44">line 44</a>.
-With this rule and the facts in
+and build a rule with them in
+<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L44">line 44</a>.</p>
+<p>With this rule, and the facts in
 <a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L51">lines 51-52</a>,
 the system will conclude that <tt class="docutils literal"><span class="pre">sue</span> <span class="pre">[view</span> <span class="pre">what</span> <span class="pre">doc1]</span></tt>.</p>
 </div>
@@ -347,8 +357,8 @@ example of this, we define a verb <tt class="docutils literal"><span class="pre"
 that will take a verb as modifier, and a rule that uses <tt class="docutils literal"><span class="pre">may</span></tt> in
 <a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L65">line 65</a>.
 Now, if we add the facts in
-<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L72">lines 72, 73</a>
-The system will conclude that <tt class="docutils literal"><span class="pre">mary</span> <span class="pre">[view</span> <span class="pre">what</span> <span class="pre">doc1]</span></tt>.</p>
+<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L72">lines 72, 73</a>,
+the system will conclude that <tt class="docutils literal"><span class="pre">mary</span> <span class="pre">[view</span> <span class="pre">what</span> <span class="pre">doc1]</span></tt>.</p>
 <p>So, as seen in
 <a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L66">line 66</a>,
 we can use a verb variable in a predicate with modifiers. Also without
@@ -356,7 +366,9 @@ modifiers, just by itself in the predicate, like <tt class="docutils literal"><s
 stands for a predicate where the content_action verb is alone without
 modifiers, as opposed to <tt class="docutils literal"><span class="pre">[Content_action1]</span></tt> where nothing is said of the
 number of modifiers.</p>
-<p>If in this last rule, we had not wanted to relate the context in which the content
+<p>If, in the rule in
+<a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L65">line 65</a>,
+we had not wanted to relate the context in which the content
 is located with the context in which the person is allowed to do the content action,
 we might have said:</p>
 <p><tt class="docutils literal"><span class="pre">if:</span></tt></p>
@@ -386,13 +398,13 @@ LPAREN : "("
 RPAREN : ")"</pre>
 </div>
 <p>The same we have said about verb variables can be said of noun variables.
-The only difference is when we want a variable form in a condition to range
+The only difference is when, in a condition, we want a variable form to range
 over names that have a type given by another (noun) variable. In that case, we
 give the name variable inmediately followed by the noun variable enclosed in
 parentheses. For example, <tt class="docutils literal"><span class="pre">Person1(PersonNoun1)</span></tt>.</p>
 <p>In the rule in
 <a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/cms.npl#L133">line 133</a>
-There is an example of the use of noun variables.</p>
+there is an example of the use of noun variables.</p>
 </div>
 </div>
 
@@ -405,6 +417,7 @@ There is an example of the use of noun variables.</p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">npl language essentials</a><ul>
+<li><a class="reference internal" href="#introduction-and-a-bit-of-hype">Introduction and a bit of hype</a></li>
 <li><a class="reference internal" href="#sentences">Sentences</a></li>
 <li><a class="reference internal" href="#order-extend">Order: extend</a></li>
 <li><a class="reference internal" href="#statements">Statements</a></li>

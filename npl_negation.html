@@ -55,6 +55,56 @@
             
   <div class="section" id="negation-and-counting-sentences">
 <h1>Negation and counting sentences<a class="headerlink" href="#negation-and-counting-sentences" title="Permalink to this headline">¶</a></h1>
+<p>We can use 2 forms of negation in <strong>npl</strong>. The first is classical negation,
+and the second negation by failure. In both cases we can only talk about
+negation of facts; neither predicates nor definitions can be negated.</p>
+<div class="section" id="classical-negation">
+<h2>Classical negation<a class="headerlink" href="#classical-negation" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>assertion : NOT fact DOT
+
+NOT : "not"</pre>
+</div>
+<p>With classical negation, a negated fact is equivalent to a non-negated
+fact. You add a negated fact &#8220;not P&#8221; to the kb in the same way you add
+a non-negated fact &#8220;P&#8221;. If you ask (in a query or in the condition of a
+rule) for a negated fact, you will only succeed if the negated fact is
+in the kb. The fundamental meaning of classical negation lies in
+contradiction: you cannot have both a non-negated fact and its negation
+in the kb. If you try to do so, the system will not accept it and warn you
+of the contradiction. And if 2 rules produce contradictory facts, the
+system will break.</p>
+</div>
+<div class="section" id="negation-by-failure">
+<h2>Negation by failure<a class="headerlink" href="#negation-by-failure" title="Permalink to this headline">¶</a></h2>
+<p>Negation by failure relies on a closed world assumption, i.e., on the
+assumption that all possible knowledge about the universe of discourse is
+present in the kb. All true facts are present in the kb, and all
+facts that are not present in the kb are false. So, if we ask a
+negated fact &#8220;not P&#8221;, the system need not look for it; it can look for
+&#8220;P&#8221;, and if it is not found, our query will succeed.</p>
+</div>
+<div class="section" id="counting-facts">
+<h2>Counting facts<a class="headerlink" href="#counting-facts" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>arith : COUNT fact
+
+COUNT : "count"</pre>
+</div>
+<p>So, negation by failure is basically a matter of counting facts. <strong>npl</strong>
+allows us to count facts in rules. If you count a fact like
+<tt class="docutils literal"><span class="pre">count</span> <span class="pre">johnny</span> <span class="pre">[goes</span> <span class="pre">to</span> <span class="pre">hollywood]</span> <span class="pre">at</span> <span class="pre">3</span></tt>, you will obtain either 1 or 0.
+So, to set a condition for a negated (by failure) fact, you would add an
+arithmetic condition like <tt class="docutils literal"><span class="pre">{count</span> <span class="pre">johnny</span> <span class="pre">[goes</span> <span class="pre">to</span> <span class="pre">hollywood]</span> <span class="pre">at</span> <span class="pre">3</span> <span class="pre">=</span> <span class="pre">0};</span></tt>.</p>
+<p>We can also use variables in fact counts. For example, to count how many
+trips there have been to egipt, we would
+<tt class="docutils literal"><span class="pre">count</span> <span class="pre">Person1</span> <span class="pre">[trips</span> <span class="pre">to</span> <span class="pre">egipt]</span> <span class="pre">at</span> <span class="pre">I1</span></tt>.</p>
+<p>We must stress again that counting facts only makes sense under a closed world
+assumption. If we use fact counts under an open world assumption, the same set
+of facts will produce different sets of consecuences depending on the order in
+which they are added to the kb. However, if we (as we do in <strong>npl</strong> when we
+use the present continuous) assume that the present and the past are closed,
+the order in which we add the facts is part of the general truth, and the same
+set of facts added in different order would represent different realities.</p>
+</div>
 </div>
 
 
@@ -63,6 +113,16 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Negation and counting sentences</a><ul>
+<li><a class="reference internal" href="#classical-negation">Classical negation</a></li>
+<li><a class="reference internal" href="#negation-by-failure">Negation by failure</a></li>
+<li><a class="reference internal" href="#counting-facts">Counting facts</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="npl_arith.html"
                         title="previous chapter">Arithmetics.</a></p>
