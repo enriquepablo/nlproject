@@ -1,44 +1,17 @@
 Questions.
 ==========
 
-XXX.
+::
 
-Instants.
----------
+    sentence : question
 
-    time : AT instant
+    question : fact QMARK
+             | definition QMARK
 
-    instant : NUMBER
-            | VAR
-            | NOW
+You query **npl** with sentences and definitions ended with a question mark.
+You can use variables in questions.
 
-    AT : "at"
+In **npl**'s `tests <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/>`_,
+you must follow every question with a (python) regular expression that matches
+the expected answer.
 
-    NUMBER : <any integer>
-
-We can provide specific instants for facts, as integers (it is in the TODO list
-to allow other time formats), prefixing them with the reserved word "at". So we can say:
-
-300 john [views what doc1] at 30.
-
-In rules or queries, we would use variables with the form `Instant1`.
-
-Durations.
-----------
-
-    time : FROM instant TILL instant
-
-    FROM : "from"
-
-    TILL : "till"
-
-Apart from instants, we can provide durations as time components of facts. To
-do this, we use the reserved words `from` y `till`:
-
-32) john [is_allowed to [edit what doc1]] from 10 till 20.
-
-    time : VAR
-
-Using variables in rules and queries, we can represent durations in 2 different
-ways, with 2 instant variables (`from Instant1 till Instant2`) or with just one
-duration variable (`Duration1`).
