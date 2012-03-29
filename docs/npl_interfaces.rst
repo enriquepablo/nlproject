@@ -1,6 +1,12 @@
 Interfacing with npl
 ====================
 
+You can use **npl** in several different ways. You can start an ircbot and
+talk to
+it in an irchat, in a REPL manner. Or you can start a daemon and talk to it
+over HTTP. Or you can use it from python (for this, refer to the
+`nl documentation <nl_intro>`_).
+
 Ircbot
 ------
 
