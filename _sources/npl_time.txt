@@ -34,9 +34,9 @@ Instants
 
 ::
 
-    order : NOW DOT
-
     time : NOW
+
+    order : NOW DOT
 
     NOW : "now"
 
@@ -69,8 +69,6 @@ Durations
 
     ONWARDS : "onwards"
 
-    SINCE : "since"
-
 To build a duration, we can use the reserved word ``onwards`` as the time
 component. This will set the starting instant of the duration to the present,
 and will set a special value
@@ -82,22 +80,24 @@ instant of these durations will evaluate to 10; and if we change the present
 Time in conditions
 ~~~~~~~~~~~~~~~~~~
 
-In conditions in rules, we can use, either ``now``, ``onwards``, or a duration
-variable, that will evaluate to ``onwards``
-but can be used in consecuences: ``D1``. Note though that it is not the same to
-say ``onwards`` as ``D1``. If we say ``onwards`` (or ``now``) in a rule, the
-condition will be formed with the 'present' instant of npl at the time of
-asserting the rule.
-
 ::
 
-    time : SINCE VAR ONWARDS
+    time : VAR
+         | AT VAR
 
-We can also specify a continuous present duration with a variable start:
-``since I1 onwards``.
+    AT : "at"
+
+In conditions in rules, we can use, either an instant variable
+(like ``at I1``), or a duration variable (like ``D1``).
 
 The ``during`` condition
 ~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    condition : VAR DURING durations
+    
+    DURING : "during"
 
 We can build a special condition with ``during``, where we give an instant
 variable and any number of duration variables like ``I1 during D1, D2, D3``.
@@ -109,11 +109,29 @@ Time in consecuences
 
 ::
 
-    time : SINCE instant UNTIL durations
+    time : SINCE instant TIL instant
+         | SINCE instant UNTIL durations
+         | SINCE instant ONWARDS
+         | AT instant
+
+    instant : arith
+            | VAR
+
+    durations : VAR COMMA durations
+              | VAR
+
+    arith : NUMBER
+
+    SINCE : "since"
+
+    TIL : "till"
+
+    UNTIL : "until"
 
 In consecuences in rules, we can use the same constructs as in conditions,
-plus a special construct for durations, in which we express the starting
-instant with a variable and the ending instant
+and we can specify the starting and ending instants in any way we want.
+There is also a special construct for durations, in which we express the starting
+instant with an instant and the ending instant
 with the reserved word ``until`` followed by any
 number of duration variables (bound in the conditions of the rule):
 ``since I1 until D1, D2, D3``. This will

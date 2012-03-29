@@ -27,7 +27,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="nlproject 1.0dev documentation" href="index.html" />
     <link rel="up" title="The npl language" href="nl_lang.html" />
-    <link rel="next" title="Final Example" href="npl_example.html" />
+    <link rel="next" title="Arithmetics." href="npl_arith.html" />
     <link rel="prev" title="npl language essentials" href="bnf.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="npl_example.html" title="Final Example"
+          <a href="npl_arith.html" title="Arithmetics."
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="bnf.html" title="npl language essentials"
@@ -79,9 +79,9 @@ i.e., we know everything about the past and the present but nothing about the
 future.</p>
 <div class="section" id="instants">
 <h2>Instants<a class="headerlink" href="#instants" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><pre>order : NOW DOT
+<div class="highlight-python"><pre>time : NOW
 
-time : NOW
+order : NOW DOT
 
 NOW : "now"</pre>
 </div>
@@ -105,9 +105,7 @@ If we do not specify a time, it is assumed to be <tt class="docutils literal"><s
 <h2>Durations<a class="headerlink" href="#durations" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><pre>time : ONWARDS
 
-ONWARDS : "onwards"
-
-SINCE : "since"</pre>
+ONWARDS : "onwards"</pre>
 </div>
 <p>To build a duration, we can use the reserved word <tt class="docutils literal"><span class="pre">onwards</span></tt> as the time
 component. This will set the starting instant of the duration to the present,
@@ -119,19 +117,20 @@ instant of these durations will evaluate to 10; and if we change the present
 </div>
 <div class="section" id="time-in-conditions">
 <h2>Time in conditions<a class="headerlink" href="#time-in-conditions" title="Permalink to this headline">¶</a></h2>
-<p>In conditions in rules, we can use, either <tt class="docutils literal"><span class="pre">now</span></tt>, <tt class="docutils literal"><span class="pre">onwards</span></tt>, or a duration
-variable, that will evaluate to <tt class="docutils literal"><span class="pre">onwards</span></tt>
-but can be used in consecuences: <tt class="docutils literal"><span class="pre">D1</span></tt>. Note though that it is not the same to
-say <tt class="docutils literal"><span class="pre">onwards</span></tt> as <tt class="docutils literal"><span class="pre">D1</span></tt>. If we say <tt class="docutils literal"><span class="pre">onwards</span></tt> (or <tt class="docutils literal"><span class="pre">now</span></tt>) in a rule, the
-condition will be formed with the &#8216;present&#8217; instant of npl at the time of
-asserting the rule.</p>
-<div class="highlight-python"><pre>time : SINCE VAR ONWARDS</pre>
+<div class="highlight-python"><pre>time : VAR
+     | AT VAR
+
+AT : "at"</pre>
 </div>
-<p>We can also specify a continuous present duration with a variable start:
-<tt class="docutils literal"><span class="pre">since</span> <span class="pre">I1</span> <span class="pre">onwards</span></tt>.</p>
+<p>In conditions in rules, we can use, either an instant variable
+(like <tt class="docutils literal"><span class="pre">at</span> <span class="pre">I1</span></tt>), or a duration variable (like <tt class="docutils literal"><span class="pre">D1</span></tt>).</p>
 </div>
 <div class="section" id="the-during-condition">
 <h2>The <tt class="docutils literal"><span class="pre">during</span></tt> condition<a class="headerlink" href="#the-during-condition" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>condition : VAR DURING durations
+
+DURING : "during"</pre>
+</div>
 <p>We can build a special condition with <tt class="docutils literal"><span class="pre">during</span></tt>, where we give an instant
 variable and any number of duration variables like <tt class="docutils literal"><span class="pre">I1</span> <span class="pre">during</span> <span class="pre">D1,</span> <span class="pre">D2,</span> <span class="pre">D3</span></tt>.
 This condition will evaluate to true when the intant that matches <tt class="docutils literal"><span class="pre">I1</span></tt>
@@ -139,11 +138,29 @@ is contained in the durations that match <tt class="docutils literal"><span clas
 </div>
 <div class="section" id="time-in-consecuences">
 <h2>Time in consecuences<a class="headerlink" href="#time-in-consecuences" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><pre>time : SINCE instant UNTIL durations</pre>
+<div class="highlight-python"><pre>time : SINCE instant TIL instant
+     | SINCE instant UNTIL durations
+     | SINCE instant ONWARDS
+     | AT instant
+
+instant : arith
+        | VAR
+
+durations : VAR COMMA durations
+          | VAR
+
+arith : NUMBER
+
+SINCE : "since"
+
+TIL : "till"
+
+UNTIL : "until"</pre>
 </div>
 <p>In consecuences in rules, we can use the same constructs as in conditions,
-plus a special construct for durations, in which we express the starting
-instant with a variable and the ending instant
+and we can specify the starting and ending instants in any way we want.
+There is also a special construct for durations, in which we express the starting
+instant with an instant and the ending instant
 with the reserved word <tt class="docutils literal"><span class="pre">until</span></tt> followed by any
 number of duration variables (bound in the conditions of the rule):
 <tt class="docutils literal"><span class="pre">since</span> <span class="pre">I1</span> <span class="pre">until</span> <span class="pre">D1,</span> <span class="pre">D2,</span> <span class="pre">D3</span></tt>. This will
@@ -191,8 +208,8 @@ all durations that are derived from it through the <tt class="docutils literal">
   <p class="topless"><a href="bnf.html"
                         title="previous chapter">npl language essentials</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="npl_example.html"
-                        title="next chapter">Final Example</a></p>
+  <p class="topless"><a href="npl_arith.html"
+                        title="next chapter">Arithmetics.</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/npl_time.txt"
@@ -222,7 +239,7 @@ all durations that are derived from it through the <tt class="docutils literal">
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="npl_example.html" title="Final Example"
+          <a href="npl_arith.html" title="Arithmetics."
              >next</a> |</li>
         <li class="right" >
           <a href="bnf.html" title="npl language essentials"
