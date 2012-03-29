@@ -27,7 +27,8 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="nlproject 1.0dev documentation" href="index.html" />
     <link rel="up" title="The npl language" href="nl_lang.html" />
-    <link rel="prev" title="Arithmetics." href="npl_arith.html" /> 
+    <link rel="next" title="Installation" href="npl_install.html" />
+    <link rel="prev" title="Negation and counting sentences" href="npl_negation.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,7 +38,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="npl_arith.html" title="Arithmetics."
+          <a href="npl_install.html" title="Installation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="npl_negation.html" title="Negation and counting sentences"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
           <li><a href="nl_lang.html" accesskey="U">The npl language</a> &raquo;</li> 
@@ -51,47 +55,16 @@
             
   <div class="section" id="questions">
 <h1>Questions.<a class="headerlink" href="#questions" title="Permalink to this headline">¶</a></h1>
-<ol class="upperroman simple" start="30">
-<li></li>
-</ol>
-<div class="section" id="instants">
-<h2>Instants.<a class="headerlink" href="#instants" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><p>time : AT instant</p>
-<dl class="docutils">
-<dt>instant <span class="classifier-delimiter">:</span> <span class="classifier">NUMBER</span></dt>
-<dd><div class="first last line-block">
-<div class="line">VAR</div>
-<div class="line">NOW</div>
+<div class="highlight-python"><pre>sentence : question
+
+question : fact QMARK
+         | definition QMARK</pre>
 </div>
-</dd>
-</dl>
-<p>AT : &#8220;at&#8221;</p>
-<p>NUMBER : &lt;any integer&gt;</p>
-</div></blockquote>
-<p>We can provide specific instants for facts, as integers (it is in the TODO list
-to allow other time formats), prefixing them with the reserved word &#8220;at&#8221;. So we can say:</p>
-<p>300 john [views what doc1] at 30.</p>
-<p>In rules or queries, we would use variables with the form <cite>Instant1</cite>.</p>
-</div>
-<div class="section" id="durations">
-<h2>Durations.<a class="headerlink" href="#durations" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><p>time : FROM instant TILL instant</p>
-<p>FROM : &#8220;from&#8221;</p>
-<p>TILL : &#8220;till&#8221;</p>
-</div></blockquote>
-<p>Apart from instants, we can provide durations as time components of facts. To
-do this, we use the reserved words <cite>from</cite> y <cite>till</cite>:</p>
-<ol class="arabic" start="32">
-<li><p class="first">john [is_allowed to [edit what doc1]] from 10 till 20.</p>
-<p>time : VAR</p>
-</li>
-</ol>
-<p>Using variables in rules and queries, we can represent durations in 2 different
-ways, with 2 instant variables (<cite>from Instant1 till Instant2</cite>) or with just one
-duration variable (<cite>Duration1</cite>).</p>
-</div>
+<p>You query <strong>npl</strong> with sentences and definitions ended with a question mark.
+You can use variables in questions.</p>
+<p>In <strong>npl</strong>&#8216;s <a class="reference external" href="https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/">tests</a>,
+you must follow every question with a (python) regular expression that matches
+the expected answer.</p>
 </div>
 
 
@@ -100,18 +73,12 @@ duration variable (<cite>Duration1</cite>).</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Questions.</a><ul>
-<li><a class="reference internal" href="#instants">Instants.</a></li>
-<li><a class="reference internal" href="#durations">Durations.</a></li>
-</ul>
-</li>
-</ul>
-
   <h4>Previous topic</h4>
-  <p class="topless"><a href="npl_arith.html"
-                        title="previous chapter">Arithmetics.</a></p>
+  <p class="topless"><a href="npl_negation.html"
+                        title="previous chapter">Negation and counting sentences</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="npl_install.html"
+                        title="next chapter">Installation</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/npl_questions.txt"
@@ -141,7 +108,10 @@ duration variable (<cite>Duration1</cite>).</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="npl_arith.html" title="Arithmetics."
+          <a href="npl_install.html" title="Installation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="npl_negation.html" title="Negation and counting sentences"
              >previous</a> |</li>
         <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
           <li><a href="nl_lang.html" >The npl language</a> &raquo;</li> 

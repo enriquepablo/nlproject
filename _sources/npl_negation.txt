@@ -63,3 +63,6 @@ which they are added to the kb. However, if we (as we do in **npl** when we
 use the present continuous) assume that the present and the past are closed,
 the order in which we add the facts is part of the general truth, and the same
 set of facts added in different order would represent different realities.
+
+**NOTE**: Counting sentences is implemented but not yet exposed in **npl**,
+because I'm not sure about the syntax.

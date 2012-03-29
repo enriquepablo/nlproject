@@ -1,5 +1,5 @@
-Arithmetics.
-============
+Arithmetics
+===========
 
 Here we will see the syntax for arithmetics in **npl**. An example program
 that uses arithmetics can be seen
