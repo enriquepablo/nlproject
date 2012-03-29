@@ -102,6 +102,17 @@ DOT : "."</pre>
 <p>If you issue the order <tt class="docutils literal"><span class="pre">extend.</span></tt>, the kb will be extended to all its
 logical consecuences.</p>
 </div>
+<div class="section" id="order-import">
+<h2>Order: import<a class="headerlink" href="#order-import" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>order : IMPORT URI DOT
+
+IMPORT : "import"
+
+URI : '"' &lt;An URI&gt; '"'</pre>
+</div>
+<p>If you issue the order <tt class="docutils literal"><span class="pre">import</span> <span class="pre">&quot;http://example.com/ont.npl&quot;.</span></tt>, the kb will
+download the file at the URI and load it into the kb.</p>
+</div>
 <div class="section" id="statements">
 <h2>Statements<a class="headerlink" href="#statements" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><pre>statement : definition DOT
@@ -420,6 +431,7 @@ there is an example of the use of noun variables.</p>
 <li><a class="reference internal" href="#introduction-and-a-bit-of-hype">Introduction and a bit of hype</a></li>
 <li><a class="reference internal" href="#sentences">Sentences</a></li>
 <li><a class="reference internal" href="#order-extend">Order: extend</a></li>
+<li><a class="reference internal" href="#order-import">Order: import</a></li>
 <li><a class="reference internal" href="#statements">Statements</a></li>
 <li><a class="reference internal" href="#definition-of-terms">Definition of terms</a><ul>
 <li><a class="reference internal" href="#noun-definitions">Noun definitions</a></li>

@@ -54,6 +54,20 @@ Order: extend
 If you issue the order ``extend.``, the kb will be extended to all its
 logical consecuences.
 
+Order: import
+-------------
+
+::
+
+    order : IMPORT URI DOT
+
+    IMPORT : "import"
+
+    URI : '"' <An URI> '"'
+
+If you issue the order ``import "http://example.com/ont.npl".``, the kb will
+download the file at the URI and load it into the kb.
+
 Statements
 ----------
 
