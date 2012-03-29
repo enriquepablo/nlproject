@@ -3,7 +3,7 @@ The npl language
 ################
 
 **npl** is a general purpose logic system, simple, yet extremelly powerful. It is
-distributed under an open source license.
+distributed under the `GNU General Public License V3 <http://www.gnu.org/licenses/gpl.txt>`_.
 
 Contents
 --------
