@@ -10,11 +10,14 @@ over HTTP. Or you can use it from python (for this, refer to the
 Ircbot
 ------
 
+From the root of the nl buildout, do:
+
+::
+
   $ bin/ircbot some_name
   Generating LALR tables
   Signed on as some_name_bot.
   Joined #nlpbot_some_name.
-.
 
 Now you can talk to the ircbot on freenode at channel #nlpbot_some_name.
 You provide definitions, facts and rules ending them with a dot, and you ask
