@@ -1,0 +1,273 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>logical foundation of the language &mdash; nlproject 1.0dev documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="nlproject 1.0dev documentation" href="index.html" />
+    <link rel="up" title="The npl language" href="nl_lang.html" />
+    <link rel="next" title="Time" href="npl_time.html" />
+    <link rel="prev" title="npl language essentials" href="bnf.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="npl_time.html" title="Time"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="bnf.html" title="npl language essentials"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
+          <li><a href="nl_lang.html" accesskey="U">The npl language</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="logical-foundation-of-the-language">
+<h1>logical foundation of the language<a class="headerlink" href="#logical-foundation-of-the-language" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="preliminary-note">
+<h2>Preliminary note<a class="headerlink" href="#preliminary-note" title="Permalink to this headline">¶</a></h2>
+<p>Most historic facts that I speak about
+in the following paragraphs
+are basic and mainstream enough
+that I don&#8217;t think they need quoting.
+An internet search will confirm them easily enough.
+The interpretation of the facts is not so mainstream,
+and it would merit quoting its origin.
+I cannot find it, though:
+All I remember is that
+I read it many yars ago
+in some textbook on the philosophy of language.
+In any case,
+the next paragraphs are better understood
+as a conceptual introduction to a problem
+(and its proposed solution),
+rather than as a historical essay.</p>
+</div>
+<div class="section" id="historical-introduction-to-the-problem">
+<h2>Historical introduction to the problem<a class="headerlink" href="#historical-introduction-to-the-problem" title="Permalink to this headline">¶</a></h2>
+<p>Gottlob Frege was the first
+to develop predicate logic.
+And he developed it
+in the belief that he was unravelling
+the foundations of
+the natural logic of scientific speech
+(including the whole of mathematics).</p>
+<p>He developed a theory in his Grundgesetze,
+in which he had individuals (or values),
+and he had classes (or value-ranges),
+and he had predicates (what he called concepts).
+His theory was second order,
+but for our purposes, to simplify,
+it will be taken to be equivalent to
+a first order axiomatic &#8216;naïve&#8217; set theory
+with an axiom schema of unrestricted comprehension
+(I call it naïve for carrying UC).</p>
+<p>In short, our formal naïve set theory is a first order theory
+with 2 basic predicates (not counting equality),
+those of &#8220;belonging to a set&#8221;, and &#8220;being a subset of another set&#8221;.
+They get their form through a set of axiomatic rules,
+basically extensionality, and a definition of subset in terms of
+belonging.</p>
+<p>Now, if we make a correspondence between these formal set predicates
+and the copular use of the verb to be, we have a formal system
+where we can express any scientific taxonomy, and reason about it.
+Obviously this is not enough to express the logic of any
+scientific theory; we need other predicates apart from copular ones,
+to represent other relations apart from that of belonging to classes.</p>
+<p>First order logic allows us to use more predicates, of course.
+We can define new predicates and give them whatever form we like through
+additional axioms. Nevertheless, there is still one problem to overcome
+if we aspire to a mechanization of the scientific use of the natural
+language. And that is the ability to have variables that range over
+predicates, the ability to express predicates through constraints,
+classes of predicates, etc. In first order predicate logic,
+you cannot have variables ranging over predicates. In the natural language,
+it is obvious that you can do the equivalent.</p>
+<p>This problem is solved with the axiom of unrestriced
+comprehension, that establishes a correspondence between predicates and sets.
+Variables range over sets, and UC gives you a set for each predicate,
+so you can have &#8220;predicate&#8221; variables that range over their corresponding sets.
+However, Bertrand Russell showed that UC leads to contradiction,
+and cannot be used.</p>
+<p>From then on, axiomatic set theory evolved, without UC,
+to grow a range of esoteric axioms that totally estranged it from
+the copular predicates of scientific speech, but which served
+logicists to provide a foundation for most mathematics.
+And logical empiricists pursued, without success, the adecuation
+of formal logic to the informal logic of natural languages.</p>
+</div>
+<div class="section" id="manifestation-of-the-problem">
+<h2>Manifestation of the problem<a class="headerlink" href="#manifestation-of-the-problem" title="Permalink to this headline">¶</a></h2>
+<p>This problem I have described can be seen in many modern
+logic programming systems, where any attempt to use
+our natural logic as design model for software development is futile.</p>
+<p>A paradigmatic example is the OWL language of the semantic web.
+This language had two flavours: DL, and full. It is an ontology language
+that can be processed by reasoners to extract consecuences.
+It has basic class predicates, and you have UC: you can have
+anonymous classes defined by predicates. But, in the DL flavour,
+you cannot treat classes as individuals. In the full flavour,
+you can, but you are not guaranteed that the system will be
+consistent under a reasoner. And it is the full flavour that would
+provide full (natural) expresivity.</p>
+</div>
+<div class="section" id="a-possible-solution">
+<h2>A possible solution<a class="headerlink" href="#a-possible-solution" title="Permalink to this headline">¶</a></h2>
+<p>My proposition is to use the predicates of set theory
+to express the natural copular verbs, just as Frege did,
+but then, instead of representing the rest of the natural verbs
+as formal predicates, we represent them through individuals of the
+theory. We limit our (first order) theory to only have the
+basic predicates of set theory in their barest form, in something
+like what follows.</p>
+<p>We only use implication &#8220;-&gt;&#8221;
+and conjunction &#8220;&amp;&#8221;
+as logical connectives,
+and the only production rule is modus ponens.
+Variables are denoted by &#8220;x1&#8221;, &#8220;x2&#8221;...
+and are always universally quantified in their outernmost scope;
+and individuals are denoted by any secuence of lower case letters.
+The predicates are &#8220;isa&#8221; (for belongs to) and &#8220;are&#8221; (for is
+a subset of),
+are used in an infix form,
+and we have that:</p>
+<blockquote>
+<div><p>x1 isa x2 &amp; x2 are x3 -&gt; x1 isa x3</p>
+<p>x1 are x2 &amp; x2 are x3 -&gt; x1 are x3</p>
+</div></blockquote>
+<p>Now to the representation of natural verbs.
+For simplicity, we will only consider natural verbs that represent
+binary relations, so a sentence with such a verb would have
+the form of a triplet subject-verb-object.
+To represent this relation, we use a ternary operator &#8220;f&#8221;
+(from fact). So, a non-copular sentence, in our system, would
+have the form &#8220;f(s, v, o)&#8221; (where &#8220;s&#8221;, &#8220;v&#8221;, and &#8220;o&#8221; are just
+individuals of the theory).
+Since &#8220;f&#8221; is an operator, this
+sentence represents just another individual of the theory, and has
+no truth value.
+We will call this sort of individuals &#8220;facts&#8221;.
+To attach truth value to facts, we use the set predicates,
+to relate them with another individual of the theory,
+&#8220;fact&#8221;. So a complete non-copular sentence, in this theory,
+would have the form (with prefix operators and infix predicates):</p>
+<blockquote>
+<div>f(s, v, o) isa fact</div></blockquote>
+<p>Since we only have 3 formal predicates, we do not need UC at all,
+and yet we can have variables that range over the equivalents of
+our natural verbs (and also over whole &#8220;facts&#8221;).</p>
+<p>We can be even more fine-grained. If we call predication to a
+pair verb-object, we may want to have variables that range over
+them. To do this, we can define a new operator &#8220;p&#8221;, that produces
+&#8220;predication&#8221; individuals, so that now the &#8220;f&#8221; operator takes 2 operands,
+the subject and a &#8220;predication&#8221;, to have something like:</p>
+<blockquote>
+<div><p>p(v, o) isa predication</p>
+<p>f(s, p(v, o)) isa fact</p>
+</div></blockquote>
+<p>And, to show a little more of the power that we can obtain from
+such a system, note that facts and predications are individuals
+of the theory, so we can use them where we have used &#8220;s&#8221; or &#8220;o&#8221;,
+to build as complex a sentence as we may want (I think it wouldn&#8217;t make
+much sense to use them in place of &#8220;v&#8221;).</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">logical foundation of the language</a><ul>
+<li><a class="reference internal" href="#preliminary-note">Preliminary note</a></li>
+<li><a class="reference internal" href="#historical-introduction-to-the-problem">Historical introduction to the problem</a></li>
+<li><a class="reference internal" href="#manifestation-of-the-problem">Manifestation of the problem</a></li>
+<li><a class="reference internal" href="#a-possible-solution">A possible solution</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="bnf.html"
+                        title="previous chapter">npl language essentials</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="npl_time.html"
+                        title="next chapter">Time</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/npl_foundation.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="npl_time.html" title="Time"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="bnf.html" title="npl language essentials"
+             >previous</a> |</li>
+        <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
+          <li><a href="nl_lang.html" >The npl language</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Enrique Pablo Pérez Arnaud &lt;enriquepablo at google&#39;s mail domain&gt;.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

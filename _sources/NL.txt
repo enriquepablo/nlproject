@@ -2,9 +2,6 @@
 APPENDIX: NL, the first order theory behind nl
 ==============================================
 
-(This is really bad. It's not 2 years since I wrote this, and I already find it
-insanely difficult to follow. I must rewrite it.)
-
 The intended interpretation
 ---------------------------
 
@@ -68,5 +65,5 @@ The sixth and seventh axioms just define a couple of second kind expressions to 
 
 The eighth axiom simply provides us with the basic form to produce non copular sentences. It has the form of an axiom schema, due to the fact that proposition is arity-less; however, due to the nature of our intended interpretation, we might limit n to, say, fifty, to be on the safe side (i.e., we don't have verbs that take more that fifty modifiers to produce sentences...)
 
-8) forall x, y1,...yn: is(proposition(x, y1,...yn), fact) -> is(x, verb)
+8) forall x, y1,...yn: isa(proposition(x, y1,...yn), fact) -> isa(x, verb)
 

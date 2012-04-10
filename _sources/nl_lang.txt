@@ -12,6 +12,7 @@ Contents
    :maxdepth: 1
 
    bnf
+   npl_foundation
    npl_time
    npl_arith
    npl_negation
