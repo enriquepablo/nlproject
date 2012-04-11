@@ -73,7 +73,7 @@ that UC leads to contradiction in this context,
 and cannot be used.
 
 From then on, axiomatic set theory evolved, without UC,
-to grow a range of esoteric axioms that totally estranged it from
+to grow a range of esoteric axioms that quite estranged it from
 the copular predicates of natural speech, but which served
 logicists to provide a foundation for most of mathematics.
 And logical empiricists pursued, without success, the adecuation
@@ -101,7 +101,8 @@ A possible solution
 -------------------
 
 My proposition is to use the predicates of set theory
-to express the natural copular verbs, just as Frege did,
+to express the natural copular verbs,
+just as Frege (or OWL) did,
 but then, instead of representing the rest of the natural verbs
 as formal predicates, we represent them through individuals of the
 theory. We limit our (first order) theory to only have the
@@ -113,7 +114,7 @@ and conjunction "&"
 as logical connectives,
 and the only production rule is modus ponens.
 Variables are denoted by "x1", "x2"...
-and are always universally quantified in their outernmost scope;
+and are always universally quantified in their outernmost scope (sentence);
 and individuals are denoted by any secuence of lower case letters.
 The predicates are "isa" (for belongs to) and "are" (for is
 a subset of),
@@ -126,7 +127,7 @@ and we have that:
 
 Now to the representation of natural verbs.
 For simplicity, we will only consider natural verbs that represent
-binary relations, so a sentence with such a verb would have
+binary relations, so a natural sentence with such a verb would have
 the form of a triplet subject-verb-object.
 To represent this relation, we use a ternary operator "f"
 (from fact). So, a non-copular sentence, in our system, would
@@ -163,3 +164,4 @@ of the theory, so we can use them where we have used "s" or "o",
 to build as complex a sentence as we may want (I think it wouldn't make
 much sense to use them in place of "v").
 
+There is a semantics for this language `here <NL>`_.
