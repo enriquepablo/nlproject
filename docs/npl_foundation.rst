@@ -20,7 +20,7 @@ the foundations of
 the natural logic behind scientific theories
 (including the whole of mathematics).
 He wanted a mathematical formalism
-capable of expessing
+capable of expressing
 any informal scientific theory.
 To that end,
 he developed a formal theory
@@ -29,7 +29,7 @@ and he had classes (or value-ranges),
 and he had predicates (what he called concepts).
 His theory was second order,
 but for our purposes, to simplify,
-it will be taken to be equivalent to
+it can be taken to be equivalent to
 a first order axiomatic 'naïve' set theory
 with an axiom schema of unrestricted comprehension
 (I call it naïve for carrying UC).
@@ -109,7 +109,8 @@ theory. We limit our (first order) theory to only have the
 basic predicates of set theory in their barest form, in something
 like what follows.
 
-We only use implication "->"
+We call this theory NPL.
+In it, we only use implication "->"
 and conjunction "&"
 as logical connectives,
 and the only production rule is modus ponens.
@@ -148,7 +149,7 @@ Since we only have 3 formal predicates, we do not need UC at all,
 and yet we can have variables that range over the equivalents of
 our natural verbs (and also over whole "facts").
 
-We can be even more fine-grained. If we call predication to a
+We can be even more fine-grained. If we call "predication" to a
 pair verb-object, we may want to have variables that range over
 them. To do this, we can define a new operator "p", that produces
 "predication" individuals, so that now the "f" operator takes 2 operands,
