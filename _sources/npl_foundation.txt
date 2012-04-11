@@ -1,39 +1,29 @@
 
-logical foundation of the language
-==================================
+logical foundation
+==================
 
-Preliminary note
-----------------
+The **npl** language may be viewed
+as a proof of concept for the solution of a problem
+that has been present in logics
+from Gottlog Frege to the modern logic programming languages.
+Here I will try to introduce this problem
+and my proposed solution.
 
-Most historic facts that I speak about
-in the following paragraphs
-are basic and mainstream enough
-that I don't think they need quoting.
-An internet search will confirm them easily enough.
-The interpretation of the facts is not so mainstream,
-and it would merit quoting its origin.
-I cannot find it, though:
-All I remember is that
-I read it many yars ago
-in some textbook on the philosophy of language.
-In any case,
-the next paragraphs are better understood
-as a conceptual introduction to a problem
-(and its proposed solution),
-rather than as a historical essay.
-
-Historical introduction to the problem
---------------------------------------
+Historical introduction
+-----------------------
 
 Gottlob Frege was the first
 to develop predicate logic.
 And he developed it
-in the belief that he was unravelling
+in the belief that he was unraveling
 the foundations of
-the natural logic of scientific speech
+the natural logic behind scientific theories
 (including the whole of mathematics).
-
-He developed a theory in his Grundgesetze,
+He wanted a mathematical formalism
+capable of expessing
+any informal scientific theory.
+To that end,
+he developed a formal theory
 in which he had individuals (or values),
 and he had classes (or value-ranges),
 and he had predicates (what he called concepts).
@@ -47,9 +37,10 @@ with an axiom schema of unrestricted comprehension
 In short, our formal naïve set theory is a first order theory
 with 2 basic predicates (not counting equality),
 those of "belonging to a set", and "being a subset of another set".
-They get their form through a set of axiomatic rules,
-basically extensionality, and a definition of subset in terms of
-belonging.
+These predicates get their form
+through a small set of axioms,
+basically extensionality,
+and a definition of subset in terms of belonging.
 
 Now, if we make a correspondence between these formal set predicates
 and the copular use of the verb to be, we have a formal system
@@ -68,19 +59,26 @@ classes of predicates, etc. In first order predicate logic,
 you cannot have variables ranging over predicates. In the natural language,
 it is obvious that you can do the equivalent.
 
-This problem is solved with the axiom of unrestriced
-comprehension, that establishes a correspondence between predicates and sets.
+For Frege, this problem was solved with unrestriced comprehension,
+that establishes a correspondence between predicates and sets.
 Variables range over sets, and UC gives you a set for each predicate,
 so you can have "predicate" variables that range over their corresponding sets.
-However, Bertrand Russell showed that UC leads to contradiction,
+(Nowadays we would say classes rather than sets,
+since they involve UC;
+but Frege could quantify variables over them,
+so they would properly be sets,
+and in any case Frege used another nomenclature.)
+However, Bertrand Russell showed
+that UC leads to contradiction in this context,
 and cannot be used.
 
 From then on, axiomatic set theory evolved, without UC,
 to grow a range of esoteric axioms that totally estranged it from
-the copular predicates of scientific speech, but which served
-logicists to provide a foundation for most mathematics.
+the copular predicates of natural speech, but which served
+logicists to provide a foundation for most of mathematics.
 And logical empiricists pursued, without success, the adecuation
 of formal logic to the informal logic of natural languages.
+And Frege got famously depressed.
 
 Manifestation of the problem
 ----------------------------

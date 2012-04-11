@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>logical foundation of the language &mdash; nlproject 1.0dev documentation</title>
+    <title>logical foundation &mdash; nlproject 1.0dev documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -53,37 +53,28 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="logical-foundation-of-the-language">
-<h1>logical foundation of the language<a class="headerlink" href="#logical-foundation-of-the-language" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="preliminary-note">
-<h2>Preliminary note<a class="headerlink" href="#preliminary-note" title="Permalink to this headline">¶</a></h2>
-<p>Most historic facts that I speak about
-in the following paragraphs
-are basic and mainstream enough
-that I don&#8217;t think they need quoting.
-An internet search will confirm them easily enough.
-The interpretation of the facts is not so mainstream,
-and it would merit quoting its origin.
-I cannot find it, though:
-All I remember is that
-I read it many yars ago
-in some textbook on the philosophy of language.
-In any case,
-the next paragraphs are better understood
-as a conceptual introduction to a problem
-(and its proposed solution),
-rather than as a historical essay.</p>
-</div>
-<div class="section" id="historical-introduction-to-the-problem">
-<h2>Historical introduction to the problem<a class="headerlink" href="#historical-introduction-to-the-problem" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="logical-foundation">
+<h1>logical foundation<a class="headerlink" href="#logical-foundation" title="Permalink to this headline">¶</a></h1>
+<p>The <strong>npl</strong> language may be viewed
+as a proof of concept for the solution of a problem
+that has been present in logics
+from Gottlog Frege to the modern logic programming languages.
+Here I will try to introduce this problem
+and my proposed solution.</p>
+<div class="section" id="historical-introduction">
+<h2>Historical introduction<a class="headerlink" href="#historical-introduction" title="Permalink to this headline">¶</a></h2>
 <p>Gottlob Frege was the first
 to develop predicate logic.
 And he developed it
-in the belief that he was unravelling
+in the belief that he was unraveling
 the foundations of
-the natural logic of scientific speech
-(including the whole of mathematics).</p>
-<p>He developed a theory in his Grundgesetze,
+the natural logic behind scientific theories
+(including the whole of mathematics).
+He wanted a mathematical formalism
+capable of expessing
+any informal scientific theory.
+To that end,
+he developed a formal theory
 in which he had individuals (or values),
 and he had classes (or value-ranges),
 and he had predicates (what he called concepts).
@@ -96,9 +87,10 @@ with an axiom schema of unrestricted comprehension
 <p>In short, our formal naïve set theory is a first order theory
 with 2 basic predicates (not counting equality),
 those of &#8220;belonging to a set&#8221;, and &#8220;being a subset of another set&#8221;.
-They get their form through a set of axiomatic rules,
-basically extensionality, and a definition of subset in terms of
-belonging.</p>
+These predicates get their form
+through a small set of axioms,
+basically extensionality,
+and a definition of subset in terms of belonging.</p>
 <p>Now, if we make a correspondence between these formal set predicates
 and the copular use of the verb to be, we have a formal system
 where we can express any scientific taxonomy, and reason about it.
@@ -114,18 +106,25 @@ predicates, the ability to express predicates through constraints,
 classes of predicates, etc. In first order predicate logic,
 you cannot have variables ranging over predicates. In the natural language,
 it is obvious that you can do the equivalent.</p>
-<p>This problem is solved with the axiom of unrestriced
-comprehension, that establishes a correspondence between predicates and sets.
+<p>For Frege, this problem was solved with unrestriced comprehension,
+that establishes a correspondence between predicates and sets.
 Variables range over sets, and UC gives you a set for each predicate,
 so you can have &#8220;predicate&#8221; variables that range over their corresponding sets.
-However, Bertrand Russell showed that UC leads to contradiction,
+(Nowadays we would say classes rather than sets,
+since they involve UC;
+but Frege could quantify variables over them,
+so they would properly be sets,
+and in any case Frege used another nomenclature.)
+However, Bertrand Russell showed
+that UC leads to contradiction in this context,
 and cannot be used.</p>
 <p>From then on, axiomatic set theory evolved, without UC,
 to grow a range of esoteric axioms that totally estranged it from
-the copular predicates of scientific speech, but which served
-logicists to provide a foundation for most mathematics.
+the copular predicates of natural speech, but which served
+logicists to provide a foundation for most of mathematics.
 And logical empiricists pursued, without success, the adecuation
-of formal logic to the informal logic of natural languages.</p>
+of formal logic to the informal logic of natural languages.
+And Frege got famously depressed.</p>
 </div>
 <div class="section" id="manifestation-of-the-problem">
 <h2>Manifestation of the problem<a class="headerlink" href="#manifestation-of-the-problem" title="Permalink to this headline">¶</a></h2>
@@ -212,9 +211,8 @@ much sense to use them in place of &#8220;v&#8221;).</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">logical foundation of the language</a><ul>
-<li><a class="reference internal" href="#preliminary-note">Preliminary note</a></li>
-<li><a class="reference internal" href="#historical-introduction-to-the-problem">Historical introduction to the problem</a></li>
+<li><a class="reference internal" href="#">logical foundation</a><ul>
+<li><a class="reference internal" href="#historical-introduction">Historical introduction</a></li>
 <li><a class="reference internal" href="#manifestation-of-the-problem">Manifestation of the problem</a></li>
 <li><a class="reference internal" href="#a-possible-solution">A possible solution</a></li>
 </ul>
