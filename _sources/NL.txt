@@ -1,6 +1,6 @@
 
-APPENDIX: NL, the first order theory behind nl
-==============================================
+APPENDIX: NPL, the first order theory behind npl
+================================================
 
 The intended interpretation
 ---------------------------
@@ -9,7 +9,7 @@ We are going to examine the natural language. For that, we are going to talk abo
 
 We can say a couple of things about expressions. First, that there are atomic and composite expressions. In principle we won't distinguish among them, and will just talk about expressions.
 
-Second, that there are finitely many atomic expressions, and that there are limits to the amount of composite expressions that it is possible to form with them. The number is not only finite but fairly small, and perhaps not too different from the number of entries in the wikipedia.
+Second, that there are finitely many atomic expressions, and that there are limits to the amount of composite expressions that it is possible to form with them.
 
 And third, that there seem to be two kinds of expressions: those with truth value (such as "John loves Mary"), and those without it (such as "John"). In this respect, we are going to take an alternative but equivalent view. We shall imagine that no expression has truth value, and that those that seem to have it, are in fact borrowing it from an underlying but implicit copular sentence: "it is a fact that <expression>".
 
@@ -17,24 +17,19 @@ What we do now is to think about copular sentences as relations among expression
 
 These structures of expressions, which we might call discourses, have of course, and by definition, meaning, they have semantics, and we use them to communicate truths. However, we are going to disregard those semantics, which are nebulous and reside in a strange universe, and we are going to try to take those structures of expressions themselves as the standard interpretation of some language to be developed. If we disregard their meaning, they are really simple structures.
 
-The development of this language is quite easy. We know that its interpretation is similar to some class or set system, and we know that there are a limited amount of of individuals in its domain of interpretation. We have 2 kinds of individuals: those that can have elements, and those that cannot. This language can be a really simple, finite domain, consistent and decidable first order theory. It would not need of any "productive" axioms, since we don't want it to contain all truth in a few axioms: we want it to be able to extend it in an ad hoc manner to model different discourses.
+The development of this language is quite simple. We know that its interpretation is similar to some class or set system, and we know that there are a limited amount of of individuals in its domain of interpretation. We have 2 kinds of individuals: those that can "have elements", and those that cannot. This language can be a finite domain, consistent and decidable first order theory. It would not need of any "productive" axioms, since we don't want it to contain all truth in a few axioms: we want it to be able to extend it in an ad hoc manner to model different discourses.
 
-Finally, we can talk about the composition of expressions. This can be done through the use of function terms. This of course includes non-copular sentences such as "John loves Mary". And I think that it is not necessary to point out that it is much easier to mirror complex grammars, such are those developed to analyze the natural languages, with function symbols than it is with predicate symbols. It might be worth pointing out 2 advantages.
-
-One. "Natural" sentences -excluding copular ones- map to formal functions. This allows us to nest them, in contrast to what happens if we map them to formal predicates. For example, "thinks that wants to eat an apple" might map to something like "fact(thinks, fact(wants, fact(eat, apple)))".
-
-Second. Since natural sentences map to functions, the antinomies that unrestricted comprehension produces are excluded when we use them to produce anonymous "classes". We only have one kind of individual, expression, and we may quantify over it with no restriction. Of course we exclude copular sentences from this, but I think that we can easily live with that.
-
-In principle, I will develop the language with recourse to a single function symbol, that will allow us to produce non-copular sentences out of other terms, though there is no limit to the number of possible operators that we might use to, for example, mirror the adjectivation of nouns, etc.
+Finally, we can talk about the composition of expressions. This can be done through the use of operators. This of course includes non-copular sentences such as "John loves Mary".
+In principle, I will develop the language with recourse to a single operator, that will allow us to produce non-copular sentences out of other symbols, though there is no limit to the number of possible operators that we might use.
 
 The language
 ------------
 
-The language for NL is a fist order language with equality with the following non-logical terms:
+The language for NL is a fist order language with equality with the following non-logical symbols:
 
-binary relations: is, isa.
+binary relations: isa (belongs), is (subset).
 
-functor: proposition. Note that we don't impose an arity on this functor. We might alternatively use a function term with a definite arity for each verb, but here, for simplicity, I will just provide this.
+ternary functor: f (fact).
 
 atomic terms: verb, fact, expression.
 
@@ -43,19 +38,19 @@ Axiomatization
 
 The first three are taken from Paul Bernays, and provide us with the form of a simple set theory without "constructive" axioms:
 
-1) forall x, y, z: (is(x, y) -> is(x, z)) -> isa(y, z)
+1) forall x, y, z: (isa(x, y) -> isa(x, z)) -> is(y, z)
 
-2) forall x, y: isa(x, y) & isa(y, x) -> equals(x, y)
+2) forall x, y: is(x, y) & is(y, x) -> equals(x, y)
 
-3) forall x, y, z: is(x, y) & equals(y, z) -> is(x, z)
+3) forall x, y, z: isa(x, y) & equals(y, z) -> isa(x, z)
 
 The fourth axiom establishes that there is a universal expression, that we denote with "expression":
 
-4) forall x: is(x, expression)
+4) forall x: isa(x, expression)
 
 The fifth axiom establishes that we only have three kinds of expressions with respect to the "is" relation: one kind is the one member set of "expression", the second kind are those expressions that can "contain" (to use the class terminology) other expressions, and the third kind are those that cannot contain other expressions. In particular, those of the second kind can contain only those of the third kind.
 
-5) forall x, y, z: is(x, y) & is(y, z) -> equals(z, expression)
+5) forall x, y, z: isa(x, y) & isa(y, z) -> equals(z, expression)
 
 The sixth and seventh axioms just define a couple of second kind expressions to begin with:
 
@@ -63,7 +58,7 @@ The sixth and seventh axioms just define a couple of second kind expressions to 
 
 7) isa(fact, expression)
 
-The eighth axiom simply provides us with the basic form to produce non copular sentences. It has the form of an axiom schema, due to the fact that proposition is arity-less; however, due to the nature of our intended interpretation, we might limit n to, say, fifty, to be on the safe side (i.e., we don't have verbs that take more that fifty modifiers to produce sentences...)
+The eighth axiom simply provides us with the basic form to produce non copular sentences.
 
-8) forall x, y1,...yn: isa(proposition(x, y1,...yn), fact) -> isa(x, verb)
+8) forall x, y, z: isa(f(x, y, z), fact) -> isa(y, verb)
 
