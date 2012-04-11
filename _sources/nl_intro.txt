@@ -68,7 +68,6 @@ Contents
    queries
    counting
    cms
-   NL
 
 
 **FOOTNOTES:**

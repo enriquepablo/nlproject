@@ -33,6 +33,8 @@ ternary functor: f (fact).
 
 atomic terms: verb, fact, expression.
 
+As variables, we will use x, y, z.
+
 Axiomatization
 --------------
 
@@ -48,9 +50,9 @@ The fourth axiom establishes that there is a universal expression, that we denot
 
 4) forall x: isa(x, expression)
 
-The fifth axiom establishes that we only have three kinds of expressions with respect to the "is" relation: one kind is the one member set of "expression", the second kind are those expressions that can "contain" (to use the class terminology) other expressions, and the third kind are those that cannot contain other expressions. In particular, those of the second kind can contain only those of the third kind.
+The fifth axiom establishes that we only have three kinds of expressions with respect to the "isa" relation: one kind is formed by "expression" and its subexpressions, the second kind are those expressions that can "contain" (to use the class terminology) other expressions, and the third kind are those that cannot contain other expressions. In particular, those of the second kind can contain only those of the third kind.
 
-5) forall x, y, z: isa(x, y) & isa(y, z) -> equals(z, expression)
+5) forall x, y, z: isa(x, y) & isa(y, z) -> is(z, expression)
 
 The sixth and seventh axioms just define a couple of second kind expressions to begin with:
 
@@ -58,7 +60,7 @@ The sixth and seventh axioms just define a couple of second kind expressions to 
 
 7) isa(fact, expression)
 
-The eighth axiom simply provides us with the basic form to produce non copular sentences.
+The eighth axiom simply provides us with the basic form to express non copular sentences.
 
 8) forall x, y, z: isa(f(x, y, z), fact) -> isa(y, verb)
 

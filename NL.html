@@ -25,10 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="nlproject 1.0dev documentation" href="index.html" />
-    <link rel="up" title="Documentation for nl" href="nl_intro.html" />
-    <link rel="next" title="The npl language" href="nl_lang.html" />
-    <link rel="prev" title="Example: A content management system" href="cms.html" /> 
+    <link rel="top" title="nlproject 1.0dev documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,14 +34,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="nl_lang.html" title="The npl language"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="cms.html" title="Example: A content management system"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
-          <li><a href="nl_intro.html" accesskey="U">Documentation for nl</a> &raquo;</li> 
+        <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -73,6 +63,7 @@ In principle, I will develop the language with recourse to a single operator, th
 <p>binary relations: isa (belongs), is (subset).</p>
 <p>ternary functor: f (fact).</p>
 <p>atomic terms: verb, fact, expression.</p>
+<p>As variables, we will use x, y, z.</p>
 </div>
 <div class="section" id="axiomatization">
 <h2>Axiomatization<a class="headerlink" href="#axiomatization" title="Permalink to this headline">¶</a></h2>
@@ -86,16 +77,16 @@ In principle, I will develop the language with recourse to a single operator, th
 <ol class="arabic simple" start="4">
 <li>forall x: isa(x, expression)</li>
 </ol>
-<p>The fifth axiom establishes that we only have three kinds of expressions with respect to the &#8220;is&#8221; relation: one kind is the one member set of &#8220;expression&#8221;, the second kind are those expressions that can &#8220;contain&#8221; (to use the class terminology) other expressions, and the third kind are those that cannot contain other expressions. In particular, those of the second kind can contain only those of the third kind.</p>
+<p>The fifth axiom establishes that we only have three kinds of expressions with respect to the &#8220;isa&#8221; relation: one kind is formed by &#8220;expression&#8221; and its subexpressions, the second kind are those expressions that can &#8220;contain&#8221; (to use the class terminology) other expressions, and the third kind are those that cannot contain other expressions. In particular, those of the second kind can contain only those of the third kind.</p>
 <ol class="arabic simple" start="5">
-<li>forall x, y, z: isa(x, y) &amp; isa(y, z) -&gt; equals(z, expression)</li>
+<li>forall x, y, z: isa(x, y) &amp; isa(y, z) -&gt; is(z, expression)</li>
 </ol>
 <p>The sixth and seventh axioms just define a couple of second kind expressions to begin with:</p>
 <ol class="arabic simple" start="6">
 <li>isa(verb, expression)</li>
 <li>isa(fact, expression)</li>
 </ol>
-<p>The eighth axiom simply provides us with the basic form to produce non copular sentences.</p>
+<p>The eighth axiom simply provides us with the basic form to express non copular sentences.</p>
 <ol class="arabic simple" start="8">
 <li>forall x, y, z: isa(f(x, y, z), fact) -&gt; isa(y, verb)</li>
 </ol>
@@ -118,12 +109,6 @@ In principle, I will develop the language with recourse to a single operator, th
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="cms.html"
-                        title="previous chapter">Example: A content management system</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="nl_lang.html"
-                        title="next chapter">The npl language</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/NL.txt"
@@ -152,14 +137,7 @@ In principle, I will develop the language with recourse to a single operator, th
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="nl_lang.html" title="The npl language"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="cms.html" title="Example: A content management system"
-             >previous</a> |</li>
-        <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li>
-          <li><a href="nl_intro.html" >Documentation for nl</a> &raquo;</li> 
+        <li><a href="index.html">nlproject 1.0dev documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
