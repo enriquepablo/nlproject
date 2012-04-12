@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>logical foundation &mdash; nlproject 1.0dev documentation</title>
+    <title>Motivation &mdash; nlproject 1.0dev documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -53,12 +53,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="logical-foundation">
-<h1>logical foundation<a class="headerlink" href="#logical-foundation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="motivation">
+<h1>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h1>
 <p>The <strong>npl</strong> language may be viewed
 as a proof of concept for the solution of a problem
 that has been present in logics
-from Gottlog Frege to the modern logic programming languages.
+from Gottlob Frege to the modern logic programming languages.
 Here I will try to introduce this problem
 and my proposed solution.</p>
 <div class="section" id="historical-introduction">
@@ -107,17 +107,25 @@ classes of predicates, etc. In first order predicate logic,
 you cannot have variables ranging over predicates. In the natural language,
 it is obvious that you can do the equivalent.</p>
 <p>For Frege, this problem was solved with unrestriced comprehension,
+(or rather, its equivalent in his system,)
 that establishes a correspondence between predicates and sets.
 Variables range over sets, and UC gives you a set for each predicate,
 so you can have &#8220;predicate&#8221; variables that range over their corresponding sets.
-(Nowadays we would say classes rather than sets,
+Pehaps, nowadays we would say classes rather than sets,
 since they involve UC;
-but Frege could quantify variables over them,
-so they would properly be sets,
-and in any case Frege used another nomenclature.)
-However, Bertrand Russell showed
+but we could quantify variables over them,
+so I think they are more properly called sets.
+In any case, Bertrand Russell showed
 that UC leads to contradiction in this context,
 and cannot be used.</p>
+<p>To be accurate, in his system,
+Frege could have variables ranging over predicates,
+since his system was second order;
+what Russell broke in Frege&#8217;s system
+was his Basic Law V, that corresponds to UC
+and allowed him to kind of reduce the system
+to first order.
+Because the natural logic is obviously first order.</p>
 <p>From then on, axiomatic set theory evolved, without UC,
 to grow a range of esoteric axioms that quite estranged it from
 the copular predicates of natural speech, but which served
@@ -214,7 +222,7 @@ much sense to use them in place of &#8220;v&#8221;).</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">logical foundation</a><ul>
+<li><a class="reference internal" href="#">Motivation</a><ul>
 <li><a class="reference internal" href="#historical-introduction">Historical introduction</a></li>
 <li><a class="reference internal" href="#manifestation-of-the-problem">Manifestation of the problem</a></li>
 <li><a class="reference internal" href="#a-possible-solution">A possible solution</a></li>

@@ -1,11 +1,11 @@
 
-logical foundation
-==================
+Motivation
+==========
 
 The **npl** language may be viewed
 as a proof of concept for the solution of a problem
 that has been present in logics
-from Gottlog Frege to the modern logic programming languages.
+from Gottlob Frege to the modern logic programming languages.
 Here I will try to introduce this problem
 and my proposed solution.
 
@@ -60,17 +60,26 @@ you cannot have variables ranging over predicates. In the natural language,
 it is obvious that you can do the equivalent.
 
 For Frege, this problem was solved with unrestriced comprehension,
+(or rather, its equivalent in his system,)
 that establishes a correspondence between predicates and sets.
 Variables range over sets, and UC gives you a set for each predicate,
 so you can have "predicate" variables that range over their corresponding sets.
-(Nowadays we would say classes rather than sets,
+Pehaps, nowadays we would say classes rather than sets,
 since they involve UC;
-but Frege could quantify variables over them,
-so they would properly be sets,
-and in any case Frege used another nomenclature.)
-However, Bertrand Russell showed
+but we could quantify variables over them,
+so I think they are more properly called sets.
+In any case, Bertrand Russell showed
 that UC leads to contradiction in this context,
 and cannot be used.
+
+To be accurate, in his system, 
+Frege could have variables ranging over predicates,
+since his system was second order;
+what Russell broke in Frege's system
+was his Basic Law V, that corresponds to UC
+and allowed him to kind of reduce the system
+to first order.
+Because the natural logic is obviously first order.
 
 From then on, axiomatic set theory evolved, without UC,
 to grow a range of esoteric axioms that quite estranged it from
