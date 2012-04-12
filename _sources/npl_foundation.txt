@@ -199,7 +199,14 @@ universal set "word"):
 
   loves isa verb
 
-  x1 isa person & x2 isa person & f(x1, loves, x2) isa fact -> f(x2, loves, x1) isa fact
+  x1 isa person &
+  x2 isa verb &
+  x3 isa person &
+  & f(x1, x2, x3) isa fact
+  ->
+  f(x3, x2, x1) isa fact
+
+Now, "john loves sue" will imply that "sue loves john".
 
 
 There is a semantics for this language `here <NL>`_.
