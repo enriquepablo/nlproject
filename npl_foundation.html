@@ -218,13 +218,17 @@ such a system, note that facts and predications are individuals
 of the theory, so we can use them where we have used &#8220;s&#8221; or &#8220;o&#8221;,
 to build as complex a sentence as we may want (I think it wouldn&#8217;t make
 much sense to use them in place of &#8220;v&#8221;).</p>
-<p>An example developed on top of this theory might be:</p>
+<p>An example developed on top of this theory might be (using a primitive
+universal set &#8220;word&#8221;):</p>
 <blockquote>
-<div><p>man are thing</p>
+<div><p>person isa word</p>
+<p>man are person</p>
 <p>john isa man</p>
-<p>woman are thing</p>
+<p>woman are person</p>
+<p>sue isa woman</p>
+<p>verb isa word</p>
 <p>loves isa verb</p>
-<p>x1 isa man &amp; x2 isa woman &amp; f(x1, loves, x2) isa fact -&gt; f(x2, loves, x1) isa fact</p>
+<p>x1 isa person &amp; x2 isa person &amp; f(x1, loves, x2) isa fact -&gt; f(x2, loves, x1) isa fact</p>
 </div></blockquote>
 <p>There is a semantics for this language <a class="reference external" href="NL">here</a>.</p>
 </div>
