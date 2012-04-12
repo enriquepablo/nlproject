@@ -182,17 +182,24 @@ of the theory, so we can use them where we have used "s" or "o",
 to build as complex a sentence as we may want (I think it wouldn't make
 much sense to use them in place of "v").
 
-An example developed on top of this theory might be:
+An example developed on top of this theory might be (using a primitive
+universal set "word"):
 
-  man are thing
+  person isa word
+
+  man are person
 
   john isa man
 
-  woman are thing
+  woman are person
+
+  sue isa woman
+
+  verb isa word
 
   loves isa verb
 
-  x1 isa man & x2 isa woman & f(x1, loves, x2) isa fact -> f(x2, loves, x1) isa fact
+  x1 isa person & x2 isa person & f(x1, loves, x2) isa fact -> f(x2, loves, x1) isa fact
 
 
 There is a semantics for this language `here <NL>`_.
