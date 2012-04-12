@@ -157,6 +157,14 @@ would have the form (with prefix operators and infix predicates):
 Since we only have 3 formal predicates, we do not need UC at all,
 and yet we can have variables that range over the equivalents of
 our natural verbs (and also over whole "facts").
+The point is that we can model the forms of natural logic
+with very few predicate and operator symbols,
+and that any new term we may want to introduce,
+when modelling any kind of discourse,
+will be quantifiable by first order variables.
+Those symbols that can not be quantified,
+like "are" or "isa" or "f",
+are so few that do not merit to be so.
 
 We can be even more fine-grained. If we call "predication" to a
 pair verb-object, we may want to have variables that range over
