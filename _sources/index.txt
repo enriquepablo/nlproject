@@ -8,7 +8,7 @@ Welcome to nlproject
 
 `**Documentation for nl python library** <http://enriquepablo.github.com/nlproject/nl_intro>`_.
 
-`**The npl language** <http://enriquepablo.github.com/nlproject/nl_lang>`_.
+`**The npl language** <http://npl.readthedocs.org>`_.
 
 Support
 -------
