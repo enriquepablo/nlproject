@@ -1,6 +1,12 @@
 npl language essentials
 =======================
 
+-------
+
+This is now obsolete. These docs have been moved to `http://npl.readthedocs.org <http://npl.readthedocs.org>`_
+
+-------
+
 Introduction and a bit of hype
 ------------------------------
 

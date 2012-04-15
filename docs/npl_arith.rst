@@ -1,6 +1,12 @@
 Arithmetics
 ===========
 
+-------
+
+This is now obsolete. These docs have been moved to `http://npl.readthedocs.org <http://npl.readthedocs.org>`_
+
+-------
+
 Here we will see the syntax for arithmetics in **npl**. An example program
 that uses arithmetics can be seen
 `here <https://github.com/enriquepablo/nl/blob/master/nl/npl_tests/physics22.npl#L32>`_.

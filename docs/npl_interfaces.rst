@@ -1,6 +1,12 @@
 Interfacing with npl
 ====================
 
+-------
+
+This is now obsolete. These docs have been moved to `http://npl.readthedocs.org <http://npl.readthedocs.org>`_
+
+-------
+
 You can use **npl** in several different ways. You can start an ircbot and
 talk to
 it in an irchat, in a REPL manner. Or you can start a daemon and talk to it

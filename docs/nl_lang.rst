@@ -2,6 +2,13 @@
 The npl language
 ################
 
+-------
+
+This is now obsolete. These docs have been moved to `http://npl.readthedocs.org <http://npl.readthedocs.org>`_
+
+-------
+
+
 **npl** is a general purpose logic system, simple, yet extremelly powerful. It is
 distributed under the `GNU General Public License V3 <http://www.gnu.org/licenses/gpl.txt>`_.
 

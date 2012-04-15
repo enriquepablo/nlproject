@@ -1,6 +1,12 @@
 Final Example
 =============
 
+-------
+
+This is now obsolete. These docs have been moved to `http://npl.readthedocs.org <http://npl.readthedocs.org>`_
+
+-------
+
 To round up, I will sketch a workflow machine on top of the terminology we
 have developed so far.
 

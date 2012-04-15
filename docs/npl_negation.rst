@@ -1,6 +1,12 @@
 Negation and counting sentences
 ===============================
 
+-------
+
+This is now obsolete. These docs have been moved to `http://npl.readthedocs.org <http://npl.readthedocs.org>`_
+
+-------
+
 We can use 2 forms of negation in **npl**. The first is classical negation,
 and the second negation by failure. In both cases we can only talk about
 negation of facts; neither predicates nor definitions can be negated.
