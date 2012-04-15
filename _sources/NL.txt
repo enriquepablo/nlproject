@@ -1,5 +1,5 @@
 
-APPENDIX: NPL, the first order theory behind npl
+APPENDIX: NL, the first order theory behind nl
 ================================================
 
 The intended interpretation
@@ -25,7 +25,7 @@ In principle, I will develop the language with recourse to a single operator, th
 The language
 ------------
 
-The language for NPL is a fist order language with equality with the following non-logical symbols:
+The language for NL is a fist order language with equality with the following non-logical symbols:
 
 binary relations: isa (belongs), is (subset).
 

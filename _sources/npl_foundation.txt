@@ -2,6 +2,12 @@
 Motivation
 ==========
 
+-------
+
+This is now obsolete. These docs have been moved to `http://npl.readthedocs.org <http://npl.readthedocs.org>`_
+
+-------
+
 The **npl** language may be viewed
 as a proof of concept for the solution of a problem
 that has been present in logics
